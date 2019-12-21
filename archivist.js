@@ -7,10 +7,13 @@ import fetch from 'node-fetch';
   // that are saved on disk
 const Cache = new Set();
 
-export default class Archivist {
+const Archivist = { 
+  collect, connect
 }
 
-async function collect({port}) {
+export default Archivist;
+
+async function collect({chrome_port:port} = {}) {
   const {send, on, ons} = await connect({port});
 
   // send commands and listen to events
