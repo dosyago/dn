@@ -4,7 +4,7 @@
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
   "scripts": {
-    "test": "node-dev index.js 4999 22120"
+    "test": "node-dev index.js 8080"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/crislin2046/22120#readme",
   "dependencies": {
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
     "ws": "^7.2.1"

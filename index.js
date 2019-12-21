@@ -1,2 +1,2 @@
-import Archivist from './archivist.js';
-import LibraryServer from './libraryServer.js';
+require = require('esm')(module/*, options*/);
+module.exports = require('./server.js');
