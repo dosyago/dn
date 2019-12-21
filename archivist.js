@@ -22,6 +22,17 @@ async function collect({chrome_port:port} = {}) {
     // can pause the request (so it does not go to network)
     // and serve from cache
     // effectively off-lining the site
+
+  // question
+    // can we attach to browser target and catch everything
+    // or do we need to handle sessions ? 
+
+  await send("Fetch.enable", {});
+  on("Fetch.requestPaused, cacheRequest);
+
+  async function cacheRequest(...args) {
+    console.log(args);
+  }
 }
 
 async function connect({port:port = 9222} = {}) {
