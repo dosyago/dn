@@ -6,6 +6,8 @@
 
 ### Save your stuff
 
+*[For instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
+
 1. Open your browser with `--remote-debugging-port=9222` 
 2. Clone this repo and inside its directory run `npm i && npm run save`
 
@@ -49,6 +51,11 @@ To build a personal archive that you can search and use that does not depend on 
 - WebSockets (how to capture and replay that faithfully?)
 
 There are probably "good enough" solutions to all these, and likely some or all of them already exist and have been thought up by other smart people.
+
+### More Instructions
+
+- For opening remote debugging in Edge, [click here](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/)
+- For opening remote debugging in Firefox, [click here](https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging)
 
 ## Higher level description
 
