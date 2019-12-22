@@ -21,9 +21,9 @@ Proof of concept of the ability to browse and transparently save everything, the
 
 Inspired by people talking about enriching bookmarks and browser history with the ability to save all your browsing data and search it, even independent of you being online or the site being online.
 
-## :fearful: I don't use Chrome will it still work?
+## Can I use this with a browser that's not Chrome-based?
 
-*[For instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
+*[For protocol status and instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
 
 ## How it works
 
@@ -56,8 +56,8 @@ There are probably "good enough" solutions to all these, and likely some or all 
 
 ### More Instructions
 
-- For opening remote debugging in Edge, [click here](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/)
-- For opening remote debugging in Firefox, [click here](https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging)
+- For opening remote debugging in Edge, [click here](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/) and also [see here that Edge's protocol does not currently support the 'Fetch' domain used by this project](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/0.2/http)
+- For opening remote debugging in Firefox, [click here](https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging) and also [see here that the protocol currently only ships in Firefox Nightly](https://firefox-source-docs.mozilla.org/remote/Usage.html) and also [see that Firefox's protocol does not fully support the 'Fetch' domain used by the project](https://bugzilla.mozilla.org/buglist.cgi?product=Remote%20Protocol&component=Fetch&resolution=---)
 - For possible options for Safari, [take a look here](https://github.com/google/ios-webkit-debug-proxy)
 
 ## Higher level description
