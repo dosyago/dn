@@ -6,8 +6,6 @@
 
 ### Save your stuff
 
-*[For instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
-
 1. Open your browser with `--remote-debugging-port=9222` 
 2. Clone this repo and inside its directory run `npm i && npm run save`
 
@@ -16,6 +14,8 @@
 1. Open your browser with `--remote-debugging-port=9222` 
 2. Inside the repo directory run `npm run serve`
 3. Browse what you browsed before (you can switch off internet and it still works).
+
+*[For instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
 
 ## Initial goal
 
