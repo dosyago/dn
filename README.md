@@ -2,6 +2,19 @@
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
+## Running
+
+### Save your stuff
+
+1. Open your browser with `--remote-debugging-port=9222` 
+2. Clone this repo and inside its directory run `npm i && npm run save`
+
+### Serve your stuff
+
+1. Open your browser with `--remote-debugging-port=9222` 
+2. Inside the repo directory run `npm run serve`
+3. Browse what you browsed before (you can switch off internet and it still works).
+
 ## Initial goal
 
 Proof of concept of the ability to browse and transparently save everything, then switch off internet and browse it later as if you were still online.
