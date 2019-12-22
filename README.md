@@ -15,15 +15,16 @@
 2. Inside the repo directory run `npm run serve`
 3. Browse what you browsed before (you can switch off internet and it still works).
 
+### Can I use this with a browser that's not Chrome-based?
+
+:fearful: *[For protocol status and instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
+
+
 ## Initial goal
 
 Proof of concept of the ability to browse and transparently save everything, then switch off internet and browse it later as if you were still online.
 
 Inspired by people talking about enriching bookmarks and browser history with the ability to save all your browsing data and search it, even independent of you being online or the site being online.
-
-## Can I use this with a browser that's not Chrome-based?
-
-*[For protocol status and instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
 
 ## How it works
 
