@@ -15,11 +15,6 @@
 2. Inside the repo directory run `npm run serve`
 3. Browse what you browsed before (you can switch off internet and it still works).
 
-### Can I use this with a browser that's not Chrome-based?
-
-:fearful: *[For protocol status and instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
-
-
 ## Initial goal
 
 Proof of concept of the ability to browse and transparently save everything, then switch off internet and browse it later as if you were still online.
@@ -56,6 +51,8 @@ To build a personal archive that you can search and use that does not depend on 
 There are probably "good enough" solutions to all these, and likely some or all of them already exist and have been thought up by other smart people.
 
 ### More Instructions
+
+Can I use this with a browser that's not Chrome-based? 
 
 - For opening remote debugging in Edge, [click here](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/) and also [see here that Edge's protocol does not currently support the 'Fetch' domain used by this project](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/0.2/http)
 - For opening remote debugging in Firefox, [click here](https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging) and also [see here that the protocol currently only ships in Firefox Nightly](https://firefox-source-docs.mozilla.org/remote/Usage.html) and also [see that Firefox's protocol does not fully support the 'Fetch' domain used by the project](https://bugzilla.mozilla.org/buglist.cgi?product=Remote%20Protocol&component=Fetch&resolution=---)
