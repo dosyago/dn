@@ -6,17 +6,21 @@ import fetch from 'node-fetch';
   // that holds the serialized requests
   // that are saved on disk
 const Cache = new Map();
+const ROOT_SESSION = 'browser';
+const State = {
+  Cache
+}
 
 const Archivist = { 
   collect, connect
 }
 
-const UNCACHED_BODY = 'We have not saved this data';
+const UNCACHED_BODY = Buffer.from('We have not saved this data').toString('base64');
 const UNCACHED_CODE = 404;
-const UNCACHED_HEADERS = {
-  'Content-type': 'text/plain',
-  'Content-length': '26'
-};
+const UNCACHED_HEADERS = [
+  { name: 'Content-type', value: 'text/plain' },
+  { name: 'Content-length', value: '26' }
+];
 
 export default Archivist;
 
@@ -38,8 +42,10 @@ async function collect({chrome_port:port, mode} = {}) {
   
   if ( mode == 'save' ) {
     requestStage = "Response";
+    setInterval(saveCache, 10000);
   } else if ( mode == 'serve' ) {
     requestStage = "Request";
+    State.Cache = new Map(JSON.parse(fs.readFileSync('cache.json')));
   } else {
     throw new TypeError(`Must specify mode`);
   }
@@ -52,35 +58,39 @@ async function collect({chrome_port:port, mode} = {}) {
       }
     ]
   });
-  on("Fetch.requestPaused, cacheRequest);
+  on("Fetch.requestPaused", cacheRequest);
 
   async function cacheRequest(pausedRequest) {
     const {requestId, request, responseStatusCode, responseHeaders} = pausedRequest;
     const key = serializeRequest(request);
     if ( mode == 'serve' ) {
-      if ( Cache.has(key) ) {
-        let {body, responseCode, responseHeaders} = Cache.get(key);
-        body = Buffer.from(body, 'base64');
-        body = Buffer.toString('utf8');
+      if ( State.Cache.has(key) ) {
+        let {body, responseCode, responseHeaders} = State.Cache.get(key);
+        responseCode = responseCode || 200;
+        console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
         await send("Fetch.fulfillRequest", {
-          requestId, body, resopnseCode, responseHeaders
+          requestId, body, responseCode, responseHeaders
         });
       } else {
-        const {body, responseCode, responseHeaders} = Cache.get(key);
+        console.log("Sending cache stub", key);
         await send("Fetch.fulfillRequest", {
-          requestId, body:UNCACHED_BODY, resopnseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
+          requestId, body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
         });
       } 
     } else if ( mode == 'save' ) {
+      const response = {responseCode: responseStatusCode, responseHeaders};
       const resp = await send("Fetch.getResponseBody", {requestId});
-      console.log(resp);
-      let {body, base64Encoded} = resp;
-      if ( ! base64Encoded ) {
-        body = Buffer.from(body);
-        body = body.toString('base64');
+      if ( !! resp ) {
+        let {body, base64Encoded} = resp;
+        if ( ! base64Encoded ) {
+          body = Buffer.from(body);
+          body = body.toString('base64');
+        }
+        response.body = body;
+      } else {
+        response.body = '';
       }
-      const response = {body, responseStatusCode, responseHeaders};
-      Cache.set(key, response);
+      State.Cache.set(key, response);
       await send("Fetch.continueRequest", {requestId});
     }
   }
@@ -88,12 +98,17 @@ async function collect({chrome_port:port, mode} = {}) {
   function serializeRequest(request) {
     const {url, urlFragment, method, headers, postData, hasPostData} = request;
 
-    const sortedHeaders = '';
+    let sortedHeaders = '';
     for( const key of Object.keys(headers).sort() ) {
       sortedHeaders += `${key}:${headers[key]}/`;
     }
 
-    return `${url}${urlFragment}:${method}:${sortedHeaders}:${postData}:${hasPostData}`;
+    return `${method}${url}`;
+    //return `${url}${urlFragment}:${method}:${sortedHeaders}:${postData}:${hasPostData}`;
+  }
+
+  function saveCache() {
+    fs.writeFileSync("cache.json", JSON.stringify([...State.Cache.entries()]));
   }
 }
 
@@ -121,6 +136,9 @@ async function connect({port:port = 9222} = {}) {
   async function handle(message) {
     const stringMessage = message;
     message = JSON.parse(message);
+    if ( message.error ) {
+      console.warn(message);
+    }
     const {sessionId} = message;
     const {method, params} = message;
     const {id, result} = message;
@@ -186,3 +204,4 @@ async function connect({port:port = 9222} = {}) {
     on, ons
   }
 }
+
