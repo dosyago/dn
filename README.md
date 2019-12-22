@@ -15,8 +15,6 @@
 2. Inside the repo directory run `npm run serve`
 3. Browse what you browsed before (you can switch off internet and it still works).
 
-*[For instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
-
 ## Initial goal
 
 Proof of concept of the ability to browse and transparently save everything, then switch off internet and browse it later as if you were still online.
@@ -25,7 +23,7 @@ Inspired by people talking about enriching bookmarks and browser history with th
 
 ## How it works
 
-Uses Chrome DevTools to intercept all requests, and caches responses against a key made of (METHOD and URL) into an in memory map which it saves to disk every 10 seconds.
+Uses DevTools protocol to intercept all requests, and caches responses against a key made of (METHOD and URL) into an in memory map which it saves to disk every 10 seconds.
 
 ## So far
 
