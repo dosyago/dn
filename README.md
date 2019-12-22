@@ -21,6 +21,10 @@ Proof of concept of the ability to browse and transparently save everything, the
 
 Inspired by people talking about enriching bookmarks and browser history with the ability to save all your browsing data and search it, even independent of you being online or the site being online.
 
+## :fearful: I don't use Chrome will it still work?
+
+*[For instructions opening remote debugging for Firefox and Edge, see this section.](#more-instructions)*
+
 ## How it works
 
 Uses DevTools protocol to intercept all requests, and caches responses against a key made of (METHOD and URL) into an in memory map which it saves to disk every 10 seconds.
@@ -54,6 +58,7 @@ There are probably "good enough" solutions to all these, and likely some or all 
 
 - For opening remote debugging in Edge, [click here](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/)
 - For opening remote debugging in Firefox, [click here](https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging)
+- For possible options for Safari, [take a look here](https://github.com/google/ios-webkit-debug-proxy)
 
 ## Higher level description
 
