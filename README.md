@@ -32,7 +32,7 @@ Uses DevTools protocol to intercept all requests, and caches responses against a
 - The library server hasn't been implemented.
 - Only saving and serving with the archivist works. 
 - You can use it by opening your browser with `--remote-debugging-port=9222` then running `npm run save`. Everything you browse will be saved to `cache.json`
-- You can switch off your internet and run `npm run serve` (also with your browser on remote debugging) and browser everything you just saved as normal.
+- You can switch off your internet and run `npm run serve` (also with your browser on remote debugging) and browse everything you just saved as normal.
 
 ## Future
 
