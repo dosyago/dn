@@ -21,7 +21,7 @@ const NEVER_CACHE = new Set([
   `http://localhost:${args.server_port}`,
   `http://localhost:${args.chrome_port}`
 ]);
-const CACHE_FILE = path.join(args.library_path, 'cache.json');
+const CACHE_FILE = path.resolve(args.library_path, 'cache.json');
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
 const UNCACHED_BODY = b64('We have not saved this data');
@@ -34,7 +34,7 @@ const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
 
-let Fs, Mode;
+let Fs, Mode, Close;
 
 export default Archivist;
 
@@ -44,9 +44,9 @@ async function collect({chrome_port:port, mode} = {}) {
     Fs = fs;
   }
   const {library_path} = args;
-  const {send, on} = await connect({port});
-
-  changeMode(mode);
+  const {send, on, close} = await connect({port});
+  Close = close;
+  Mode = mode; 
 
   // send commands and listen to events
     // so that we can intercept every request
@@ -64,8 +64,10 @@ async function collect({chrome_port:port, mode} = {}) {
   try {
     State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
   } catch(e) {
+    console.warn(e);
     State.Cache = new Map();
   }
+
 
   if ( Mode == 'save' ) {
     requestStage = "Response";
@@ -76,6 +78,7 @@ async function collect({chrome_port:port, mode} = {}) {
     setInterval(saveCache, 10000);
   } else if ( Mode == 'serve' ) {
     requestStage = "Request";
+    DEBUG && console.log(State.Cache);
   } else {
     throw new TypeError(`Must specify mode`);
   }
@@ -154,7 +157,7 @@ async function collect({chrome_port:port, mode} = {}) {
     const origin = (new URL(url).origin);
     let originDir = State.Cache.get(origin);
     if ( ! originDir ) {
-      originDir = path.join(library_path, origin.replace(TBL, '_'));
+      originDir = path.resolve(library_path, origin.replace(TBL, '_'));
       try {
         await Fs.promises.mkdir(originDir, {recursive:true});
       } catch(e) {
@@ -165,7 +168,7 @@ async function collect({chrome_port:port, mode} = {}) {
 
     const fileName = `${await hasha(key, HASH_OPTS)}.json`;
 
-    const responsePath = path.join(originDir, fileName);
+    const responsePath = path.resolve(originDir, fileName);
     await Fs.promises.writeFile(responsePath, JSON.stringify(response));
 
     return responsePath;
@@ -189,8 +192,11 @@ async function collect({chrome_port:port, mode} = {}) {
 function getMode() { return Mode; }
 
 function changeMode(mode) { 
+  console.log({modeChange:mode});
   saveCache();
+  Close && Close();
   Mode = mode;
+  collect({chrome_port:args.chrome_port, mode});
 }
 
 function saveCache() {
