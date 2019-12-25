@@ -5,13 +5,25 @@
   <button>Search</button>
 </form>
 <form method=POST action=/mode>
-  <label>
-    <input type=radio name=mode value=save>
-    Save
-  </label>
-  <label>
-    <input type=radio name=mode value=serve>
-    Serve
-  </label>
+  <p>
+    <label>
+      <input type=radio name=mode value=save>
+      Save
+    </label>
+    <label>
+      <input type=radio name=mode value=serve>
+      Serve
+    </label>
+  <p>
+    <button>Change mode</button>
+  <script>
+    const form = document.currentScript.closest('form');
+    showCurrentMode();
+
+    async function showCurrentMode() {
+      const mode = await fetch('/mode').then(r => r.text());
+      form.querySelector(`[name="mode"][value="${mode}"]`).checked = true;
+    }
+  </script>
 </form>
 <a href=/library>Go to your library directory</a>
