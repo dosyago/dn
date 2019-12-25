@@ -9,9 +9,7 @@ import args from './args.js';
 const CHROME_OPTS = !DEBUG ? [] : [
   '--no-sandbox'
 ];
-const server_port = process.env.PORT || args.server_port || 22120;
-const mode = args.mode || 'save';
-const chrome_port = args.chrome_port || 9222;
+const {server_port, mode, chrome_port} = args;
 
 start();
 

@@ -1,9 +1,9 @@
 import hasha from 'hasha';
 import {URL} from 'url';
 import path from 'path';
+import args from './args.js';
 import {context, sleep, DEBUG} from './common.js';
 import {connect} from './protocol.js';
-import {libraryPath} from './libraryServer.js';
 
 // cache is a simple map
   // that holds the serialized requests
@@ -14,10 +14,14 @@ const State = {
 }
 
 const Archivist = { 
-  collect 
+  collect, getMode, changeMode
 }
 
-const CACHE_FILE = path.join(libraryPath, 'cache.json');
+const NEVER_CACHE = new Set([
+  `http://localhost:${args.server_port}`,
+  `http://localhost:${args.chrome_port}`
+]);
+const CACHE_FILE = path.join(args.library_path, 'cache.json');
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
 const UNCACHED_BODY = b64('We have not saved this data');
@@ -30,17 +34,19 @@ const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
 
-let Fs;
+let Fs, Mode;
 
 export default Archivist;
 
 async function collect({chrome_port:port, mode} = {}) {
-  const {send, on} = await connect({port});
-
   if ( context == 'node' ) {
     const {default:fs} = await import('fs');
     Fs = fs;
   }
+  const {library_path} = args;
+  const {send, on} = await connect({port});
+
+  changeMode(mode);
 
   // send commands and listen to events
     // so that we can intercept every request
@@ -55,20 +61,21 @@ async function collect({chrome_port:port, mode} = {}) {
 
   let requestStage;
   
-  if ( mode == 'save' ) {
+  try {
+    State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
+  } catch(e) {
+    State.Cache = new Map();
+  }
+
+  if ( Mode == 'save' ) {
     requestStage = "Response";
-    try {
-      State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
-    } catch(e) {
-      State.Cache = new Map();
-    }
-    process.on('SIGINT', saveCache);
+    process.on('SIGINT', () => { 
+      saveCache();
+      process.exit(0);
+    });
     setInterval(saveCache, 10000);
-  } else if ( mode == 'serve' ) {
+  } else if ( Mode == 'serve' ) {
     requestStage = "Request";
-    if ( context == 'node' ) {
-      State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
-    }
   } else {
     throw new TypeError(`Must specify mode`);
   }
@@ -85,8 +92,12 @@ async function collect({chrome_port:port, mode} = {}) {
 
   async function cacheRequest(pausedRequest) {
     const {requestId, request, responseStatusCode, responseHeaders} = pausedRequest;
+    if ( dontCache(request) ) {
+      DEBUG && console.log("Not caching", request);
+      return send("Fetch.continueRequest", {requestId});
+    }
     const key = serializeRequest(request);
-    if ( mode == 'serve' ) {
+    if ( Mode == 'serve' ) {
       if ( State.Cache.has(key) ) {
         let {body, responseCode, responseHeaders} = await getResponseData(State.Cache.get(key));
         responseCode = responseCode || 200;
@@ -100,7 +111,7 @@ async function collect({chrome_port:port, mode} = {}) {
           requestId, ...UNCACHED
         });
       } 
-    } else if ( mode == 'save' ) {
+    } else if ( Mode == 'save' ) {
       if ( responseStatusCode == 302 ) {
         return send("Fetch.continueRequest", {requestId});
       }
@@ -124,6 +135,11 @@ async function collect({chrome_port:port, mode} = {}) {
       await send("Fetch.continueRequest", {requestId});
     }
   }
+  
+  function dontCache(request) {
+    const origin = new URL(request.url).origin;
+    return NEVER_CACHE.has(origin);
+  }
 
   async function getResponseData(path) {
     try {
@@ -135,19 +151,23 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function saveResponseData(key, url, response) {
-    const origin = (new URL(url).origin).replace(TBL, '_');
-    const hash = await hasha(key, HASH_OPTS); 
-    const fileName = `${hash}.json`;
-    const responsePath = path.join(libraryPath, origin, fileName);
-    if ( ! State.Cache.has(origin) ) {
+    const origin = (new URL(url).origin);
+    let originDir = State.Cache.get(origin);
+    if ( ! originDir ) {
+      originDir = path.join(library_path, origin.replace(TBL, '_'));
       try {
-        await Fs.promises.mkdir(path.dirname(responsePath), {recursive:true});
+        await Fs.promises.mkdir(originDir, {recursive:true});
       } catch(e) {
         console.warn(`Issue with origin directory ${path.dirname(responsePath)}`, e);
       }
-      State.Cache.set(origin, origin);
+      State.Cache.set(origin, originDir);
     }
+
+    const fileName = `${await hasha(key, HASH_OPTS)}.json`;
+
+    const responsePath = path.join(originDir, fileName);
     await Fs.promises.writeFile(responsePath, JSON.stringify(response));
+
     return responsePath;
   }
 
@@ -164,11 +184,18 @@ async function collect({chrome_port:port, mode} = {}) {
     return `${method}${url}`;
     //return `${url}${urlFragment}:${method}:${sortedHeaders}:${postData}:${hasPostData}`;
   }
+}
 
-  function saveCache() {
-    if ( context == 'node' ) {
-      Fs.writeFileSync(CACHE_FILE, JSON.stringify([...State.Cache.entries()]));
-    }
+function getMode() { return Mode; }
+
+function changeMode(mode) { 
+  saveCache();
+  Mode = mode;
+}
+
+function saveCache() {
+  if ( context == 'node' ) {
+    Fs.writeFileSync(CACHE_FILE, JSON.stringify([...State.Cache.entries()]));
   }
 }
 
