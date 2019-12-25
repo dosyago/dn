@@ -8,6 +8,8 @@
 	"homepage_url": "https://github.com/dosyago/22120",
   "permissions" :
     [
+      "tabs",
+      "<all_urls>",
       "debugger",
       "storage",
       "unlimitedStorage"

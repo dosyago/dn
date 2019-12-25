@@ -17,6 +17,10 @@
 
 export const context = Context;
 
+export const DEBUG = false;
+
+export const sleep = ms => new Promise(res => setTimeout(res, ms));
+
 export function say(o) {
   console.log(JSON.stringify(o));
 }
