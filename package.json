@@ -4,6 +4,11 @@
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
   "bin": "index.js",
+  "pkg": {
+    "options": [
+      "experimental-modules"
+    ]
+  },
   "scripts": {
     "test": "node-dev index.js 8080",
     "save": "node-dev index.js 8080 save",
@@ -33,6 +38,7 @@
     "ws": "^7.2.1"
   },
   "devDependencies": {
-    "node-dev": "^4.0.0"
+    "node-dev": "^4.0.0",
+    "pkg": "^4.4.2"
   }
 }
