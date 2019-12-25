@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "node-dev index.js 8080",
     "save": "node-dev index.js 8080 save",

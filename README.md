@@ -6,6 +6,22 @@
 
 ## Running
 
+### Running the binary for your OS
+
+### Download the binary
+
+Get one from the packages page.
+
+### Pick save mode or serve mode
+
+To pick the mode, go to http://localhost:22120 in your browser, 
+and follow the instructions. 
+
+You might want to bookmark this page,
+as anytime you want to change any settings, you need to use this page.
+
+### Running as a Node.JS app
+
 ### Save your stuff
 
 1. Open your browser with `--remote-debugging-port=9222` 
@@ -65,5 +81,4 @@ Can I use this with a browser that's not Chrome-based?
 ## Higher level description
 
 Basically this is like a "full spectrum record" of your browsing history, with all assets and their content saved. It's like going on holiday and taking a GoPro that saves everything you look at, except that the quality is such that when you replay it, it's actually the same as experiencing it the first time.
-
 
