@@ -7,7 +7,7 @@ import args from './args.js';
 import {say} from './common.js';
 
 const SITE_PATH = path.join(__dirname, 'public');
-const libraryPath = args.libraryPath || path.join(__dirname, 'public', 'library');
+export const libraryPath = args.libraryPath || path.join(__dirname, 'public', 'library');
 
 const app = express();
 

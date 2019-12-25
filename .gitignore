@@ -1,5 +1,5 @@
-cache.json
-public/library/origin*
+public/library/cache.json
+public/library/http*
 
 
 # Logs
