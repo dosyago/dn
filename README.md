@@ -8,11 +8,11 @@
 
 ### Running the binary for your OS
 
-### Download the binary
+#### Download the binary
 
 Get one from the packages page.
 
-### Pick save mode or serve mode
+#### Pick save mode or serve mode
 
 To pick the mode, go to http://localhost:22120 in your browser, 
 and follow the instructions. 
@@ -22,16 +22,24 @@ as anytime you want to change any settings, you need to use this page.
 
 ### Running as a Node.JS app
 
-### Save your stuff
+#### Save your stuff
 
 1. Open your browser with `--remote-debugging-port=9222` 
 2. Clone this repo and inside its directory run `npm i && npm run save`
 
-### Serve your stuff
+#### Serve your stuff
 
 1. Open your browser with `--remote-debugging-port=9222` 
 2. Inside the repo directory run `npm run serve`
 3. Browse what you browsed before (you can switch off internet and it still works).
+
+### Get the Chrome Extension
+
+#### Download from the Chrome Store
+
+
+#### Control the mode with the browser action
+
 
 ## Initial goal
 
