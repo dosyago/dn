@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
-  "bin": "index.js",
+  "bin": "app.bundle.js",
   "pkg": {
-    "options": [
-      "experimental-modules"
-    ]
+    "options": [],
+    "scripts": "*.app.bundle.js",
+    "assets": [ "public/*", "public/library/cache.json", "public/library/**/*.json"]
   },
   "scripts": {
+    "build": "npx webpack && pkg .",
+    "clean": "rm 22120-* && rm *app.bundle.js",
     "test": "node-dev index.js 8080",
     "save": "node-dev index.js 8080 save",
     "serve": "node-dev index.js 8080 serve"
@@ -39,6 +41,8 @@
   },
   "devDependencies": {
     "node-dev": "^4.0.0",
-    "pkg": "^4.4.2"
+    "pkg": "^4.4.2",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
   }
 }

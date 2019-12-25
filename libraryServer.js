@@ -50,7 +50,7 @@ function addHandlers() {
 
   app.post('/mode', async (req, res) => {
     const {mode} = req.body;
-    await Archivist.changeMode(mode);
+    await Archivist.collect({chrome_port,mode});
     res.end(`Mode set to ${mode}`);
   });
 }

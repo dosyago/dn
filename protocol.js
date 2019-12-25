@@ -172,7 +172,6 @@ export async function connect({port:port = 9222} = {}) {
       targets = resp.filter(T => T.type == 'page' && T.url.startsWith('http') && !T.attached);
       console.assert(targets.length == 0, "We are not attached to some attachable targets", targets);
     }
-
   } else if ( context == 'node' ) {
     if ( ! Ws || ! Fetch ) {
       await loadDependencies();
@@ -252,6 +251,10 @@ export async function connect({port:port = 9222} = {}) {
       listeners.push(handler);
     }
 
+    function close() {
+      socket.close();
+    }
+
     function wrap(fn) {
       return ({message, sessionId}) => fn(message.params)
     }
@@ -265,7 +268,8 @@ export async function connect({port:port = 9222} = {}) {
 
     return {
       send,
-      on, ons
+      on, ons,
+      close
     }
   } else {
     throw new TypeError('Currently only supports running in Node.JS or as a Chrome Extension with Debugger permissions');

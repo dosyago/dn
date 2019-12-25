@@ -1,3 +1,9 @@
+# Bundling and packaging
+22120-*
+app.bundle.js
+*.app.bundle.js
+
+# Library
 public/library/cache.json
 public/library/http*
 
