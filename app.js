@@ -15,7 +15,12 @@ start();
 async function start() {
   if ( context == 'node' ) {
     ({launch:ChromeLaunch} = await import('chrome-launcher'));
-    await ChromeLaunch({port: chrome_port, chromeFlags:CHROME_OPTS});
+    await ChromeLaunch({
+      port: chrome_port, 
+      chromeFlags:CHROME_OPTS, 
+      userDataDir:false, 
+      startingUrl: `http://localhost:${args.server_port}`
+    });
     await LibraryServer.start({server_port});
   }
   await Archivist.collect({chrome_port, mode});
