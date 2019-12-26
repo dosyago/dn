@@ -4,23 +4,42 @@
 
 *[If you want to get an email when the next major version drops, add your email to this list](https://forms.gle/yN4WVjuwKgBRCzYF8)*
 
-## Running
+## Using
 
-### Running the binary for your OS
-
-#### Download the binary
-
-Get one from the packages page.
-
-#### Pick save mode or serve mode
+### Pick save mode or serve mode
 
 To pick the mode, go to http://localhost:22120 in your browser, 
 and follow the instructions. 
 
-You might want to bookmark this page,
+You might want to bookmark that page,
 as anytime you want to change any settings, you need to use this page.
 
+If you need to change the port, check out the command line options that print when you run it.
+
+## Getting it and Running it
+
+I like multiple release channels and there's plenty of ways to install and use this.
+
+You can download a standalone binary (Win, Mac or Linux), install globally from npm, or just
+clone or download the repo and run it.
+
+### Downloading the binary for your OS
+
+Get one from the [releases page.](https://github.com/dosyago/22120/releases)
+
+### Installing using npm
+
+`npm i -g archivist1`
+
+Then run as `archivist1`
+
 ### Running as a Node.JS app
+
+`npm i && npm start`
+
+### Old Skool, DIY, CUSTOM way
+
+Clone the repo, comment out the `ChromeLaunch` line in `app.js` and then:
 
 #### Save your stuff
 
@@ -35,11 +54,15 @@ as anytime you want to change any settings, you need to use this page.
 
 ### Get the Chrome Extension
 
+Coming soon.
+
 #### Download from the Chrome Store
 
+Under construction.
 
 #### Control the mode with the browser action
 
+Watch this space.
 
 ## Initial goal
 
