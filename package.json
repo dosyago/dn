@@ -18,7 +18,7 @@
   "scripts": {
     "start": "node index.js",
     "build": "npx webpack && pkg .",
-    "clean": "rm 22120-* *app.bundle.js",
+    "clean": "rm archivist1-* *app.bundle.js",
     "test": "node-dev index.js 8080",
     "save": "node-dev index.js 8080 save",
     "serve": "node-dev index.js 8080 serve"
