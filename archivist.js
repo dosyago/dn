@@ -62,9 +62,14 @@ async function collect({chrome_port:port, mode} = {}) {
   let requestStage;
   
   try {
+    if ( !Fs.existsSync(CACHE_FILE) ) {
+      console.log(`Cache file does not exist, creating...`); 
+      Fs.writeFileSync(CACHE_FILE, JSON.stringify([]));
+      console.log(`Created!`);
+    }
     State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
   } catch(e) {
-    console.warn(e);
+    DEBUG && console.warn(e);
     State.Cache = new Map();
   }
 
@@ -191,12 +196,12 @@ async function collect({chrome_port:port, mode} = {}) {
 
 function getMode() { return Mode; }
 
-function changeMode(mode) { 
-  console.log({modeChange:mode});
+async function changeMode(mode) { 
+  DEBUG && console.log({modeChange:mode});
   saveCache();
   Close && Close();
   Mode = mode;
-  collect({chrome_port:args.chrome_port, mode});
+  await collect({chrome_port:args.chrome_port, mode});
 }
 
 function saveCache() {
