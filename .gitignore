@@ -1,7 +1,8 @@
 # Bundling and packaging
 22120-*
-app.bundle.js
-*.app.bundle.js
+#Leave these to allow install by npm -g
+#app.bundle.js
+#*.app.bundle.js
 
 # Library
 public/library/cache.json
