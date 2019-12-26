@@ -43,5 +43,10 @@
     "serve-index": "^1.9.1",
     "ws": "^7.2.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "node-dev": "^4.0.0",
+    "pkg": "^4.4.2",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
+  }
 }
