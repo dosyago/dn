@@ -2,8 +2,6 @@
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
-*[If you want to get an email when the next major version drops, add your email to this list](https://forms.gle/yN4WVjuwKgBRCzYF8)*
-
 ## Getting it and Running it
 
 I like multiple release channels and there's plenty of ways to install and use this.
