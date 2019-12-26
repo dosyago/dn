@@ -90,3 +90,16 @@ Can I use this with a browser that's not Chrome-based?
 
 Basically this is like a "full spectrum record" of your browsing history, with all assets and their content saved. It's like going on holiday and taking a GoPro that saves everything you look at, except that the quality is such that when you replay it, it's actually the same as experiencing it the first time.
 
+## FAQ
+
+### How does this interact with Ad blockers?
+
+Interacts just fine. The things ad blockers stop will not be archived.
+
+### How secure is running chrome with remote debugging port open?
+
+Seems pretty secure. It's not exposed to the public internet, and pages you load that tried to use it cannot use the protocol for anything (except to open a new tab, which they can do anyway). 
+
+### Is this free?
+
+Yes this is totally free to download and use. It's also open source so do what you want with it.
