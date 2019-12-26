@@ -1,5 +1,5 @@
 {
-  "name": "@dosy/22120",
+  "name": "22120",
   "version": "1.1.1",
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
