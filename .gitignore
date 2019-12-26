@@ -1,5 +1,6 @@
 # Bundling and packaging
 22120-*
+archivist1-*
 #Leave these to allow install by npm -g
 #app.bundle.js
 #*.app.bundle.js
