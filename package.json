@@ -7,11 +7,15 @@
   "pkg": {
     "options": [],
     "scripts": "*.app.bundle.js",
-    "assets": [ "public/*", "public/library/cache.json", "public/library/**/*.json"]
+    "assets": [
+      "public/*",
+      "public/library/cache.json",
+      "public/library/**/*.json"
+    ]
   },
   "scripts": {
     "build": "npx webpack && pkg .",
-    "clean": "rm 22120-* && rm *app.bundle.js",
+    "clean": "rm 22120-* *app.bundle.js",
     "test": "node-dev index.js 8080",
     "save": "node-dev index.js 8080 save",
     "serve": "node-dev index.js 8080 serve"
@@ -39,10 +43,5 @@
     "serve-index": "^1.9.1",
     "ws": "^7.2.1"
   },
-  "devDependencies": {
-    "node-dev": "^4.0.0",
-    "pkg": "^4.4.2",
-    "webpack": "^4.41.4",
-    "webpack-cli": "^3.3.10"
-  }
+  "devDependencies": {}
 }
