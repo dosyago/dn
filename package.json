@@ -4,7 +4,7 @@
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
   "bin": {
-    "archivist1": "app.bundle.js",
+    "archivist1": "app.bundle.js"
   },
   "pkg": {
     "options": [],
