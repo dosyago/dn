@@ -51,13 +51,14 @@ Inspired by people talking about enriching bookmarks and browser history with th
 
 ## How it works
 
-Uses DevTools protocol to intercept all requests, and caches responses against a key made of (METHOD and URL) into an in memory map which it saves to disk every 10 seconds.
+Uses DevTools protocol to intercept all requests, and caches responses against a key made of (METHOD and URL) onto disk. It also maintains an in memory set of keys so it knows what it has on disk. 
 
 ## So far
 
 - The library server hasn't been implemented.
 - Only saving and serving with the archivist works. 
-- You can use it by opening your browser with `--remote-debugging-port=9222` then running `npm run save`. Everything you browse will be saved to `cache.json`
+- You can use it by running it and opening `http://localhost:22120` in your browser. There's controls there to set the mode. 
+- You can use it by opening your browser with `--remote-debugging-port=9222` then running `npm run save`. Everything you browse will be saved to on disk under the directory for the origin and paths will be saved to `cache.json`
 - You can switch off your internet and run `npm run serve` (also with your browser on remote debugging) and browse everything you just saved as normal.
 
 ## Future
