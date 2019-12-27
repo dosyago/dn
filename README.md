@@ -27,17 +27,17 @@ Coming soon.
 Go to http://localhost:22120 in your browser, 
 and follow the instructions. 
 
-#### Save your stuff
+## Exploring your 22120 archive
 
-`npm run save`
+Archive will be located in `$your_user_home_directory/22120-arc/public/library`
 
-#### Serve your stuff
+But it's not actually public, don't worry!
 
-`npm run serve`
+The archive format is:
 
-### Get the Chrome Extension
+`22120-arc/public/library/<resource-origin>/<sha1-path-hash>.json`
 
-Coming soon.
+Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
 
 ## Initial goal
 
