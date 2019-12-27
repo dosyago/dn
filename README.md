@@ -27,10 +27,6 @@ Coming soon.
 Go to http://localhost:22120 in your browser, 
 and follow the instructions. 
 
-### Old Skool, DIY, CUST0M way
-
-Clone the repo, comment out the `ChromeLaunch` line in `app.js`, run `npm i`, open your browser with `--remote-debugging-port=9222` then:
-
 #### Save your stuff
 
 `npm run save`
