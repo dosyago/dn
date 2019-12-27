@@ -7,18 +7,27 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 **Note: you MUST close chrome before you run this. This will relaunch chrome.**
 
 ### Downloading the binary for your OS
+3 ways to get it:
+
+### 1. Download a OS binary 
 
 Get one from the [releases page.](https://github.com/dosyago/22120/releases)
 
-### Installing using npm
+OR
+
+### 2. Install by npm
 
 `npm i -g archivist1`
 
-### Running as a Node.JS app
+OR
+
+### 3. Clone this repo and run as a Node.JS app
 
 `npm i && npm start`
 
-### Chrome Extension
+OR
+
+### 4. Get the Chrome Extension
 
 Coming soon.
 
@@ -29,21 +38,17 @@ Coming soon.
 Go to http://localhost:22120 in your browser, 
 and follow the instructions. 
 
-### Old Skool, DIY, CUST0M way
+### Exploring your 22120 archive
 
-Clone the repo, comment out the `ChromeLaunch` line in `app.js`, run `npm i`, open your browser with `--remote-debugging-port=9222` then:
+Archive will be located in `$your_user_home_directory/22120-arc/public/library`
 
-#### Save your stuff
+But it's not actually public, don't worry!
 
-`npm run save`
+The archive format is:
 
-#### Serve your stuff
+`22120-arc/public/library/<resource-origin>/<sha1-path-hash>.json`
 
-`npm run serve`
-
-### Get the Chrome Extension
-
-Coming soon.
+Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
 
 ## Initial goal
 
@@ -82,11 +87,11 @@ To build a personal archive that you can search and use that does not depend on 
 
 There are probably "good enough" solutions to all these, and likely some or all of them already exist and have been thought up by other smart people.
 
-### More Instructions
+## More Instructions
 
 Can I use this with a browser that's not Chrome-based? 
 
-**Probably not. At least not yet.**
+**Probably not**
 
 - For opening remote debugging in Edge, [click here](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/) and also [see here that Edge's protocol does not currently support the 'Fetch' domain used by this project](https://docs.microsoft.com/en-us/microsoft-edge/devtools-protocol/0.2/http)
 - For opening remote debugging in Firefox, [click here](https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging) and also [see here that the protocol currently only ships in Firefox Nightly](https://firefox-source-docs.mozilla.org/remote/Usage.html) and also [see that Firefox's protocol does not fully support the 'Fetch' domain used by the project](https://bugzilla.mozilla.org/buglist.cgi?product=Remote%20Protocol&component=Fetch&resolution=---)
