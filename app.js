@@ -15,8 +15,7 @@ start();
 async function start() {
   if ( context == 'node' ) {
     ({launch:ChromeLaunch} = await import('chrome-launcher'));
-    // don't await this so server will still run even if chrome is already open
-    ChromeLaunch({
+    await ChromeLaunch({
       port: chrome_port, 
       chromeFlags:CHROME_OPTS, 
       userDataDir:false, 
