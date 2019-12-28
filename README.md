@@ -63,6 +63,7 @@ Yes this is totally free to download and use. It's also open source so do what y
 
 - Full text search 
 - Library server to serve archive publicly.
+- Distributed p2p web browser on IPFS
 
 ### What about streaming content?
 
