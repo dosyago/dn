@@ -4,8 +4,6 @@
 
 Save your browsing, then switch off the net and go to `http://localhost:22120` and switch mode to **serve** then browse what you browsed before. It all still works.
 
-**Note: you MUST close chrome before you run this. This will relaunch chrome.**
-
 ## Get 22120
 
 3 ways to get it:
