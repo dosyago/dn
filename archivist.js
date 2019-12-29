@@ -17,6 +17,10 @@ const Archivist = {
   collect, getMode, changeMode
 }
 
+const BODYLESS = new Set([
+  301,
+  302
+]);
 const NEVER_CACHE = new Set([
   `http://localhost:${args.server_port}`,
   `http://localhost:${args.chrome_port}`
@@ -120,11 +124,13 @@ async function collect({chrome_port:port, mode} = {}) {
         });
       } 
     } else if ( Mode == 'save' ) {
-      if ( responseStatusCode == 302 ) {
-        return send("Fetch.continueRequest", {requestId});
-      }
       const response = {key, responseCode: responseStatusCode, responseHeaders};
-      let resp = await send("Fetch.getResponseBody", {requestId});
+      let resp;
+      if ( ! BODYLESS.has(responseStatusCode) ) {
+        resp = await send("Fetch.getResponseBody", {requestId});
+      } else {
+        resp = {body:'', base64Encoded:true};
+      }
       if ( ! resp ) {
         DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
         return send("Fetch.continueRequest", {requestId});

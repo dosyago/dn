@@ -1,9 +1,10 @@
 # Bundling and packaging
-22120-*
-archivist1-*
+22120.exe
+22120.nix
+22120.mac
 #Leave these to allow install by npm -g
-#app.bundle.js
-#*.app.bundle.js
+#22120.js
+#*.22120.js
 
 # Library
 public/library/cache.json
