@@ -5,7 +5,7 @@ module.exports = {
   entry: "./app.js",
   output: {
     path: path.resolve(__dirname),
-    filename: "app.bundle.js"
+    filename: "22120.js"
   },
   target: "node",
   node: {

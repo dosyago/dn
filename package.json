@@ -4,24 +4,15 @@
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
   "bin": {
-    "archivist1": "app.bundle.js"
-  },
-  "pkg": {
-    "options": [],
-    "scripts": "*.app.bundle.js",
-    "assets": [
-      "public/*",
-      "public/library/cache.json",
-      "public/library/**/*.json"
-    ]
+    "archivist1": "22120.js"
   },
   "scripts": {
     "start": "node index.js",
-    "build": "npx webpack && pkg .",
-    "clean": "rm archivist1-* *app.bundle.js",
-    "test": "node-dev index.js 8080",
-    "save": "node-dev index.js 8080 save",
-    "serve": "node-dev index.js 8080 serve"
+    "build": "npx webpack && nexe -t windows 22120.js && nexe -t linux-x64 -o 22120.nix 22120.js && nexe -t macos-x64 -o 22120.mac 22120.js",
+    "clean": "rm 22120.js *22120.js",
+    "test": "node-dev index.js 22120",
+    "save": "node-dev index.js 22120 save",
+    "serve": "node-dev index.js 22120 serve"
   },
   "repository": {
     "type": "git",
@@ -48,7 +39,6 @@
   },
   "devDependencies": {
     "node-dev": "^4.0.0",
-    "pkg": "^4.4.2",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10"
   }
