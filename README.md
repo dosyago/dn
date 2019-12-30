@@ -88,7 +88,7 @@ Yes! Put any domains into `$HOME/22120-arc/no.json`, eg:
 
 Will not cache any resource with a host matching those. Wildcards: 
 
-- * (0 or more anything) and 
-- ? (0 or 1 anything) 
+- `*` (0 or more anything) and 
+- `?` (0 or 1 anything) 
 
 
