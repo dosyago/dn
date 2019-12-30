@@ -74,3 +74,21 @@ The following are probably hard (and I haven't thought much about):
 - WebSockets (how to capture and replay that faithfully?)
 
 Probably some way to do this tho.
+
+### Can I black list domains to not archive them?
+
+Yes! Put any domains into `$HOME/22120-arc/no.json`, eg:
+
+```json
+[
+  "*.google.com",
+  "*.cnn.co?"
+]
+```
+
+Will not cache any resource with a host matching those. Wildcards: 
+
+- * (0 or more anything) and 
+- ? (0 or 1 anything) 
+
+
