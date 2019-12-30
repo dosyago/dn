@@ -17,7 +17,7 @@
 
 export const context = Context;
 
-export const DEBUG = true;
+export const DEBUG = process.env.DEBUG_22120 || false;
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
