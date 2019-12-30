@@ -26,6 +26,7 @@ const NEVER_CACHE = new Set([
   `http://localhost:${args.chrome_port}`
 ]);
 const CACHE_FILE = path.resolve(args.library_path, 'cache.json');
+const NO_FILE = args.no_file;
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
 const UNCACHED_BODY = b64('We have not saved this data');
@@ -73,8 +74,25 @@ async function collect({chrome_port:port, mode} = {}) {
     }
     State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
   } catch(e) {
-    DEBUG && console.warn(e);
+    DEBUG && console.warn('Error creating key cache file', e);
     State.Cache = new Map();
+  }
+
+  try {
+    if ( !Fs.existsSync(NO_FILE) ) {
+      console.log(`No file does not exist, ignoring...`); 
+      State.No = null;
+    } else {
+      State.No = new RegExp(JSON.parse(Fs.readFileSync(NO_FILE))
+        .join('|')
+        .replace(/\./g, '\\.')
+        .replace(/\*/g, '.*')
+        .replace(/\?/g, '.?')
+      );
+    }
+  } catch(e) {
+    DEBUG && console.warn('Error compiling regex from No file', e);
+    State.No = null;
   }
 
 
@@ -151,8 +169,8 @@ async function collect({chrome_port:port, mode} = {}) {
   }
   
   function dontCache(request) {
-    const origin = new URL(request.url).origin;
-    return NEVER_CACHE.has(origin);
+    const url = new URL(request.url);
+    return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
   }
 
   async function getResponseData(path) {
