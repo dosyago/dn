@@ -15,12 +15,6 @@ if ( !fs.existsSync(library_path) ) {
   console.log(`Created.`);
 }
 
-if ( fs.existsSync(temp_browser_cache) ) {
-  console.log(`Temp browser cache directory (${temp_browser_cache}) exists, deleting...`);
-  fs.rmdirSync(temp_browser_cache, {recursive:true});
-  console.log(`Deleted.`);
-}
-
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
 
 const args = {

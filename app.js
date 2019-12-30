@@ -30,6 +30,7 @@ start();
 
 async function start() {
   if ( context == 'node' ) {
+    const fs = await import('fs');
     const {launch:ChromeLaunch} = await import('chrome-launcher');
     const {default:child_process} = await import('child_process');
     if ( process.platform in KILL_ON ) {
@@ -41,6 +42,11 @@ async function start() {
       }
     } else {
       console.warn(`If you have Chrome running, you may need to shut it down manually and restart 22120.`);
+    }
+    if ( fs.existsSync(args.temp_browser_cache) ) {
+      console.log(`Temp browser cache directory (${args.temp_browser_cache}) exists, deleting...`);
+      fs.rmdirSync(args.temp_browser_cache, {recursive:true});
+      console.log(`Deleted.`);
     }
     await ChromeLaunch(LAUNCH_OPTS);
     await LibraryServer.start({server_port});

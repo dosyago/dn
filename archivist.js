@@ -19,7 +19,9 @@ const Archivist = {
 
 const BODYLESS = new Set([
   301,
-  302
+  302,
+  303,
+  307
 ]);
 const NEVER_CACHE = new Set([
   `http://localhost:${args.server_port}`,

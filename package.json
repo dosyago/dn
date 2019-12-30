@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "npx webpack && nexe -t windows 22120.js && nexe -t linux-x64 -o 22120.nix 22120.js && nexe -t macos-x64 -o 22120.mac 22120.js",
+    "build": "npx webpack && nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"",
     "clean": "rm 22120.js *22120.js",
     "test": "node-dev index.js 22120",
     "save": "node-dev index.js 22120 save",
@@ -34,7 +34,6 @@
     "express": "^4.17.1",
     "hasha": "^5.1.0",
     "node-fetch": "^2.6.0",
-    "serve-index": "^1.9.1",
     "ws": "^7.2.1"
   },
   "devDependencies": {
