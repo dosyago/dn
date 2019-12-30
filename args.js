@@ -6,6 +6,7 @@ const server_port = process.env.PORT || process.argv[2] || 22120;
 const mode = process.argv[3] || 'save';
 const chrome_port = process.argv[4] || 9222;
 const library_path = process.argv[5] || path.resolve(os.homedir(), '22120-arc', 'public', 'library');
+const no_file = path.resolve(os.homedir(), '22120-arc', 'no.json');
 const temp_browser_cache = path.resolve(os.homedir(), '22120-arc', 'temp-browser-cache');
 
 if ( !fs.existsSync(library_path) ) {
@@ -26,6 +27,7 @@ const args = {
   server_port, mode, 
   chrome_port,
   library_path,
+  no_file,
   temp_browser_cache
 };
 
