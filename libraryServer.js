@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
-import serveIndex from 'serve-index';
 
 import args from './args.js';
 import {say} from './common.js';
@@ -37,7 +36,7 @@ function addHandlers() {
   app.use(express.urlencoded({extended:true}));
   app.use(express.static(SITE_PATH));
   if ( !! libraryPath ) {
-    app.use("/library", express.static(libraryPath), serveIndex(libraryPath, {icons:true}));
+    app.use("/library", express.static(libraryPath))
   }
 
   app.get('/search', async (req, res) => {
