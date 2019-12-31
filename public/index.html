@@ -26,3 +26,22 @@
     }
   </script>
 </form>
+<form method=POST action=/library_path>
+  <p>
+    Set the path to your archive
+    <label>
+      Library path
+      <input type=text name=library_path placeholder="Library path...">
+    </label>
+  <p>
+    <button>Change path</button>
+  <script>
+    const form = document.currentScript.closest('form');
+    showCurrentLibraryPath();
+
+    async function showCurrentLibraryPath() {
+      const library_path = await fetch('/library_path').then(r => r.text());
+      form.querySelector(`[name="library_path"]`).value = librar_path;
+    }
+  </script>
+</form>

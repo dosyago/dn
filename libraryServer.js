@@ -52,5 +52,15 @@ function addHandlers() {
     await Archivist.changeMode(mode);
     res.end(`Mode set to ${mode}`);
   });
+
+  app.get('/library_path', async (req, res) => {
+    res.end(Archivist.getLibraryPath());
+  });
+
+  app.post('/library_path', async (req, res) => {
+    const {library_path} = req.body;
+    await Archivist.changeLibraryPath(library_path);
+    res.end(`Library path set to ${library_path}`);
+  });
 }
 
