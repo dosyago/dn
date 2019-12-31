@@ -12,11 +12,12 @@ let Fs, Mode, Close;
 const Cache = new Map();
 const State = {
   Cache, 
-  SavedCacheFilePath: null
+  SavedCacheFilePath: null,
+  saver: null
 }
 
 const Archivist = { 
-  collect, getMode, changeMode, shutdown
+  collect, getMode, changeMode, shutdown, handlePathChanged
 }
 
 const BODYLESS = new Set([
@@ -42,7 +43,6 @@ const UNCACHED_HEADERS = [
 const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
-
 
 export default Archivist;
 
@@ -71,16 +71,19 @@ async function collect({chrome_port:port, mode} = {}) {
   
   loadFiles();
 
+  if ( State.saver ) {
+    clearInterval(State.saver);
+    State.saver = null;
+  }
+
   if ( Mode == 'save' ) {
     requestStage = "Response";
-    process.on('SIGINT', () => { 
-      saveCache();
-      process.exit(0);
-    });
-    setInterval(saveCache, 10000);
+    // in case we get a updateBasePath call before an interval
+    // and we don't clear it in time, leading us to erroneously save the old
+    // cache to the new path, we always used our saved copy
+    State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 10000);
   } else if ( Mode == 'serve' ) {
     requestStage = "Request";
-    DEBUG && console.log(State.Cache);
   } else {
     throw new TypeError(`Must specify mode`);
   }
@@ -98,7 +101,7 @@ async function collect({chrome_port:port, mode} = {}) {
   async function cacheRequest(pausedRequest) {
     const {requestId, request, responseStatusCode, responseHeaders} = pausedRequest;
     if ( dontCache(request) ) {
-      DEBUG && console.log("Not caching", request);
+      DEBUG && console.log("Not caching", request.url);
       return send("Fetch.continueRequest", {requestId});
     }
     const key = serializeRequest(request);
@@ -106,7 +109,8 @@ async function collect({chrome_port:port, mode} = {}) {
       if ( State.Cache.has(key) ) {
         let {body, responseCode, responseHeaders} = await getResponseData(State.Cache.get(key));
         responseCode = responseCode || 200;
-        DEBUG && console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
+        //DEBUG && console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
+        DEBUG && console.log("Fulfilling", key, responseCode, body.slice(0,140));
         await send("Fetch.fulfillRequest", {
           requestId, body, responseCode, responseHeaders
         });
@@ -197,6 +201,7 @@ function loadFiles() {
   try {
     State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
     State.SavedCacheFilePath = CACHE_FILE();
+    DEBUG && console.log(`Loaded cache key file ${CACHE_FILE()}`);
   } catch(e) {
     DEBUG && console.warn('Error reading key cache file', e, CACHE_FILE());
     State.Cache = new Map();
@@ -224,6 +229,9 @@ function getMode() { return Mode; }
 
 async function changeMode(mode) { 
   DEBUG && console.log({modeChange:mode});
+  if ( State.saver ) {
+    clearInterval(State.saver);
+  }
   saveCache();
   Close && Close();
   Mode = mode;
@@ -232,6 +240,9 @@ async function changeMode(mode) {
 
 function handlePathChanged() { 
   DEBUG && console.log({libraryPathChange:args.library_path()});
+  if ( State.saver ) {
+    clearInterval(State.saver);
+  }
   // saves the old cache path
   saveCache(State.SavedCacheFilePath);
   // reloads from new path and updates SavedCacheFilePath
@@ -240,6 +251,7 @@ function handlePathChanged() {
 
 function saveCache(path) {
   if ( context == 'node' ) {
+    //DEBUG && console.log("Writing to", path || CACHE_FILE());
     Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()]));
   }
 }

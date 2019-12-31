@@ -34,17 +34,18 @@ start();
 async function start() {
   if ( context == 'node' ) {
     console.log(`Running in node...`);
+
+    process.on('beforeExit', cleanup);
+    process.on('SIGBREAK', cleanup);
+    process.on('SIGHUP', cleanup);
+    process.on('SIGINT', cleanup);
+    process.on('SIGTERM', cleanup);
+
     console.log(`Importing dependencies...`);
     const fs = await import('fs');
     const {launch:ChromeLaunch} = await import('chrome-launcher');
 
     await killChrome();
-
-    process.on('beforeExit', cleanup);
-    process.on('exit', cleanup);
-    process.on('SIGINT', cleanup);
-    process.on('SIGTERM', cleanup);
-    process.on('SIGBREAK', cleanup);
 
     console.log(`Removing 22120's existing temporary browser cache if it exists...`);
     if ( fs.existsSync(args.temp_browser_cache) ) {
@@ -83,8 +84,8 @@ async function killChrome(wait = true) {
         res => ChildProcess.exec(KILL_ON[process.platform], (...a) => res(a))
       ));
       if ( err ) {
-        DEBUG && console.warn("Error closing existing chrome", err);
         console.log(`There was no running chrome.`);
+        //DEBUG && console.warn("Error closing existing chrome", err);
       } else {
         console.log(`Running chrome shut down.`);
         if ( wait ) {
@@ -102,15 +103,27 @@ async function killChrome(wait = true) {
 
 async function cleanup(reason) {
   console.log(`Cleanup called on reason: ${reason}`);
+
   if ( quitting ) {
     console.log(`Cleanup already called so not running again.`);
     return;
   }
   quitting = true;
-  LibraryServer.stop();
+
   Archivist.shutdown();
-  killChrome(); 
-  console.log(`22120 exiting in 10 seconds...`);
-  setTimeout(() => process.exit(0), 10000);
-  //process.exit(0);
+
+  await LibraryServer.stop();
+
+  await killChrome(false); 
+
+  console.log(`Take a breath. Everything's done. 22120 is exiting in 3 seconds...`);
+
+  await sleep(3000);
+
+  // note that chrome-launcher calls process.exit
+  // on sigint so we often don't get here. 
+  // I'm going to fork it and remove that line and then open a PR 
+  // in chrome-launcher to add an option to not exit process
+
+  process.exit(0);
 } 
