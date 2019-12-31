@@ -8,6 +8,7 @@ import {connect} from './protocol.js';
 // cache is a simple map
   // that holds the serialized requests
   // that are saved on disk
+let Fs, Mode, LibraryPath, Close;
 const Cache = new Map();
 const State = {
   Cache
@@ -27,7 +28,7 @@ const NEVER_CACHE = new Set([
   `http://localhost:${args.server_port}`,
   `http://localhost:${args.chrome_port}`
 ]);
-const CACHE_FILE = path.resolve(args.library_path, 'cache.json');
+const CACHE_FILE = () => path.resolve(LibraryPath, 'cache.json');
 const NO_FILE = args.no_file;
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
@@ -41,7 +42,6 @@ const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
 
-let Fs, Mode, Close;
 
 export default Archivist;
 
@@ -54,6 +54,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const {send, on, close} = await connect({port});
   Close = close;
   Mode = mode; 
+  LibraryPath = library_path;
 
   // send commands and listen to events
     // so that we can intercept every request
@@ -69,12 +70,12 @@ async function collect({chrome_port:port, mode} = {}) {
   let requestStage;
   
   try {
-    if ( !Fs.existsSync(CACHE_FILE) ) {
+    if ( !Fs.existsSync(CACHE_FILE()) ) {
       console.log(`Cache file does not exist, creating...`); 
-      Fs.writeFileSync(CACHE_FILE, JSON.stringify([]));
+      Fs.writeFileSync(CACHE_FILE(), JSON.stringify([]));
       console.log(`Created!`);
     }
-    State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE)));
+    State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
   } catch(e) {
     DEBUG && console.warn('Error creating key cache file', e);
     State.Cache = new Map();
@@ -188,7 +189,7 @@ async function collect({chrome_port:port, mode} = {}) {
     const origin = (new URL(url).origin);
     let originDir = State.Cache.get(origin);
     if ( ! originDir ) {
-      originDir = path.resolve(library_path, origin.replace(TBL, '_'));
+      originDir = path.resolve(LibraryPath, origin.replace(TBL, '_'));
       try {
         await Fs.promises.mkdir(originDir, {recursive:true});
       } catch(e) {
@@ -230,9 +231,16 @@ async function changeMode(mode) {
   await collect({chrome_port:args.chrome_port, mode});
 }
 
+function getLibraryPath() { return LibraryPath; }
+
+async function changeLibraryPath(library_path) { 
+  DEBUG && console.log({libraryPathChange:library_path});
+  LibraryPath = library_path;
+}
+
 function saveCache() {
   if ( context == 'node' ) {
-    Fs.writeFileSync(CACHE_FILE, JSON.stringify([...State.Cache.entries()]));
+    Fs.writeFileSync(CACHE_FILE(), JSON.stringify([...State.Cache.entries()]));
   }
 }
 
