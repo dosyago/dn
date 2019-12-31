@@ -176,100 +176,105 @@ export async function connect({port:port = 9222} = {}) {
     if ( ! Ws || ! Fetch ) {
       await loadDependencies();
     }
-    const {webSocketDebuggerUrl} = await Fetch(`http://localhost:${port}/json/version`).then(r => r.json());
-    const socket = new Ws(webSocketDebuggerUrl);
-    const Resolvers = {};
-    const Handlers = {};
-    socket.on('message', handle);
-    let id = 0;
-    
-    async function send(method, params = {}, sessionId) {
-      const message = {
-        method, params, sessionId, 
-        id: ++id
-      };
-      const key = `${sessionId||ROOT_SESSION}:${message.id}`;
+    try {
+      const {webSocketDebuggerUrl} = await Fetch(`http://localhost:${port}/json/version`).then(r => r.json());
+      const socket = new Ws(webSocketDebuggerUrl);
+      const Resolvers = {};
+      const Handlers = {};
+      socket.on('message', handle);
+      let id = 0;
+
       let resolve;
       const promise = new Promise(res => resolve = res);
-      Resolvers[key] = resolve; 
-      socket.send(JSON.stringify(message));
-      return promise;
-    }
 
-    async function handle(message) {
-      const stringMessage = message;
-      message = JSON.parse(message);
-      if ( message.error ) {
-        //console.warn(message);
+      socket.on('open', () => resolve());
+
+      await promise;
+
+      return {
+        send,
+        on, ons,
+        close
       }
-      const {sessionId} = message;
-      const {method, params} = message;
-      const {id, result} = message;
+      
+      async function send(method, params = {}, sessionId) {
+        const message = {
+          method, params, sessionId, 
+          id: ++id
+        };
+        const key = `${sessionId||ROOT_SESSION}:${message.id}`;
+        let resolve;
+        const promise = new Promise(res => resolve = res);
+        Resolvers[key] = resolve; 
+        socket.send(JSON.stringify(message));
+        return promise;
+      }
 
-      if ( id ) {
-        const key = `${sessionId||ROOT_SESSION}:${id}`;
-        const resolve = Resolvers[key];
-        if ( ! resolve ) {
-          console.warn(`No resolver for key`, key, stringMessage.slice(0,140));
-        } else {
-          Resolvers[key] = undefined;
-          try {
-            await resolve(result);
-          } catch(e) {
-            console.warn(`Resolver failed`, e, key, stringMessage.slice(0,140), resolve);
-          }
+      async function handle(message) {
+        const stringMessage = message;
+        message = JSON.parse(message);
+        if ( message.error ) {
+          //console.warn(message);
         }
-      } else if ( method ) {
-        const listeners = Handlers[method];
-        if ( Array.isArray(listeners) ) {
-          for( const func of listeners ) {
+        const {sessionId} = message;
+        const {method, params} = message;
+        const {id, result} = message;
+
+        if ( id ) {
+          const key = `${sessionId||ROOT_SESSION}:${id}`;
+          const resolve = Resolvers[key];
+          if ( ! resolve ) {
+            console.warn(`No resolver for key`, key, stringMessage.slice(0,140));
+          } else {
+            Resolvers[key] = undefined;
             try {
-              await func({message, sessionId});
+              await resolve(result);
             } catch(e) {
-              console.warn(`Listener failed`, method, e, func.toString().slice(0,140), stringMessage.slice(0,140));
+              console.warn(`Resolver failed`, e, key, stringMessage.slice(0,140), resolve);
             }
           }
+        } else if ( method ) {
+          const listeners = Handlers[method];
+          if ( Array.isArray(listeners) ) {
+            for( const func of listeners ) {
+              try {
+                await func({message, sessionId});
+              } catch(e) {
+                console.warn(`Listener failed`, method, e, func.toString().slice(0,140), stringMessage.slice(0,140));
+              }
+            }
+          }
+        } else {
+          console.warn(`Unknown message on socket`, message);
         }
-      } else {
-        console.warn(`Unknown message on socket`, message);
       }
-    }
 
-    function on(method, handler) {
-      let listeners = Handlers[method]; 
-      if ( ! listeners ) {
-        Handlers[method] = listeners = [];
+      function on(method, handler) {
+        let listeners = Handlers[method]; 
+        if ( ! listeners ) {
+          Handlers[method] = listeners = [];
+        }
+        listeners.push(wrap(handler));
       }
-      listeners.push(wrap(handler));
-    }
 
-    function ons(method, handler) {
-      let listeners = Handlers[method]; 
-      if ( ! listeners ) {
-        Handlers[method] = listeners = [];
+      function ons(method, handler) {
+        let listeners = Handlers[method]; 
+        if ( ! listeners ) {
+          Handlers[method] = listeners = [];
+        }
+        listeners.push(handler);
       }
-      listeners.push(handler);
-    }
 
-    function close() {
-      socket.close();
-    }
+      function close() {
+        socket.close();
+      }
 
-    function wrap(fn) {
-      return ({message, sessionId}) => fn(message.params)
-    }
-
-    let resolve;
-    const promise = new Promise(res => resolve = res);
-
-    socket.on('open', () => resolve());
-
-    await promise;
-
-    return {
-      send,
-      on, ons,
-      close
+      function wrap(fn) {
+        return ({message, sessionId}) => fn(message.params)
+      }
+    } catch(e) {
+      console.log("Error communicating with browser", e);
+      process.exit(1);
     }
   } else {
     throw new TypeError('Currently only supports running in Node.JS or as a Chrome Extension with Debugger permissions');

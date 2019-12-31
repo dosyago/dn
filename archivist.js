@@ -8,14 +8,15 @@ import {connect} from './protocol.js';
 // cache is a simple map
   // that holds the serialized requests
   // that are saved on disk
-let Fs, Mode, LibraryPath, Close;
+let Fs, Mode, Close;
 const Cache = new Map();
 const State = {
-  Cache
+  Cache, 
+  SavedCacheFilePath: null
 }
 
 const Archivist = { 
-  collect, getMode, changeMode
+  collect, getMode, changeMode, shutdown
 }
 
 const BODYLESS = new Set([
@@ -28,7 +29,7 @@ const NEVER_CACHE = new Set([
   `http://localhost:${args.server_port}`,
   `http://localhost:${args.chrome_port}`
 ]);
-const CACHE_FILE = () => path.resolve(LibraryPath, 'cache.json');
+const CACHE_FILE = args.cache_file; 
 const NO_FILE = args.no_file;
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
@@ -54,7 +55,6 @@ async function collect({chrome_port:port, mode} = {}) {
   const {send, on, close} = await connect({port});
   Close = close;
   Mode = mode; 
-  LibraryPath = library_path;
 
   // send commands and listen to events
     // so that we can intercept every request
@@ -69,35 +69,7 @@ async function collect({chrome_port:port, mode} = {}) {
 
   let requestStage;
   
-  try {
-    if ( !Fs.existsSync(CACHE_FILE()) ) {
-      console.log(`Cache file does not exist, creating...`); 
-      Fs.writeFileSync(CACHE_FILE(), JSON.stringify([]));
-      console.log(`Created!`);
-    }
-    State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
-  } catch(e) {
-    DEBUG && console.warn('Error creating key cache file', e);
-    State.Cache = new Map();
-  }
-
-  try {
-    if ( !Fs.existsSync(NO_FILE) ) {
-      console.log(`No file does not exist, ignoring...`); 
-      State.No = null;
-    } else {
-      State.No = new RegExp(JSON.parse(Fs.readFileSync(NO_FILE))
-        .join('|')
-        .replace(/\./g, '\\.')
-        .replace(/\*/g, '.*')
-        .replace(/\?/g, '.?')
-      );
-    }
-  } catch(e) {
-    DEBUG && console.warn('Error compiling regex from No file', e);
-    State.No = null;
-  }
-
+  loadFiles();
 
   if ( Mode == 'save' ) {
     requestStage = "Response";
@@ -189,7 +161,7 @@ async function collect({chrome_port:port, mode} = {}) {
     const origin = (new URL(url).origin);
     let originDir = State.Cache.get(origin);
     if ( ! originDir ) {
-      originDir = path.resolve(LibraryPath, origin.replace(TBL, '_'));
+      originDir = path.resolve(library_path(), origin.replace(TBL, '_'));
       try {
         await Fs.promises.mkdir(originDir, {recursive:true});
       } catch(e) {
@@ -221,6 +193,33 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 }
 
+function loadFiles() {
+  try {
+    State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
+    State.SavedCacheFilePath = CACHE_FILE();
+  } catch(e) {
+    DEBUG && console.warn('Error reading key cache file', e, CACHE_FILE());
+    State.Cache = new Map();
+  }
+
+  try {
+    if ( !Fs.existsSync(NO_FILE()) ) {
+      console.log(`The 'No file' (${NO_FILE()}) does not exist, ignoring...`); 
+      State.No = null;
+    } else {
+      State.No = new RegExp(JSON.parse(Fs.readFileSync(NO_FILE))
+        .join('|')
+        .replace(/\./g, '\\.')
+        .replace(/\*/g, '.*')
+        .replace(/\?/g, '.?')
+      );
+    }
+  } catch(e) {
+    DEBUG && console.warn('Error compiling regex from No file', e);
+    State.No = null;
+  }
+}
+
 function getMode() { return Mode; }
 
 async function changeMode(mode) { 
@@ -231,17 +230,25 @@ async function changeMode(mode) {
   await collect({chrome_port:args.chrome_port, mode});
 }
 
-function getLibraryPath() { return LibraryPath; }
-
-async function changeLibraryPath(library_path) { 
-  DEBUG && console.log({libraryPathChange:library_path});
-  LibraryPath = library_path;
+function handlePathChanged() { 
+  DEBUG && console.log({libraryPathChange:args.library_path()});
+  // saves the old cache path
+  saveCache(State.SavedCacheFilePath);
+  // reloads from new path and updates SavedCacheFilePath
+  loadFiles();
 }
 
-function saveCache() {
+function saveCache(path) {
   if ( context == 'node' ) {
-    Fs.writeFileSync(CACHE_FILE(), JSON.stringify([...State.Cache.entries()]));
+    Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()]));
   }
+}
+
+function shutdown() {
+  console.log(`Archivist shutting down...`);  
+  saveCache();
+  Close && Close();
+  console.log(`Archivist shut down.`);
 }
 
 function b64(s) {
