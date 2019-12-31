@@ -3,7 +3,7 @@ import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {say} from './common.js';
+import {say, sleep} from './common.js';
 import Archivist from './archivist.js';
 
 const SITE_PATH = path.resolve(__dirname, 'public');
@@ -60,14 +60,35 @@ function addHandlers() {
 
   app.post('/base_path', async (req, res) => {
     const {base_path} = req.body;
-    await args.updateBasePath(base_path);
-    res.end(`Base path set to ${base_path} and saved to preferences. Server restarting...`);
-    Server.close(() => start({server_port:port})); 
+    const change = args.updateBasePath(base_path);
+
+    if ( change ) {
+      Archivist.handlePathChanged();
+      Server.close(async () => {
+        console.log(`Server closed.`);
+        console.log(`Waiting 1 second...`);
+        await sleep(1000);
+        await start({server_port:port});
+        console.log(`Server restarted.`);
+      });
+      res.end(`Base path set to ${base_path} and saved to preferences. Server restarting...`);
+    } else {
+      res.end(`Base path not changed.`);
+    }
   });
 }
 
-function stop() {
-  console.log(`Shutting down library server...`);
-  Server.close(() => console.log(`Library server shutdown.`));
+async function stop() {
+  let resolve;
+  const pr = new Promise(res => resolve = res);
+
+  console.log(`Closing library server...`);
+
+  Server.close(() => {
+    console.log(`Library server closed.`);
+    resolve();
+  });
+
+  return pr;
 }
 

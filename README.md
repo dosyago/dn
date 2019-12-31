@@ -93,4 +93,24 @@ Will not cache any resource with a host matching those. Wildcards:
 - `*` (0 or more anything) and 
 - `?` (0 or 1 anything) 
 
+### Is there a DEBUG mode for troubleshooting?
+
+Yes, just make sure you set an environment variable called `DEBUG_22120` to anything non empty.
+
+So for example in posix systems:
+
+```bash
+export DEBUG_22120=True
+```
+
+### Can I change the archive path?
+
+Yes, there's a control for changing the archive path in the control page: http://localhost:22120
+
+### Can I change this other thing?
+
+There's a few command line arguments. You'll see the format printed as the first printed line when you start the program.
+
+For other things you can examine the source code. 
+
 

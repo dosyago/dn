@@ -42,8 +42,10 @@ export default args;
 function updateBasePath(new_base_path) {
   new_base_path = path.resolve(new_base_path);
   if ( BasePath == new_base_path ) {
-    return;
+    return false;
   }
+
+  console.log(`Updating base path from ${BasePath} to ${new_base_path}...`);
   BasePath = new_base_path;
 
   if ( !fs.existsSync(library_path()) ) {
@@ -58,10 +60,12 @@ function updateBasePath(new_base_path) {
     console.log(`Created!`);
   }
 
-  console.log(`Base path updated: ${BasePath}. Saving to preferences...`);
+  console.log(`Base path updated to: ${BasePath}. Saving to preferences...`);
   Pref.BasePath = BasePath;
   savePref();
   console.log(`Saved!`);
+
+  return true;
 }
 
 function getBasePath() {
