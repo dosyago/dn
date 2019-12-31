@@ -10,7 +10,7 @@
     "start": "node index.js",
     "build": "npx webpack && nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"",
     "clean": "rm 22120.js *22120.js",
-    "test": "node-dev index.js 22120",
+    "test": "node-dev index.js",
     "save": "node-dev index.js 22120 save",
     "serve": "node-dev index.js 22120 serve"
   },
