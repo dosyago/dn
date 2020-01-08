@@ -18,7 +18,17 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 
 Also, coming soon is a Chrome Extension.
 
-## Using
+## How to Use 22120
+
+### Start Chrome with Remote Debugging Enabled
+
+Windows (Start > Run > CMD): 
+
+`chrome.exe --remote-debugging-port=9222`
+
+OS X (from the "Terminal"):
+
+`/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
 
 ### Pick save mode or serve mode
 
