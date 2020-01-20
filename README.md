@@ -1,4 +1,4 @@
-# [22120](https://github.com/dosyago/22120) ![npm downloads](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads) ![binary downloads](https://img.shields.io/github/downloads/dosyago/22120/total?label=binary%20downloads) [![latest package](https://img.shields.io/github/v/release/dosyago/22120?label=latest%20release)](https://github.com/dosyago/22120/releases)
+# :classical_building: [22120](https://github.com/dosyago/22120) ![npm downloads](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads) ![binary downloads](https://img.shields.io/github/downloads/dosyago/22120/total?label=binary%20downloads) [![latest package](https://img.shields.io/github/v/release/dosyago/22120?label=latest%20release)](https://github.com/dosyago/22120/releases)
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
