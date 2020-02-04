@@ -1,6 +1,6 @@
 {
   "name": "archivist1",
-  "version": "1.1.16",
+  "version": "1.1.17",
   "description": "Library server and an archivist browser controller.",
   "main": "index.js",
   "bin": {
