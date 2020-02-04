@@ -13,7 +13,9 @@ const Cache = new Map();
 const State = {
   Cache, 
   SavedCacheFilePath: null,
-  saver: null
+  SavedIndexFilePath: null,
+  saver: null,
+  indexSaver: null
 }
 
 const Archivist = { 
@@ -30,7 +32,9 @@ const NEVER_CACHE = new Set([
   `http://localhost:${args.server_port}`,
   `http://localhost:${args.chrome_port}`
 ]);
+const SORT_URLS = ([urlA],[urlB]) => urlA < urlB ? -1 : 1;
 const CACHE_FILE = args.cache_file; 
+const INDEX_FILE = args.index_file;
 const NO_FILE = args.no_file;
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
@@ -71,10 +75,7 @@ async function collect({chrome_port:port, mode} = {}) {
   
   loadFiles();
 
-  if ( State.saver ) {
-    clearInterval(State.saver);
-    State.saver = null;
-  }
+  clearSavers();
 
   if ( Mode == 'save' ) {
     requestStage = "Response";
@@ -82,6 +83,7 @@ async function collect({chrome_port:port, mode} = {}) {
     // and we don't clear it in time, leading us to erroneously save the old
     // cache to the new path, we always used our saved copy
     State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 10000);
+    State.indexSaver = setInterval(() => saveIndex(State.SavedIndexFilePath), 10001);
   } else if ( Mode == 'serve' ) {
     requestStage = "Request";
   } else {
@@ -98,8 +100,22 @@ async function collect({chrome_port:port, mode} = {}) {
   });
   on("Fetch.requestPaused", cacheRequest);
 
+  send("Target.setDiscoverTargets", {discover:true});
+  on("Target.targetCreated", indexURL);
+  on("Target.targetInfoChanged", indexURL);
+
+  function indexURL({targetInfo:info = {}} = {}) {
+    if ( info.type != 'page' ) return;
+    if ( ! info.url  || info.url == 'about:blank' ) return;
+    if ( info.url.startsWith('chrome') ) return;
+    if ( dontCache(info) ) return;
+
+    State.Index.set(info.url, info.title);   
+    DEBUG && console.log(`Indexing ${info.url} to ${info.title}`);
+  }
+
   async function cacheRequest(pausedRequest) {
-    const {requestId, request, responseStatusCode, responseHeaders} = pausedRequest;
+    const {requestId, request, resourceType, responseStatusCode, responseHeaders} = pausedRequest;
     if ( dontCache(request) ) {
       DEBUG && console.log("Not caching", request.url);
       return send("Fetch.continueRequest", {requestId});
@@ -197,14 +213,30 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 }
 
+function clearSavers() {
+  if ( State.saver ) {
+    clearInterval(State.saver);
+    State.saver = null;
+  }
+
+  if ( State.indexSaver ) {
+    clearInterval(State.indexSaver);
+    State.indexSaver = null;
+  }
+}
+
 function loadFiles() {
   try {
     State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
+    State.Index = new Map(JSON.parse(Fs.readFileSync(INDEX_FILE())));
     State.SavedCacheFilePath = CACHE_FILE();
+    State.SavedIndexFilePath = INDEX_FILE();
     DEBUG && console.log(`Loaded cache key file ${CACHE_FILE()}`);
+    DEBUG && console.log(`Loaded index file ${INDEX_FILE()}`);
   } catch(e) {
-    DEBUG && console.warn('Error reading key cache file', e, CACHE_FILE());
+    DEBUG && console.warn('Error reading file', e);
     State.Cache = new Map();
+    State.Index = new Map();
   }
 
   try {
@@ -229,10 +261,9 @@ function getMode() { return Mode; }
 
 async function changeMode(mode) { 
   DEBUG && console.log({modeChange:mode});
-  if ( State.saver ) {
-    clearInterval(State.saver);
-  }
+  clearSavers();
   saveCache();
+  saveIndex();
   Close && Close();
   Mode = mode;
   await collect({chrome_port:args.chrome_port, mode});
@@ -240,12 +271,11 @@ async function changeMode(mode) {
 
 function handlePathChanged() { 
   DEBUG && console.log({libraryPathChange:args.library_path()});
-  if ( State.saver ) {
-    clearInterval(State.saver);
-  }
+  clearSavers();
   // saves the old cache path
   saveCache(State.SavedCacheFilePath);
-  // reloads from new path and updates SavedCacheFilePath
+  saveIndex(State.SavedIndexFilePath);
+  // reloads from new path and updates Saved FilePaths
   loadFiles();
 }
 
@@ -253,6 +283,14 @@ function saveCache(path) {
   if ( context == 'node' ) {
     //DEBUG && console.log("Writing to", path || CACHE_FILE());
     Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()]));
+  }
+}
+
+function saveIndex(path) {
+  if ( context == 'node' ) {
+    DEBUG && console.log("Writing to", path || INDEX_FILE());
+    DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
+    Fs.writeFileSync(path || INDEX_FILE(), JSON.stringify([...State.Index.entries()].sort(SORT_URLS)));
   }
 }
 

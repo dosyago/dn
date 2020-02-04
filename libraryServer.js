@@ -9,6 +9,7 @@ import Archivist from './archivist.js';
 const SITE_PATH = path.resolve(__dirname, 'public');
 
 const app = express();
+const INDEX_FILE = args.index_file;
 
 let Server, upAt, port;
 
@@ -46,6 +47,11 @@ function addHandlers() {
 
   app.get('/mode', async (req, res) => {
     res.end(Archivist.getMode());
+  });
+
+  app.get('/archive_index.html', async (req, res) => {
+    const index = JSON.parse(fs.readFileSync(INDEX_FILE()));
+    res.end(IndexView(index));
   });
 
   app.post('/mode', async (req, res) => {
@@ -90,5 +96,59 @@ async function stop() {
   });
 
   return pr;
+}
+
+function IndexView(urls) {
+  return `
+    <!DOCTYPE html>
+    <meta charset=utf-8>
+    <title>Your HTML Library</title>
+    <style>
+      :root {
+        font-family: sans-serif;
+        background: lavenderblush;
+      }
+      body {
+        display: table;
+        margin: 0 auto;
+        background: silver;
+        padding: 0.5em;
+        box-shadow: 0 1px 1px purple;
+      }
+      form {
+      }
+      fieldset {
+        border: thin solid purple;
+      }
+      button, input, output {
+      }
+      input.long {
+        width: 100%;
+        min-width: 250px;
+      }
+      output {
+        font-size: smaller;
+        color: purple;
+      }
+      h1 {
+        margin: 0;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+    <h1>22120</h1>
+    <h2>Internet Offline Library</h2>
+    <h2>Archive Index</h2>
+    <ul>
+    ${
+      urls.map(([url,title]) => `
+        <li>
+          <a target=_blank href=${url}>${title||url}</a>
+        </li>
+      `).join('\n')
+    }
+    </ul>
+  `
 }
 
