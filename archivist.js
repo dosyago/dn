@@ -288,8 +288,8 @@ function saveCache(path) {
 
 function saveIndex(path) {
   if ( context == 'node' ) {
-    DEBUG && console.log("Writing to", path || INDEX_FILE());
-    DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
+    //DEBUG && console.log("Writing to", path || INDEX_FILE());
+    //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
     Fs.writeFileSync(path || INDEX_FILE(), JSON.stringify([...State.Index.entries()].sort(SORT_URLS)));
   }
 }
