@@ -17,6 +17,7 @@ const no_file = () => path.resolve(archive_root(), 'no.json');
 const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cache');
 const library_path = () => path.resolve(archive_root(), 'public', 'library');
 const cache_file = () => path.resolve(library_path(), 'cache.json');
+const index_file = () => path.resolve(library_path(), 'index.json');
 
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
 
@@ -34,7 +35,8 @@ const args = {
   library_path,
   no_file,
   temp_browser_cache,
-  cache_file
+  cache_file,
+  index_file
 };
 
 export default args;
@@ -57,6 +59,12 @@ function updateBasePath(new_base_path) {
   if ( !fs.existsSync(cache_file()) ) {
     console.log(`Cache file does not exist, creating...`); 
     fs.writeFileSync(cache_file(), JSON.stringify([]));
+    console.log(`Created!`);
+  }
+
+  if ( !fs.existsSync(index_file()) ) {
+    console.log(`Index file does not exist, creating...`); 
+    fs.writeFileSync(index_file(), JSON.stringify([]));
     console.log(`Created!`);
   }
 

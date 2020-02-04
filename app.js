@@ -7,10 +7,10 @@ import args from './args.js';
 const {server_port, mode, chrome_port} = args;
 const CHROME_OPTS = !DEBUG ? [
   '--restore-last-session',
-  `--disk-cache-dir=${args.temp_browser_cache}`,
+  `--disk-cache-dir=${args.temp_browser_cache()}`,
 ] : [
   '--restore-last-session',
-  `--disk-cache-dir=${args.temp_browser_cache}`,
+  `--disk-cache-dir=${args.temp_browser_cache()}`,
   '--no-sandbox'
 ];
 const LAUNCH_OPTS = {
