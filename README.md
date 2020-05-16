@@ -2,6 +2,8 @@
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
+Already a user? [Would it be impossible to share what you think on this feedback form?](https://forms.gle/san6sZT6B9PN52K38)
+
 **This project literally makes your web browsing available COMPLETELY OFFLINE.** Your browser does not even know the difference. It's literally that amazing. Yes. 
 
 Save your browsing, then switch off the net and go to `http://localhost:22120` and switch mode to **serve** then browse what you browsed before. It all still works.
