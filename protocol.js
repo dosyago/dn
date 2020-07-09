@@ -202,6 +202,9 @@ export async function connect({port:port = 9222} = {}) {
           method, params, sessionId, 
           id: ++id
         };
+        if ( ! sessionId ) {
+          delete message[sessionId];
+        }
         const key = `${sessionId||ROOT_SESSION}:${message.id}`;
         let resolve;
         const promise = new Promise(res => resolve = res);

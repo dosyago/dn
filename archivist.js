@@ -62,6 +62,7 @@ async function collect({chrome_port:port, mode} = {}) {
   }
   const {library_path} = args;
   const {send, on, close} = await connect({port});
+  const Sessions = new Map();
   Close = close;
   Mode = mode; 
 
@@ -106,20 +107,37 @@ async function collect({chrome_port:port, mode} = {}) {
   on("Fetch.requestPaused", cacheRequest);
 
   send("Target.setDiscoverTargets", {discover:true});
-  send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
-  on("Target.targetCreated", indexURL);
-  on("Target.targetInfoChanged", indexURL);
+  send("Target.setAutoAttach", {autoAttach:false, waitForDebuggerOnStart:true, flatten: true});
+  on("Target.targetCreated", attachToTarget);
+  on("Target.targetInfoChanged", acquireTarget);
   on("Target.attachedToTarget", acquireTarget);
 
-  async function acquireTarget({sessionId, targetInfo, waitingForDebugger}) {
-    await send("Page.addScriptToEvaluateOnNewDocument", {
-      sessionId,
-      source: InjectionSource,
-      worldName: "Context-22120-Indexing"
-    });
+  async function attachToTarget({targetInfo}) {
+    if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
+      const {sessionId} = await send("Target.attachToTarget", {
+        targetId: targetInfo.targetId,
+        flatten: true
+      });
+      console.log({attached:{sessionId}});
+      indexURL({targetInfo});
+    }
+  }
 
-    if ( waitingForDebugger ) {
-      await send("Runtime.runIfWaitingForDebugger", {sessionId});
+  async function acquireTarget({sessionId, targetInfo, waitingForDebugger}) {
+    console.log({acquire:{sessionId, targetInfo, waitingForDebugger}});
+    if ( sessionId ) {
+      Sessions.set(targetInfo.targetId, sessionId);
+    } else {
+      sessionId = Sessions.get(targetInfo.targetId);
+    }
+    if ( targetInfo.type == 'page' && targetInfo.url.startsWith('http') ) {
+      if ( waitingForDebugger ) {
+        console.log({acquire_waiting: await send("Runtime.runIfWaitingForDebugger", {}, sessionId)});
+      }
+      console.log({acquire_script:await send("Runtime.evaluate", {
+        expression: InjectionSource,
+      }, sessionId)});
+      indexURL({targetInfo});
     }
   }
 
