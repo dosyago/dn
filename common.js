@@ -1,3 +1,6 @@
+import path from 'path';
+import {fileURLToPath} from 'url';
+
 // determine where this code is running 
   let Context = 'unknown';
 
@@ -18,6 +21,8 @@
 export const context = Context;
 
 export const DEBUG = process.env.DEBUG_22120 || false;
+
+export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 

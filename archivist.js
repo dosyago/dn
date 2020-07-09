@@ -1,9 +1,12 @@
 import hasha from 'hasha';
 import {URL} from 'url';
 import path from 'path';
+import fs from 'fs';
 import args from './args.js';
-import {context, sleep, DEBUG} from './common.js';
+import {APP_ROOT, context, sleep, DEBUG} from './common.js';
 import {connect} from './protocol.js';
+
+//import xapian from 'xapian';
 
 // cache is a simple map
   // that holds the serialized requests
@@ -47,6 +50,8 @@ const UNCACHED_HEADERS = [
 const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
+
+const InjectionSource = fs.readFileSync(path.resolve(APP_ROOT, 'injections', 'source.js'), "utf-8").toString("utf-8");
 
 export default Archivist;
 
@@ -101,14 +106,30 @@ async function collect({chrome_port:port, mode} = {}) {
   on("Fetch.requestPaused", cacheRequest);
 
   send("Target.setDiscoverTargets", {discover:true});
+  send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
   on("Target.targetCreated", indexURL);
   on("Target.targetInfoChanged", indexURL);
+  on("Target.attachedToTarget", acquireTarget);
+
+  async function acquireTarget({sessionId, targetInfo, waitingForDebugger}) {
+    await send("Page.addScriptToEvaluateOnNewDocument", {
+      sessionId,
+      source: InjectionSource,
+      worldName: "Context-22120-Indexing"
+    });
+
+    if ( waitingForDebugger ) {
+      await send("Runtime.runIfWaitingForDebugger", {sessionId});
+    }
+  }
 
   function indexURL({targetInfo:info = {}} = {}) {
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
+
+
 
     State.Index.set(info.url, info.title);   
     DEBUG && console.log(`Indexing ${info.url} to ${info.title}`);

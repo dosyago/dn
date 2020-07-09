@@ -35,7 +35,8 @@
     "express": "^4.17.1",
     "hasha": "^5.1.0",
     "node-fetch": "^2.6.0",
-    "ws": "^7.2.1"
+    "ws": "^7.2.1",
+    "xapian": "0.0.1"
   },
   "devDependencies": {
     "node-dev": "^4.0.0",
