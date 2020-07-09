@@ -107,9 +107,9 @@ async function collect({chrome_port:port, mode} = {}) {
   on("Fetch.requestPaused", cacheRequest);
 
   send("Target.setDiscoverTargets", {discover:true});
-  send("Target.setAutoAttach", {autoAttach:false, waitForDebuggerOnStart:true, flatten: true});
+  send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
   on("Target.targetCreated", attachToTarget);
-  on("Target.targetInfoChanged", acquireTarget);
+  on("Target.targetInfoChanged", indexURL);
   on("Target.attachedToTarget", acquireTarget);
 
   async function attachToTarget({targetInfo}) {
@@ -130,12 +130,14 @@ async function collect({chrome_port:port, mode} = {}) {
     } else {
       sessionId = Sessions.get(targetInfo.targetId);
     }
-    if ( targetInfo.type == 'page' && targetInfo.url.startsWith('http') ) {
+    if ( targetInfo.type == 'page' ) {
       if ( waitingForDebugger ) {
         console.log({acquire_waiting: await send("Runtime.runIfWaitingForDebugger", {}, sessionId)});
       }
-      console.log({acquire_script:await send("Runtime.evaluate", {
-        expression: InjectionSource,
+      await send("Page.enable", {}, sessionId);
+      console.log({acquire_script:await send("Page.addScriptToEvaluateOnNewDocument", {
+        source: InjectionSource,
+        worldName: "Context-22120-Indexing"
       }, sessionId)});
       indexURL({targetInfo});
     }
