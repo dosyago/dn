@@ -63,6 +63,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const {library_path} = args;
   const {send, on, close} = await connect({port});
   const Sessions = new Map();
+  const Installations = new Set();
   Close = close;
   Mode = mode; 
 
@@ -96,6 +97,9 @@ async function collect({chrome_port:port, mode} = {}) {
     throw new TypeError(`Must specify mode`);
   }
 
+  send("Target.setDiscoverTargets", {discover:true});
+  send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
+
   send("Fetch.enable", {
     patterns: [
       {
@@ -104,43 +108,62 @@ async function collect({chrome_port:port, mode} = {}) {
       }
     ]
   });
+
   on("Fetch.requestPaused", cacheRequest);
 
-  send("Target.setDiscoverTargets", {discover:true});
-  send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
-  on("Target.targetCreated", attachToTarget);
-  on("Target.targetInfoChanged", indexURL);
+  on("Target.targetCreated", acquireTarget);
+  on("Target.targetInfoChanged", acquireTarget);
   on("Target.attachedToTarget", acquireTarget);
 
   async function attachToTarget({targetInfo}) {
+    if ( dontCache(targetInfo) ) return;
+
     if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
       const {sessionId} = await send("Target.attachToTarget", {
         targetId: targetInfo.targetId,
         flatten: true
       });
-      console.log({attached:{sessionId}});
+      Sessions.set(targetInfo.targetId, sessionId);
       indexURL({targetInfo});
     }
   }
 
   async function acquireTarget({sessionId, targetInfo, waitingForDebugger}) {
-    console.log({acquire:{sessionId, targetInfo, waitingForDebugger}});
-    if ( sessionId ) {
-      Sessions.set(targetInfo.targetId, sessionId);
-    } else {
-      sessionId = Sessions.get(targetInfo.targetId);
+    if ( ! targetInfo.attached ) {
+      await attachToTarget({targetInfo});
     }
-    if ( targetInfo.type == 'page' ) {
-      if ( waitingForDebugger ) {
-        console.log({acquire_waiting: await send("Runtime.runIfWaitingForDebugger", {}, sessionId)});
+
+    if ( ! Installations.has(targetInfo.targetId) ) {
+
+      if ( sessionId ) {
+        Sessions.set(targetInfo.targetId, sessionId);
+      } else {
+        sessionId = Sessions.get(targetInfo.targetId);
       }
-      await send("Page.enable", {}, sessionId);
-      console.log({acquire_script:await send("Page.addScriptToEvaluateOnNewDocument", {
-        source: InjectionSource,
-        worldName: "Context-22120-Indexing"
-      }, sessionId)});
-      indexURL({targetInfo});
+
+      if ( sessionId ) {
+
+        if ( waitingForDebugger ) {
+          send("Runtime.enable", {}, sessionId);
+          send("Runtime.runIfWaitingForDebugger", {}, sessionId);
+        }
+
+        if ( targetInfo.type == 'page' ) {
+          send("Page.enable", {}, sessionId);
+          send("Page.addScriptToEvaluateOnNewDocument", {
+            source: InjectionSource,
+            worldName: "Context-22120-Indexing"
+          }, sessionId);
+        }
+
+        Installations.add(targetInfo.targetId);
+
+        indexURL({targetInfo});
+
+      }
+
     }
+
   }
 
   function indexURL({targetInfo:info = {}} = {}) {
@@ -148,8 +171,6 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
-
-
 
     State.Index.set(info.url, info.title);   
     DEBUG && console.log(`Indexing ${info.url} to ${info.title}`);
@@ -205,6 +226,7 @@ async function collect({chrome_port:port, mode} = {}) {
   }
   
   function dontCache(request) {
+    if ( ! request.url ) return false;
     const url = new URL(request.url);
     return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
   }
