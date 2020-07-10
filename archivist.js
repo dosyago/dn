@@ -132,7 +132,7 @@ async function collect({chrome_port:port, mode} = {}) {
         jump = async url => {
           send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
           send("Runtime.enable", {}, args[0].sessionId);
-          console.log(`Running ${url}`);
+          DEBUG && console.log(`Running ${url}`);
         };
       }
 
@@ -166,13 +166,12 @@ async function collect({chrome_port:port, mode} = {}) {
 
         indexURL({targetInfo});
       }
-      console.log("Just installed", targetInfo.url);
+      DEBUG && console.log("Just installed", targetInfo.url);
     } else {
-      console.log("Already installed", targetInfo.url);
+      DEBUG && console.log("Already installed", targetInfo.url);
     }
 
     if ( jump ) {
-      await sleep(500);
       jump(targetInfo.url);
     }
   }
@@ -211,7 +210,6 @@ async function collect({chrome_port:port, mode} = {}) {
         ''
       );
       if ( DEBUG ) {
-        /*
         console.log({
           page : {
             url: info.url,
@@ -219,7 +217,6 @@ async function collect({chrome_port:port, mode} = {}) {
             text: pageText
           }
         });
-        */
       }
     }
 
