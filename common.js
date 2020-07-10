@@ -24,7 +24,7 @@ export const DEBUG = false; // process.env.DEBUG_22120 || false;
 
 export const NO_SANDBOX = true;
 
-export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
+export const APP_ROOT = __dirname;
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
