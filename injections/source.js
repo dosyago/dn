@@ -6,9 +6,9 @@
 
     async function install() {
       console.log("Opening an alert....");
-      await sleep(3000);
-      //alert("Hello there");
-      console.log("Hello there");
+      await sleep(500);
+      alert("Hello there");
+      //console.log("Hello there");
     }
   }
 }

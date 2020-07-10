@@ -143,7 +143,7 @@ export async function connect({port:port = 9222} = {}) {
       if ( Array.isArray(listeners) ) {
         for( const func of listeners ) {
           try {
-            await func(method, params, source);
+            func(method, params, source);
           } catch(e) {
             console.warn(`Listener failed`, method, JSON.stringify(params), e, func.toString().slice(0,140));
           }
@@ -241,7 +241,7 @@ export async function connect({port:port = 9222} = {}) {
           if ( Array.isArray(listeners) ) {
             for( const func of listeners ) {
               try {
-                await func({message, sessionId});
+                func({message, sessionId});
               } catch(e) {
                 console.warn(`Listener failed`, method, e, func.toString().slice(0,140), stringMessage.slice(0,140));
               }
