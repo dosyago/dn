@@ -1,11 +1,11 @@
-import {DEBUG, context, sleep} from './common.js';
+import {DEBUG, context, sleep, NO_SANDBOX} from './common.js';
 
 import Archivist from './archivist.js';
 import LibraryServer from './libraryServer.js';
 import args from './args.js';
 
 const {server_port, mode, chrome_port} = args;
-const CHROME_OPTS = !DEBUG ? [
+const CHROME_OPTS = !NO_SANDBOX ? [
   '--restore-last-session',
   `--disk-cache-dir=${args.temp_browser_cache()}`,
 ] : [

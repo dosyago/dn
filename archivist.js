@@ -111,28 +111,18 @@ async function collect({chrome_port:port, mode} = {}) {
 
   on("Fetch.requestPaused", cacheRequest);
 
-  on("Target.targetCreated", acquireTarget);
-  on("Target.targetInfoChanged", acquireTarget);
-  on("Target.attachedToTarget", acquireTarget);
+  on("Target.targetInfoChanged", guard(indexURL, 'infoChanged'));
+  on("Target.attachedToTarget", guard(installForSession, 'attached'));
 
-  async function attachToTarget({targetInfo}) {
-    if ( dontCache(targetInfo) ) return;
-
-    if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
-      const {sessionId} = await send("Target.attachToTarget", {
-        targetId: targetInfo.targetId,
-        flatten: true
-      });
-      Sessions.set(targetInfo.targetId, sessionId);
-      indexURL({targetInfo});
-    }
+  function guard(func, text = '') {
+    return (...args) => {
+      if ( args[0].targetInfo.type !== 'page' ) return;
+      console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
+      return func(...args);
+    };
   }
 
-  async function acquireTarget({sessionId, targetInfo, waitingForDebugger}) {
-    if ( ! targetInfo.attached ) {
-      await attachToTarget({targetInfo});
-    }
-
+  async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
     if ( ! Installations.has(targetInfo.targetId) ) {
 
       if ( sessionId ) {
@@ -163,7 +153,6 @@ async function collect({chrome_port:port, mode} = {}) {
       }
 
     }
-
   }
 
   function indexURL({targetInfo:info = {}} = {}) {
@@ -175,6 +164,21 @@ async function collect({chrome_port:port, mode} = {}) {
     State.Index.set(info.url, info.title);   
     DEBUG && console.log(`Indexing ${info.url} to ${info.title}`);
   }
+
+  async function attachToTarget({targetInfo}) {
+    return;
+    if ( dontCache(targetInfo) ) return;
+
+    if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
+      const {sessionId} = await send("Target.attachToTarget", {
+        targetId: targetInfo.targetId,
+        flatten: true
+      });
+      Sessions.set(targetInfo.targetId, sessionId);
+      indexURL({targetInfo});
+    }
+  }
+
 
   async function cacheRequest(pausedRequest) {
     const {requestId, request, resourceType, responseStatusCode, responseHeaders} = pausedRequest;
@@ -304,7 +308,7 @@ function loadFiles() {
 
   try {
     if ( !Fs.existsSync(NO_FILE()) ) {
-      console.log(`The 'No file' (${NO_FILE()}) does not exist, ignoring...`); 
+      DEBUG && console.log(`The 'No file' (${NO_FILE()}) does not exist, ignoring...`); 
       State.No = null;
     } else {
       State.No = new RegExp(JSON.parse(Fs.readFileSync(NO_FILE))
@@ -358,10 +362,10 @@ function saveIndex(path) {
 }
 
 function shutdown() {
-  console.log(`Archivist shutting down...`);  
+  DEBUG && console.log(`Archivist shutting down...`);  
   saveCache();
   Close && Close();
-  console.log(`Archivist shut down.`);
+  DEBUG && console.log(`Archivist shut down.`);
 }
 
 function b64(s) {

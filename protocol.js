@@ -208,7 +208,7 @@ export async function connect({port:port = 9222} = {}) {
         const key = `${sessionId||ROOT_SESSION}:${message.id}`;
         let resolve;
         const promise = new Promise(res => resolve = res);
-        Resolvers[key] = resolve; 
+        Resolvers[key] = resolve;
         socket.send(JSON.stringify(message));
         return promise;
       }
