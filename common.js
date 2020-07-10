@@ -20,9 +20,9 @@ import {fileURLToPath} from 'url';
 
 export const context = Context;
 
-export const DEBUG = false; // process.env.DEBUG_22120 || false;
+export const DEBUG = process.env.DEBUG_22120 || false;
 
-export const NO_SANDBOX = true;
+export const NO_SANDBOX = process.env.DEBUG_22120 || false;
 
 export const APP_ROOT = __dirname;
 

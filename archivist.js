@@ -106,6 +106,12 @@ async function collect({chrome_port:port, mode} = {}) {
     throw new TypeError(`Must specify mode`);
   }
 
+  on("Target.targetInfoChanged", indexURL);
+
+  on("Target.attachedToTarget", guard(installForSession, 'attached'));
+
+  on("Fetch.requestPaused", cacheRequest);
+
   send("Target.setDiscoverTargets", {discover:true});
   send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
 
@@ -118,29 +124,28 @@ async function collect({chrome_port:port, mode} = {}) {
     ]
   });
 
-  on("Fetch.requestPaused", cacheRequest);
-
-  on("Target.targetInfoChanged", indexURL);
-  on("Target.attachedToTarget", guard(installForSession, 'attached'));
-
   function guard(func, text = '') {
     return (...args) => {
+      let jump;
+
       if ( args[0].waitingForDebugger ) {
-        send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
-        send("Runtime.enable", {}, args[0].sessionId);
+        jump = async url => {
+          send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
+          send("Runtime.enable", {}, args[0].sessionId);
+          DEBUG && console.log(`Running ${url}`);
+        };
       }
 
       if ( args[0].targetInfo.type !== 'page' ) return;
 
       DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
 
-      return func(...args);
+      return func(...args, jump);
     };
   }
 
-  async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
+  async function installForSession({sessionId, targetInfo, waitingForDebugger}, jump) {
     if ( ! Installations.has(targetInfo.targetId) ) {
-
       if ( sessionId ) {
         Sessions.set(targetInfo.targetId, sessionId);
       } else {
@@ -148,37 +153,46 @@ async function collect({chrome_port:port, mode} = {}) {
       }
 
       if ( sessionId ) {
-
-        send("DOM.enable", {}, sessionId);
         send("Page.enable", {}, sessionId);
+
         send("Page.addScriptToEvaluateOnNewDocument", {
           source: InjectionSource,
           worldName: "Context-22120-Indexing"
         }, sessionId);
 
+        send("Page.reload", {}, sessionId);
+
         Installations.add(targetInfo.targetId);
 
         indexURL({targetInfo});
-
       }
+      DEBUG && console.log("Just installed", targetInfo.url);
+    } else {
+      DEBUG && console.log("Already installed", targetInfo.url);
+    }
 
+    if ( jump ) {
+      jump(targetInfo.url);
     }
   }
 
   async function indexURL({targetInfo:info = {}} = {}) {
-    DEBUG && console.log({indexURL:JSON.stringify(info,null,2)});
+    //DEBUG && console.log({indexURL:JSON.stringify(info,null,2)});
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
+    if ( ! Sessions.has(info.targetId) ) return;
 
     State.Index.set(info.url, info.title);   
 
     if ( Installations.has(info.targetId) ) {
+      const sessionId = Sessions.get(info.targetId);
+
+      send("DOM.enable", {}, sessionId);
 
       await sleep(1000);
 
-      const sessionId = Sessions.get(info.targetId);
       const {nodes:pageNodes} = await send("DOM.getFlattenedDocument", {
         depth: -1,
         pierce: true
@@ -195,17 +209,18 @@ async function collect({chrome_port:port, mode} = {}) {
         (Text, {nodeValue}) => Text + nodeValue + ' ',
         ''
       );
-      DEBUG && console.log({
-        page : {
-          url: info.url,
-          title: info.title,
-          text: pageText
-        }
-      });
-
+      if ( DEBUG ) {
+        console.log({
+          page : {
+            url: info.url,
+            title: info.title,
+            text: pageText
+          }
+        });
+      }
     }
 
-    DEBUG && console.log(`Indexing ${info.url} to ${info.title}`);
+    DEBUG && console.log(`Indexed ${info.url} to ${info.title}`);
   }
 
   async function attachToTarget({targetInfo}) {
@@ -221,7 +236,6 @@ async function collect({chrome_port:port, mode} = {}) {
       indexURL({targetInfo});
     }
   }
-
 
   async function cacheRequest(pausedRequest) {
     const {requestId, request, resourceType, responseStatusCode, responseHeaders} = pausedRequest;
