@@ -21,6 +21,15 @@ const State = {
   indexSaver: null
 }
 
+const IGNORE_NODES = new Set([
+  'script',
+  'style',
+  'noscript',
+  'datalist'
+]);
+const TextNode = 3;
+const AttributeNode = 2;
+
 const Archivist = { 
   collect, getMode, changeMode, shutdown, handlePathChanged
 }
@@ -111,13 +120,20 @@ async function collect({chrome_port:port, mode} = {}) {
 
   on("Fetch.requestPaused", cacheRequest);
 
-  on("Target.targetInfoChanged", guard(indexURL, 'infoChanged'));
+  on("Target.targetInfoChanged", indexURL);
   on("Target.attachedToTarget", guard(installForSession, 'attached'));
 
   function guard(func, text = '') {
     return (...args) => {
+      if ( args[0].waitingForDebugger ) {
+        send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
+        send("Runtime.enable", {}, args[0].sessionId);
+      }
+
       if ( args[0].targetInfo.type !== 'page' ) return;
+
       console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
+
       return func(...args);
     };
   }
@@ -133,18 +149,12 @@ async function collect({chrome_port:port, mode} = {}) {
 
       if ( sessionId ) {
 
-        if ( waitingForDebugger ) {
-          send("Runtime.enable", {}, sessionId);
-          send("Runtime.runIfWaitingForDebugger", {}, sessionId);
-        }
-
-        if ( targetInfo.type == 'page' ) {
-          send("Page.enable", {}, sessionId);
-          send("Page.addScriptToEvaluateOnNewDocument", {
-            source: InjectionSource,
-            worldName: "Context-22120-Indexing"
-          }, sessionId);
-        }
+        send("DOM.enable", {}, sessionId);
+        send("Page.enable", {}, sessionId);
+        send("Page.addScriptToEvaluateOnNewDocument", {
+          source: InjectionSource,
+          worldName: "Context-22120-Indexing"
+        }, sessionId);
 
         Installations.add(targetInfo.targetId);
 
@@ -156,12 +166,43 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   function indexURL({targetInfo:info = {}} = {}) {
+    DEBUG && console.log({indexURL:JSON.stringify(info,null,2)});
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
 
     State.Index.set(info.url, info.title);   
+
+    if ( Installations.has(info.targetId) ) {
+
+      const sessionId = Sessions.get(info.targetId);
+      const {nodes:pageNodes} = await send("DOM.getFlattenedDocument", {
+        depth: -1,
+        pierce: true
+      }, sessionId);
+      // we collect TextNodes, ignoring any under script, style or an attribute
+      const ignoredParentIds = new Set(
+        pageNodes.filter(
+          ({localName,nodeType}) => IGNORE_NODES.has(localName) || nodeType == AttributeNode
+        ).map(({nodeId}) => nodeId);
+      );
+      const pageText = pageNodes.filter(
+        ({nodeType,parentId}) => nodeType == TextNode && ! ignoredParentIds.has(parentId)
+      ).reduce(
+        (Text, ({nodeValue})) => Text + nodeValue,
+        ''
+      );
+      console.log({
+        page : {
+          url: info.url,
+          title: info.title,
+          text: pageText
+        }
+      });
+
+    }
+
     DEBUG && console.log(`Indexing ${info.url} to ${info.title}`);
   }
 
