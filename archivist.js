@@ -195,7 +195,7 @@ async function collect({chrome_port:port, mode} = {}) {
         (Text, {nodeValue}) => Text + nodeValue + ' ',
         ''
       );
-      console.log({
+      DEBUG && console.log({
         page : {
           url: info.url,
           title: info.title,
