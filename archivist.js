@@ -165,7 +165,7 @@ async function collect({chrome_port:port, mode} = {}) {
     }
   }
 
-  function indexURL({targetInfo:info = {}} = {}) {
+  async function indexURL({targetInfo:info = {}} = {}) {
     DEBUG && console.log({indexURL:JSON.stringify(info,null,2)});
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
@@ -176,6 +176,8 @@ async function collect({chrome_port:port, mode} = {}) {
 
     if ( Installations.has(info.targetId) ) {
 
+      await sleep(1000);
+
       const sessionId = Sessions.get(info.targetId);
       const {nodes:pageNodes} = await send("DOM.getFlattenedDocument", {
         depth: -1,
@@ -185,12 +187,12 @@ async function collect({chrome_port:port, mode} = {}) {
       const ignoredParentIds = new Set(
         pageNodes.filter(
           ({localName,nodeType}) => IGNORE_NODES.has(localName) || nodeType == AttributeNode
-        ).map(({nodeId}) => nodeId);
+        ).map(({nodeId}) => nodeId)
       );
       const pageText = pageNodes.filter(
         ({nodeType,parentId}) => nodeType == TextNode && ! ignoredParentIds.has(parentId)
       ).reduce(
-        (Text, ({nodeValue})) => Text + nodeValue,
+        (Text, {nodeValue}) => Text + nodeValue + ' ',
         ''
       );
       console.log({
