@@ -132,7 +132,7 @@ async function collect({chrome_port:port, mode} = {}) {
 
       if ( args[0].targetInfo.type !== 'page' ) return;
 
-      console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
+      DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
 
       return func(...args);
     };
