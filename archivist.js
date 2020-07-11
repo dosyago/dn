@@ -130,8 +130,8 @@ async function collect({chrome_port:port, mode} = {}) {
 
       if ( args[0].waitingForDebugger ) {
         jump = async url => {
-          send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
           send("Runtime.enable", {}, args[0].sessionId);
+          send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
           DEBUG && console.log(`Running ${url}`);
         };
       }
@@ -161,12 +161,17 @@ async function collect({chrome_port:port, mode} = {}) {
           worldName: "Context-22120-Indexing"
         }, sessionId);
 
-        send("Page.reload", {}, sessionId);
 
         Installations.add(targetInfo.targetId);
 
         indexURL({targetInfo});
       }
+
+      if ( jump ) {
+        jump(targetInfo.url);
+        jump = null;
+      }
+      send("Page.reload", {}, sessionId);
       DEBUG && console.log("Just installed", targetInfo.url);
     } else {
       DEBUG && console.log("Already installed", targetInfo.url);
