@@ -154,6 +154,7 @@ async function collect({chrome_port:port, mode} = {}) {
 
       if ( sessionId ) {
         send("Page.enable", {}, sessionId);
+        send("Page.stopLoading", {}, sessionId);
 
         send("Page.addScriptToEvaluateOnNewDocument", {
           source: InjectionSource,
