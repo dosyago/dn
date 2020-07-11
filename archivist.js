@@ -60,7 +60,7 @@ const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
 
-const InjectionSource = fs.readFileSync(path.resolve(APP_ROOT, 'injections', 'source.js'), "utf-8").toString("utf-8");
+const InjectionSource = fs.readFileSync(path.resolve(APP_ROOT, 'public', 'injection.js'), "utf-8").toString("utf-8");
 
 export default Archivist;
 
