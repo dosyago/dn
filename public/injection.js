@@ -8,7 +8,8 @@
       console.log("Opening an alert....");
       await sleep(500);
       //alert("Hello there");
-      console.log("Hello there");
+      //console.log("Hello there");
+      setInterval(() => document.title = `[INSTALLED]`);
     }
   }
 }
