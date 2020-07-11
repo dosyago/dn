@@ -73,6 +73,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const {send, on, close} = await connect({port});
   const Sessions = new Map();
   const Installations = new Set();
+  const DELAY = 2000;
   Close = close;
   Mode = mode; 
 
@@ -112,9 +113,6 @@ async function collect({chrome_port:port, mode} = {}) {
 
   on("Fetch.requestPaused", cacheRequest);
 
-  await send("Target.setDiscoverTargets", {discover:true});
-  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
-
   await send("Fetch.enable", {
     patterns: [
       {
@@ -124,36 +122,21 @@ async function collect({chrome_port:port, mode} = {}) {
     ]
   });
 
+  await send("Network.setCacheDisabled", {cacheDisabled:true});
+  await send("Network.setBypassServiceWorker", {bypass:true});
+
+  await send("Target.setDiscoverTargets", {discover:true});
+  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
+
   function guard(func, text = '') {
     return (...args) => {
-      let jump;
-
-      if ( args[0].waitingForDebugger ) {
-        jump = async url => {
-          await send("Runtime.enable", {}, args[0].sessionId);
-          await send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
-          DEBUG && console.log(`Running ${url}`);
-        };
-      }
-
-      if ( args[0].targetInfo.type !== 'page' ) {
-        if ( jump ) {
-          jump(args[0].targetInfo.url);
-        }
-        return;
-      }
-
       DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
 
-      return func(...args, jump);
+      return func(...args);
     };
   }
 
-  async function installForSession({sessionId, targetInfo, waitingForDebugger}, jump) {
-    if ( jump ) {
-      await jump(targetInfo.url);
-    }
-
+  async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
     if ( ! Installations.has(targetInfo.targetId) ) {
       if ( sessionId ) {
         Sessions.set(targetInfo.targetId, sessionId);
@@ -162,13 +145,29 @@ async function collect({chrome_port:port, mode} = {}) {
       }
 
       if ( sessionId ) {
-        await send("Page.enable", {}, sessionId);
-        //await send("Page.stopLoading", {}, sessionId);
+        send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
+        send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
+
+        send("Runtime.enable", {}, sessionId);
+        send("Page.enable", {}, sessionId);
         await send("Page.addScriptToEvaluateOnNewDocument", {
           source: InjectionSource,
           worldName: "Context-22120-Indexing"
         }, sessionId);
-        //await send("Page.reload", {}, sessionId);
+        const varName = `a${Math.random()}`;
+        await send("Page.addScriptToEvaluateOnNewDocument", {
+          source: `self["${varName}"] = true`,
+        }, sessionId);
+        await sleep(DELAY);
+        const {result:{type,value}} = await send("Runtime.evaluate", {
+          expression: `self["${varName}"]`,
+          returnByValue: true
+        }, sessionId);
+        if ( type == "undefined" ) {
+          console.log({url:targetInfo.url, requiresReload:true});
+          await send("Page.stopLoading", {}, sessionId);
+          await send("Page.reload", {}, sessionId);
+        }
 
         Installations.add(targetInfo.targetId);
 
@@ -196,7 +195,7 @@ async function collect({chrome_port:port, mode} = {}) {
 
       send("DOM.enable", {}, sessionId);
 
-      await sleep(1000);
+      await sleep(5000);
 
       const {nodes:pageNodes} = await send("DOM.getFlattenedDocument", {
         depth: -1,
@@ -246,6 +245,7 @@ async function collect({chrome_port:port, mode} = {}) {
     const {requestId, request, resourceType, responseStatusCode, responseHeaders} = pausedRequest;
     if ( dontCache(request) ) {
       DEBUG && console.log("Not caching", request.url);
+      await sleep(2000);
       return send("Fetch.continueRequest", {requestId});
     }
     const key = serializeRequest(request);
@@ -274,7 +274,7 @@ async function collect({chrome_port:port, mode} = {}) {
       }
       if ( ! resp ) {
         DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
-        await sleep(1000);
+        await sleep(2000);
         return send("Fetch.continueRequest", {requestId});
       }
       if ( !! resp ) {
@@ -288,7 +288,7 @@ async function collect({chrome_port:port, mode} = {}) {
       }
       const responsePath = await saveResponseData(key, request.url, response);
       State.Cache.set(key, responsePath);
-      await sleep(1000);
+      await sleep(2000);
       await send("Fetch.continueRequest", {requestId});
     }
   }

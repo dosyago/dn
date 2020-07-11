@@ -8,9 +8,11 @@ const {server_port, mode, chrome_port} = args;
 const CHROME_OPTS = !NO_SANDBOX ? [
   '--restore-last-session',
   `--disk-cache-dir=${args.temp_browser_cache()}`,
+  `--aggressive-cache-discard`
 ] : [
   '--restore-last-session',
   `--disk-cache-dir=${args.temp_browser_cache()}`,
+  `--aggressive-cache-discard`,
   '--no-sandbox'
 ];
 const LAUNCH_OPTS = {
