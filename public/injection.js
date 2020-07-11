@@ -5,11 +5,11 @@
     install();
 
     async function install() {
-      console.log("Opening an alert....");
+      console.log("Installing...");
       await sleep(500);
       //alert("Hello there");
       //console.log("Hello there");
-      setInterval(() => document.title = `[INSTALLED]`);
+      //setInterval(() => document.title = `[INSTALLED]`);
     }
   }
 }
