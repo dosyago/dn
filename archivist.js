@@ -73,7 +73,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const {send, on, close} = await connect({port});
   const Sessions = new Map();
   const Installations = new Set();
-  const DELAY = 2000;
+  const DELAY = 500;
   Close = close;
   Mode = mode; 
 
@@ -137,6 +137,8 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
+    const {url} = targetInfo;
+
     if ( ! Installations.has(targetInfo.targetId) ) {
       if ( sessionId ) {
         Sessions.set(targetInfo.targetId, sessionId);
@@ -148,25 +150,27 @@ async function collect({chrome_port:port, mode} = {}) {
         send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
         send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
 
-        send("Runtime.enable", {}, sessionId);
-        send("Page.enable", {}, sessionId);
+        await send("Runtime.enable", {}, sessionId);
+        await send("Page.enable", {}, sessionId);
+
+        const {result} = await send("Runtime.evaluate", {
+          expression: `document.readyState`,
+          returnByValue: true
+        }, sessionId);
+
         await send("Page.addScriptToEvaluateOnNewDocument", {
           source: InjectionSource,
           worldName: "Context-22120-Indexing"
         }, sessionId);
-        const varName = `a${Math.random()}`;
-        await send("Page.addScriptToEvaluateOnNewDocument", {
-          source: `self["${varName}"] = true`,
-        }, sessionId);
-        await sleep(DELAY);
-        const {result:{type,value}} = await send("Runtime.evaluate", {
-          expression: `self["${varName}"]`,
-          returnByValue: true
-        }, sessionId);
-        if ( type == "undefined" ) {
-          console.log({url:targetInfo.url, requiresReload:true});
-          await send("Page.stopLoading", {}, sessionId);
-          await send("Page.reload", {}, sessionId);
+
+        const {value} = result;
+
+        if ( value !== "complete" ) {
+          console.log({url, result, value, requiresReload:true});
+          send("Page.stopLoading", {}, sessionId);
+          send("Page.reload", {}, sessionId);
+        } else {
+          DEBUG && console.log({result,value,url});
         }
 
         Installations.add(targetInfo.targetId);
@@ -245,7 +249,6 @@ async function collect({chrome_port:port, mode} = {}) {
     const {requestId, request, resourceType, responseStatusCode, responseHeaders} = pausedRequest;
     if ( dontCache(request) ) {
       DEBUG && console.log("Not caching", request.url);
-      await sleep(2000);
       return send("Fetch.continueRequest", {requestId});
     }
     const key = serializeRequest(request);
@@ -274,7 +277,7 @@ async function collect({chrome_port:port, mode} = {}) {
       }
       if ( ! resp ) {
         DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
-        await sleep(2000);
+        await sleep(DELAY);
         return send("Fetch.continueRequest", {requestId});
       }
       if ( !! resp ) {
@@ -288,7 +291,7 @@ async function collect({chrome_port:port, mode} = {}) {
       }
       const responsePath = await saveResponseData(key, request.url, response);
       State.Cache.set(key, responsePath);
-      await sleep(2000);
+      await sleep(DELAY);
       await send("Fetch.continueRequest", {requestId});
     }
   }
