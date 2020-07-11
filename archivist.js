@@ -112,10 +112,10 @@ async function collect({chrome_port:port, mode} = {}) {
 
   on("Fetch.requestPaused", cacheRequest);
 
-  send("Target.setDiscoverTargets", {discover:true});
-  send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:true, flatten: true});
+  await send("Target.setDiscoverTargets", {discover:true});
+  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
 
-  send("Fetch.enable", {
+  await send("Fetch.enable", {
     patterns: [
       {
         urlPattern: "http*://*", 
@@ -130,13 +130,18 @@ async function collect({chrome_port:port, mode} = {}) {
 
       if ( args[0].waitingForDebugger ) {
         jump = async url => {
-          send("Runtime.enable", {}, args[0].sessionId);
-          send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
+          await send("Runtime.enable", {}, args[0].sessionId);
+          await send("Runtime.runIfWaitingForDebugger", {}, args[0].sessionId);
           DEBUG && console.log(`Running ${url}`);
         };
       }
 
-      if ( args[0].targetInfo.type !== 'page' ) return;
+      if ( args[0].targetInfo.type !== 'page' ) {
+        if ( jump ) {
+          jump(args[0].targetInfo.url);
+        }
+        return;
+      }
 
       DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
 
@@ -145,6 +150,10 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}, jump) {
+    if ( jump ) {
+      await jump(targetInfo.url);
+    }
+
     if ( ! Installations.has(targetInfo.targetId) ) {
       if ( sessionId ) {
         Sessions.set(targetInfo.targetId, sessionId);
@@ -153,32 +162,22 @@ async function collect({chrome_port:port, mode} = {}) {
       }
 
       if ( sessionId ) {
-        send("Page.enable", {}, sessionId);
-        send("Page.stopLoading", {}, sessionId);
-
-        send("Page.addScriptToEvaluateOnNewDocument", {
+        await send("Page.enable", {}, sessionId);
+        //await send("Page.stopLoading", {}, sessionId);
+        await send("Page.addScriptToEvaluateOnNewDocument", {
           source: InjectionSource,
           worldName: "Context-22120-Indexing"
         }, sessionId);
-
+        //await send("Page.reload", {}, sessionId);
 
         Installations.add(targetInfo.targetId);
 
         indexURL({targetInfo});
       }
 
-      if ( jump ) {
-        jump(targetInfo.url);
-        jump = null;
-      }
-      send("Page.reload", {}, sessionId);
       DEBUG && console.log("Just installed", targetInfo.url);
     } else {
       DEBUG && console.log("Already installed", targetInfo.url);
-    }
-
-    if ( jump ) {
-      jump(targetInfo.url);
     }
   }
 
@@ -215,7 +214,7 @@ async function collect({chrome_port:port, mode} = {}) {
         (Text, {nodeValue}) => Text + nodeValue + ' ',
         ''
       );
-      if ( DEBUG ) {
+      if ( false ) {
         console.log({
           page : {
             url: info.url,
@@ -275,6 +274,7 @@ async function collect({chrome_port:port, mode} = {}) {
       }
       if ( ! resp ) {
         DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
+        await sleep(1000);
         return send("Fetch.continueRequest", {requestId});
       }
       if ( !! resp ) {
@@ -288,6 +288,7 @@ async function collect({chrome_port:port, mode} = {}) {
       }
       const responsePath = await saveResponseData(key, request.url, response);
       State.Cache.set(key, responsePath);
+      await sleep(1000);
       await send("Fetch.continueRequest", {requestId});
     }
   }
