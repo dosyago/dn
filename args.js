@@ -8,13 +8,14 @@ const chrome_port = process.argv[4] || 9222;
 
 const Pref = {};
 const pref_file = path.resolve(os.homedir(), '.22120.config.json');
+const cacheId = Math.random();
 
 loadPref();
 
 let BasePath = Pref.BasePath;
 const archive_root = () => path.resolve(BasePath, '22120-arc');
 const no_file = () => path.resolve(archive_root(), 'no.json');
-const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cache + Math.random()');
+const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cache' + cacheId);
 const library_path = () => path.resolve(archive_root(), 'public', 'library');
 const cache_file = () => path.resolve(library_path(), 'cache.json');
 const index_file = () => path.resolve(library_path(), 'index.json');

@@ -114,20 +114,15 @@ async function cleanup(reason) {
   }
   quitting = true;
 
+  killChrome(false); 
+
+  fs.rmdirSync(args.temp_browser_cache());
+
   Archivist.shutdown();
 
-  await LibraryServer.stop();
-
-  await killChrome(false); 
+  LibraryServer.stop();
 
   console.log(`Take a breath. Everything's done. 22120 is exiting in 3 seconds...`);
-
-  await sleep(3000);
-
-  // note that chrome-launcher calls process.exit
-  // on sigint so we often don't get here. 
-  // I'm going to fork it and remove that line and then open a PR 
-  // in chrome-launcher to add an option to not exit process
 
   process.exit(0);
 } 
