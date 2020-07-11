@@ -77,17 +77,6 @@ async function collect({chrome_port:port, mode} = {}) {
   Close = close;
   Mode = mode; 
 
-  // send commands and listen to events
-    // so that we can intercept every request
-    // and cache it and if it's in cache then we
-    // can pause the request (so it does not go to network)
-    // and serve from cache
-    // effectively off-lining the site
-
-  // question
-    // can we attach to browser target and catch everything
-    // or do we need to handle sessions ? 
-
   let requestStage;
   
   loadFiles();
@@ -128,6 +117,10 @@ async function collect({chrome_port:port, mode} = {}) {
   await send("Target.setDiscoverTargets", {discover:true});
   await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
 
+  const {targetInfos:targets} = await send("Target.getTargets", {});
+  const pageTargets = targets.filter(({type}) => type == 'page');
+  pageTargets.forEach(attachToTarget);
+
   function guard(func, text = '') {
     return (...args) => {
       DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
@@ -138,6 +131,8 @@ async function collect({chrome_port:port, mode} = {}) {
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
     const {url} = targetInfo;
+
+    if ( targetInfo.type != 'page' ) return;
 
     if ( ! Installations.has(targetInfo.targetId) ) {
       if ( sessionId ) {
@@ -231,8 +226,7 @@ async function collect({chrome_port:port, mode} = {}) {
     DEBUG && console.log(`Indexed ${info.url} to ${info.title}`);
   }
 
-  async function attachToTarget({targetInfo}) {
-    return;
+  async function attachToTarget(targetInfo) {
     if ( dontCache(targetInfo) ) return;
 
     if ( targetInfo.type == 'page' && ! targetInfo.attached ) {

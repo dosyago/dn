@@ -52,9 +52,9 @@ async function start() {
     await killChrome();
 
     console.log(`Removing 22120's existing temporary browser cache if it exists...`);
-    if ( fs.existsSync(args.temp_browser_cache) ) {
-      console.log(`Temp browser cache directory (${args.temp_browser_cache}) exists, deleting...`);
-      fs.rmdirSync(args.temp_browser_cache, {recursive:true});
+    if ( fs.existsSync(args.temp_browser_cache()) ) {
+      console.log(`Temp browser cache directory (${args.temp_browser_cache()}) exists, deleting...`);
+      fs.rmdirSync(args.temp_browser_cache(), {recursive:true});
       console.log(`Deleted.`);
     }
     console.log(`Launching library server...`);
@@ -114,15 +114,15 @@ async function cleanup(reason) {
   }
   quitting = true;
 
-  killChrome(false); 
-
-  fs.rmdirSync(args.temp_browser_cache());
-
   Archivist.shutdown();
 
   LibraryServer.stop();
 
+  killChrome(false); 
+
   console.log(`Take a breath. Everything's done. 22120 is exiting in 3 seconds...`);
+
+  await sleep(3000);
 
   process.exit(0);
 } 

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "npx webpack && nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t windows-x32 -o 22120.win32.exe -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x32 -o 22120.nix32 -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"",
+    "build": "cp -r custom-launcher/* node_modules/chrome-launcher/ && npx webpack && nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t windows-x32 -o 22120.win32.exe -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x32 -o 22120.nix32 -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"",
     "clean": "rm 22120.js *22120.js 22120.???",
     "pack": "upx 22120.exe && upx 22120.nix && upx 22120.mac && upx 22120.win32.exe && upx 22120.nix32",
     "test": "node-dev index.js",
