@@ -11,9 +11,7 @@ export function getInjection({sessionId}) {
           console.log("Installing...");
           console.info(JSON.stringify({installed: { sessionId, startUrl: location.href }}));
           await sleep(500);
-          //alert("Hello there");
-          //console.log("Hello there");
-          //setInterval(() => document.title = `[INSTALLED]`);
+          console.log("Installed.");
         }
       }
     }

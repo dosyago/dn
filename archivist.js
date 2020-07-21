@@ -73,7 +73,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const {send, on, close} = await connect({port});
   const Sessions = new Map();
   const Installations = new Set();
-  const ConfirmedInstallations = new Set();
+  const ConfirmedInstalls = new Set();
   const DELAY = 500;
   Close = close;
   Mode = mode; 
@@ -100,6 +100,8 @@ async function collect({chrome_port:port, mode} = {}) {
   on("Target.targetInfoChanged", indexURL);
   on("Target.targetInfoChanged", reloadIfNotLive);
 
+  on("Target.targetInfoChanged", attachToTarget);
+
   on("Target.attachedToTarget", guard(installForSession, 'attached'));
 
   on("Fetch.requestPaused", cacheRequest);
@@ -119,7 +121,7 @@ async function collect({chrome_port:port, mode} = {}) {
   await send("Network.setBypassServiceWorker", {bypass:true});
 
   await send("Target.setDiscoverTargets", {discover:true});
-  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
+  await send("Target.setAutoAttach", {autoAttach:false, waitForDebuggerOnStart:false, flatten: true});
 
   const {targetInfos:targets} = await send("Target.getTargets", {});
   const pageTargets = targets.filter(({type}) => type == 'page');
@@ -127,29 +129,34 @@ async function collect({chrome_port:port, mode} = {}) {
 
   function guard(func, text = '') {
     return (...args) => {
-      DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
+      //DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
 
       return func(...args);
     };
   }
 
   function confirmInstall(args) {
-    console.log(args);
-    const {type, args:[strVal], context} = args;
+    const {type, args:[{value:strVal}], context} = args;
     if ( type == 'info' ) {
       try {
         const val = JSON.parse(strVal);
-        console.log({val, context});
-      } finally {}
+        const {installed:{sessionId}} = val;
+        if ( ! ConfirmedInstalls.has(sessionId) ) {
+          ConfirmedInstalls.add(sessionId);
+          console.log({confirmedInstall:val, context});
+        }
+      } finally {} 
     }
   }
 
   async function reloadIfNotLive({targetInfo}) {
-    const { attached, type} = targetInfo;
+    if ( Mode == 'serve' ) return; 
+    const {attached, type} = targetInfo;
     if ( attached && type == 'page' ) {
       const {url, targetId} = targetInfo;
-      if ( url != "about:blank" && !ConfirmedInstalls.has(targetId) ) {
-        const sessionId = Sessions.get(targetId);
+      const sessionId = Sessions.get(targetId);
+      if ( !!url && url != "about:blank" && !url.startsWith('chrome') && !ConfirmedInstalls.has(sessionId) ) {
+        console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
         send("Page.stopLoading", {}, sessionId);
         send("Page.reload", {}, sessionId);
       }
@@ -157,20 +164,22 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
-    const {url} = targetInfo;
-
-    console.log(targetInfo);
+    const {targetId, url} = targetInfo;
 
     if ( targetInfo.type != 'page' ) return;
 
-    if ( ! Installations.has(targetInfo.targetId) ) {
+    if ( Mode == 'serve' ) return;
+
+    indexURL({targetInfo});
+
+    if ( ! Installations.has(targetId) ) {
       if ( sessionId ) {
-        Sessions.set(targetInfo.targetId, sessionId);
+        Sessions.set(targetId, sessionId);
       } else {
-        sessionId = Sessions.get(targetInfo.targetId);
+        sessionId = Sessions.get(targetId);
       }
 
-      if ( sessionId ) {
+      if ( sessionId && Mode == 'save' ) {
         send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
         send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
 
@@ -182,24 +191,22 @@ async function collect({chrome_port:port, mode} = {}) {
           worldName: "Context-22120-Indexing"
         }, sessionId);
 
-        Installations.add(targetInfo.targetId);
-
-        indexURL({targetInfo});
+        DEBUG && console.log("Just request install", targetId, url);
       }
 
-      DEBUG && console.log("Just installed", targetInfo.url);
-    } else {
-      DEBUG && console.log("Already installed", targetInfo.url);
+      Installations.add(targetId);
+
+    } else if ( ConfirmedInstalls.has(sessionId) ) {
+      DEBUG && console.log("Already confirmed install", targetId, url);
     }
   }
 
   async function indexURL({targetInfo:info = {}} = {}) {
-    //DEBUG && console.log({indexURL:JSON.stringify(info,null,2)});
+    if ( Mode == 'serve' ) return;
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
-    if ( ! Sessions.has(info.targetId) ) return;
 
     State.Index.set(info.url, info.title);   
 
@@ -237,19 +244,21 @@ async function collect({chrome_port:port, mode} = {}) {
       }
     }
 
-    DEBUG && console.log(`Indexed ${info.url} to ${info.title}`);
+    console.log(`Indexed ${info.url} to ${info.title}`);
   }
 
   async function attachToTarget(targetInfo) {
     if ( dontCache(targetInfo) ) return;
+    const {url} = targetInfo;
+    if ( !!url && url != "about:blank" && !url.startsWith('chrome') ) {
 
-    if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
-      const {sessionId} = await send("Target.attachToTarget", {
-        targetId: targetInfo.targetId,
-        flatten: true
-      });
-      Sessions.set(targetInfo.targetId, sessionId);
-      indexURL({targetInfo});
+      if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
+        const {sessionId} = await send("Target.attachToTarget", {
+          targetId: targetInfo.targetId,
+          flatten: true
+        });
+        Sessions.set(targetInfo.targetId, sessionId);
+      }
     }
   }
 
