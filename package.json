@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "cp -r custom-launcher/* node_modules/chrome-launcher/ && npx webpack && nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t windows-x32 -o 22120.win32.exe -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x32 -o 22120.nix32 -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"",
+    "build": "npx webpack && nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t windows-x32 -o 22120.win32.exe -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && nexe -t linux-x32 -o 22120.nix32 -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"",
     "clean": "rm 22120.js *22120.js 22120.???",
     "pack": "upx 22120.exe && upx 22120.nix && upx 22120.mac && upx 22120.win32.exe && upx 22120.nix32",
     "test": "node-dev index.js",
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/dosyago/22120#readme",
   "dependencies": {
-    "chrome-launcher": "^0.13.1",
+    "chrome-launcher": "^0.13.4",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "hasha": "^5.1.0",
@@ -41,6 +41,6 @@
   "devDependencies": {
     "node-dev": "^4.0.0",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.12"
   }
 }
