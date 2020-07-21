@@ -5,6 +5,7 @@ import fs from 'fs';
 import args from './args.js';
 import {APP_ROOT, context, sleep, DEBUG} from './common.js';
 import {connect} from './protocol.js';
+import {getInjection} from './public/injection.js';
 
 //import xapian from 'xapian';
 
@@ -60,7 +61,6 @@ const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
 
-const InjectionSource = fs.readFileSync(path.resolve(APP_ROOT, 'public', 'injection.js'), "utf-8").toString("utf-8");
 
 export default Archivist;
 
@@ -73,6 +73,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const {send, on, close} = await connect({port});
   const Sessions = new Map();
   const Installations = new Set();
+  const ConfirmedInstallations = new Set();
   const DELAY = 500;
   Close = close;
   Mode = mode; 
@@ -97,10 +98,13 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   on("Target.targetInfoChanged", indexURL);
+  on("Target.targetInfoChanged", reloadIfNotLive);
 
   on("Target.attachedToTarget", guard(installForSession, 'attached'));
 
   on("Fetch.requestPaused", cacheRequest);
+
+  on("Runtime.consoleAPICalled", confirmInstall);
 
   await send("Fetch.enable", {
     patterns: [
@@ -129,8 +133,33 @@ async function collect({chrome_port:port, mode} = {}) {
     };
   }
 
+  function confirmInstall(args) {
+    console.log(args);
+    const {type, args:[strVal], context} = args;
+    if ( type == 'info' ) {
+      try {
+        const val = JSON.parse(strVal);
+        console.log({val, context});
+      } finally {}
+    }
+  }
+
+  async function reloadIfNotLive({targetInfo}) {
+    const { attached, type} = targetInfo;
+    if ( attached && type == 'page' ) {
+      const {url, targetId} = targetInfo;
+      if ( url != "about:blank" && !ConfirmedInstalls.has(targetId) ) {
+        const sessionId = Sessions.get(targetId);
+        send("Page.stopLoading", {}, sessionId);
+        send("Page.reload", {}, sessionId);
+      }
+    }
+  }
+
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
     const {url} = targetInfo;
+
+    console.log(targetInfo);
 
     if ( targetInfo.type != 'page' ) return;
 
@@ -148,25 +177,10 @@ async function collect({chrome_port:port, mode} = {}) {
         await send("Runtime.enable", {}, sessionId);
         await send("Page.enable", {}, sessionId);
 
-        const {result} = await send("Runtime.evaluate", {
-          expression: `document.readyState`,
-          returnByValue: true
-        }, sessionId);
-
         await send("Page.addScriptToEvaluateOnNewDocument", {
-          source: InjectionSource,
+          source: getInjection({sessionId}),
           worldName: "Context-22120-Indexing"
         }, sessionId);
-
-        const {value} = result;
-
-        if ( value !== "complete" ) {
-          console.log({url, result, value, requiresReload:true});
-          send("Page.stopLoading", {}, sessionId);
-          send("Page.reload", {}, sessionId);
-        } else {
-          DEBUG && console.log({result,value,url});
-        }
 
         Installations.add(targetInfo.targetId);
 
