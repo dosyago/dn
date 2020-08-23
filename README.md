@@ -4,6 +4,12 @@
 
 **News - new binaries** 
 
+## Licensing
+
+Want to use this commercially? [Contact me for purchase](mailto:cris@dosycorp.com?subject=22120&body=Hi%20Cris)
+
+## About
+
 **This project literally makes your web browsing available COMPLETELY OFFLINE.** Your browser does not even know the difference. It's literally that amazing. Yes. 
 
 Save your browsing, then switch off the net and go to `http://localhost:22120` and switch mode to **serve** then browse what you browsed before. It all still works.
