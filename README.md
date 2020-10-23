@@ -1,4 +1,4 @@
-# :classical_building: [22120](https://github.com/dosyago/22120) ![npm downloads](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads) ![binary downloads](https://img.shields.io/github/downloads/dosyago/22120/total?label=binary%20downloads) [![latest package](https://img.shields.io/github/v/release/dosyago/22120?label=latest%20release)](https://github.com/dosyago/22120/releases)
+# :classical_building: [22120](https://github.com/c9fe/22120) ![npm downloads](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads) ![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=binary%20downloads) [![latest package](https://img.shields.io/github/v/release/c9fe/22120?label=latest%20release)](https://github.com/c9fe/22120/releases)
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
@@ -25,7 +25,7 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 
 3 ways to get it:
 
-1. Get binary from the [releases page.](https://github.com/dosyago/22120/releases), or
+1. Get binary from the [releases page.](https://github.com/c9fe/22120/releases), or
 2. Run with npx: `npx archivist1`, or 
 3. Clone this repo and run as a Node.JS app: `npm i && npm start` 
 
