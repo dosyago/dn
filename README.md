@@ -6,7 +6,7 @@
 
 ## Licensing
 
-Want to use this commercially? [Contact me for purchase](mailto:cris@dosycorp.com?subject=22120&body=Hi%20Cris)
+Want to use this commercially, or just want an upgraded version? [Contact me for purchasing the Pro version, it's only USD13.71](mailto:cris@dosycorp.com?subject=22120&body=Hi%20Cris)
 
 ## About
 
