@@ -18,11 +18,6 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 
 **warning: if you have Chrome open, it will close it automatically when you open 22120, and relaunch it. You may lose any unsaved work.**
 
-## What do you think?
-
-[Would it be impossible to share what you think on this feedback form?](https://forms.gle/san6sZT6B9PN52K38)
-
-
 ## Get 22120
 
 3 ways to get it:
@@ -53,6 +48,30 @@ The archive format is:
 `22120-arc/public/library/<resource-origin>/<path-hash>.json`
 
 Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
+
+## Why not WARC (or another format like MHTML) ?
+
+**The case for the 22120 format.**
+
+Other formats save translations of the resources you archive. They create modifications, such as altering the internal structure of the HTML, changing hyperlinks and URLs into "flat" embedded data URIs, and require other "hacks* in order to save a "perceptually similar" copy of the archived resource.
+
+22120 throws all that out, and calls rubbish on it. 22120 saves a *verbatim* **high-fidelity** copy of the resources your archive. It does not alter their internal structure in any way. Instead it records each resource in its own metadata file.
+
+**Why?**
+
+At 22120, we believe in the resources and in verbatim copies. We don't annoint ourselves as all knowing enough to modify the resource source of truth before we archive it, just so it can "fit the format* we choose. We don't believe we should be modifying or altering resources we archive. We belive we should save them exactly as they were presented. We believe the format should fit (or at least accommodate, and be suited to) the resource, not the other way around. We don't believe in conflating **metadata** with **content**; so we separate them. We believe separating metadata and content, and keeping the content pure and altered throughout the archiving process is not only the right thing to do, it simplifies every part of the audit trail, because we know that the modifications between archived copies of a resource of due to changes to the resources themselves, not artefacts of the format or archiving process.
+
+Both WARC and MHTML require mutilatious modifications of the resources so that the resources can be "forced to fit" the format. At 22120, we believe this is not required (and in any case should never be performed). We see it as akin to lopping off the arms of a Roman statue in order to fit it into a presentation and security display box. How ridiculous! The web may be a more "pliable" medium but that does not mean we should treat it without respect for its inherent content. 
+
+**Why is changing the internal structure of resources so bad?**
+
+In our view, the internal structure of the resource as presented, *is the cannon*. Internal structure is not just substitutable "presentation" - no, in fact it encodes vital semantic information such as hyperlink relationships, source choices, and the "strokes" of the resource author as they create their content, even if it's mediated through a web server or web framework. 
+
+**Why else is 22120 the obvious and natural choice?**
+
+22120 also archives resources exactly as they are sent to the browser. It runs connected to a browser, and so is able to access the full-scope of resources (with, currently, the exception of video, audio and websockets, for now) in their highest fidelity, without modification, that the browser receives and is able to archive them in the exact format presented to the user. Many resources undergo presentational and processing changes before they are presented to the user. This is the ubiquitous, "web app", where client-side scripting enabled by JavaScript, creates resources and resource views on the fly. These sorts of "hyper resources" or "realtime" or "client side" resources, prevalent in SPAs, are not able to be archived, at least not utilizing the normal archive flow, within traditional `wget`-based archiving tools. 
+
+In short, the web is an *online* medium, and it should be archived and presented in the same fashion. 22120 archives content exactly as it is received and presented by a browser, and it also replays that content exactly as if the resource were being taken from online. Yes, it requires a browser for this exercise, but that browser need not be connected to the internet. It is only natural that viewing a web resource requires the web browser. And because of 22120 the browser doesn't know the difference! Resources presented to the browser form a remote web site, and resources given to the browser by 22120, are seen by the browser as ***exactly the same.*** This ensures that the people viewing the archive are also not let down and are given the change to have the exact same experience as if they were viewing the resource online. 
 
 ## How it works
 
