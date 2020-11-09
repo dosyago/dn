@@ -6,9 +6,15 @@
 
 **News - new binaries** 
 
-## Licensing
+## License 
 
-Want to use this commercially, or just want an upgraded version? [Contact me for purchasing the Pro version, it's only USD13.71](mailto:cris@dosycorp.com?subject=22120&body=Hi%20Cris)
+Copyright (c) 2018, 2020, Dosyago and/or its affiliates. All rights reserved.
+
+This is a release of 22120, a web archiver.
+
+License information can be found in the LICENSE file.
+
+This software is dual-licensed. For information about commercial licensing, see [Dosyago Commercial License for OEMs, ISVs and VARs](https://github.com/dosyago/dual-licensing).
 
 ## About
 
