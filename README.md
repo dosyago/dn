@@ -6,6 +6,33 @@
 
 **News - new binaries** 
 
+----------------
+- [Overview](#classical_building-22120---)
+  * [License](#license)
+  * [About](#about)
+  * [Get 22120](#get-22120)
+  * [Using](#using)
+    + [Pick save mode or serve mode](#pick-save-mode-or-serve-mode)
+    + [Exploring your 22120 archive](#exploring-your-22120-archive)
+  * [Format](#format)
+  * [Why not WARC (or another format like MHTML) ?](#why-not-warc-or-another-format-like-mhtml-)
+  * [How it works](#how-it-works)
+  * [FAQ](#faq)
+    + [Can I use this with a browser that's not Chrome-based?](#can-i-use-this-with-a-browser-that-s-not-chrome-based-)
+    + [How does this interact with Ad blockers?](#how-does-this-interact-with-ad-blockers-)
+    + [How secure is running chrome with remote debugging port open?](#how-secure-is-running-chrome-with-remote-debugging-port-open-)
+    + [Is this free?](#is-this-free-)
+    + [What's the roadmap?](#what-s-the-roadmap-)
+    + [What about streaming content?](#what-about-streaming-content-)
+    + [Can I black list domains to not archive them?](#can-i-black-list-domains-to-not-archive-them-)
+    + [Is there a DEBUG mode for troubleshooting?](#is-there-a-debug-mode-for-troubleshooting-)
+    + [Can I change the archive path?](#can-i-change-the-archive-path-)
+    + [Can I change this other thing?](#can-i-change-this-other-thing-)
+
+
+
+------------------
+
 ## License 
 
 Copyright (c) 2018, 2020, Dosyago and/or its affiliates. All rights reserved.
