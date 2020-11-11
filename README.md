@@ -96,7 +96,7 @@ Both WARC and MHTML require mutilatious modifications of the resources so that t
 
 **Why is changing the internal structure of resources so bad?**
 
-In our view, the internal structure of the resource as presented, *is the cannon*. Internal structure is not just substitutable "presentation" - no, in fact it encodes vital semantic information such as hyperlink relationships, source choices, and the "strokes" of the resource author as they create their content, even if it's mediated through a web server or web framework. 
+In our view, the internal structure of the resource as presented, *is the canon*. Internal structure is not just substitutable "presentation" - no, in fact it encodes vital semantic information such as hyperlink relationships, source choices, and the "strokes" of the resource author as they create their content, even if it's mediated through a web server or web framework. 
 
 **Why else is 22120 the obvious and natural choice?**
 
