@@ -81,8 +81,9 @@ Archive will be located in `$your_user_home_directory/22120-arc/public/library`
 
 But it's not public, don't worry!
 
-## Format
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+## Format
 
 The archive format is:
 
@@ -90,8 +91,9 @@ The archive format is:
 
 Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
 
-## Why not WARC (or another format like MHTML) ?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+## Why not WARC (or another format like MHTML) ?
 
 **The case for the 22120 format.**
 
@@ -115,44 +117,51 @@ In our view, the internal structure of the resource as presented, *is the cannon
 
 In short, the web is an *online* medium, and it should be archived and presented in the same fashion. 22120 archives content exactly as it is received and presented by a browser, and it also replays that content exactly as if the resource were being taken from online. Yes, it requires a browser for this exercise, but that browser need not be connected to the internet. It is only natural that viewing a web resource requires the web browser. And because of 22120 the browser doesn't know the difference! Resources presented to the browser form a remote web site, and resources given to the browser by 22120, are seen by the browser as ***exactly the same.*** This ensures that the people viewing the archive are also not let down and are given the change to have the exact same experience as if they were viewing the resource online. 
 
-## How it works
 <p align=right><small><a href=#toc>Top</a></small></p>
 
+## How it works
+
 Uses DevTools protocol to intercept all requests, and caches responses against a key made of (METHOD and URL) onto disk. It also maintains an in memory set of keys so it knows what it has on disk. 
+
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 ## FAQ
 
 ### Can I use this with a browser that's not Chrome-based? 
-<p align=right><small><a href=#toc>Top</a></small></p>
 
 No. 
 
 But...see [#57](https://github.com/c9fe/22120/issues/57). Just want to set some expectations, this is only an investigation and considering it, it might not ever get done. But, your voices made a difference, as I wasn't even considering it before. 
 
-### How does this interact with Ad blockers?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### How does this interact with Ad blockers?
 
 Interacts just fine. The things ad blockers stop will not be archived.
 
-### How secure is running chrome with remote debugging port open?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### How secure is running chrome with remote debugging port open?
 
 Seems pretty secure. It's not exposed to the public internet, and pages you load that tried to use it cannot use the protocol for anything (except to open a new tab, which they can do anyway). 
 
-### Is this free?
 <p align=right><small><a href=#toc>Top</a></small></p>
 
-Yes this is totally free to download and use. It's also open source so do what you want with it.
+### Is this free?
+
+Yes this is totally free to download and use. It's also open source (under AGPL-3.0) so do what you want with it. For more information about licensing, see the [license section](#license). 
+
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 ### What's the roadmap?
-<p align=right><small><a href=#toc>Top</a></small></p>
 
 - Full text search 
 - Library server to serve archive publicly.
 - Distributed p2p web browser on IPFS
 
-### What about streaming content?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### What about streaming content?
 
 The following are probably hard (and I haven't thought much about):
 
@@ -162,14 +171,18 @@ The following are probably hard (and I haven't thought much about):
 
 Probably some way to do this tho.
 
-### Can I black list domains to not archive them?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### Can I black list domains to not archive them?
 
 Yes! Put any domains into `$HOME/22120-arc/no.json`, eg:
 
 ```json
 [
-  "*.google.com",
+  "*.horribleplantations.com",
+  "*.cactusfernfurniture.com",
+  "*.gustymeadows.com",
+  "*.nytimes.com",
   "*.cnn.co?"
 ]
 ```
@@ -179,8 +192,9 @@ Will not cache any resource with a host matching those. Wildcards:
 - `*` (0 or more anything) and 
 - `?` (0 or 1 anything) 
 
-### Is there a DEBUG mode for troubleshooting?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### Is there a DEBUG mode for troubleshooting?
 
 Yes, just make sure you set an environment variable called `DEBUG_22120` to anything non empty.
 
@@ -190,16 +204,25 @@ So for example in posix systems:
 export DEBUG_22120=True
 ```
 
-### Can I change the archive path?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### Can I version the archive?
+
+Yes! But you need to use `git` for versioning. Just initiate a git repo in your archive repository. And when you want to save a snapshot, make a new git commit.
+
+<p align=right><small><a href=#toc>Top</a></small></p>
+
+### Can I change the archive path?
 
 Yes, there's a control for changing the archive path in the control page: http://localhost:22120
 
-### Can I change this other thing?
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### Can I change this other thing?
 
 There's a few command line arguments. You'll see the format printed as the first printed line when you start the program.
 
 For other things you can examine the source code. 
 
+<p align=right><small><a href=#toc>Top</a></small></p>
 
