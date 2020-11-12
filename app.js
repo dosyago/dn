@@ -19,9 +19,7 @@ const LAUNCH_OPTS = {
   port: chrome_port, 
   chromeFlags:CHROME_OPTS, 
   userDataDir:false, 
-  /*
   startingUrl: `http://localhost:${args.server_port}`,
-  */
   ignoreDefaultFlags: true
 }
 const KILL_ON = {
