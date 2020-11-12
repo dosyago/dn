@@ -112,7 +112,9 @@ Uses DevTools protocol to intercept all requests, and caches responses against a
 
 ### Can I use this with a browser that's not Chrome-based? 
 
-No.
+No. 
+
+But...see [#57](https://github.com/c9fe/22120/issues/57). Just want to set some expectations, this is only an investigation and considering it, it might not ever get done. But, your voices made a difference, as I wasn't even considering it before. 
 
 ### How does this interact with Ad blockers?
 
