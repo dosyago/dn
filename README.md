@@ -4,6 +4,8 @@
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
+If you like **22120**, you might love the clientless hosted version coming in future. You'll be able to build your archives online from any device, without any download, then download the archive to run on any desktop. You'll need to sign up to use it, but you can jump the queue and sign up [today](https://dosyago.com).
+
 **News - new binaries** 
 
 <span id=toc></span>
