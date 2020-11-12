@@ -4,8 +4,6 @@
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
-If you like **22120**, you might love the clientless hosted version coming in future. You'll be able to build your archives online from any device, without any download, then download the archive to run on any desktop. You'll need to sign up to use it, but you can jump the queue and sign up [today](https://dosyago.com).
-
 **News - new binaries** 
 
 <span id=toc></span>
@@ -21,6 +19,7 @@ If you like **22120**, you might love the clientless hosted version coming in fu
   * [Why not WARC (or another format like MHTML) ?](#why-not-warc-or-another-format-like-mhtml-)
   * [How it works](#how-it-works)
   * [FAQ](#faq)
+    + [Do I need to download something?](#do-i-need-to-download-something)
     + [Can I use this with a browser that's not Chrome-based?](#can-i-use-this-with-a-browser-thats-not-chrome-based)
     + [How does this interact with Ad blockers?](#how-does-this-interact-with-ad-blockers)
     + [How secure is running chrome with remote debugging port open?](#how-secure-is-running-chrome-with-remote-debugging-port-open)
@@ -134,6 +133,10 @@ Uses DevTools protocol to intercept all requests, and caches responses against a
 <p align=right><small><a href=#toc>Top</a></small></p>
 
 ## FAQ
+
+### Do I need to download something?
+
+Yes. But....If you like **22120**, you might love the clientless hosted version coming in future. You'll be able to build your archives online from any device, without any download, then download the archive to run on any desktop. You'll need to sign up to use it, but you can jump the queue and sign up [today](https://dosyago.com).
 
 ### Can I use this with a browser that's not Chrome-based? 
 
