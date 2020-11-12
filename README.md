@@ -42,8 +42,9 @@ License information can be found in the LICENSE file.
 
 This software is dual-licensed. For information about commercial licensing, see [Dosyago Commercial License for OEMs, ISVs and VARs](https://github.com/dosyago/dual-licensing).
 
-## About
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+## About
 
 **This project literally makes your web browsing available COMPLETELY OFFLINE.** Your browser does not even know the difference. It's literally that amazing. Yes. 
 
@@ -51,8 +52,9 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 
 **warning: if you have Chrome open, it will close it automatically when you open 22120, and relaunch it. You may lose any unsaved work.**
 
-## Get 22120
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+## Get 22120
 
 3 ways to get it:
 
@@ -62,16 +64,18 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 
 Also, coming soon is a Chrome Extension.
 
+<p align=right><small><a href=#toc>Top</a></small></p>
+
 ## Using
 
 ### Pick save mode or serve mode
-<p align=right><small><a href=#toc>Top</a></small></p>
 
 Go to http://localhost:22120 in your browser, 
 and follow the instructions. 
 
-### Exploring your 22120 archive
 <p align=right><small><a href=#toc>Top</a></small></p>
+
+### Exploring your 22120 archive
 
 Archive will be located in `$your_user_home_directory/22120-arc/public/library`
 
