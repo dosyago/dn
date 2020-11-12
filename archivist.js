@@ -344,7 +344,7 @@ async function collect({chrome_port:port, mode} = {}) {
     const fileName = `${await hasha(key, HASH_OPTS)}.json`;
 
     const responsePath = path.resolve(originDir, fileName);
-    await Fs.promises.writeFile(responsePath, JSON.stringify(response));
+    await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
 
     return responsePath;
   }
@@ -433,7 +433,7 @@ function handlePathChanged() {
 function saveCache(path) {
   if ( context == 'node' ) {
     //DEBUG && console.log("Writing to", path || CACHE_FILE());
-    Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()]));
+    Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()],null,2));
   }
 }
 
@@ -441,7 +441,10 @@ function saveIndex(path) {
   if ( context == 'node' ) {
     //DEBUG && console.log("Writing to", path || INDEX_FILE());
     //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
-    Fs.writeFileSync(path || INDEX_FILE(), JSON.stringify([...State.Index.entries()].sort(SORT_URLS)));
+    Fs.writeFileSync(
+      path || INDEX_FILE(), 
+      JSON.stringify([...State.Index.entries()].sort(SORT_URLS),null,2)
+    );
   }
 }
 

@@ -96,7 +96,7 @@ function loadPref() {
 
 function savePref() {
   try {
-    fs.writeFileSync(pref_file, JSON.stringify(Pref));
+    fs.writeFileSync(pref_file, JSON.stringify(Pref,null,2));
   } catch(e) {
     console.warn("Error writing preferences file", pref_file, Pref, e);
   }
