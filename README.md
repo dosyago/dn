@@ -27,6 +27,7 @@
     + [What about streaming content?](#what-about-streaming-content)
     + [Can I black list domains to not archive them?](#can-i-black-list-domains-to-not-archive-them)
     + [Is there a DEBUG mode for troubleshooting?](#is-there-a-debug-mode-for-troubleshooting)
+    + [Can I version the archive?](#can-i-version-the-archive)
     + [Can I change the archive path?](#can-i-change-the-archive-path)
     + [Can I change this other thing?](#can-i-change-this-other-thing)
 
