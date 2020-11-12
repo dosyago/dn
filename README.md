@@ -42,6 +42,7 @@ License information can be found in the LICENSE file.
 This software is dual-licensed. For information about commercial licensing, see [Dosyago Commercial License for OEMs, ISVs and VARs](https://github.com/dosyago/dual-licensing).
 
 ## About
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 **This project literally makes your web browsing available COMPLETELY OFFLINE.** Your browser does not even know the difference. It's literally that amazing. Yes. 
 
@@ -50,6 +51,7 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 **warning: if you have Chrome open, it will close it automatically when you open 22120, and relaunch it. You may lose any unsaved work.**
 
 ## Get 22120
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 3 ways to get it:
 
@@ -62,17 +64,20 @@ Also, coming soon is a Chrome Extension.
 ## Using
 
 ### Pick save mode or serve mode
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Go to http://localhost:22120 in your browser, 
 and follow the instructions. 
 
 ### Exploring your 22120 archive
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Archive will be located in `$your_user_home_directory/22120-arc/public/library`
 
 But it's not public, don't worry!
 
 ## Format
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 The archive format is:
 
@@ -81,6 +86,7 @@ The archive format is:
 Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
 
 ## Why not WARC (or another format like MHTML) ?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 **The case for the 22120 format.**
 
@@ -105,36 +111,43 @@ In our view, the internal structure of the resource as presented, *is the cannon
 In short, the web is an *online* medium, and it should be archived and presented in the same fashion. 22120 archives content exactly as it is received and presented by a browser, and it also replays that content exactly as if the resource were being taken from online. Yes, it requires a browser for this exercise, but that browser need not be connected to the internet. It is only natural that viewing a web resource requires the web browser. And because of 22120 the browser doesn't know the difference! Resources presented to the browser form a remote web site, and resources given to the browser by 22120, are seen by the browser as ***exactly the same.*** This ensures that the people viewing the archive are also not let down and are given the change to have the exact same experience as if they were viewing the resource online. 
 
 ## How it works
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Uses DevTools protocol to intercept all requests, and caches responses against a key made of (METHOD and URL) onto disk. It also maintains an in memory set of keys so it knows what it has on disk. 
 
 ## FAQ
 
 ### Can I use this with a browser that's not Chrome-based? 
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 No. 
 
 But...see [#57](https://github.com/c9fe/22120/issues/57). Just want to set some expectations, this is only an investigation and considering it, it might not ever get done. But, your voices made a difference, as I wasn't even considering it before. 
 
 ### How does this interact with Ad blockers?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Interacts just fine. The things ad blockers stop will not be archived.
 
 ### How secure is running chrome with remote debugging port open?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Seems pretty secure. It's not exposed to the public internet, and pages you load that tried to use it cannot use the protocol for anything (except to open a new tab, which they can do anyway). 
 
 ### Is this free?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Yes this is totally free to download and use. It's also open source so do what you want with it.
 
 ### What's the roadmap?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 - Full text search 
 - Library server to serve archive publicly.
 - Distributed p2p web browser on IPFS
 
 ### What about streaming content?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 The following are probably hard (and I haven't thought much about):
 
@@ -145,6 +158,7 @@ The following are probably hard (and I haven't thought much about):
 Probably some way to do this tho.
 
 ### Can I black list domains to not archive them?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Yes! Put any domains into `$HOME/22120-arc/no.json`, eg:
 
@@ -161,6 +175,7 @@ Will not cache any resource with a host matching those. Wildcards:
 - `?` (0 or 1 anything) 
 
 ### Is there a DEBUG mode for troubleshooting?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Yes, just make sure you set an environment variable called `DEBUG_22120` to anything non empty.
 
@@ -171,10 +186,12 @@ export DEBUG_22120=True
 ```
 
 ### Can I change the archive path?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 Yes, there's a control for changing the archive path in the control page: http://localhost:22120
 
 ### Can I change this other thing?
+<p align=right><small><a href=#toc>Top</a></small></p>
 
 There's a few command line arguments. You'll see the format printed as the first printed line when you start the program.
 
