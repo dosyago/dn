@@ -91,7 +91,7 @@ You can also check out the archive index, for a listing of every title in the ar
 
 The archive format is:
 
-`22120-arc/public/library/<resource-origin>/<path-hash>.json`\*
+`22120-arc/public/library/<resource-origin>/<path-hash>.json`
 
 Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
 
