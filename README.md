@@ -77,9 +77,13 @@ and follow the instructions.
 
 ### Exploring your 22120 archive
 
-Archive will be located in `$your_user_home_directory/22120-arc/public/library`
+Archive will be located in `22120-arc/public/library`\*
 
 But it's not public, don't worry!
+
+\**Note:`22120-arc` is the archive root of a single archive, and by defualt it is placed in your home directory. But you can change the parent directory for `22120-arc` to have multiple archvies.*
+
+You can also check out the archive index, for a listing of every title in the archive. The index is accessible from the control page, which by default is at [http://localhost:22120](http://localhost:22120) (unless you changed the port).
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
@@ -87,7 +91,7 @@ But it's not public, don't worry!
 
 The archive format is:
 
-`22120-arc/public/library/<resource-origin>/<path-hash>.json`
+`22120-arc/public/library/<resource-origin>/<path-hash>.json`\*
 
 Inside the JSON file, is a JSON object with headers, response code, key and a base 64 encoded response body.
 
@@ -175,7 +179,7 @@ Probably some way to do this tho.
 
 ### Can I black list domains to not archive them?
 
-Yes! Put any domains into `$HOME/22120-arc/no.json`, eg:
+Yes! Put any domains into `22120-arc/no.json`\*, eg:
 
 ```json
 [
@@ -191,6 +195,8 @@ Will not cache any resource with a host matching those. Wildcards:
 
 - `*` (0 or more anything) and 
 - `?` (0 or 1 anything) 
+
+\**Note: the `no` file is per-archive. `22120-arc` is the archive root of a single archive, and by defualt it is placed in your home directory. But you can change the parent directory for `22120-arc` to have multiple archvies, and each archive requires its own `no` file, if you want a blacklist in that archive.*
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
