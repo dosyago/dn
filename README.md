@@ -62,7 +62,8 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 3 ways to get it:
 
 1. Get binary from the [releases page.](https://github.com/c9fe/22120/releases), or
-2. Run with npx: `npx archivist1`, or 
+2. Run with npx: `npx archivist1@latest`, or
+  + `npm i -g archivist1@latest && archivist1`
 3. Clone this repo and run as a Node.JS app: `npm i && npm start` 
 
 Also, coming soon is a Chrome Extension.
