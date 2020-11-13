@@ -9,19 +9,19 @@
 - [Overview](#classical_building-22120---)
   * [License](#license)
   * [About](#about)
-  * [Get 22120](#get-22120)
-  * [Using](#using)
+  * [Installation](#installation)
+  * [Usage](#usage)
     + [Pick save mode or serve mode](#pick-save-mode-or-serve-mode)
     + [Exploring your 22120 archive](#exploring-your-22120-archive)
-  * [Format](#format)
+  * [Archive Format](#archive-format)
   * [Why not WARC (or another format like MHTML) ?](#why-not-warc-or-another-format-like-mhtml-)
   * [How it works](#how-it-works)
   * [FAQ](#faq)
     + [Do I need to download something?](#do-i-need-to-download-something)
     + [Can I use this with a browser that's not Chrome-based?](#can-i-use-this-with-a-browser-thats-not-chrome-based)
-    + [How does this interact with Ad blockers?](#how-does-this-interact-with-ad-blockers)
+    + [How does this interact with ad blockers?](#how-does-this-interact-with-ad-blockers)
     + [How secure is running chrome with remote debugging port open?](#how-secure-is-running-chrome-with-remote-debugging-port-open)
-    + [Is this free?](#is-this-free)
+    + [Is the software free?](#is-the-software-free)
     + [What's the roadmap?](#whats-the-roadmap)
     + [What about streaming content?](#what-about-streaming-content)
     + [Can I black list domains to not archive them?](#can-i-black-list-domains-to-not-archive-them)
@@ -46,7 +46,7 @@ This software is dual-licensed. For information about commercial licensing, see 
 
 ## About
 
-**This project literally makes your web browsing available COMPLETELY OFFLINE.** Your browser does not even know the difference. It's literally that amazing. Yes. 
+**This project makes your web browsing available COMPLETELY OFFLINE.** Your browser does not even know the difference. It is that amazing. Yes.
 
 Save your browsing, then switch off the net and go to `http://localhost:22120` and switch mode to **serve** then browse what you browsed before. It all still works.
 
@@ -54,12 +54,15 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
-## Get 22120
+## Installation
 
-3 ways to get it:
+Currently we do not provide a complete installation solution.
+However, you can download a 22120 executable and run it. It just works!
 
-1. Get binary from the [releases page.](https://github.com/c9fe/22120/releases), or
-2. Run with npx: `npx archivist1@latest`, or
+Here are three ways to get an executable for 22120:
+
+1. Download a binary from the [releases page.](https://github.com/c9fe/22120/releases)
+2. Run with npx: `npx archivist1@latest`:
     - `npm i -g archivist1@latest && archivist1`
 3. Clone this repo and run as a Node.JS app: `npm i && npm start` 
 
@@ -67,7 +70,7 @@ Also, coming soon is a Chrome Extension.
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
-## Using
+## Usage
 
 ### Pick save mode or serve mode
 
@@ -88,7 +91,7 @@ You can also check out the archive index, for a listing of every title in the ar
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
-## Format
+## Archive Format
 
 The archive format is:
 
@@ -144,7 +147,7 @@ But...see [#57](https://github.com/c9fe/22120/issues/57). Just want to set some 
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
-### How does this interact with Ad blockers?
+### How does this interact with ad blockers?
 
 Interacts just fine. The things ad blockers stop will not be archived.
 
@@ -156,9 +159,12 @@ Seems pretty secure. It's not exposed to the public internet, and pages you load
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
-### Is this free?
+### Is the software free?
 
-Yes this is totally free to download and use. It's also open source (under AGPL-3.0) so do what you want with it. For more information about licensing, see the [license section](#license). 
+Yes it is totally free (as in free beer) to download and use.
+It's also free (as in freedom) and open source (under AGPL-3.0) so do what you
+want with it.
+For more information about licensing, see the [license section](#license).
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
@@ -209,7 +215,7 @@ Will not cache any resource with a host matching those. Wildcards:
 
 Yes, just make sure you set an environment variable called `DEBUG_22120` to anything non empty.
 
-So for example in posix systems:
+So for example in POSIX systems:
 
 ```bash
 export DEBUG_22120=True
