@@ -22,6 +22,7 @@
     + [How does this interact with Ad blockers?](#how-does-this-interact-with-ad-blockers)
     + [How secure is running chrome with remote debugging port open?](#how-secure-is-running-chrome-with-remote-debugging-port-open)
     + [Is this free?](#is-this-free)
+    + [What if it can't find my chrome?](#what-if-it-cant-find-my-chrome)
     + [What's the roadmap?](#whats-the-roadmap)
     + [What about streaming content?](#what-about-streaming-content)
     + [Can I black list domains to not archive them?](#can-i-black-list-domains-to-not-archive-them)
@@ -159,6 +160,12 @@ Seems pretty secure. It's not exposed to the public internet, and pages you load
 ### Is this free?
 
 Yes this is totally free to download and use. It's also open source (under AGPL-3.0) so do what you want with it. For more information about licensing, see the [license section](#license). 
+
+<p align=right><small><a href=#toc>Top</a></small></p>
+
+### What if it can't find my chrome?
+
+See this useful [issue](https://github.com/c9fe/22120/issues/68).
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
