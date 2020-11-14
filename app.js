@@ -67,8 +67,7 @@ async function start() {
     try {
       await ChromeLaunch(LAUNCH_OPTS);
     } catch(e) {
-      console.log(`Could not launch chrome.`);
-      DEBUG && console.info('Chrome launch error:', e);
+      console.log(`Could not launch chrome.\n`, e);
       process.exit(1);
     }
     console.log(`Chrome started.`);
