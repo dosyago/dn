@@ -152,7 +152,7 @@ Interacts just fine. The things ad blockers stop will not be archived.
 
 ### How secure is running chrome with remote debugging port open?
 
-Seems pretty secure. It's not exposed to the public internet, and pages you load that tried to use it cannot use the protocol for anything (except to open a new tab, which they can do anyway). 
+Seems pretty secure. It's not exposed to the public internet, and pages you load that tried to use it cannot use the protocol for anything (except to open a new tab, which they can do anyway). It seems there's a potential risk from malicious browser extensions, but we'd need to confirm that and if that's so, work out blocks. See [this useful security related post](https://github.com/c9fe/22120/issues/67) for some info.
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
