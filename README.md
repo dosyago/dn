@@ -81,7 +81,7 @@ But it's not public, don't worry!
 
 You can also check out the archive index, for a listing of every title in the archive. The index is accessible from the control page, which by default is at [http://localhost:22120](http://localhost:22120) (unless you changed the port).
 
-\**Note:`22120-arc` is the archive root of a single archive, and by defualt it is placed in your home directory. But you can change the parent directory for `22120-arc` to have multiple archvies.*
+\**Note:`22120-arc` is the archive root of a single archive, and by default it is placed in your home directory. But you can change the parent directory for `22120-arc` to have multiple archives.*
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
