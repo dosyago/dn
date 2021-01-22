@@ -137,8 +137,6 @@ Yes. But....If you like **22120**, you might love the clientless hosted version 
 
 No. 
 
-But...see [#57](https://github.com/c9fe/22120/issues/57). Just want to set some expectations, this is only an investigation and considering it, it might not ever get done. But, your voices made a difference, as I wasn't even considering it before. 
-
 <p align=right><small><a href=#toc>Top</a></small></p>
 
 ### How does this interact with Ad blockers?
