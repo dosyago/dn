@@ -2,7 +2,7 @@
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
-If you use or like this, don't forget to show your appreciation by [starring this repo](https://github.com/i5ik/22120/stargazers), or [following me](https://github.com/i5ik) 😹
+If you use or like this, don't forget to show your appreciation by [starring this repo](https://github.com/i5ik/22120/stargazers), or [following me](https://github.com/i5ik) 😹 
 
 **News - 22120 plus interview featured in [Console - the open source newsletter](https://console.substack.com/p/console-28)**
 
