@@ -1,4 +1,5 @@
 # :classical_building: [22120](https://github.com/c9fe/22120) ![npm downloads](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads) ![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=binary%20downloads) [![latest package](https://img.shields.io/github/v/release/c9fe/22120?label=latest%20release)](https://github.com/c9fe/22120/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fi5ik%2F22120.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fi5ik%2F22120?ref=badge_shield)
 
 :classical_building: - An archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
@@ -34,6 +35,9 @@ If you use or like this, don't forget to show your appreciation by [starring thi
     + [Can I change this other thing?](#can-i-change-this-other-thing)
 
 ------------------
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fi5ik%2F22120.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fi5ik%2F22120?ref=badge_large)
 
 ## License 
 
@@ -237,4 +241,3 @@ There's a few command line arguments. You'll see the format printed as the first
 For other things you can examine the source code. 
 
 <p align=right><small><a href=#toc>Top</a></small></p>
-
