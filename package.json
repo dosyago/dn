@@ -1,0 +1,46 @@
+{
+  "name": "archivist1",
+  "version": "1.3.14",
+  "description": "Library server and an archivist browser controller.",
+  "main": "index.js",
+  "bin": {
+    "archivist1": "22120.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "postinstall": "bash ./build_setup.sh",
+    "build": "bash ./compile.sh",
+    "clean": "rm 22120.js *22120.js 22120.???",
+    "pack": "upx 22120.exe && upx 22120.nix && upx 22120.mac && upx 22120.win32.exe && upx 22120.nix32",
+    "test": "node-dev index.js",
+    "save": "node-dev index.js 22120 save",
+    "serve": "node-dev index.js 22120 serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dosyago/22120.git"
+  },
+  "keywords": [
+    "archivist",
+    "library"
+  ],
+  "author": "@dosy",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dosyago/22120/issues"
+  },
+  "homepage": "https://github.com/dosyago/22120#readme",
+  "dependencies": {
+    "chrome-launcher": "latest",
+    "esm": "latest",
+    "express": "latest",
+    "hasha": "latest",
+    "node-fetch": "latest",
+    "ws": "latest"
+  },
+  "devDependencies": {
+    "node-dev": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Archivists Anonymous",
+  "short_name": "22120",
+  "version": "1.0",
+  "manifest_version": 2,
+  "minimum_chrome_version": "33",
+  "description": "An archivist browser controller that caches everything you browse, and serves it when you're offline.",
+	"homepage_url": "https://github.com/dosyago/22120",
+  "permissions" :
+    [
+      "tabs",
+      "<all_urls>",
+      "debugger",
+      "storage",
+      "unlimitedStorage"
+    ],
+	"background": {
+		"persistent": true,
+		"page": "ext/bg_page.html"
+	},
+	"browser_action": {
+
+	}
+}
