@@ -39,7 +39,9 @@
     "ws": "latest"
   },
   "devDependencies": {
+    "nexe": "latest",
     "node-dev": "latest",
+    "npx": "latest",
     "webpack": "latest",
     "webpack-cli": "latest"
   }
