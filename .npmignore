@@ -1,0 +1,9 @@
+
+.*.swp
+
+# Bundling and packaging
+22120.exe
+22120.nix
+22120.mac
+22120.win32.exe
+22120.nix32
