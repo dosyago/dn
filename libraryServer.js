@@ -3,10 +3,10 @@ import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {say, sleep} from './common.js';
+import {say, sleep, APP_ROOT} from './common.js';
 import Archivist from './archivist.js';
 
-const SITE_PATH = path.resolve(__dirname, 'public');
+const SITE_PATH = path.resolve(APP_ROOT, 'public');
 
 const app = express();
 const INDEX_FILE = args.index_file;

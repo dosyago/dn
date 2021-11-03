@@ -6,6 +6,7 @@ import args from './args.js';
 import {APP_ROOT, context, sleep, DEBUG} from './common.js';
 import {connect} from './protocol.js';
 import {getInjection} from './public/injection.js';
+import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
 
 //import xapian from 'xapian';
 
@@ -74,7 +75,7 @@ async function collect({chrome_port:port, mode} = {}) {
   const Sessions = new Map();
   const Installations = new Set();
   const ConfirmedInstalls = new Set();
-  const DELAY = 500;
+  const DELAY = 100; // 500 ?
   Close = close;
   Mode = mode; 
 
@@ -263,7 +264,15 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function cacheRequest(pausedRequest) {
-    const {requestId, request, resourceType, responseStatusCode, responseHeaders} = pausedRequest;
+    const {
+      requestId, request, resourceType, 
+      responseStatusCode, responseHeaders, responseErrorReason
+    } = pausedRequest;
+    const {url} = request;
+    const isNavigationRequest = resourceType == "Document";
+    const isFont = resourceType == "Font";
+
+
     if ( dontCache(request) ) {
       DEBUG && console.log("Not caching", request.url);
       return send("Fetch.continueRequest", {requestId});
@@ -286,31 +295,57 @@ async function collect({chrome_port:port, mode} = {}) {
       } 
     } else if ( Mode == 'save' ) {
       const response = {key, responseCode: responseStatusCode, responseHeaders};
-      let resp;
-      if ( ! BODYLESS.has(responseStatusCode) ) {
-        resp = await send("Fetch.getResponseBody", {requestId});
-      } else {
-        resp = {body:'', base64Encoded:true};
-      }
-      if ( ! resp ) {
-        DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
-        await sleep(DELAY);
-        return send("Fetch.continueRequest", {requestId});
-      }
+      const resp = await getBody({requestId, responseStatusCode});
       if ( !! resp ) {
         let {body, base64Encoded} = resp;
         if ( ! base64Encoded ) {
           body = b64(body);
         }
         response.body = body;
+        const responsePath = await saveResponseData(key, request.url, response);
+        State.Cache.set(key, responsePath);
       } else {
+        DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
         response.body = '';
       }
-      const responsePath = await saveResponseData(key, request.url, response);
-      State.Cache.set(key, responsePath);
       await sleep(DELAY);
-      await send("Fetch.continueRequest", {requestId});
+      if ( !isFont && responseErrorReason ) {
+        if ( isNavigationRequest ) {
+          await send("Fetch.fulfillRequest", {
+              requestId,
+              responseHeaders: BLOCKED_HEADERS,
+              responseCode: BLOCKED_CODE,
+              body: Buffer.from(responseErrorReason).toString("base64"),
+            },
+          );
+        } else {
+          await send("Fetch.failRequest", {
+              requestId,
+              errorReason: responseErrorReason
+            },
+          );
+        }
+      } else {
+        try {
+          await send("Fetch.continueRequest", {
+              requestId,
+            },
+          );
+        } catch(e) {
+          console.warn("Issue with continuing request", e, message);
+        }
+      }
     }
+  }
+
+  async function getBody({requestId, responseStatusCode}) {
+    let resp;
+    if ( ! BODYLESS.has(responseStatusCode) ) {
+      resp = await send("Fetch.getResponseBody", {requestId});
+    } else {
+      resp = {body:'', base64Encoded:true};
+    }
+    return resp;
   }
   
   function dontCache(request) {
