@@ -37,7 +37,11 @@ If you use or like this, don't forget to show your appreciation by [starring thi
 
 ## License 
 
-This is released into the public domain.
+22120 is licensed under Polyform Strict License 1.0.0 (no modification, no distribution). You can purchase a license to use for personal, research, noncommercial purposes, below:
+
+- [Buy a Perpetual Non-commercial Use License of the current Version re-upped Monthly to the Latest Version, USD$1.99 per month](https://buy.stripe.com/fZeg0a45zdz58U028z) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Noncommercial-1.0.0.md)
+- [Buy a Perpetual Internal Use License of the current Version re-upped Monthly to the Latest Version, USD $12.99 per month](https://buy.stripe.com/00g4hsgSlbqXb288wY) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Internal-Use-1.0.0.md)
+- [Buy a Perpetual Small-medium Business License of the current Version re-upped Monthly to the Latest Version, USD $99 per month](https://buy.stripe.com/aEUbJUgSl2UreekdRj) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Small-Business-1.0.0.md)
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
@@ -153,7 +157,7 @@ Seems pretty secure. It's not exposed to the public internet, and pages you load
 
 ### Is this free?
 
-Yes this is totally free to download and use. It's also open source (under AGPL-3.0) so do what you want with it. For more information about licensing, see the [license section](#license). 
+Yes this is totally free to download and use for personal non-commercial use. If you want to modify or distribute it, or use it commercially (either internally or for customer functions) you need to purchase a [Noncommercial, internal use, or SMB license](#license). 
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
