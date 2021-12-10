@@ -35,6 +35,7 @@
     "chrome-launcher": "latest",
     "esm": "^3.2.25",
     "express": "latest",
+    "flexsearch": "^0.7.21",
     "hasha": "latest",
     "node-fetch": "latest",
     "ws": "latest"

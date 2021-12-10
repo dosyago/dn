@@ -2,6 +2,7 @@ import hasha from 'hasha';
 import {URL} from 'url';
 import path from 'path';
 import fs from 'fs';
+import FlexSearch from 'flexsearch';
 import args from './args.js';
 import {APP_ROOT, context, sleep, DEBUG} from './common.js';
 import {connect} from './protocol.js';
@@ -14,6 +15,11 @@ import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js'
   // that holds the serialized requests
   // that are saved on disk
 let Fs, Mode, Close;
+const {Index, registerCharset, registerLanguage} = FlexSearch;
+const FLEX_OPTS = {
+  context: true,
+};
+const Flex = new Index(FLEX_OPTS);
 const Cache = new Map();
 const State = {
   Cache, 
@@ -234,6 +240,7 @@ async function collect({chrome_port:port, mode} = {}) {
         (Text, {nodeValue}) => Text + nodeValue + ' ',
         ''
       );
+
       if ( false ) {
         console.log({
           page : {
@@ -243,6 +250,7 @@ async function collect({chrome_port:port, mode} = {}) {
           }
         });
       }
+      Flex.updateAsync(info.url, pageText);
     }
 
     console.log(`Indexed ${info.url} to ${info.title}`);
