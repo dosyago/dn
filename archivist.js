@@ -202,7 +202,6 @@ async function collect({chrome_port:port, mode} = {}) {
       }
 
       Installations.add(targetId);
-
     } else if ( ConfirmedInstalls.has(sessionId) ) {
       DEBUG && console.log("Already confirmed install", targetId, url);
     }
@@ -218,6 +217,7 @@ async function collect({chrome_port:port, mode} = {}) {
     State.Index.set(info.url, info.title);   
 
     if ( Installations.has(info.targetId) ) {
+      console.log('hi');
       const sessionId = Sessions.get(info.targetId);
 
       send("DOM.enable", {}, sessionId);
@@ -250,7 +250,10 @@ async function collect({chrome_port:port, mode} = {}) {
           }
         });
       }
-      Flex.updateAsync(info.url, pageText);
+      //Flex.updateAsync(info.url, pageText).then(r => console.log('Search index update done'));
+      //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
+      const res = Flex.add(info.url, pageText);
+      console.log(res);
     }
 
     console.log(`Indexed ${info.url} to ${info.title}`);
