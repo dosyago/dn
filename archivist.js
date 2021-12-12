@@ -126,11 +126,8 @@ async function collect({chrome_port:port, mode} = {}) {
         urlPattern: "http*://*", 
         requestStage
       }
-    ]
+    ], 
   });
-
-  await send("Network.setCacheDisabled", {cacheDisabled:true});
-  await send("Network.setBypassServiceWorker", {bypass:true});
 
   await send("Target.setDiscoverTargets", {discover:true});
   await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
