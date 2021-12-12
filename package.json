@@ -34,16 +34,16 @@
   "homepage": "https://github.com/dosyago/22120#readme",
   "dependencies": {
     "chrome-launcher": "latest",
-    "esm": "^3.2.25",
+    "esm": "latest",
     "express": "latest",
-    "flexsearch": "^0.7.21",
+    "flexsearch": "latest",
     "hasha": "latest",
     "node-fetch": "latest",
     "ws": "latest"
   },
   "devDependencies": {
     "nexe": "latest",
-    "nodemon": "^2.0.15",
+    "nodemon": "latest",
     "npx": "latest",
     "webpack": "latest",
     "webpack-cli": "latest"
