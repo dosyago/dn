@@ -1,4 +1,4 @@
-import {context} from './common.js';
+import {DEBUG, context} from './common.js';
 
 const ROOT_SESSION = "browser";
 // actually we use 'tot' but in chrome.debugger.attach 'tot' is 
@@ -41,75 +41,95 @@ async function loadDependencies() {
 }
 
 export async function connect({port:port = 9222} = {}) {
-  if ( context == 'extension' ) {
+  if ( ! Ws || ! Fetch ) {
+    await loadDependencies();
+  }
+  try {
+    const {webSocketDebuggerUrl} = await Fetch(`http://localhost:${port}/json/version`).then(r => r.json());
+    const socket = new Ws(webSocketDebuggerUrl);
+    const Resolvers = {};
     const Handlers = {};
-    const getTargets = promisify(chrome.debugger, 'getTargets', guardError);
-    const attach = promisify(chrome.debugger, 'attach', guardError);
-    const sendCommand = promisify(chrome.debugger, 'sendCommand', guardError);
-    let resp, firstTarget, targets;
+    socket.on('message', handle);
+    let id = 0;
 
-    chrome.debugger.onEvent.addListener(handle);
+    let resolve;
+    const promise = new Promise(res => resolve = res);
 
-    // attach to all existing targets 
-      targets = await getTargets();
-      targets = targets.filter(T => T.type == 'page' && T.url.startsWith('http'));
+    socket.on('open', () => resolve());
 
-      for ( const T of targets ) {
-        if ( ! T.attached ) {
-          resp = await attach({targetId:T.id}, VERSION);
-          console.log("attached", {resp});
-        }
+    await promise;
+
+    return {
+      send,
+      on, ons,
+      close
+    }
+    
+    async function send(method, params = {}, sessionId) {
+      const message = {
+        method, params, sessionId, 
+        id: ++id
+      };
+      if ( ! sessionId ) {
+        delete message[sessionId];
       }
+      const key = `${sessionId||ROOT_SESSION}:${message.id}`;
+      let resolve;
+      const promise = new Promise(res => resolve = res);
+      Resolvers[key] = resolve;
+      socket.send(JSON.stringify(message));
+      DEBUG && console.log("Sent", message);
+      return promise;
+    }
 
-      if ( targets.length ) {
-        firstTarget = targets[0].id;
+    async function handle(message) {
+      const stringMessage = message;
+      message = JSON.parse(message);
+      if ( message.error ) {
+        DEBUG && console.warn(message);
       }
+      const {sessionId} = message;
+      const {method, params} = message;
+      const {id, result} = message;
 
-      await confirmAllAttached();
-
-    // discover targets is blocked in extensions
-      // instead we manually discover via tabs onCreated
-
-      let nextAttachConfirmation;
-
-      chrome.tabs.onCreated.addListener(async Tab => {
-        console.log(Tab);
-        const url = Tab.url || Tab.pendingUrl;
-        const attachable = url.startsWith('about') || url.startsWith('http');
-        if ( attachable ) {
-          const target = {tabId:Tab.id};
-          const r = await attach(target, VERSION);
-          if ( ! firstTarget ) {
-            firstTarget = Tab.id;
+      if ( id ) {
+        const key = `${sessionId||ROOT_SESSION}:${id}`;
+        const resolve = Resolvers[key];
+        if ( ! resolve ) {
+          console.warn(`No resolver for key`, key, stringMessage.slice(0,140));
+        } else {
+          Resolvers[key] = undefined;
+          try {
+            await resolve(result);
+          } catch(e) {
+            console.warn(`Resolver failed`, e, key, stringMessage.slice(0,140), resolve);
           }
-          console.log("attach", {resp:r});
         }
-        if ( nextAttachConfirmation ) {
-          clearTimeout(nextAttachConfirmation);
-        }
-        nextAttachConfirmation = setTimeout(confirmAllAttached, 200);
-      });
-
-      chrome.tabs.onUpdated.addListener(async (id, changed, Tab) => {
-        const {url} = changed;
-        const attachable = url && (url.startsWith('about') || url.startsWith('http'));
-        if ( attachable && ! Tab.attached ) {
-          const target = {tabId:id};
-          const r = await attach(target, VERSION);
-          if ( ! firstTarget ) {
-            firstTarget = id;
+      } else if ( method ) {
+        const listeners = Handlers[method];
+        if ( Array.isArray(listeners) ) {
+          for( const func of listeners ) {
+            try {
+              func({message, sessionId});
+            } catch(e) {
+              console.warn(`Listener failed`, method, e, func.toString().slice(0,140), stringMessage.slice(0,140));
+            }
           }
-          console.log("attach", {resp:r});
         }
-        if ( nextAttachConfirmation ) {
-          clearTimeout(nextAttachConfirmation);
-        }
-        nextAttachConfirmation = setTimeout(confirmAllAttached, 200);
-      });
+      } else {
+        console.warn(`Unknown message on socket`, message);
+      }
+    }
 
-    return {send, on};
+    function on(method, handler) {
+      let listeners = Handlers[method]; 
+      if ( ! listeners ) {
+        Handlers[method] = listeners = [];
+      }
+      listeners.push(wrap(handler));
+    }
 
-    async function on(method, handler) {
+    function ons(method, handler) {
       let listeners = Handlers[method]; 
       if ( ! listeners ) {
         Handlers[method] = listeners = [];
@@ -117,169 +137,15 @@ export async function connect({port:port = 9222} = {}) {
       listeners.push(handler);
     }
 
-    async function send(method, params = {}, id = firstTarget) {
-      let tabId, targetId;
-      if ( Number.isInteger(id) ) {
-        tabId = id;
-      } else if ( typeof id == "string" ) {
-        targetId = id;
-      } else {
-        throw new Error(`Must specify an id to send command to. ${method}`);
-      }
-      try {
-        return await sendCommand(
-          {targetId, tabId}, 
-          method, 
-          params, 
-        );
-      } catch(e) {
-        console.warn(`${method}`, e);
-        return {error:e};
-      }
+    function close() {
+      socket.close();
     }
 
-    async function handle(source, method, params) {
-      const listeners = Handlers[method];
-      if ( Array.isArray(listeners) ) {
-        for( const func of listeners ) {
-          try {
-            func(method, params, source);
-          } catch(e) {
-            console.warn(`Listener failed`, method, JSON.stringify(params), e, func.toString().slice(0,140));
-          }
-        }
-      }
+    function wrap(fn) {
+      return ({message, sessionId}) => fn(message.params)
     }
-
-    function guardError(prefix = '') {
-      if ( chrome.runtime.lastError ) {
-        if ( typeof prefix == 'object' ) {
-          try {
-            prefix = JSON.stringify(prefix, null, 2);
-          } catch(e) {
-            console.warn(e);
-            prefix = prefix + '';
-          }
-        }
-        const error = `${prefix}: ${chrome.runtime.lastError.message}`;
-        return error;
-      }
-      return false;
-    }
-
-    async function confirmAllAttached() {
-      resp = await getTargets();
-      targets = resp.filter(T => T.type == 'page' && T.url.startsWith('http') && !T.attached);
-      console.assert(targets.length == 0, "We are not attached to some attachable targets", targets);
-    }
-  } else if ( context == 'node' ) {
-    if ( ! Ws || ! Fetch ) {
-      await loadDependencies();
-    }
-    try {
-      const {webSocketDebuggerUrl} = await Fetch(`http://localhost:${port}/json/version`).then(r => r.json());
-      const socket = new Ws(webSocketDebuggerUrl);
-      const Resolvers = {};
-      const Handlers = {};
-      socket.on('message', handle);
-      let id = 0;
-
-      let resolve;
-      const promise = new Promise(res => resolve = res);
-
-      socket.on('open', () => resolve());
-
-      await promise;
-
-      return {
-        send,
-        on, ons,
-        close
-      }
-      
-      async function send(method, params = {}, sessionId) {
-        const message = {
-          method, params, sessionId, 
-          id: ++id
-        };
-        if ( ! sessionId ) {
-          delete message[sessionId];
-        }
-        const key = `${sessionId||ROOT_SESSION}:${message.id}`;
-        let resolve;
-        const promise = new Promise(res => resolve = res);
-        Resolvers[key] = resolve;
-        socket.send(JSON.stringify(message));
-        return promise;
-      }
-
-      async function handle(message) {
-        const stringMessage = message;
-        message = JSON.parse(message);
-        if ( message.error ) {
-          //console.warn(message);
-        }
-        const {sessionId} = message;
-        const {method, params} = message;
-        const {id, result} = message;
-
-        if ( id ) {
-          const key = `${sessionId||ROOT_SESSION}:${id}`;
-          const resolve = Resolvers[key];
-          if ( ! resolve ) {
-            console.warn(`No resolver for key`, key, stringMessage.slice(0,140));
-          } else {
-            Resolvers[key] = undefined;
-            try {
-              await resolve(result);
-            } catch(e) {
-              console.warn(`Resolver failed`, e, key, stringMessage.slice(0,140), resolve);
-            }
-          }
-        } else if ( method ) {
-          const listeners = Handlers[method];
-          if ( Array.isArray(listeners) ) {
-            for( const func of listeners ) {
-              try {
-                func({message, sessionId});
-              } catch(e) {
-                console.warn(`Listener failed`, method, e, func.toString().slice(0,140), stringMessage.slice(0,140));
-              }
-            }
-          }
-        } else {
-          console.warn(`Unknown message on socket`, message);
-        }
-      }
-
-      function on(method, handler) {
-        let listeners = Handlers[method]; 
-        if ( ! listeners ) {
-          Handlers[method] = listeners = [];
-        }
-        listeners.push(wrap(handler));
-      }
-
-      function ons(method, handler) {
-        let listeners = Handlers[method]; 
-        if ( ! listeners ) {
-          Handlers[method] = listeners = [];
-        }
-        listeners.push(handler);
-      }
-
-      function close() {
-        socket.close();
-      }
-
-      function wrap(fn) {
-        return ({message, sessionId}) => fn(message.params)
-      }
-    } catch(e) {
-      console.log("Error communicating with browser", e);
-      process.exit(1);
-    }
-  } else {
-    throw new TypeError('Currently only supports running in Node.JS or as a Chrome Extension with Debugger permissions');
+  } catch(e) {
+    console.log("Error communicating with browser", e);
+    process.exit(1);
   }
 }

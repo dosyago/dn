@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import FlexSearch from 'flexsearch';
 import args from './args.js';
-import {APP_ROOT, context, sleep, DEBUG} from './common.js';
+import {APP_ROOT, context, sleep, DEBUG, CHECK_INTERVAL} from './common.js';
 import {connect} from './protocol.js';
 import {getInjection} from './public/injection.js';
 import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
@@ -21,7 +21,9 @@ const FLEX_OPTS = {
 };
 const Flex = new Index(FLEX_OPTS);
 const Cache = new Map();
+const Indexing = new Set();
 const State = {
+  Indexing,
   Cache, 
   SavedCacheFilePath: null,
   SavedIndexFilePath: null,
@@ -109,7 +111,7 @@ async function collect({chrome_port:port, mode} = {}) {
 
   on("Target.targetInfoChanged", attachToTarget);
 
-  on("Target.attachedToTarget", guard(installForSession, 'attached'));
+  on("Target.attachedToTarget", installForSession);
 
   on("Fetch.requestPaused", cacheRequest);
 
@@ -128,7 +130,7 @@ async function collect({chrome_port:port, mode} = {}) {
   await send("Network.setBypassServiceWorker", {bypass:true});
 
   await send("Target.setDiscoverTargets", {discover:true});
-  await send("Target.setAutoAttach", {autoAttach:false, waitForDebuggerOnStart:false, flatten: true});
+  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
 
   const {targetInfos:targets} = await send("Target.getTargets", {});
   const pageTargets = targets.filter(({type}) => type == 'page');
@@ -162,7 +164,7 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( attached && type == 'page' ) {
       const {url, targetId} = targetInfo;
       const sessionId = Sessions.get(targetId);
-      if ( !!url && url != "about:blank" && !url.startsWith('chrome') && !ConfirmedInstalls.has(sessionId) ) {
+      if ( !!sessionId && !!url && url != "about:blank" && !url.startsWith('chrome') && !ConfirmedInstalls.has(sessionId) ) {
         console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
         send("Page.stopLoading", {}, sessionId);
         send("Page.reload", {}, sessionId);
@@ -171,64 +173,76 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
+    console.log("installForSession called");
+    if ( ! sessionId ) {
+      throw new TypeError(`installForSession needs a sessionId`);
+    }
+
     const {targetId, url} = targetInfo;
+
+    if ( Installations.has(sessionId) ) return;
 
     if ( targetInfo.type != 'page' ) return;
 
     if ( Mode == 'serve' ) return;
 
-    indexURL({targetInfo});
+    Sessions.set(targetId, sessionId);
 
-    if ( ! Installations.has(targetId) ) {
-      if ( sessionId ) {
-        Sessions.set(targetId, sessionId);
-      } else {
-        sessionId = Sessions.get(targetId);
-      }
+    if ( Mode == 'save' ) {
+      send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
+      send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
 
-      if ( sessionId && Mode == 'save' ) {
-        send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
-        send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
+      await send("Runtime.enable", {}, sessionId);
+      await send("Page.enable", {}, sessionId);
+      await send("DOMSnapshot.enable", {}, sessionId);
 
-        await send("Runtime.enable", {}, sessionId);
-        await send("Page.enable", {}, sessionId);
+      await send("Page.addScriptToEvaluateOnNewDocument", {
+        source: getInjection({sessionId}),
+        worldName: "Context-22120-Indexing"
+      }, sessionId);
 
-        await send("Page.addScriptToEvaluateOnNewDocument", {
-          source: getInjection({sessionId}),
-          worldName: "Context-22120-Indexing"
-        }, sessionId);
-
-        DEBUG && console.log("Just request install", targetId, url);
-      }
-
-      Installations.add(targetId);
-    } else if ( ConfirmedInstalls.has(sessionId) ) {
-      DEBUG && console.log("Already confirmed install", targetId, url);
+      DEBUG && console.log("Just request install", targetId, url);
     }
+
+    Installations.add(sessionId);
+
+    console.log('Installed sessionId', sessionId);
+    indexURL({targetInfo});
   }
 
-  async function indexURL({targetInfo:info = {}} = {}) {
+  async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
     if ( Mode == 'serve' ) return;
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
 
+    if ( State.Indexing.has(info.targetId) ) return;
+    State.Indexing.add(info.targetId);
+
     State.Index.set(info.url, info.title);   
 
-    if ( Installations.has(info.targetId) ) {
-      console.log('hi');
-      const sessionId = Sessions.get(info.targetId);
+    if ( ! sessionId ) {
+      sessionId = await untilHas(Sessions, info.targetId);
+    }
 
-      send("DOM.enable", {}, sessionId);
+    if ( !Installations.has(sessionId) ) {
+      await untilHas(Installations, sessionId);
+    }
 
-      await sleep(5000);
+    console.log('hi', sessionId);
 
-      const {nodes:pageNodes} = await send("DOM.getFlattenedDocument", {
-        depth: -1,
-        pierce: true
-      }, sessionId);
-      // we collect TextNodes, ignoring any under script, style or an attribute
+    send("DOMSnapshot.enable", {}, sessionId);
+
+    await sleep(500);
+
+    const flatDoc = await send("DOMSnapshot.captureSnapshot", {
+      computedStyles: [],
+    }, sessionId);
+    console.log(flatDoc);
+    processDoc(flatDoc);
+    // we collect TextNodes, ignoring any under script, style or an attribute
+    /*
       const ignoredParentIds = new Set(
         pageNodes.filter(
           ({localName,nodeType}) => IGNORE_NODES.has(localName) || nodeType == AttributeNode
@@ -254,9 +268,55 @@ async function collect({chrome_port:port, mode} = {}) {
       //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
       const res = Flex.add(info.url, pageText);
       console.log(res);
-    }
+    */
+    State.Indexing.delete(info.targetId);
 
     console.log(`Indexed ${info.url} to ${info.title}`);
+  }
+
+  async function untilHas(thing, key) {
+    if ( thing instanceof Map ) {
+      if ( thing.has(key) ) {
+        return thing.get(key);
+      } else {
+        let resolve;
+        const pr = new Promise(res => resolve = res);
+        const checker = setInterval(() => {
+          if ( thing.has(key) ) {
+            clearInterval(checker);
+            resolve(thing.get(key));
+          } else {
+            console.log(thing, "not have", key);
+          }
+        }, CHECK_INTERVAL);
+
+        return pr;
+      }
+    } else if ( thing instanceof Set ) {
+      if ( thing.has(key) ) {
+        return true;
+      } else {
+        let resolve;
+        const pr = new Promise(res => resolve = res);
+        const checker = setInterval(() => {
+          if ( thing.has(key) ) {
+            clearInterval(checker);
+            resolve(true);
+          } else {
+            console.log(thing, "not have", key);
+          }
+        }, CHECK_INTERVAL);
+
+        return pr;
+      }
+    } else {
+      throw new TypeError(`untilHas with thing of type ${thing} is not yet implemented!`);
+    }
+  }
+
+  function processDoc({documents, strings}) {
+    const {nodes} = documents[0];
+    console.log(nodes);
   }
 
   async function attachToTarget(targetInfo) {
@@ -264,12 +324,14 @@ async function collect({chrome_port:port, mode} = {}) {
     const {url} = targetInfo;
     if ( !!url && url != "about:blank" && !url.startsWith('chrome') ) {
 
-      if ( targetInfo.type == 'page' && ! targetInfo.attached ) {
-        const {sessionId} = await send("Target.attachToTarget", {
-          targetId: targetInfo.targetId,
-          flatten: true
-        });
-        Sessions.set(targetInfo.targetId, sessionId);
+      if ( targetInfo.type == 'page' ) {
+        if ( ! targetInfo.attached ) {
+          const {sessionId} = await send("Target.attachToTarget", {
+            targetId: targetInfo.targetId,
+            flatten: true
+          });
+          Sessions.set(targetInfo.targetId, sessionId);
+        }
       }
     }
   }
