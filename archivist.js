@@ -4,7 +4,10 @@ import path from 'path';
 import fs from 'fs';
 import FlexSearch from 'flexsearch';
 import args from './args.js';
-import {APP_ROOT, context, sleep, DEBUG, CHECK_INTERVAL} from './common.js';
+import {
+  APP_ROOT, context, sleep, DEBUG, 
+  CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
+} from './common.js';
 import {connect} from './protocol.js';
 import {getInjection} from './public/injection.js';
 import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
@@ -239,36 +242,12 @@ async function collect({chrome_port:port, mode} = {}) {
     const flatDoc = await send("DOMSnapshot.captureSnapshot", {
       computedStyles: [],
     }, sessionId);
-    console.log(flatDoc);
-    processDoc(flatDoc);
-    // we collect TextNodes, ignoring any under script, style or an attribute
-    /*
-      const ignoredParentIds = new Set(
-        pageNodes.filter(
-          ({localName,nodeType}) => IGNORE_NODES.has(localName) || nodeType == AttributeNode
-        ).map(({nodeId}) => nodeId)
-      );
-      const pageText = pageNodes.filter(
-        ({nodeType,parentId}) => nodeType == TextNode && ! ignoredParentIds.has(parentId)
-      ).reduce(
-        (Text, {nodeValue}) => Text + nodeValue + ' ',
-        ''
-      );
+    const pageText = processDoc(flatDoc);
+    //Flex.updateAsync(info.url, pageText).then(r => console.log('Search index update done'));
+    //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
+    const res = Flex.add(info.url, pageText);
+    DEBUG && console.log('Flex Index Result>>>', res);
 
-      if ( false ) {
-        console.log({
-          page : {
-            url: info.url,
-            title: info.title,
-            text: pageText
-          }
-        });
-      }
-      //Flex.updateAsync(info.url, pageText).then(r => console.log('Search index update done'));
-      //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
-      const res = Flex.add(info.url, pageText);
-      console.log(res);
-    */
     State.Indexing.delete(info.targetId);
 
     console.log(`Indexed ${info.url} to ${info.title}`);
@@ -315,8 +294,45 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   function processDoc({documents, strings}) {
-    const {nodes} = documents[0];
-    console.log(nodes);
+    /* 
+      Info
+      Implementation Notes 
+
+      1. Code uses spec at: 
+        https://chromedevtools.github.io/devtools-protocol/tot/DOMSnapshot/#type-NodeTreeSnapshot
+
+      2. Note that so far the below will NOT produce text for and therefore we will NOT
+      index textarea or input elements. We can access those by using the textValue and
+      inputValue array properties of the doc, if we want to implement that.
+    */
+       
+    const texts = [];
+    for( const doc of documents) {
+      const textIndices = doc.nodes.nodeType.reduce((Indices, type, index) => {
+        if ( type === TEXT_NODE ) {
+          const parentIndex = doc.nodes.parentIndex[index];
+          const forbiddenParent = parentIndex >= 0 && 
+            FORBIDDEN_TEXT_PARENT.has(strings[
+              doc.nodes.nodeName[
+                parentIndex
+              ]
+            ])
+          if ( ! forbiddenParent ) {
+            Indices.push(index);
+          }
+        }
+        return Indices;
+      }, []);
+      textIndices.forEach(index => {
+        const stringsIndex = doc.nodes.nodeValue[index];
+        const text = strings[stringsIndex];
+        texts.push(text);
+      });
+    }
+
+    const pageText = texts.filter(t => t.trim()).join(' ');
+    DEBUG && console.log('Page text>>>', pageText);
+    return pageText;
   }
 
   async function attachToTarget(targetInfo) {

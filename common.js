@@ -24,6 +24,12 @@ export const context = Context;
 export const DEBUG = process.env.DEBUG_22120 || false;
 
 export const CHECK_INTERVAL = 400;
+export const TEXT_NODE = 3;
+export const FORBIDDEN_TEXT_PARENT = new Set([
+  'STYLE',
+  'SCRIPT',
+  'NOSCRIPT'
+]);
 
 export const NO_SANDBOX = process.env.DEBUG_22120 || false;
 
