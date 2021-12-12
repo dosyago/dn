@@ -23,6 +23,8 @@ export const context = Context;
 
 export const DEBUG = process.env.DEBUG_22120 || false;
 
+export const CHECK_INTERVAL = 400;
+
 export const NO_SANDBOX = process.env.DEBUG_22120 || false;
 
 //export const APP_ROOT = __dirname;
