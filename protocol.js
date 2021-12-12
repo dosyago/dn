@@ -86,7 +86,7 @@ export async function connect({port:port = 9222} = {}) {
       const stringMessage = message;
       message = JSON.parse(message);
       if ( message.error ) {
-        DEBUG && console.warn(message);
+        console.warn(message);
       }
       const {sessionId} = message;
       const {method, params} = message;
