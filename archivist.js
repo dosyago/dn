@@ -111,15 +111,13 @@ async function collect({chrome_port:port, mode} = {}) {
 
   on("Target.targetInfoChanged", indexURL);
   on("Target.targetInfoChanged", reloadIfNotLive);
-
   on("Target.targetInfoChanged", attachToTarget);
-
   on("Target.attachedToTarget", installForSession);
-
   on("Fetch.requestPaused", cacheRequest);
-
   on("Runtime.consoleAPICalled", confirmInstall);
 
+  await send("Target.setDiscoverTargets", {discover:true});
+  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
   await send("Fetch.enable", {
     patterns: [
       {
@@ -128,9 +126,6 @@ async function collect({chrome_port:port, mode} = {}) {
       }
     ], 
   });
-
-  await send("Target.setDiscoverTargets", {discover:true});
-  await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
 
   const {targetInfos:targets} = await send("Target.getTargets", {});
   const pageTargets = targets.filter(({type}) => type == 'page');
@@ -164,12 +159,16 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( attached && type == 'page' ) {
       const {url, targetId} = targetInfo;
       const sessionId = Sessions.get(targetId);
-      if ( !!sessionId && !!url && url != "about:blank" && !url.startsWith('chrome') && !ConfirmedInstalls.has(sessionId) ) {
+      if ( !!sessionId && !neverCache(url) && !ConfirmedInstalls.has(sessionId) ) {
         console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
         send("Page.stopLoading", {}, sessionId);
         send("Page.reload", {}, sessionId);
       }
     }
+  }
+
+  function neverCache(url) {
+    return !url || url == "about:blank" || url.startsWith('chrome') || NEVER_CACHE.has(url);
   }
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
@@ -230,8 +229,6 @@ async function collect({chrome_port:port, mode} = {}) {
       await untilHas(Installations, sessionId);
     }
 
-    console.log('hi', sessionId);
-
     send("DOMSnapshot.enable", {}, sessionId);
 
     await sleep(500);
@@ -242,12 +239,13 @@ async function collect({chrome_port:port, mode} = {}) {
     const pageText = processDoc(flatDoc);
     //Flex.updateAsync(info.url, pageText).then(r => console.log('Search index update done'));
     //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
-    const res = Flex.add(info.url, pageText);
+    const res = Flex.update(info.url, pageText);
     DEBUG && console.log('Flex Index Result>>>', res);
 
     State.Indexing.delete(info.targetId);
 
-    console.log(`Indexed ${info.url} to ${info.title}`);
+    const {title, url} = info;
+    console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content'});
   }
 
   async function untilHas(thing, key) {

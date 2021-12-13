@@ -30,6 +30,20 @@ export const FORBIDDEN_TEXT_PARENT = new Set([
   'SCRIPT',
   'NOSCRIPT'
 ]);
+export const ERROR_CODE_SAFE_TO_IGNORE = new Set([
+  -32000, /* message:
+            Can only get response body on requests captured after headers received.
+           * ignore because: 
+              seems to only happen when new navigation aborts all 
+              pending requests of the unloading page 
+           */
+  -32602, /* message:
+            Invalid InterceptionId.
+           * ignore because: 
+              seems to only happen when new navigation aborts all 
+              pending requests of the unloading page 
+           */
+]);
 
 export const NO_SANDBOX = process.env.DEBUG_22120 || false;
 

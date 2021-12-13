@@ -1,9 +1,10 @@
-import {DEBUG, context} from './common.js';
+import {DEBUG, context, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
 
 const ROOT_SESSION = "browser";
 // actually we use 'tot' but in chrome.debugger.attach 'tot' is 
 // not a supported version string
 const VERSION = "1.3"; 
+const MESSAGES = new Map();
 
 function promisify(context, name, err) {
   return async function(...args) {
@@ -77,7 +78,9 @@ export async function connect({port:port = 9222} = {}) {
       let resolve;
       const promise = new Promise(res => resolve = res);
       Resolvers[key] = resolve;
-      socket.send(JSON.stringify(message));
+      const outGoing = JSON.stringify(message);
+      MESSAGES.set(key, outGoing);
+      socket.send(outGoing);
       DEBUG && console.log("Sent", message);
       return promise;
     }
@@ -86,7 +89,10 @@ export async function connect({port:port = 9222} = {}) {
       const stringMessage = message;
       message = JSON.parse(message);
       if ( message.error ) {
-        console.warn(message);
+        const showError = DEBUG || !ERROR_CODE_SAFE_TO_IGNORE.has(message.error.code);
+        if ( showError ) {
+          console.warn(message);
+        }
       }
       const {sessionId} = message;
       const {method, params} = message;
@@ -105,6 +111,16 @@ export async function connect({port:port = 9222} = {}) {
             console.warn(`Resolver failed`, e, key, stringMessage.slice(0,140), resolve);
           }
         }
+        if ( DEBUG ) {
+          if ( message.error ) {
+            const showError = DEBUG || !ERROR_CODE_SAFE_TO_IGNORE.has(message.error.code);
+            if ( showError ) {
+              const originalMessage = MESSAGES.get(key);
+              console.warn({originalMessage});
+            }
+          }
+        }
+        MESSAGES.delete(key);
       } else if ( method ) {
         const listeners = Handlers[method];
         if ( Array.isArray(listeners) ) {
