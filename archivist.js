@@ -149,6 +149,8 @@ async function collect({chrome_port:port, mode} = {}) {
           ConfirmedInstalls.add(sessionId);
           console.log({confirmedInstall:val, context});
         }
+      } catch(e) {
+        DEBUG && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
       } finally {} 
     }
   }
