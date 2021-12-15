@@ -282,8 +282,6 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( State.Indexing.has(info.targetId) ) return;
     State.Indexing.add(info.targetId);
 
-    State.Index.set(info.url, info.title);   
-
     if ( ! sessionId ) {
       sessionId = await untilHas(Sessions, info.targetId);
     }
@@ -291,6 +289,9 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( !Installations.has(sessionId) ) {
       await untilHas(Installations, sessionId);
     }
+
+    const {title:latestTitle} = Targets.get(sessionId);
+    State.Index.set(info.url, latestTitle);   
 
     send("DOMSnapshot.enable", {}, sessionId);
 
@@ -396,16 +397,13 @@ async function collect({chrome_port:port, mode} = {}) {
   async function attachToTarget(targetInfo) {
     if ( dontInstall(targetInfo) ) return;
     const {url} = targetInfo;
-    if ( !!url && url != "about:blank" && !url.startsWith('chrome') ) {
-
-      if ( targetInfo.type == 'page' ) {
-        if ( ! targetInfo.attached ) {
-          const {sessionId} = await send("Target.attachToTarget", {
-            targetId: targetInfo.targetId,
-            flatten: true
-          });
-          Sessions.set(targetInfo.targetId, sessionId);
-        }
+    if ( url && targetInfo.type == 'page' ) {
+      if ( ! targetInfo.attached ) {
+        const {sessionId} = await send("Target.attachToTarget", {
+          targetId: targetInfo.targetId,
+          flatten: true
+        });
+        Sessions.set(targetInfo.targetId, sessionId);
       }
     }
   }
