@@ -50,6 +50,7 @@ function addHandlers() {
   });
 
   app.get('/archive_index.html', async (req, res) => {
+    Archivist.saveIndex();
     const index = JSON.parse(fs.readFileSync(INDEX_FILE()));
     res.end(IndexView(index));
   });
