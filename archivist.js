@@ -114,11 +114,11 @@ async function collect({chrome_port:port, mode} = {}) {
     throw new TypeError(`Must specify mode`);
   }
 
-  on("Target.targetInfoChanged", indexURL);
-  on("Target.targetInfoChanged", updateTargetInfo);
-  on("Target.targetInfoChanged", reloadIfNotLive);
-  on("Target.targetInfoChanged", attachToTarget);
   on("Target.targetInfoChanged", displayTargetInfo);
+  on("Target.targetInfoChanged", attachToTarget);
+  on("Target.targetInfoChanged", reloadIfNotLive);
+  on("Target.targetInfoChanged", updateTargetInfo);
+  on("Target.targetInfoChanged", indexURL);
   on("Target.attachedToTarget", installForSession);
   on("Fetch.requestPaused", cacheRequest);
   on("Runtime.consoleAPICalled", handleMessage);
