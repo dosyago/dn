@@ -32,7 +32,8 @@ const State = {
   SavedCacheFilePath: null,
   SavedIndexFilePath: null,
   saver: null,
-  indexSaver: null
+  indexSaver: null,
+  saveInProgress: false
 }
 
 const IGNORE_NODES = new Set([
@@ -45,7 +46,7 @@ const TextNode = 3;
 const AttributeNode = 2;
 
 const Archivist = { 
-  collect, getMode, changeMode, shutdown, handlePathChanged
+  collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex
 }
 
 const BODYLESS = new Set([
@@ -103,7 +104,10 @@ async function collect({chrome_port:port, mode} = {}) {
     // and we don't clear it in time, leading us to erroneously save the old
     // cache to the new path, we always used our saved copy
     State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 10000);
-    State.indexSaver = setInterval(() => saveIndex(State.SavedIndexFilePath), 10001);
+    // we use timeout because we can trigger this ourself
+    // so in order to not get a race condition (overlapping calls) we ensure 
+    // only 1 call at 1 time
+    State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 10001);
   } else if ( Mode == 'serve' ) {
     requestStage = "Request";
   } else {
@@ -114,7 +118,7 @@ async function collect({chrome_port:port, mode} = {}) {
   on("Target.targetInfoChanged", updateTargetInfo);
   on("Target.targetInfoChanged", reloadIfNotLive);
   on("Target.targetInfoChanged", attachToTarget);
-  //on("Target.targetInfoChanged", displayTargetInfo);
+  on("Target.targetInfoChanged", displayTargetInfo);
   on("Target.attachedToTarget", installForSession);
   on("Fetch.requestPaused", cacheRequest);
   on("Runtime.consoleAPICalled", handleMessage);
@@ -181,7 +185,6 @@ async function collect({chrome_port:port, mode} = {}) {
     const latestTargetInfo = await untilHas(Targets, sessionId);
     latestTargetInfo.title = currentTitle;
     Targets.set(sessionId, latestTargetInfo);
-    console.log(`Reindexing with`, latestTargetInfo);
     indexURL({targetInfo:latestTargetInfo});
   }
 
@@ -199,7 +202,10 @@ async function collect({chrome_port:port, mode} = {}) {
         // if we have an existing target info for this URL and have saved an updated title
         if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
           // keep that title (because targetInfo does not reflect the latest title)
-          targetInfo.title = existingTargetInfo.title;
+          if ( existingTargetInfo.title !== existingTargetInfo.url ) {
+            console.log('Setting title to existing', existingTargetInfo);
+            targetInfo.title = existingTargetInfo.title;
+          }
         }
         Targets.set(sessionId, targetInfo);
       }
@@ -212,7 +218,7 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( attached && type == 'page' ) {
       const {url, targetId} = targetInfo;
       const sessionId = Sessions.get(targetId);
-      if ( !!sessionId && !dontInstall({url}) && !ConfirmedInstalls.has(sessionId) ) {
+      if ( !!sessionId && !ConfirmedInstalls.has(sessionId) ) {
         console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
         send("Page.stopLoading", {}, sessionId);
         send("Page.reload", {}, sessionId);
@@ -488,10 +494,8 @@ async function collect({chrome_port:port, mode} = {}) {
     return resp;
   }
   
-  function dontInstall(request) {
-    if ( ! request.url ) return false;
-    const url = new URL(request.url);
-    return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
+  function dontInstall(targetInfo) {
+    return targetInfo.type !== 'page';
   }
 
   function dontCache(request) {
@@ -553,7 +557,7 @@ function clearSavers() {
   }
 
   if ( State.indexSaver ) {
-    clearInterval(State.indexSaver);
+    clearTimeout(State.indexSaver);
     State.indexSaver = null;
   }
 }
@@ -620,6 +624,11 @@ function saveCache(path) {
 }
 
 function saveIndex(path) {
+  if ( State.saveInProgress ) return;
+  State.saveInProgress = true;
+
+  clearTimeout(State.indexSaver);
+
   if ( context == 'node' ) {
     //DEBUG && console.log("Writing to", path || INDEX_FILE());
     //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
@@ -628,6 +637,10 @@ function saveIndex(path) {
       JSON.stringify([...State.Index.entries()].sort(SORT_URLS),null,2)
     );
   }
+
+  State.indexSaver = setTimeout(saveIndex, 10001);
+
+  State.saveInProgress = false;
 }
 
 function shutdown() {
