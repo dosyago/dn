@@ -22,6 +22,7 @@ const {Index, registerCharset, registerLanguage} = FlexSearch;
 const FLEX_OPTS = {
   context: true,
 };
+const Targets = new Map();
 const Flex = new Index(FLEX_OPTS);
 const Cache = new Map();
 const Indexing = new Set();
@@ -110,11 +111,13 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   on("Target.targetInfoChanged", indexURL);
+  on("Target.targetInfoChanged", updateTargetInfo);
   on("Target.targetInfoChanged", reloadIfNotLive);
   on("Target.targetInfoChanged", attachToTarget);
+  //on("Target.targetInfoChanged", displayTargetInfo);
   on("Target.attachedToTarget", installForSession);
   on("Fetch.requestPaused", cacheRequest);
-  on("Runtime.consoleAPICalled", confirmInstall);
+  on("Runtime.consoleAPICalled", handleMessage);
 
   await send("Target.setDiscoverTargets", {discover:true});
   await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
@@ -139,19 +142,67 @@ async function collect({chrome_port:port, mode} = {}) {
     };
   }
 
-  function confirmInstall(args) {
+  function handleMessage(args) {
     const {type, args:[{value:strVal}], context} = args;
     if ( type == 'info' ) {
       try {
         const val = JSON.parse(strVal);
-        const {installed:{sessionId}} = val;
-        if ( ! ConfirmedInstalls.has(sessionId) ) {
-          ConfirmedInstalls.add(sessionId);
-          console.log({confirmedInstall:val, context});
+        // possible messages
+        const {install, titleChange} = val;
+        switch(true) {
+          case !!install: {
+              confirmInstall({install});
+            }; break;
+          case !!titleChange: {
+              reindexOnTitleChange({titleChange});
+            }; break;
+          default: {
+              if ( DEBUG ) {
+                console.warn(`Unknown message`, strVal);
+              }
+            }; break;
         }
       } catch(e) {
         DEBUG && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
       } finally {} 
+    }
+  }
+
+  function confirmInstall({install}) {
+    const {sessionId} = install;
+    if ( ! ConfirmedInstalls.has(sessionId) ) {
+      ConfirmedInstalls.add(sessionId);
+      console.log({confirmedInstall:val, context});
+    }
+  }
+
+  async function reindexOnTitleChange({titleChange}) {
+    const {currentTitle, url, sessionId} = titleChange;
+    const latestTargetInfo = await untilHas(Targets, sessionId);
+    latestTargetInfo.title = currentTitle;
+    Targets.set(sessionId, latestTargetInfo);
+    console.log(`Reindexing with`, latestTargetInfo);
+    indexURL({targetInfo:latestTargetInfo});
+  }
+
+  function displayTargetInfo({targetInfo}) {
+    if ( targetInfo.type === 'page' ) {
+      console.log("Title info", JSON.stringify(targetInfo, null, 2));
+    }
+  }
+
+  function updateTargetInfo({targetInfo}) {
+    if ( targetInfo.type === 'page' ) {
+      const sessionId = Sessions.get(targetInfo.targetId); 
+      if ( sessionId ) {
+        const existingTargetInfo = Targets.get(sessionId);
+        // if we have an existing target info for this URL and have saved an updated title
+        if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
+          // keep that title (because targetInfo does not reflect the latest title)
+          targetInfo.title = existingTargetInfo.title;
+        }
+        Targets.set(sessionId, targetInfo);
+      }
     }
   }
 
@@ -161,7 +212,7 @@ async function collect({chrome_port:port, mode} = {}) {
     if ( attached && type == 'page' ) {
       const {url, targetId} = targetInfo;
       const sessionId = Sessions.get(targetId);
-      if ( !!sessionId && !neverCache(url) && !ConfirmedInstalls.has(sessionId) ) {
+      if ( !!sessionId && !dontInstall({url}) && !ConfirmedInstalls.has(sessionId) ) {
         console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
         send("Page.stopLoading", {}, sessionId);
         send("Page.reload", {}, sessionId);
@@ -170,24 +221,28 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   function neverCache(url) {
-    return !url || url == "about:blank" || url.startsWith('chrome') || NEVER_CACHE.has(url);
+    return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
   }
 
   async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
-    console.log("installForSession called");
     if ( ! sessionId ) {
       throw new TypeError(`installForSession needs a sessionId`);
     }
 
     const {targetId, url} = targetInfo;
 
-    if ( Installations.has(sessionId) ) return;
+    if ( Mode == 'serve' ) return;
+
+    if ( dontInstall(targetInfo) ) return;
 
     if ( targetInfo.type != 'page' ) return;
 
-    if ( Mode == 'serve' ) return;
+    if ( Installations.has(sessionId) ) return;
+
+    console.log("installForSession running on " + targetId);
 
     Sessions.set(targetId, sessionId);
+    Targets.set(sessionId, targetInfo);
 
     if ( Mode == 'save' ) {
       send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
@@ -333,7 +388,7 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function attachToTarget(targetInfo) {
-    if ( dontCache(targetInfo) ) return;
+    if ( dontInstall(targetInfo) ) return;
     const {url} = targetInfo;
     if ( !!url && url != "about:blank" && !url.startsWith('chrome') ) {
 
@@ -357,7 +412,6 @@ async function collect({chrome_port:port, mode} = {}) {
     const {url} = request;
     const isNavigationRequest = resourceType == "Document";
     const isFont = resourceType == "Font";
-
 
     if ( dontCache(request) ) {
       DEBUG && console.log("Not caching", request.url);
@@ -434,8 +488,15 @@ async function collect({chrome_port:port, mode} = {}) {
     return resp;
   }
   
-  function dontCache(request) {
+  function dontInstall(request) {
     if ( ! request.url ) return false;
+    const url = new URL(request.url);
+    return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
+  }
+
+  function dontCache(request) {
+    if ( ! request.url ) return true;
+    if ( neverCache(request.url) ) return true;
     const url = new URL(request.url);
     return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
   }

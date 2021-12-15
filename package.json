@@ -42,6 +42,7 @@
     "ws": "latest"
   },
   "devDependencies": {
+    "eslint": "^8.4.1",
     "nexe": "^1.1.6",
     "nodemon": "latest",
     "npx": "^3.0.0",
