@@ -1,5 +1,6 @@
 - ensure we are correctly indexing / saving the page title when the page title updates.
-  - issues. Title still out of date. We are incorrectly connecting to newtab, etc.
+  - issues. Title still out of date.
+- We need to reload on localhost 22120 if we open with that
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
 - add export and import of the FTS index
 - link up to search input and provide results page
