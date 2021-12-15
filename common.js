@@ -21,7 +21,7 @@ import {fileURLToPath} from 'url';
 
 export const context = Context;
 
-export const DEBUG = process.env.DEBUG_22120 || true;
+export const DEBUG = process.env.DEBUG_22120 || false;
 export const SHOW_FETCH = false;
 
 export const CHECK_INTERVAL = 400;
@@ -55,4 +55,8 @@ export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 export function say(o) {
   console.log(JSON.stringify(o));
+}
+
+export function clone(o) {
+  return JSON.parse(JSON.stringify(o));
 }
