@@ -22,6 +22,7 @@ import {fileURLToPath} from 'url';
 export const context = Context;
 
 export const DEBUG = process.env.DEBUG_22120 || true;
+export const SHOW_FETCH = false;
 
 export const CHECK_INTERVAL = 400;
 export const TEXT_NODE = 3;
