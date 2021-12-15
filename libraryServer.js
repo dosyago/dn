@@ -3,7 +3,7 @@ import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {say, sleep, APP_ROOT} from './common.js';
+import {DEBUG, say, sleep, APP_ROOT} from './common.js';
 import Archivist from './archivist.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, 'public');
@@ -11,6 +11,7 @@ const SITE_PATH = path.resolve(APP_ROOT, 'public');
 const app = express();
 const INDEX_FILE = args.index_file;
 
+let running = false;
 let Server, upAt, port;
 
 const LibraryServer = {
@@ -20,15 +21,26 @@ const LibraryServer = {
 export default LibraryServer;
 
 async function start({server_port}) {
-  port = server_port;
-  addHandlers();
-  Server = app.listen(Number(port), err => {
-    if ( err ) { 
-      throw err;
-    } 
-    upAt = new Date;
-    say({server_up:{upAt,port}});
-  });
+  if ( running ) {
+    DEBUG && console.warn(`Attempting to start server when it is not closed. Exiting start()...`);
+    return;
+  }
+  running = true;
+  try {
+    port = server_port;
+    addHandlers();
+    Server = app.listen(Number(port), err => {
+      if ( err ) { 
+        running = false;
+        throw err;
+      } 
+      upAt = new Date;
+      say({server_up:{upAt,port}});
+    });
+  } catch(e) {
+    running = false;
+    DEBUG && console.error(`Error starting server`, e);
+  }
 }
 
 function addHandlers() {
@@ -72,11 +84,12 @@ function addHandlers() {
     if ( change ) {
       Archivist.handlePathChanged();
       Server.close(async () => {
+        running = false;
         console.log(`Server closed.`);
-        console.log(`Waiting 1 second...`);
-        await sleep(1000);
-        await start({server_port:port});
-        console.log(`Server restarted.`);
+        console.log(`Waiting 50ms...`);
+        await sleep(50);
+        start({server_port:port});
+        console.log(`Server restarting.`);
       });
       res.end(`Base path set to ${base_path} and saved to preferences. Server restarting...`);
     } else {

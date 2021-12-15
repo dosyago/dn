@@ -1,4 +1,4 @@
-import {DEBUG, context, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
+import {SHOW_FETCH, DEBUG, context, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
 
 const ROOT_SESSION = "browser";
 // actually we use 'tot' but in chrome.debugger.attach 'tot' is 
@@ -81,7 +81,7 @@ export async function connect({port:port = 9222} = {}) {
       const outGoing = JSON.stringify(message);
       MESSAGES.set(key, outGoing);
       socket.send(outGoing);
-      DEBUG && console.log("Sent", message);
+      DEBUG && (SHOW_FETCH || !method.startsWith('Fetch')) && console.log("Sent", message);
       return promise;
     }
 
