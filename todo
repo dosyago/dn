@@ -1,3 +1,4 @@
+- title is still out of date, and sometimes error 'we have no saved this' hn example
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
 - add export and import of the FTS index
 - link up to search input and provide results page
