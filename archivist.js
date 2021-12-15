@@ -6,6 +6,7 @@ import FlexSearch from 'flexsearch';
 import args from './args.js';
 import {
   APP_ROOT, context, sleep, DEBUG, 
+  clone,
   CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
 } from './common.js';
 import {connect} from './protocol.js';
@@ -114,7 +115,7 @@ async function collect({chrome_port:port, mode} = {}) {
     throw new TypeError(`Must specify mode`);
   }
 
-  on("Target.targetInfoChanged", displayTargetInfo);
+  //on("Target.targetInfoChanged", displayTargetInfo);
   on("Target.targetInfoChanged", attachToTarget);
   on("Target.targetInfoChanged", reloadIfNotLive);
   on("Target.targetInfoChanged", updateTargetInfo);
@@ -184,13 +185,13 @@ async function collect({chrome_port:port, mode} = {}) {
     const {currentTitle, url, sessionId} = titleChange;
     const latestTargetInfo = await untilHas(Targets, sessionId);
     latestTargetInfo.title = currentTitle;
-    Targets.set(sessionId, latestTargetInfo);
+    Targets.set(sessionId, clone(latestTargetInfo));
     indexURL({targetInfo:latestTargetInfo});
   }
 
   function displayTargetInfo({targetInfo}) {
     if ( targetInfo.type === 'page' ) {
-      console.log("Title info", JSON.stringify(targetInfo, null, 2));
+      console.log("Target info", JSON.stringify(targetInfo, null, 2));
     }
   }
 
@@ -207,7 +208,7 @@ async function collect({chrome_port:port, mode} = {}) {
             targetInfo.title = existingTargetInfo.title;
           }
         }
-        Targets.set(sessionId, targetInfo);
+        Targets.set(sessionId, clone(targetInfo));
       }
     }
   }
@@ -248,7 +249,7 @@ async function collect({chrome_port:port, mode} = {}) {
     console.log("installForSession running on " + targetId);
 
     Sessions.set(targetId, sessionId);
-    Targets.set(sessionId, targetInfo);
+    Targets.set(sessionId, clone(targetInfo));
 
     if ( Mode == 'save' ) {
       send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
@@ -384,8 +385,10 @@ async function collect({chrome_port:port, mode} = {}) {
       }, []);
       textIndices.forEach(index => {
         const stringsIndex = doc.nodes.nodeValue[index];
-        const text = strings[stringsIndex];
-        texts.push(text);
+        if ( stringsIndex >= 0 ) {
+          const text = strings[stringsIndex];
+          texts.push(text);
+        }
       });
     }
 
