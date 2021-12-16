@@ -19,18 +19,20 @@ import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js'
   // that holds the serialized requests
   // that are saved on disk
 let Fs, Mode, Close;
-const {Index, registerCharset, registerLanguage} = FlexSearch;
+const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
 const FLEX_OPTS = {
   context: true,
 };
 const Targets = new Map();
 const UpdatedKeys = new Set();
-const Flex = new Index(FLEX_OPTS);
+const Flex = new FTSIndex(FLEX_OPTS);
 const Cache = new Map();
+const Index = new Map();
 const Indexing = new Set();
 const State = {
   Indexing,
   Cache, 
+  Index,
   SavedCacheFilePath: null,
   SavedIndexFilePath: null,
   SavedFTSIndexDirPath: null,
@@ -51,7 +53,9 @@ const TextNode = 3;
 const AttributeNode = 2;
 
 const Archivist = { 
-  collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex
+  collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex,
+  search,
+  getTitle
 }
 
 const BODYLESS = new Set([
@@ -587,11 +591,13 @@ function loadFiles() {
 
     State.Cache = new Map(JSON.parse(Fs.readFileSync(cacheFile)));
     State.Index = new Map(JSON.parse(Fs.readFileSync(indexFile)));
+    console.log(Flex);
     Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
       if ( dirEnt.isFile() ) {
-        const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name));
-        Flex.import(dirEnt.name, content);
-        console.log('Imported', dirEnt.name);
+        const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
+        const result = Flex.import(dirEnt.name, JSON.parse(content));
+        console.log('Imported', dirEnt.name, result);
+        console.log(Flex);
       }
     });
 
@@ -638,6 +644,10 @@ async function changeMode(mode) {
   await collect({chrome_port:args.chrome_port, mode});
 }
 
+function getTitle(url) {
+  return State.Index.get(url);
+}
+
 function handlePathChanged() { 
   DEBUG && console.log({libraryPathChange:args.library_path()});
   clearSavers();
@@ -676,6 +686,10 @@ function saveIndex(path) {
   State.saveInProgress = false;
 }
 
+async function search(query) {
+  return await Flex.searchAsync(query, args.results_per_page);
+}
+
 async function saveFTS(path) {
   if ( State.ftsSaveInProgress ) return;
   State.ftsSaveInProgress = true;
@@ -689,10 +703,11 @@ async function saveFTS(path) {
     if ( UpdatedKeys.size ) {
       DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
       Flex.export((key, data) => {
+        key = key.split('.').pop();
         try {
           Fs.writeFileSync(
             Path.resolve(dir, key),
-            data
+            JSON.stringify(data)
           );
         } catch(e) {
           console.error('Error writing full text search index', e);
@@ -722,5 +737,7 @@ function b64(s) {
     return btoa(s);
   }
 }
+
+
 
 
