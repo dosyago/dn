@@ -1,4 +1,4 @@
-- link up to search input and provide results page
+- provide results page
 - We need to reload on localhost 22120 if we open with that
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
 
