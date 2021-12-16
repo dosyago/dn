@@ -20,6 +20,7 @@ const library_path = () => path.resolve(archive_root(), 'public', 'library');
 const cache_file = () => path.resolve(library_path(), 'cache.json');
 const index_file = () => path.resolve(library_path(), 'index.json');
 const fts_index_dir = () => path.resolve(library_path(), 'fts');
+const results_per_page = 10;
 
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
 
@@ -39,7 +40,9 @@ const args = {
   temp_browser_cache,
   cache_file,
   index_file,
-  fts_index_dir
+  fts_index_dir,
+
+  results_per_page
 };
 
 export default args;

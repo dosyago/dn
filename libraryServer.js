@@ -54,7 +54,11 @@ function addHandlers() {
   }
 
   app.get('/search', async (req, res) => {
-    res.end('Not implemented yet');
+    const resultUrls = await Archivist.search(req.query.query);
+    const results = resultUrls.map(url => ({title: Archivist.getTitle(url), url}));
+    res.end(JSON.stringify({
+      results
+    }, null, 2));
   });
 
   app.get('/mode', async (req, res) => {
