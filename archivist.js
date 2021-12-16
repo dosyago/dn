@@ -670,24 +670,28 @@ async function saveFTS(path) {
 
   clearTimeout(State.ftsIndexSaver);
 
+  const DEBUG = true;
   if ( context == 'node' ) {
     DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
     const dir = path || FTS_INDEX_DIR();
 
-    let writeCount = 0;
-    Flex.export((key, data) => {
-      if ( UpdatedKeys.has(key) ) {
-        Fs.writeFileSync(
-          /* haha .flx file extensionf or flexsearch index date file */
-          Path.resolve(dir, `${hash(key, HASH_OPTS)}.flx`),
-          data
-        );
-        UpdatedKeys.delete(key);
-        writeCount++;
-      }
-    });
-
-    DEBUG && console.log("Wrote FTS index: ", writeCount, "files");
+    if ( UpdatedKeys.size ) {
+      let writeCount = 0;
+      Flex.export((key, data) => {
+        if ( UpdatedKeys.has(key) ) {
+          Fs.writeFileSync(
+            /* haha .flx file extensionf or flexsearch index date file */
+            Path.resolve(dir, `${hash(key, HASH_OPTS)}.flx`),
+            data
+          );
+          UpdatedKeys.delete(key);
+          writeCount++;
+        }
+      });
+      DEBUG && console.log("Wrote FTS index: ", writeCount, "files");
+    } else {
+      DEBUG && console.log("No FTS keys updated, no writes needed this time.");
+    }
   }
 
   State.ftsIndexSaver = setTimeout(saveIndex, 31001);
