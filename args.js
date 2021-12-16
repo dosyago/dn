@@ -19,6 +19,7 @@ const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cach
 const library_path = () => path.resolve(archive_root(), 'public', 'library');
 const cache_file = () => path.resolve(library_path(), 'cache.json');
 const index_file = () => path.resolve(library_path(), 'index.json');
+const fts_index_dir = () => path.resolve(library_path(), 'fts');
 
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
 
@@ -37,7 +38,8 @@ const args = {
   no_file,
   temp_browser_cache,
   cache_file,
-  index_file
+  index_file,
+  fts_index_dir
 };
 
 export default args;
