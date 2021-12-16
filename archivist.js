@@ -583,6 +583,7 @@ function loadFiles() {
   try {
     State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
     State.Index = new Map(JSON.parse(Fs.readFileSync(INDEX_FILE())));
+    
     State.SavedCacheFilePath = CACHE_FILE();
     State.SavedIndexFilePath = INDEX_FILE();
     State.SavedFTSIndexDirPath = FTS_INDEX_DIR();
