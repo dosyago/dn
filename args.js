@@ -71,6 +71,12 @@ function updateBasePath(new_base_path) {
     console.log(`Created!`);
   }
 
+  if ( !fs.existsSync(fts_index_dir()) ) {
+    console.log(`FTS Index directory does not exist, creating...`); 
+    fs.mkdirSync(fts_index_dir(), {recursive:true});
+    console.log(`Created!`);
+  }
+
   console.log(`Base path updated to: ${BasePath}. Saving to preferences...`);
   Pref.BasePath = BasePath;
   savePref();
