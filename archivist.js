@@ -581,17 +581,28 @@ function clearSavers() {
 
 function loadFiles() {
   try {
-    State.Cache = new Map(JSON.parse(Fs.readFileSync(CACHE_FILE())));
-    State.Index = new Map(JSON.parse(Fs.readFileSync(INDEX_FILE())));
-    
-    State.SavedCacheFilePath = CACHE_FILE();
-    State.SavedIndexFilePath = INDEX_FILE();
-    State.SavedFTSIndexDirPath = FTS_INDEX_DIR();
-    DEBUG && console.log(`Loaded cache key file ${CACHE_FILE()}`);
-    DEBUG && console.log(`Loaded index file ${INDEX_FILE()}`);
-    DEBUG && console.log(`Need to load FTS index dir ${FTS_INDEX_DIR()}`);
+    const cacheFile = CACHE_FILE();
+    const indexFile = INDEX_FILE();
+    const ftsDir = FTS_INDEX_DIR();
+
+    State.Cache = new Map(JSON.parse(Fs.readFileSync(cacheFile)));
+    State.Index = new Map(JSON.parse(Fs.readFileSync(indexFile)));
+    Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
+      if ( dirEnt.isFile() ) {
+        const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name));
+        Flex.import(dirEnt.name, content);
+        console.log('Imported', dirEnt.name);
+      }
+    });
+
+    State.SavedCacheFilePath = cacheFile;
+    State.SavedIndexFilePath = indexFile;
+    State.SavedFTSIndexDirPath = ftsDir;
+    DEBUG && console.log(`Loaded cache key file ${cacheFile}`);
+    DEBUG && console.log(`Loaded index file ${indexFile}`);
+    DEBUG && console.log(`Need to load FTS index dir ${ftsDir}`);
   } catch(e) {
-    DEBUG && console.warn('Error reading file', e);
+    console.warn('Error reading archive file', e);
     State.Cache = new Map();
     State.Index = new Map();
   }
