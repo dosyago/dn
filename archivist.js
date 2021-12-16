@@ -81,7 +81,6 @@ const UNCACHED = {
   body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
 }
 
-
 export default Archivist;
 
 async function collect({chrome_port:port, mode} = {}) {
@@ -284,12 +283,13 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
-    console.log('Index URL called', info);
     if ( Mode == 'serve' ) return;
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
     if ( info.url.startsWith('chrome') ) return;
     if ( dontCache(info) ) return;
+
+    console.log('Index URL called', info);
 
     if ( State.Indexing.has(info.targetId) ) return;
     State.Indexing.add(info.targetId);
@@ -670,31 +670,29 @@ async function saveFTS(path) {
 
   clearTimeout(State.ftsIndexSaver);
 
-  const DEBUG = true;
   if ( context == 'node' ) {
     DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
     const dir = path || FTS_INDEX_DIR();
 
     if ( UpdatedKeys.size ) {
-      let writeCount = 0;
+      DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
       Flex.export((key, data) => {
-        if ( UpdatedKeys.has(key) ) {
+        try {
           Fs.writeFileSync(
-            /* haha .flx file extensionf or flexsearch index date file */
-            Path.resolve(dir, `${hash(key, HASH_OPTS)}.flx`),
+            Path.resolve(dir, key),
             data
           );
-          UpdatedKeys.delete(key);
-          writeCount++;
+        } catch(e) {
+          console.error('Error writing full text search index', e);
         }
       });
-      DEBUG && console.log("Wrote FTS index: ", writeCount, "files");
+      UpdatedKeys.clear();
     } else {
       DEBUG && console.log("No FTS keys updated, no writes needed this time.");
     }
   }
 
-  State.ftsIndexSaver = setTimeout(saveIndex, 31001);
+  State.ftsIndexSaver = setTimeout(saveFTS, 31001);
   State.ftsSaveInProgress = false;
 }
 
