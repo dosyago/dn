@@ -22,6 +22,7 @@ let Fs, Mode, Close;
 const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
 const FLEX_OPTS = {
   context: true,
+  language: "en"
 };
 const Targets = new Map();
 const UpdatedKeys = new Set();
