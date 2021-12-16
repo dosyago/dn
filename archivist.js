@@ -104,11 +104,11 @@ async function collect({chrome_port:port, mode} = {}) {
     // in case we get a updateBasePath call before an interval
     // and we don't clear it in time, leading us to erroneously save the old
     // cache to the new path, we always used our saved copy
-    State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 10000);
+    State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 17000);
     // we use timeout because we can trigger this ourself
     // so in order to not get a race condition (overlapping calls) we ensure 
     // only 1 call at 1 time
-    State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 10001);
+    State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 11001);
   } else if ( Mode == 'serve' ) {
     requestStage = "Request";
   } else {
@@ -183,9 +183,11 @@ async function collect({chrome_port:port, mode} = {}) {
 
   async function reindexOnTitleChange({titleChange}) {
     const {currentTitle, url, sessionId} = titleChange;
-    const latestTargetInfo = await untilHas(Targets, sessionId);
+    console.log('Received titleChange', titleChange);
+    const latestTargetInfo = clone(await untilHas(Targets, sessionId));
     latestTargetInfo.title = currentTitle;
-    Targets.set(sessionId, clone(latestTargetInfo));
+    Targets.set(sessionId, latestTargetInfo);
+    console.log('Updated stored target info', latestTargetInfo);
     indexURL({targetInfo:latestTargetInfo});
   }
 
@@ -198,9 +200,11 @@ async function collect({chrome_port:port, mode} = {}) {
   function updateTargetInfo({targetInfo}) {
     if ( targetInfo.type === 'page' ) {
       const sessionId = Sessions.get(targetInfo.targetId); 
+      console.log('Updating target info', targetInfo, sessionId);
       if ( sessionId ) {
         const existingTargetInfo = Targets.get(sessionId);
         // if we have an existing target info for this URL and have saved an updated title
+        console.log('Existing target info', existingTargetInfo);
         if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
           // keep that title (because targetInfo does not reflect the latest title)
           if ( existingTargetInfo.title !== existingTargetInfo.url ) {
@@ -274,6 +278,7 @@ async function collect({chrome_port:port, mode} = {}) {
   }
 
   async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
+    console.log('Index URL called', info);
     if ( Mode == 'serve' ) return;
     if ( info.type != 'page' ) return;
     if ( ! info.url  || info.url == 'about:blank' ) return;
@@ -291,9 +296,6 @@ async function collect({chrome_port:port, mode} = {}) {
       await untilHas(Installations, sessionId);
     }
 
-    const {title:latestTitle} = Targets.get(sessionId);
-    State.Index.set(info.url, latestTitle);   
-
     send("DOMSnapshot.enable", {}, sessionId);
 
     await sleep(500);
@@ -307,10 +309,12 @@ async function collect({chrome_port:port, mode} = {}) {
     const res = Flex.update(info.url, pageText);
     DEBUG && console.log('Flex Index Result>>>', res);
 
-    State.Indexing.delete(info.targetId);
+    const {title, url} = Targets.get(sessionId);
+    State.Index.set(url, title);   
 
-    const {title, url} = info;
     console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content'});
+
+    State.Indexing.delete(info.targetId);
   }
 
   async function untilHas(thing, key) {
