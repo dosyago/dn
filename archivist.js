@@ -1,6 +1,6 @@
 import hasha from 'hasha';
 import {URL} from 'url';
-import path from 'path';
+import Path from 'path';
 import fs from 'fs';
 import FlexSearch from 'flexsearch';
 import args from './args.js';
@@ -24,6 +24,7 @@ const FLEX_OPTS = {
   context: true,
 };
 const Targets = new Map();
+const UpdatedKeys = new Set();
 const Flex = new Index(FLEX_OPTS);
 const Cache = new Map();
 const Indexing = new Set();
@@ -32,9 +33,12 @@ const State = {
   Cache, 
   SavedCacheFilePath: null,
   SavedIndexFilePath: null,
+  SavedFTSIndexDirPath: null,
   saver: null,
   indexSaver: null,
-  saveInProgress: false
+  ftsIndexSaver: null,
+  saveInProgress: false,
+  ftsSaveInProgress: false
 }
 
 const IGNORE_NODES = new Set([
@@ -63,6 +67,7 @@ const NEVER_CACHE = new Set([
 const SORT_URLS = ([urlA],[urlB]) => urlA < urlB ? -1 : 1;
 const CACHE_FILE = args.cache_file; 
 const INDEX_FILE = args.index_file;
+const FTS_INDEX_DIR = args.fts_index_dir;
 const NO_FILE = args.no_file;
 const TBL = /:\/\//g;
 const HASH_OPTS = {algorithm: 'sha1'};
@@ -109,6 +114,7 @@ async function collect({chrome_port:port, mode} = {}) {
     // so in order to not get a race condition (overlapping calls) we ensure 
     // only 1 call at 1 time
     State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 11001);
+    State.ftsIndexSaver = setTimeout(() => saveFTS(State.SavedFTSIndexDirPath), 31001);
   } else if ( Mode == 'serve' ) {
     requestStage = "Request";
   } else {
@@ -307,6 +313,7 @@ async function collect({chrome_port:port, mode} = {}) {
     //Flex.updateAsync(info.url, pageText).then(r => console.log('Search index update done'));
     //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
     const res = Flex.update(info.url, pageText);
+    UpdatedKeys.add(info.url);
     DEBUG && console.log('Flex Index Result>>>', res);
 
     const {title, url} = Targets.get(sessionId);
@@ -523,18 +530,18 @@ async function collect({chrome_port:port, mode} = {}) {
     const origin = (new URL(url).origin);
     let originDir = State.Cache.get(origin);
     if ( ! originDir ) {
-      originDir = path.resolve(library_path(), origin.replace(TBL, '_'));
+      originDir = Path.resolve(library_path(), origin.replace(TBL, '_'));
       try {
         await Fs.promises.mkdir(originDir, {recursive:true});
       } catch(e) {
-        console.warn(`Issue with origin directory ${path.dirname(responsePath)}`, e);
+        console.warn(`Issue with origin directory ${Path.dirname(responsePath)}`, e);
       }
       State.Cache.set(origin, originDir);
     }
 
     const fileName = `${await hasha(key, HASH_OPTS)}.json`;
 
-    const responsePath = path.resolve(originDir, fileName);
+    const responsePath = Path.resolve(originDir, fileName);
     await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
 
     return responsePath;
@@ -565,6 +572,11 @@ function clearSavers() {
     clearTimeout(State.indexSaver);
     State.indexSaver = null;
   }
+
+  if ( State.ftsIndexSaver ) {
+    clearTimeout(State.ftsIndexSaver);
+    State.ftsIndexSaver = null;
+  }
 }
 
 function loadFiles() {
@@ -573,8 +585,10 @@ function loadFiles() {
     State.Index = new Map(JSON.parse(Fs.readFileSync(INDEX_FILE())));
     State.SavedCacheFilePath = CACHE_FILE();
     State.SavedIndexFilePath = INDEX_FILE();
+    State.SavedFTSIndexDirPath = FTS_INDEX_DIR();
     DEBUG && console.log(`Loaded cache key file ${CACHE_FILE()}`);
     DEBUG && console.log(`Loaded index file ${INDEX_FILE()}`);
+    DEBUG && console.log(`Need to load FTS index dir ${FTS_INDEX_DIR()}`);
   } catch(e) {
     DEBUG && console.warn('Error reading file', e);
     State.Cache = new Map();
@@ -606,6 +620,7 @@ async function changeMode(mode) {
   clearSavers();
   saveCache();
   saveIndex();
+  saveFTS();
   Close && Close();
   Mode = mode;
   await collect({chrome_port:args.chrome_port, mode});
@@ -617,6 +632,7 @@ function handlePathChanged() {
   // saves the old cache path
   saveCache(State.SavedCacheFilePath);
   saveIndex(State.SavedIndexFilePath);
+  saveFTS(State.SavedFTSIndexDirPath);
   // reloads from new path and updates Saved FilePaths
   loadFiles();
 }
@@ -643,9 +659,39 @@ function saveIndex(path) {
     );
   }
 
-  State.indexSaver = setTimeout(saveIndex, 10001);
+  State.indexSaver = setTimeout(saveIndex, 11001);
 
   State.saveInProgress = false;
+}
+
+async function saveFTS(path) {
+  if ( State.ftsSaveInProgress ) return;
+  State.ftsSaveInProgress = true;
+
+  clearTimeout(State.ftsIndexSaver);
+
+  if ( context == 'node' ) {
+    DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
+    const dir = path || FTS_INDEX_DIR();
+
+    let writeCount = 0;
+    Flex.export((key, data) => {
+      if ( UpdatedKeys.has(key) ) {
+        Fs.writeFileSync(
+          /* haha .flx file extensionf or flexsearch index date file */
+          Path.resolve(dir, `${hash(key, HASH_OPTS)}.flx`),
+          data
+        );
+        UpdatedKeys.delete(key);
+        writeCount++;
+      }
+    });
+
+    DEBUG && console.log("Wrote FTS index: ", writeCount, "files");
+  }
+
+  State.ftsIndexSaver = setTimeout(saveIndex, 31001);
+  State.ftsSaveInProgress = false;
 }
 
 function shutdown() {
