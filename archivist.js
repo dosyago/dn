@@ -85,7 +85,7 @@
   const Archivist = { 
     collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex,
     search,
-    getTitle
+    getDetails
   }
 
   const BODYLESS = new Set([
@@ -346,15 +346,19 @@ export default Archivist;
       const pageText = processDoc(flatDoc);
 
       const {title, url} = Targets.get(sessionId);
-      State.Index.set(url, title);   
+      let id;
+      if ( State.Index.has(url) ) {
+        ({id} = State.Index.get(url));
+      }
+      const doc = toNDXDoc({id, url, title, pageText});
+      State.Index.set(url, {id:doc.id, title});   
+      State.Index.set(doc.id, url);
 
       //Old flexsearch code
       //const res = Flex.update(info.url, pageText);
       //DEBUG && console.log('Flex Index Result>>>', res);
       //New NDX code
-      const doc = toNDXDoc({url, title, pageText});
       const res = NDX_FTSIndex.add(doc);
-      console.log(NDX_FTSIndex.index);
       UpdatedKeys.add(info.url);
 
       console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content', res, doc});
@@ -678,8 +682,10 @@ export default Archivist;
     await collect({chrome_port:args.chrome_port, mode});
   }
 
-  function getTitle(url) {
-    return State.Index.get(url);
+  function getDetails(id) {
+    const url = State.Index.get(id);
+    const {title} = State.Index.get(url);
+    return {url, title};
   }
 
   function handlePathChanged() { 
@@ -841,9 +847,11 @@ export default Archivist;
     };
   }
 
-  function toNDXDoc({url, title, pageText}) {
+  function toNDXDoc({id, url, title, pageText}) {
+    // use existing defined id or a new one
+    id = id || Id++;
     return {
-      id: Id++,
+      id,
       url, title, 
       content: pageText
     };

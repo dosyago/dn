@@ -55,7 +55,7 @@ function addHandlers() {
 
   app.get('/search', async (req, res) => {
     const resultUrls = await Archivist.search(req.query.query);
-    const results = resultUrls.map(url => ({title: Archivist.getTitle(url), url}));
+    const results = resultUrls.map(({docId}) => Archivist.getDetails(docId));
     res.end(JSON.stringify({
       results
     }, null, 2));
@@ -67,7 +67,8 @@ function addHandlers() {
 
   app.get('/archive_index.html', async (req, res) => {
     Archivist.saveIndex();
-    const index = JSON.parse(fs.readFileSync(INDEX_FILE()));
+    const index = JSON.parse(fs.readFileSync(INDEX_FILE()))
+      .filter(([key, val]) => typeof key === 'string');
     res.end(IndexView(index));
   });
 
@@ -160,7 +161,7 @@ function IndexView(urls) {
     <h2>Archive Index</h2>
     <ul>
     ${
-      urls.map(([url,title]) => `
+      urls.map(([url,{title}]) => `
         <li>
           <a target=_blank href=${url}>${title||url}</a>
         </li>
