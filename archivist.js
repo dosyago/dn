@@ -1,3 +1,9 @@
+// Licenses
+  // FlexSearch is Apache-2.0 licensed
+    // Source: https://github.com/nextapps-de/flexsearch/blob/bffb255b7904cb7f79f027faeb963ecef0a85dba/LICENSE
+  // NDX is MIT licensed
+    // Source: https://github.com/ndx-search/ndx/blob/cc9ec2780d88918338d4edcfca2d4304af9dc721/LICENSE
+  
 // module imports
   import hasha from 'hasha';
   import {URL} from 'url';
@@ -19,8 +25,6 @@
   import {getInjection} from './public/injection.js';
   import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
 
-//import xapian from 'xapian';
-
 // search related state: constants and variables
   // common
     const FTS_INDEX_DIR = args.fts_index_dir;
@@ -34,13 +38,14 @@
     const Flex = new FTSIndex(FLEX_OPTS);
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
-  const Tokenizer = new Nat.WordTokenizer();
-  const StemmerEn = Nat.PorterStemmer;
+    const Tokenizer = new Nat.WordTokenizer();
+    const StemmerEn = Nat.PorterStemmer;
 
   // NDX
-  const NDX_FIELDS = ndxDocFields();
-  const words = Tokenizer.tokenize.bind(Tokenizer);
-  const termFilter = StemmerEn.stem.bind(StemmerEn);
+    const NDX_FIELDS = ndxDocFields();
+    const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
+    const words = Tokenizer.tokenize.bind(Tokenizer);
+    const termFilter = StemmerEn.stem.bind(StemmerEn);
 
 // module state: constants and variables
   // cache is a simple map
@@ -337,14 +342,16 @@ export default Archivist;
         computedStyles: [],
       }, sessionId);
       const pageText = processDoc(flatDoc);
-      //Flex.updateAsync(info.url, pageText).then(r => console.log('Search index update done'));
-      //Flex.addAsync(info.url, pageText).then(r => console.log('Search index update done'));
-      const res = Flex.update(info.url, pageText);
-      UpdatedKeys.add(info.url);
-      DEBUG && console.log('Flex Index Result>>>', res);
 
       const {title, url} = Targets.get(sessionId);
       State.Index.set(url, title);   
+
+      //Old flexsearch code
+      //const res = Flex.update(info.url, pageText);
+      //DEBUG && console.log('Flex Index Result>>>', res);
+      //New NDX code
+      const res = NTX_FTSIndex.add(toNDXDoc({url, title, pageText}));
+      UpdatedKeys.add(info.url);
 
       console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content'});
 
@@ -711,7 +718,8 @@ export default Archivist;
   }
 
   async function search(query) {
-    return await Flex.searchAsync(query, args.results_per_page);
+    //return await Flex.searchAsync(query, args.results_per_page);
+    return NDX_FTSIndex.search(query);
   }
 
   async function saveFTS(path) {
@@ -763,6 +771,10 @@ export default Archivist;
   }
 
   function NDXIndex(fields) {
+    // source: 
+      // adapted from:
+      // https://github.com/ndx-search/docs/blob/94530cbff6ae8ea66c54bba4c97bdd972518b8b4/README.md#creating-a-simple-indexer-with-a-search-function
+
     if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
 
     // `createIndex()` creates an index data structure.
