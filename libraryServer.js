@@ -53,12 +53,16 @@ function addHandlers() {
     app.use("/library", express.static(args.library_path()))
   }
 
-  app.get('/search', async (req, res) => {
-    const resultUrls = await Archivist.search(req.query.query);
-    const results = resultUrls.map(({docId}) => Archivist.getDetails(docId));
-    res.end(JSON.stringify({
-      results
-    }, null, 2));
+  app.get('/search(.json)?', async (req, res) => {
+    const {query, results:resultIds} = await Archivist.search(req.query.query);
+    const results = resultIds.map(({docId}) => Archivist.getDetails(docId));
+    if ( req.path.endsWith('.json') ) {
+      res.end(JSON.stringify({
+        results, query
+      }, null, 2));
+    } else {
+      res.end(SearchResultView({results, query}));
+    }
   });
 
   app.get('/mode', async (req, res) => {
@@ -168,6 +172,63 @@ function IndexView(urls) {
       `).join('\n')
     }
     </ul>
+  `
+}
+
+function SearchResultView({results, query}) {
+  return `
+    <!DOCTYPE html>
+    <meta charset=utf-8>
+    <title>Your HTML Library</title>
+    <style>
+      :root {
+        font-family: sans-serif;
+        background: lavenderblush;
+      }
+      body {
+        display: table;
+        margin: 0 auto;
+        background: silver;
+        padding: 0.5em;
+        box-shadow: 0 1px 1px purple;
+      }
+      form {
+      }
+      fieldset {
+        border: thin solid purple;
+      }
+      button, input, output {
+      }
+      input.long {
+        width: 100%;
+        min-width: 250px;
+      }
+      output {
+        font-size: smaller;
+        color: purple;
+      }
+      h1 {
+        margin: 0;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+    <h1>22120</h1>
+    <h2>Internet Offline Library</h2>
+    <h2>Archive Results</h2>
+    <p>
+      Showing results for <b>${query}</b>
+    </p>
+    <ol>
+    ${
+      results.map(({url,title}) => `
+        <li>
+          <a target=_blank href=${url}>${title||url}</a>
+        </li>
+      `).join('\n')
+    }
+    </ol>
   `
 }
 

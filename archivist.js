@@ -729,8 +729,7 @@ export default Archivist;
   async function search(query) {
     //return await Flex.searchAsync(query, args.results_per_page);
     const results = NDX_FTSIndex.search(query);
-    console.log({query, results});
-    return results;
+    return {query,results};
   }
 
   async function saveFTS(path) {
