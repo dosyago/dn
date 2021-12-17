@@ -1,8 +1,7 @@
-- provide results page
 - We need to reload on localhost 22120 if we open with that
+- We need to not open other localhosts if we already have one open
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
   - then send console message to the controller ({textChanged}), to trigger indexURL again
   - throttle how often this can occur per URL
-- set Id = equal half the size of the index (as its a two way map) on load (so ids don't overwrite)
 - add serialize and load to the index (later version of ndx?)
 
