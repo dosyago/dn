@@ -350,10 +350,11 @@ export default Archivist;
       //const res = Flex.update(info.url, pageText);
       //DEBUG && console.log('Flex Index Result>>>', res);
       //New NDX code
-      const res = NTX_FTSIndex.add(toNDXDoc({url, title, pageText}));
+      const doc = toNDXDoc({url, title, pageText});
+      const res = NDX_FTSIndex.add(doc);
       UpdatedKeys.add(info.url);
 
-      console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content'});
+      console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content', res});
 
       State.Indexing.delete(info.targetId);
     }
@@ -719,7 +720,9 @@ export default Archivist;
 
   async function search(query) {
     //return await Flex.searchAsync(query, args.results_per_page);
-    return NDX_FTSIndex.search(query);
+    const results = NDX_FTSIndex.search(query);
+    console.log({results});
+    return results;
   }
 
   async function saveFTS(path) {
@@ -787,23 +790,24 @@ export default Archivist;
     const fieldBoostFactors = fields.map(() => 1);
     
     return {
+      index,
       // `add()` function will add documents to the index.
       add: doc => ndx(
-          index,
-          fieldAccessors,
-          // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
-          // called tokens.
-          // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
-          // details.
-          words,
-          // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
-          // index documents.
-          termFilter,
-          // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
-          // in memory.
-          doc.url,
-          // Document.
-          doc,
+        index,
+        fieldAccessors,
+        // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
+        // called tokens.
+        // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
+        // details.
+        words,
+        // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
+        // index documents.
+        termFilter,
+        // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
+        // in memory.
+        doc.url,
+        // Document.
+        doc,
       ),
       // `search()` function will be used to perform queries.
       search: q => NDXQuery(
