@@ -43,10 +43,11 @@
     const StemmerEn = Nat.PorterStemmer;
 
   // NDX
+    let Id = 1;
     const NDX_FIELDS = ndxDocFields();
-    const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     const words = Tokenizer.tokenize.bind(Tokenizer);
     const termFilter = StemmerEn.stem.bind(StemmerEn);
+    const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
 
 // module state: constants and variables
   // cache is a simple map
@@ -353,9 +354,10 @@ export default Archivist;
       //New NDX code
       const doc = toNDXDoc({url, title, pageText});
       const res = NDX_FTSIndex.add(doc);
+      console.log(NDX_FTSIndex.index);
       UpdatedKeys.add(info.url);
 
-      console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content', res});
+      console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content', res, doc});
 
       State.Indexing.delete(info.targetId);
     }
@@ -721,7 +723,7 @@ export default Archivist;
   async function search(query) {
     //return await Flex.searchAsync(query, args.results_per_page);
     const results = NDX_FTSIndex.search(query);
-    console.log({results});
+    console.log({query, results});
     return results;
   }
 
@@ -833,13 +835,15 @@ export default Archivist;
     fields.forEach(name => index.addField(name));
 
     return {
+      index,
       search: query => index.search(query),
-      add: doc => index.add(doc.url, doc)
+      add: doc => index.add(doc.id, doc)
     };
   }
 
   function toNDXDoc({url, title, pageText}) {
     return {
+      id: Id++,
       url, title, 
       content: pageText
     };
