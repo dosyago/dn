@@ -11,8 +11,9 @@
   import fs from 'fs';
   // search related
     import FlexSearch from 'flexsearch';
-    import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
-    import { query as NDXQuery } from 'ndx-query';
+    //import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
+    //import { query as NDXQuery } from 'ndx-query';
+    import { DocumentIndex } from 'ndx';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -623,13 +624,12 @@ export default Archivist;
 
       State.Cache = new Map(JSON.parse(Fs.readFileSync(cacheFile)));
       State.Index = new Map(JSON.parse(Fs.readFileSync(indexFile)));
-      console.log(Flex);
       Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
           const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
           const result = Flex.import(dirEnt.name, JSON.parse(content));
-          console.log('Imported', dirEnt.name, result);
-          console.log(Flex);
+          DEBUG && console.log('Imported', dirEnt.name, result);
+          DEBUG && console.log(Flex);
         }
       });
 
@@ -774,55 +774,67 @@ export default Archivist;
   }
 
   function NDXIndex(fields) {
-    // source: 
-      // adapted from:
-      // https://github.com/ndx-search/docs/blob/94530cbff6ae8ea66c54bba4c97bdd972518b8b4/README.md#creating-a-simple-indexer-with-a-search-function
+    // Old code (from newer, in my opinion, worse, version)
+      /*
+        // source: 
+          // adapted from:
+          // https://github.com/ndx-search/docs/blob/94530cbff6ae8ea66c54bba4c97bdd972518b8b4/README.md#creating-a-simple-indexer-with-a-search-function
 
-    if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
+        if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
 
-    // `createIndex()` creates an index data structure.
-    // First argument specifies how many different fields we want to index.
-    const index = NDX(fields.length);
-    // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
-    const fieldAccessors = fields.map(f => doc => doc[f.name]);
-    // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
-    // identical factors.
-    const fieldBoostFactors = fields.map(() => 1);
-    
+        // `createIndex()` creates an index data structure.
+        // First argument specifies how many different fields we want to index.
+        const index = NDX(fields.length);
+        // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
+        const fieldAccessors = fields.map(f => doc => doc[f.name]);
+        // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
+        // identical factors.
+        const fieldBoostFactors = fields.map(() => 1);
+        
+        return {
+          index,
+          // `add()` function will add documents to the index.
+          add: doc => ndx(
+            index,
+            fieldAccessors,
+            // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
+            // called tokens.
+            // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
+            // details.
+            words,
+            // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
+            // index documents.
+            termFilter,
+            // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
+            // in memory.
+            doc.url,
+            // Document.
+            doc,
+          ),
+          // `search()` function will be used to perform queries.
+          search: q => NDXQuery(
+            index,
+            fieldBoostFactors,
+            // BM25 ranking function constants:
+            1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
+            0.75, // BM25 b constant, controls to what degree document length normalizes tf values.
+            words,
+            termFilter,
+            // Set of removed documents, in this example we don't want to support removing documents from the index,
+            // so we can ignore it by specifying this set as `undefined` value.
+            undefined, 
+            q,
+          ),
+        };
+      */
+    // Even older code (from older but, to me, much better, version: 0.4.1)
+
+    const index = new DocumentIndex();
+    fields.forEach(name => index.addField(name));
+
     return {
-      index,
-      // `add()` function will add documents to the index.
-      add: doc => ndx(
-        index,
-        fieldAccessors,
-        // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
-        // called tokens.
-        // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
-        // details.
-        words,
-        // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
-        // index documents.
-        termFilter,
-        // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
-        // in memory.
-        doc.url,
-        // Document.
-        doc,
-      ),
-      // `search()` function will be used to perform queries.
-      search: q => NDXQuery(
-        index,
-        fieldBoostFactors,
-        // BM25 ranking function constants:
-        1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
-        0.75, // BM25 b constant, controls to what degree document length normalizes tf values.
-        words,
-        termFilter,
-        // Set of removed documents, in this example we don't want to support removing documents from the index,
-        // so we can ignore it by specifying this set as `undefined` value.
-        undefined, 
-        q,
-      ),
+      search: query => index.search(query),
+      add: doc => index.add(doc.url, doc)
     };
   }
 
