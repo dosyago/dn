@@ -163,6 +163,13 @@ function IndexView(urls) {
     <h1>22120</h1>
     <h2>Internet Offline Library</h2>
     <h2>Archive Index</h2>
+    <form method=GET action=/search>
+      <fieldset>
+        <legend>Search your archive</legend>
+        <input type=search name=query placeholder="search your library">
+        <button>Search</button>
+      </fieldset>
+    </form>
     <ul>
     ${
       urls.map(([url,{title}]) => `
@@ -179,7 +186,7 @@ function SearchResultView({results, query}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
-    <title>Your HTML Library</title>
+    <title>${query} - 22120 search results</title>
     <style>
       :root {
         font-family: sans-serif;
@@ -215,8 +222,14 @@ function SearchResultView({results, query}) {
       }
     </style>
     <h1>22120</h1>
-    <h2>Internet Offline Library</h2>
-    <h2>Archive Results</h2>
+    <h2>Search results</h2>
+    <form method=GET action=/search>
+      <fieldset>
+        <legend>Search again</legend>
+        <input type=search name=query placeholder="search your library">
+        <button>Search</button>
+      </fieldset>
+    </form>
     <p>
       Showing results for <b>${query}</b>
     </p>

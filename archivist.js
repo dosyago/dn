@@ -43,7 +43,7 @@
     const StemmerEn = Nat.PorterStemmer;
 
   // NDX
-    let Id = 1;
+    let Id;
     const NDX_FIELDS = ndxDocFields();
     const words = Tokenizer.tokenize.bind(Tokenizer);
     const termFilter = StemmerEn.stem.bind(StemmerEn);
@@ -638,6 +638,8 @@ export default Archivist;
           DEBUG && console.log(Flex);
         }
       });
+
+      Id = State.Index.size / 2 + 3;
 
       State.SavedCacheFilePath = cacheFile;
       State.SavedIndexFilePath = indexFile;
