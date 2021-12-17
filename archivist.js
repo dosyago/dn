@@ -846,9 +846,18 @@ export default Archivist;
   }
 
   function ndxDocFields() {
+    /* old format (for newer ndx >= v1 ) */
+    /*
+      return [
+        { name: "url" },
+        { name: "title" },
+        { name: "content" },
+      ];
+    */
+    /* new format (for older ndx ~ v0.4 ) */
     return [
-      { name: "url" },
-      { name: "title" },
-      { name: "content" },
+      "url",
+      "title",
+      "content"
     ];
   }
