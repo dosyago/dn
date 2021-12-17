@@ -809,7 +809,7 @@ export default Archivist;
             termFilter,
             // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
             // in memory.
-            doc.url,
+            doc.id,
             // Document.
             doc,
           ),
