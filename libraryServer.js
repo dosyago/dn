@@ -54,6 +54,7 @@ function addHandlers() {
   }
 
   app.get('/search(.json)?', async (req, res) => {
+    await Archivist.isReady();
     const {query, results:resultIds} = await Archivist.search(req.query.query);
     let results;
     if ( Archivist.USE_FLEX ) {
@@ -237,7 +238,7 @@ function SearchResultView({results, query}) {
     <form method=GET action=/search>
       <fieldset>
         <legend>Search again</legend>
-        <input type=search name=query placeholder="search your library">
+        <input type=search name=query placeholder="search your library" value="${query}">
         <button>Search</button>
       </fieldset>
     </form>
