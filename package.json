@@ -39,7 +39,7 @@
     "flexsearch": "^0.7.21",
     "hasha": "latest",
     "natural": "^5.1.11",
-    "ndx": "^0.4.1",
+    "ndx": "^1.0.2",
     "ndx-query": "^1.0.1",
     "ndx-serializable": "^1.0.0",
     "node-fetch": "latest",

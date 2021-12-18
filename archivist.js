@@ -11,9 +11,10 @@
   import fs from 'fs';
   // search related
     import FlexSearch from 'flexsearch';
-    //import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
-    //import { query as NDXQuery } from 'ndx-query';
-    import { DocumentIndex } from 'ndx';
+    import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
+    import { query as NDXQuery } from 'ndx-query';
+    import { toSerializable, fromSerializable } from 'ndx-serializable';
+    //import { DocumentIndex } from 'ndx';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -28,9 +29,10 @@
 
 // search related state: constants and variables
   // common
-    const NDX_OLD = true;
-    const USE_FLEX = true;
+    const NDX_OLD = false;
+    const USE_FLEX = false;
     const FTS_INDEX_DIR = args.fts_index_dir;
+    const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
 
   // FlexSearch
     const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
@@ -638,9 +640,10 @@ export default Archivist;
       Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
           const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
-          Flex.import(dirEnt.name, content);
+          Flex.import(dirEnt.name, JSON.parse(content));
         }
       });
+      loadNDXIndex(NDX_FTSIndex);
 
       Id = State.Index.size / 2 + 3;
       console.log({Id});
@@ -768,6 +771,7 @@ export default Archivist;
             console.error('Error writing full text search index', e);
           }
         });
+        NDX_FTSIndex.save();
         UpdatedKeys.clear();
       } else {
         DEBUG && console.log("No FTS keys updated, no writes needed this time.");
@@ -794,6 +798,8 @@ export default Archivist;
   }
 
   function NDXIndex(fields) {
+    let retVal;
+
     if ( ! NDX_OLD ) {
       // Old code (from newer, in my opinion, worse, version)
         // source: 
@@ -811,11 +817,11 @@ export default Archivist;
       // identical factors.
       const fieldBoostFactors = fields.map(() => 1);
       
-      return {
+      retVal = {
         index,
         // `add()` function will add documents to the index.
         add: doc => ndx(
-          index,
+          retVal.index,
           fieldAccessors,
           // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
           // called tokens.
@@ -833,7 +839,7 @@ export default Archivist;
         ),
         // `search()` function will be used to perform queries.
         search: q => NDXQuery(
-          index,
+          retVal.index,
           fieldBoostFactors,
           // BM25 ranking function constants:
           1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
@@ -845,17 +851,45 @@ export default Archivist;
           undefined, 
           q,
         ),
+        save: () => {
+          const obj = toSerializable(retVal.index);
+          const objStr = JSON.stringify(obj);
+          Fs.writeFileSync(
+            Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
+            objStr
+          );
+        },
+        load: newIndex => {
+          retVal.index = newIndex;
+        }
       };
     } else {
       // Even older code (from older but, to me, much better, version: 0.4.1)
       const index = new DocumentIndex();
       fields.forEach(name => index.addField(name));
 
-      return {
+      retVal = {
         index,
-        search: query => index.search(query),
-        add: doc => index.add(doc.id, doc)
+        search: query => retVal.index.search(query),
+        add: doc => retVal.index.add(doc.id, doc),
       };
+    }
+
+    console.log({retVal});
+    return retVal;
+  }
+
+  function loadNDXIndex(ndxFTSIndex) {
+    const DEBUG = true;
+    try {
+      const indexContent = Fs.readFileSync(
+        Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
+      ).toString();
+      const index = fromSerializable(JSON.parse(indexContent));
+      ndxFTSIndex.load(index);
+    } catch(e) {
+      DEBUG && console.warn('Could not load NDX FTS index from disk', e);
+      console.log(ndxFTSIndex);
     }
   }
 
