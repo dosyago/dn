@@ -50,12 +50,13 @@
       tokenize: s => words(s).map(w => termFilter(w))
     };
     const Flex = new FTSIndex(FLEX_OPTS);
+    DEBUG && console.log({Flex});
 
   // NDX
     let Id;
     const NDX_FIELDS = ndxDocFields();
     const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
-    console.log(NDX_FTSIndex);
+    DEBUG && console.log({NDX_FTSIndex});
 
 // module state: constants and variables
   // cache is a simple map
@@ -307,7 +308,7 @@ export default Archivist;
 
       if ( Installations.has(sessionId) ) return;
 
-      console.log("installForSession running on " + targetId);
+      DEBUG && console.log("installForSession running on target " + targetId);
 
       Sessions.set(targetId, sessionId);
       Targets.set(sessionId, clone(targetInfo));
@@ -330,7 +331,7 @@ export default Archivist;
 
       Installations.add(sessionId);
 
-      console.log('Installed sessionId', sessionId);
+      DEBUG && console.log('Installed sessionId', sessionId);
       indexURL({targetInfo});
     }
 
@@ -621,7 +622,7 @@ export default Archivist;
       loadNDXIndex(NDX_FTSIndex);
 
       Id = State.Index.size / 2 + 3;
-      console.log({Id});
+      DEBUG && console.log({firstFreeId: Id});
 
       State.SavedCacheFilePath = cacheFile;
       State.SavedIndexFilePath = indexFile;
@@ -850,7 +851,7 @@ export default Archivist;
       };
     }
 
-    console.log({retVal});
+    DEBUG && console.log('ndx setup', {retVal});
     return retVal;
   }
 
