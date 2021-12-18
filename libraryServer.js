@@ -56,12 +56,17 @@ function addHandlers() {
   app.get('/search(.json)?', async (req, res) => {
     const {query, results:resultIds} = await Archivist.search(req.query.query);
     let results;
-    if ( Archivist.NDX_OLD ) {
-      // Old ndx code
-      results = resultIds.map(({docId}) => Archivist.getDetails(docId));
+    if ( Archivist.USE_FLEX ) {
+      console.log({flexResults: resultIds});
+      results = [];
     } else {
-      // New ndx code
-      results = resultIds.map(({key}) => Archivist.getDetails(key));
+      if ( Archivist.NDX_OLD ) {
+        // Old ndx code
+        results = resultIds.map(({docId}) => Archivist.getDetails(docId));
+      } else {
+        // New ndx code
+        results = resultIds.map(({key}) => Archivist.getDetails(key));
+      }
     }
     if ( req.path.endsWith('.json') ) {
       res.end(JSON.stringify({
