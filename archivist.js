@@ -34,24 +34,26 @@
     const FTS_INDEX_DIR = args.fts_index_dir;
     const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
 
+  // natural (NLP tools -- stemmers and tokenizers, etc)
+    const Tokenizer = new Nat.WordTokenizer();
+    const Stemmer = Nat.PorterStemmer;
+    //const Stemmer = Nat.LancasterStemmer; // EN only
+    const words = Tokenizer.tokenize.bind(Tokenizer);
+    const termFilter = Stemmer.stem.bind(Stemmer);
+    //const termFilter = s => s.toLocaleLowerCase();
+
   // FlexSearch
     const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
     const FLEX_OPTS = {
       context: true,
-      language: "en"
+      language: "en",
+      tokenize: s => words(s).map(w => termFilter(w))
     };
     const Flex = new FTSIndex(FLEX_OPTS);
-
-  // natural (NLP tools -- stemmers and tokenizers, etc)
-    const Tokenizer = new Nat.WordTokenizer();
-    const StemmerEn = Nat.PorterStemmer;
 
   // NDX
     let Id;
     const NDX_FIELDS = ndxDocFields();
-    const words = Tokenizer.tokenize.bind(Tokenizer);
-    //const termFilter = StemmerEn.stem.bind(StemmerEn);
-    const termFilter = s => s.toLocaleLowerCase();
     const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
 
 // module state: constants and variables

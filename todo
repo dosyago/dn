@@ -1,7 +1,6 @@
-- add stemmers and tokenizers to flex from natural
 - We need to reload on localhost 22120 if we open with that
 - We need to not open other localhosts if we already have one open
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
   - then send console message to the controller ({textChanged}), to trigger indexURL again
   - throttle how often this can occur per URL
-
+- Snippets with highlights via levenshtein distance search from natural
