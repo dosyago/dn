@@ -10,7 +10,7 @@
   import Path from 'path';
   import fs from 'fs';
   // search related
-    import FlexSearch from 'flexsearch';
+    //import FlexSearch from 'flexsearch';
     //import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
     //import { query as NDXQuery } from 'ndx-query';
     import { DocumentIndex } from 'ndx';
@@ -28,15 +28,18 @@
 
 // search related state: constants and variables
   // common
+    const NDX_OLD = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
 
   // FlexSearch
-    const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
+    //const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
+    /*
     const FLEX_OPTS = {
       context: true,
       language: "en"
     };
-    const Flex = new FTSIndex(FLEX_OPTS);
+    */
+    //const Flex = new FTSIndex(FLEX_OPTS);
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
     const Tokenizer = new Nat.WordTokenizer();
@@ -46,7 +49,8 @@
     let Id;
     const NDX_FIELDS = ndxDocFields();
     const words = Tokenizer.tokenize.bind(Tokenizer);
-    const termFilter = StemmerEn.stem.bind(StemmerEn);
+    //const termFilter = StemmerEn.stem.bind(StemmerEn);
+    const termFilter = s => s.toLocaleLowerCase();
     const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
 
 // module state: constants and variables
@@ -83,6 +87,7 @@
   const AttributeNode = 2;
 
   const Archivist = { 
+    NDX_OLD,
     collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex,
     search,
     getDetails
@@ -354,9 +359,6 @@ export default Archivist;
       State.Index.set(url, {id:doc.id, title});   
       State.Index.set(doc.id, url);
 
-      //Old flexsearch code
-      //const res = Flex.update(info.url, pageText);
-      //DEBUG && console.log('Flex Index Result>>>', res);
       //New NDX code
       const res = NDX_FTSIndex.add(doc);
       UpdatedKeys.add(info.url);
@@ -633,13 +635,11 @@ export default Archivist;
       Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
           const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
-          const result = Flex.import(dirEnt.name, JSON.parse(content));
-          DEBUG && console.log('Imported', dirEnt.name, result);
-          DEBUG && console.log(Flex);
         }
       });
 
       Id = State.Index.size / 2 + 3;
+      console.log({Id});
 
       State.SavedCacheFilePath = cacheFile;
       State.SavedIndexFilePath = indexFile;
@@ -686,6 +686,7 @@ export default Archivist;
 
   function getDetails(id) {
     const url = State.Index.get(id);
+    console.log(id, url);
     const {title} = State.Index.get(url);
     return {url, title};
   }
@@ -731,6 +732,7 @@ export default Archivist;
   async function search(query) {
     //return await Flex.searchAsync(query, args.results_per_page);
     const results = NDX_FTSIndex.search(query);
+    console.log({query, results});
     return {query,results};
   }
 
@@ -746,6 +748,8 @@ export default Archivist;
 
       if ( UpdatedKeys.size ) {
         DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
+        // Old Flexsearch code
+        /*
         Flex.export((key, data) => {
           key = key.split('.').pop();
           try {
@@ -757,6 +761,7 @@ export default Archivist;
             console.error('Error writing full text search index', e);
           }
         });
+        */
         UpdatedKeys.clear();
       } else {
         DEBUG && console.log("No FTS keys updated, no writes needed this time.");
@@ -783,69 +788,69 @@ export default Archivist;
   }
 
   function NDXIndex(fields) {
-    // Old code (from newer, in my opinion, worse, version)
-      /*
+    if ( ! NDX_OLD ) {
+      // Old code (from newer, in my opinion, worse, version)
         // source: 
           // adapted from:
           // https://github.com/ndx-search/docs/blob/94530cbff6ae8ea66c54bba4c97bdd972518b8b4/README.md#creating-a-simple-indexer-with-a-search-function
 
-        if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
+      if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
 
-        // `createIndex()` creates an index data structure.
-        // First argument specifies how many different fields we want to index.
-        const index = NDX(fields.length);
-        // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
-        const fieldAccessors = fields.map(f => doc => doc[f.name]);
-        // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
-        // identical factors.
-        const fieldBoostFactors = fields.map(() => 1);
-        
-        return {
+      // `createIndex()` creates an index data structure.
+      // First argument specifies how many different fields we want to index.
+      const index = NDX(fields.length);
+      // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
+      const fieldAccessors = fields.map(f => doc => doc[f.name]);
+      // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
+      // identical factors.
+      const fieldBoostFactors = fields.map(() => 1);
+      
+      return {
+        index,
+        // `add()` function will add documents to the index.
+        add: doc => ndx(
           index,
-          // `add()` function will add documents to the index.
-          add: doc => ndx(
-            index,
-            fieldAccessors,
-            // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
-            // called tokens.
-            // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
-            // details.
-            words,
-            // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
-            // index documents.
-            termFilter,
-            // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
-            // in memory.
-            doc.id,
-            // Document.
-            doc,
-          ),
-          // `search()` function will be used to perform queries.
-          search: q => NDXQuery(
-            index,
-            fieldBoostFactors,
-            // BM25 ranking function constants:
-            1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
-            0.75, // BM25 b constant, controls to what degree document length normalizes tf values.
-            words,
-            termFilter,
-            // Set of removed documents, in this example we don't want to support removing documents from the index,
-            // so we can ignore it by specifying this set as `undefined` value.
-            undefined, 
-            q,
-          ),
-        };
-      */
-    // Even older code (from older but, to me, much better, version: 0.4.1)
+          fieldAccessors,
+          // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
+          // called tokens.
+          // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
+          // details.
+          words,
+          // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
+          // index documents.
+          termFilter,
+          // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
+          // in memory.
+          doc.id,
+          // Document.
+          doc,
+        ),
+        // `search()` function will be used to perform queries.
+        search: q => NDXQuery(
+          index,
+          fieldBoostFactors,
+          // BM25 ranking function constants:
+          1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
+          0.75, // BM25 b constant, controls to what degree document length normalizes tf values.
+          words,
+          termFilter,
+          // Set of removed documents, in this example we don't want to support removing documents from the index,
+          // so we can ignore it by specifying this set as `undefined` value.
+          undefined, 
+          q,
+        ),
+      };
+    } else {
+      // Even older code (from older but, to me, much better, version: 0.4.1)
+      const index = new DocumentIndex();
+      fields.forEach(name => index.addField(name));
 
-    const index = new DocumentIndex();
-    fields.forEach(name => index.addField(name));
-
-    return {
-      index,
-      search: query => index.search(query),
-      add: doc => index.add(doc.id, doc)
-    };
+      return {
+        index,
+        search: query => index.search(query),
+        add: doc => index.add(doc.id, doc)
+      };
+    }
   }
 
   function toNDXDoc({id, url, title, pageText}) {
@@ -859,18 +864,19 @@ export default Archivist;
   }
 
   function ndxDocFields() {
-    /* old format (for newer ndx >= v1 ) */
-    /*
+    if ( !NDX_OLD ) {
+      /* old format (for newer ndx >= v1 ) */
       return [
         { name: "url" },
         { name: "title" },
         { name: "content" },
       ];
-    */
-    /* new format (for older ndx ~ v0.4 ) */
-    return [
-      "url",
-      "title",
-      "content"
-    ];
+    } else {
+      /* new format (for older ndx ~ v0.4 ) */
+      return [
+        "url",
+        "title",
+        "content"
+      ];
+    }
   }
