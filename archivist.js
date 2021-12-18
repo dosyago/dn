@@ -55,6 +55,7 @@
     let Id;
     const NDX_FIELDS = ndxDocFields();
     const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
+    console.log(NDX_FTSIndex);
 
 // module state: constants and variables
   // cache is a simple map
@@ -239,11 +240,11 @@ export default Archivist;
 
     async function reindexOnTitleChange({titleChange}) {
       const {currentTitle, url, sessionId} = titleChange;
-      console.log('Received titleChange', titleChange);
+      DEBUG && console.log('Received titleChange', titleChange);
       const latestTargetInfo = clone(await untilHas(Targets, sessionId));
       latestTargetInfo.title = currentTitle;
       Targets.set(sessionId, latestTargetInfo);
-      console.log('Updated stored target info', latestTargetInfo);
+      DEBUG && console.log('Updated stored target info', latestTargetInfo);
       indexURL({targetInfo:latestTargetInfo});
     }
 
@@ -256,15 +257,15 @@ export default Archivist;
     function updateTargetInfo({targetInfo}) {
       if ( targetInfo.type === 'page' ) {
         const sessionId = Sessions.get(targetInfo.targetId); 
-        console.log('Updating target info', targetInfo, sessionId);
+        DEBUG && console.log('Updating target info', targetInfo, sessionId);
         if ( sessionId ) {
           const existingTargetInfo = Targets.get(sessionId);
           // if we have an existing target info for this URL and have saved an updated title
-          console.log('Existing target info', existingTargetInfo);
+          DEBUG && console.log('Existing target info', existingTargetInfo);
           if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
             // keep that title (because targetInfo does not reflect the latest title)
             if ( existingTargetInfo.title !== existingTargetInfo.url ) {
-              console.log('Setting title to existing', existingTargetInfo);
+              DEBUG && console.log('Setting title to existing', existingTargetInfo);
               targetInfo.title = existingTargetInfo.title;
             }
           }
@@ -378,7 +379,7 @@ export default Archivist;
       const res = NDX_FTSIndex.add(doc);
       UpdatedKeys.add(info.url);
 
-      console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content', res, doc});
+      console.log({id: doc.id, title, url, indexed: true});
 
       State.Indexing.delete(info.targetId);
     }
@@ -669,7 +670,7 @@ export default Archivist;
     const url = State.Index.get(id);
     console.log(id, url);
     const {title} = State.Index.get(url);
-    return {url, title};
+    return {url, title, id};
   }
 
   function handlePathChanged() { 
@@ -854,7 +855,6 @@ export default Archivist;
   }
 
   function loadNDXIndex(ndxFTSIndex) {
-    const DEBUG = true;
     try {
       const indexContent = Fs.readFileSync(
         Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
