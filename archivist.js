@@ -10,7 +10,7 @@
   import Path from 'path';
   import fs from 'fs';
   // search related
-    //import FlexSearch from 'flexsearch';
+    import FlexSearch from 'flexsearch';
     //import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
     //import { query as NDXQuery } from 'ndx-query';
     import { DocumentIndex } from 'ndx';
@@ -29,17 +29,16 @@
 // search related state: constants and variables
   // common
     const NDX_OLD = true;
+    const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
 
   // FlexSearch
-    //const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
-    /*
+    const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
     const FLEX_OPTS = {
       context: true,
       language: "en"
     };
-    */
-    //const Flex = new FTSIndex(FLEX_OPTS);
+    const Flex = new FTSIndex(FLEX_OPTS);
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
     const Tokenizer = new Nat.WordTokenizer();
@@ -88,6 +87,7 @@
 
   const Archivist = { 
     NDX_OLD,
+    USE_FLEX,
     collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex,
     search,
     getDetails
@@ -358,6 +358,9 @@ export default Archivist;
       const doc = toNDXDoc({id, url, title, pageText});
       State.Index.set(url, {id:doc.id, title});   
       State.Index.set(doc.id, url);
+
+      //Old Flex code
+      Flex.update(doc.id, doc.title + ' ' + doc.content);
 
       //New NDX code
       const res = NDX_FTSIndex.add(doc);
@@ -635,6 +638,7 @@ export default Archivist;
       Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
           const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
+          Flex.import(dirEnt.name, content);
         }
       });
 
@@ -730,8 +734,13 @@ export default Archivist;
   }
 
   async function search(query) {
-    //return await Flex.searchAsync(query, args.results_per_page);
-    const results = NDX_FTSIndex.search(query);
+    let results;
+    if ( USE_FLEX ) {
+      results = await Flex.searchAsync(query, args.results_per_page);
+    } else {
+      // NDX code
+      results = NDX_FTSIndex.search(query);
+    }
     console.log({query, results});
     return {query,results};
   }
@@ -748,8 +757,6 @@ export default Archivist;
 
       if ( UpdatedKeys.size ) {
         DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
-        // Old Flexsearch code
-        /*
         Flex.export((key, data) => {
           key = key.split('.').pop();
           try {
@@ -761,7 +768,6 @@ export default Archivist;
             console.error('Error writing full text search index', e);
           }
         });
-        */
         UpdatedKeys.clear();
       } else {
         DEBUG && console.log("No FTS keys updated, no writes needed this time.");

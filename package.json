@@ -36,6 +36,7 @@
     "chrome-launcher": "latest",
     "esm": "latest",
     "express": "latest",
+    "flexsearch": "^0.7.21",
     "hasha": "latest",
     "natural": "^5.1.11",
     "ndx": "^0.4.1",
