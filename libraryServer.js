@@ -184,9 +184,9 @@ function IndexView(urls) {
     </form>
     <ul>
     ${
-      urls.map(([url,{title}]) => `
+      urls.map(([url,{title, id}]) => `
         <li>
-          <a target=_blank href=${url}>${title||url}</a>
+          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${title||url}</a>
         </li>
       `).join('\n')
     }
@@ -247,9 +247,9 @@ function SearchResultView({results, query}) {
     </p>
     <ol>
     ${
-      results.map(({url,title}) => `
+      results.map(({url,title,id}) => `
         <li>
-          <a target=_blank href=${url}>${title||url}</a>
+          ${DEBUG ? id + ':' : ''}: <a target=_blank href=${url}>${title||url}</a>
         </li>
       `).join('\n')
     }
