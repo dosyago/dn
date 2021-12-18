@@ -282,7 +282,7 @@ export default Archivist;
         const {url, targetId} = targetInfo;
         const sessionId = Sessions.get(targetId);
         if ( !!sessionId && !ConfirmedInstalls.has(sessionId) ) {
-          console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
+          DEBUG && console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
           send("Page.stopLoading", {}, sessionId);
           send("Page.reload", {}, sessionId);
         }
