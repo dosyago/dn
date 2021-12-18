@@ -16,7 +16,8 @@
     "pack": "upx 22120.exe && upx 22120.nix && upx 22120.mac && upx 22120.win32.exe && upx 22120.nix32",
     "test": "nodemon app.js",
     "save": "nodemon app.js 22120 save",
-    "serve": "nodemon app.js 22120 serve"
+    "serve": "nodemon app.js 22120 serve",
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
