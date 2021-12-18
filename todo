@@ -1,8 +1,10 @@
+- add fuzzysort as another search signal
+  - maybe merge all outstanding PRs for fuzzy into fuzzy since it hasn't been maintained since 2018
 - Snippets with highlights via levenshtein distance search from natural
 - Improve search page look
+- Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
 - We need to reload on localhost 22120 if we open with that
 - We need to not open other localhosts if we already have one open
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
   - then send console message to the controller ({textChanged}), to trigger indexURL again
   - throttle how often this can occur per URL
-- add fuzzysort as another search signal
