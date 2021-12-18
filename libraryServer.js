@@ -171,7 +171,7 @@ function IndexView(urls) {
         margin-top: 0;
       }
     </style>
-    <h1>22120</h1>
+    <h1><a href=/>22120</a></h1>
     <h2>Internet Offline Library</h2>
     <h2>Archive Index</h2>
     <form method=GET action=/search>
@@ -232,7 +232,7 @@ function SearchResultView({results, query}) {
         margin-top: 0;
       }
     </style>
-    <h1>22120</h1>
+    <h1><a href=/>22120</a></h1>
     <h2>Search results</h2>
     <form method=GET action=/search>
       <fieldset>
