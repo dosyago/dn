@@ -1,3 +1,4 @@
+- issue with not getting all results (ie. hell - google search -- we only get id 4 no others)
 - We need to reload on localhost 22120 if we open with that
 - We need to not open other localhosts if we already have one open
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)
