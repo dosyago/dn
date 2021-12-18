@@ -57,8 +57,7 @@ function addHandlers() {
     const {query, results:resultIds} = await Archivist.search(req.query.query);
     let results;
     if ( Archivist.USE_FLEX ) {
-      console.log({flexResults: resultIds});
-      results = [];
+      results = resultIds.map(docId => Archivist.getDetails(docId));
     } else {
       if ( Archivist.NDX_OLD ) {
         // Old ndx code
