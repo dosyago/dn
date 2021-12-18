@@ -30,7 +30,7 @@
 // search related state: constants and variables
   // common
     const NDX_OLD = false;
-    const USE_FLEX = false;
+    const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
     const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
 
@@ -59,6 +59,9 @@
     // that holds the serialized requests
     // that are saved on disk
   let Fs, Mode, Close;
+  const Status = {
+    loaded: false
+  };
   const Targets = new Map();
   const UpdatedKeys = new Set();
   const Cache = new Map();
@@ -92,7 +95,8 @@
     USE_FLEX,
     collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex,
     search,
-    getDetails
+    getDetails,
+    isReady,
   }
 
   const BODYLESS = new Set([
@@ -183,7 +187,11 @@ export default Archivist;
 
     const {targetInfos:targets} = await send("Target.getTargets", {});
     const pageTargets = targets.filter(({type}) => type == 'page');
-    pageTargets.forEach(attachToTarget);
+    await Promise.all(pageTargets.map(attachToTarget));
+
+    Status.loaded = true;
+
+    return Status.loaded;
 
     function guard(func, text = '') {
       return (...args) => {
@@ -371,46 +379,6 @@ export default Archivist;
       console.log({title, url, indexed: true, searchable: true, indexType: 'full text and full content', res, doc});
 
       State.Indexing.delete(info.targetId);
-    }
-
-    async function untilHas(thing, key) {
-      if ( thing instanceof Map ) {
-        if ( thing.has(key) ) {
-          return thing.get(key);
-        } else {
-          let resolve;
-          const pr = new Promise(res => resolve = res);
-          const checker = setInterval(() => {
-            if ( thing.has(key) ) {
-              clearInterval(checker);
-              resolve(thing.get(key));
-            } else {
-              console.log(thing, "not have", key);
-            }
-          }, CHECK_INTERVAL);
-
-          return pr;
-        }
-      } else if ( thing instanceof Set ) {
-        if ( thing.has(key) ) {
-          return true;
-        } else {
-          let resolve;
-          const pr = new Promise(res => resolve = res);
-          const checker = setInterval(() => {
-            if ( thing.has(key) ) {
-              clearInterval(checker);
-              resolve(true);
-            } else {
-              console.log(thing, "not have", key);
-            }
-          }, CHECK_INTERVAL);
-
-          return pr;
-        }
-      } else {
-        throw new TypeError(`untilHas with thing of type ${thing} is not yet implemented!`);
-      }
     }
 
     function processDoc({documents, strings}) {
@@ -612,6 +580,10 @@ export default Archivist;
   }
 
 // helpers
+  async function isReady() {
+    return await untilHas(Status, 'loaded');
+  }
+
   function clearSavers() {
     if ( State.saver ) {
       clearInterval(State.saver);
@@ -920,3 +892,62 @@ export default Archivist;
       ];
     }
   }
+
+  async function untilHas(thing, key) {
+    if ( thing instanceof Map ) {
+      if ( thing.has(key) ) {
+        return thing.get(key);
+      } else {
+        let resolve;
+        const pr = new Promise(res => resolve = res);
+        const checker = setInterval(() => {
+          if ( thing.has(key) ) {
+            clearInterval(checker);
+            resolve(thing.get(key));
+          } else {
+            DEBUG && console.log(thing, "not have", key);
+          }
+        }, CHECK_INTERVAL);
+
+        return pr;
+      }
+    } else if ( thing instanceof Set ) {
+      if ( thing.has(key) ) {
+        return true;
+      } else {
+        let resolve;
+        const pr = new Promise(res => resolve = res);
+        const checker = setInterval(() => {
+          if ( thing.has(key) ) {
+            clearInterval(checker);
+            resolve(true);
+          } else {
+            DEBUG && console.log(thing, "not have", key);
+          }
+        }, CHECK_INTERVAL);
+
+        return pr;
+      }
+    } else if ( typeof thing === "object" ) {
+      if ( thing[key] ) {
+        return true;
+      } else {
+        let resolve;
+        const pr = new Promise(res => resolve = res);
+        const checker = setInterval(() => {
+          if ( thing[key] ) {
+            clearInterval(checker);
+            resolve(true);
+          } else {
+            DEBUG && console.log(thing, "not have", key);
+          }
+        }, CHECK_INTERVAL);
+
+        return pr;
+      }
+    } else {
+      throw new TypeError(`untilHas with thing of type ${thing} is not yet implemented!`);
+    }
+  }
+
+
