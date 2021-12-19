@@ -611,23 +611,43 @@ export default Archivist;
   }
 
   async function loadFiles() {
-    const DEBUG = true;
     let cacheFile = CACHE_FILE();
     let indexFile = INDEX_FILE();
     let ftsDir = FTS_INDEX_DIR();
+    let someError = false;
 
     try {
       State.Cache = new Map(JSON.parse(Fs.readFileSync(cacheFile)));
+    } catch(e) {
+      State.Cache = new Map();
+      someError = true;
+    }
+
+    try {
       State.Index = new Map(JSON.parse(Fs.readFileSync(indexFile)));
+    } catch(e) {
+      State.Index = new Map();
+      someError = true;
+    }
+
+    try {
       Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
           const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
           Flex.import(dirEnt.name, JSON.parse(content));
         }
       });
-      loadNDXIndex(NDX_FTSIndex);
-
     } catch(e) {
+      someError = true;
+    }
+
+    try {
+      loadNDXIndex(NDX_FTSIndex);
+    } catch(e) {
+      someError = true;
+    }
+
+    if ( someError ) {
       const rl = readline.createInterface({input, output});
       const question = util.promisify(rl.question).bind(rl);
       console.warn('Error reading archive file. Your archive directory is corrupted. We will attempt to patch it so you can use it going forward, but because we replace a missing or corrupt index, cache, or full-text search index files with new blank copies, existing resources already indexed and cached may become inaccessible from your new index. A future version of this software should be able to more completely repair your archive directory, reconnecting and re-existing all cached resources and notifying you about and purging from the index any missing resources.\n');
@@ -672,15 +692,11 @@ export default Archivist;
         }
       }
       DEBUG && console.warn(e);
-      State.Cache = new Map();
-      State.Index = new Map();
       console.log('Resetting base path', newBasePath);
       args.updateBasePath(newBasePath, {force:true});
-      saveFiles();
-      cacheFile = CACHE_FILE();
-      indexFile = INDEX_FILE();
-      ftsDir = FTS_INDEX_DIR();
+      saveFiles({forceSave:true});
     }
+
     Id = State.Index.size / 2 + 3;
     DEBUG && console.log({firstFreeId: Id});
 
@@ -711,23 +727,23 @@ export default Archivist;
 
   function getMode() { return Mode; }
 
-  function saveFiles({useState: useState = false} = {}) {
+  function saveFiles({useState: useState = false, forceSave:forceSave = false} = {}) {
     clearSavers();
     if ( useState ) {
       // saves the old cache path
       saveCache(State.SavedCacheFilePath);
       saveIndex(State.SavedIndexFilePath);
-      saveFTS(State.SavedFTSIndexDirPath);
+      saveFTS(State.SavedFTSIndexDirPath, {forceSave});
     } else {
       saveCache();
       saveIndex();
-      saveFTS();
+      saveFTS(null, {forceSave});
     }
   }
 
   async function changeMode(mode) { 
     DEBUG && console.log({modeChange:mode});
-    saveFiles();
+    saveFiles({forceSave:true});
     Close && Close();
     Mode = mode;
     await collect({chrome_port:args.chrome_port, mode});
@@ -735,14 +751,14 @@ export default Archivist;
 
   function getDetails(id) {
     const url = State.Index.get(id);
-    console.log(id, url);
+    DEBUG && console.log(id, url);
     const {title} = State.Index.get(url);
     return {url, title, id};
   }
 
   async function handlePathChanged() { 
     DEBUG && console.log({libraryPathChange:args.library_path()});
-    saveFiles({useState:true});
+    saveFiles({useState:true, forceSave:true});
     // reloads from new path and updates Saved FilePaths
     await loadFiles();
   }
@@ -786,17 +802,19 @@ export default Archivist;
     return {query,results};
   }
 
-  async function saveFTS(path) {
+  async function saveFTS(path = undefined, {forceSave:forceSave = false} = {}) {
     if ( State.ftsSaveInProgress ) return;
     State.ftsSaveInProgress = true;
 
     clearTimeout(State.ftsIndexSaver);
 
+    const DEBUG = true;
+
     if ( context == 'node' ) {
       DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
       const dir = path || FTS_INDEX_DIR();
 
-      if ( UpdatedKeys.size ) {
+      if ( forceSave || UpdatedKeys.size ) {
         DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
         Flex.export((key, data) => {
           key = key.split('.').pop();
@@ -822,7 +840,7 @@ export default Archivist;
 
   function shutdown() {
     DEBUG && console.log(`Archivist shutting down...`);  
-    saveCache();
+    saveFiles({forceSave:true});
     Close && Close();
     DEBUG && console.log(`Archivist shut down.`);
   }
@@ -918,6 +936,7 @@ export default Archivist;
   }
 
   function loadNDXIndex(ndxFTSIndex) {
+    const DEBUG = true;
     try {
       const indexContent = Fs.readFileSync(
         Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
@@ -926,7 +945,7 @@ export default Archivist;
       ndxFTSIndex.load(index);
     } catch(e) {
       DEBUG && console.warn('Could not load NDX FTS index from disk', e);
-      console.log(ndxFTSIndex);
+      DEBUG && console.log(ndxFTSIndex);
     }
   }
 
