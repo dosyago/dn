@@ -61,7 +61,7 @@
       language: "en",
       tokenize: "reverse"
     };
-    const Flex = new FTSIndex(FLEX_OPTS);
+    let Flex = new FTSIndex(FLEX_OPTS);
     DEBUG && console.log({Flex});
 
   // NDX
@@ -69,7 +69,7 @@
     const NDXRemoved = new Set();
     const REMOVED_CAP_TO_VACUUM_NDX = 10;
     const NDX_FIELDS = ndxDocFields();
-    const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
+    let NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     DEBUG && console.log({NDX_FTSIndex});
 
 // module state: constants and variables
@@ -85,10 +85,12 @@
   const Cache = new Map();
   const Index = new Map();
   const Indexing = new Set();
-  const State = {
+  const BLANK_STATE = {
     Indexing,
     Cache, 
     Index,
+    NDX_FTSIndex,
+    Flex,
     SavedCacheFilePath: null,
     SavedIndexFilePath: null,
     SavedFTSIndexDirPath: null,
@@ -97,7 +99,8 @@
     ftsIndexSaver: null,
     saveInProgress: false,
     ftsSaveInProgress: false
-  }
+  };
+  const State = Object.assign({}, BLANK_STATE);
 
   const IGNORE_NODES = new Set([
     'script',
@@ -111,7 +114,10 @@
   const Archivist = { 
     NDX_OLD,
     USE_FLEX,
-    collect, getMode, changeMode, shutdown, handlePathChanged, saveIndex,
+    collect, getMode, changeMode, shutdown, 
+    beforePathChanged,
+    afterPathChanged,
+    saveIndex,
     search,
     getDetails,
     isReady,
@@ -402,8 +408,11 @@ export default Archivist;
       Flex.update(doc.id, doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' '));
 
       //New NDX code
-      const res = NDX_FTSIndex.add(doc);
-      UpdatedKeys.add(info.url);
+      const res = NDX_FTSIndex.update(doc);
+
+      console.log("NDX updated", doc.id);
+
+      UpdatedKeys.add(url);
 
       console.log({id: doc.id, title, url, indexed: true});
 
@@ -717,7 +726,6 @@ export default Archivist;
       saveFiles({forceSave:true});
     }
 
-    Id = State.Index.size / 2 + 3;
     DEBUG && console.log({firstFreeId: Id});
 
     State.SavedCacheFilePath = cacheFile;
@@ -776,7 +784,17 @@ export default Archivist;
     return {url, title, id};
   }
 
-  async function handlePathChanged() { 
+  function beforePathChanged() {
+    saveFiles({useState:true, forceSave:true});
+    // clear all memory cache, index and full text indexes
+    Index.clear();
+    Cache.clear();
+    State.NDX_FTSIndex = NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
+    State.Flex = Flex = new FTSIndex(FLEX_OPTS);
+    Id = State.Index.size / 2 + 3;
+  }
+
+  async function afterPathChanged() { 
     DEBUG && console.log({libraryPathChange:args.library_path()});
     saveFiles({useState:true, forceSave:true});
     // reloads from new path and updates Saved FilePaths
@@ -822,6 +840,7 @@ export default Archivist;
       results = ndxResults;
     }
 
+    console.log(State.Index, {flexResults, ndxResults}, NDX_FTS_INDEX_DIR(), Id);
     console.log({
       query, 
       flexResults: flexResults.map(id=> ({id, url: State.Index.get(id)})),
@@ -925,6 +944,11 @@ export default Archivist;
         remove: id => {
           removeDocumentFromIndex(retVal.index, NDXRemoved, id);
           maybeClean();
+        },
+        update: doc => {
+          retVal.remove(doc.id);
+          maybeClean();
+          retVal.add(doc.id);
         },
         // `search()` function will be used to perform queries.
         search: q => NDXQuery(
@@ -1075,5 +1099,3 @@ export default Archivist;
       throw new TypeError(`untilHas with thing of type ${thing} is not yet implemented!`);
     }
   }
-
-
