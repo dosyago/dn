@@ -787,8 +787,8 @@ export default Archivist;
   function beforePathChanged() {
     saveFiles({useState:true, forceSave:true});
     // clear all memory cache, index and full text indexes
-    Index.clear();
-    Cache.clear();
+    State.Index.clear();
+    State.Cache.clear();
     State.NDX_FTSIndex = NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     State.Flex = Flex = new FTSIndex(FLEX_OPTS);
     Id = State.Index.size / 2 + 3;
