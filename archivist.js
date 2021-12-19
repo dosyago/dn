@@ -134,6 +134,14 @@
     body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
   }
 
+// shutdown and cleanup
+  // handle writing out indexes and closing browser connection when resetting under nodemon
+    process.once('SIGUSR2', function () {
+      shutdown(function () {
+        process.kill(process.pid, 'SIGUSR2');
+      });
+    });
+
 export default Archivist;
 
 // main
@@ -838,11 +846,12 @@ export default Archivist;
     State.ftsSaveInProgress = false;
   }
 
-  function shutdown() {
+  function shutdown(then) {
     DEBUG && console.log(`Archivist shutting down...`);  
     saveFiles({forceSave:true});
     Close && Close();
     DEBUG && console.log(`Archivist shut down.`);
+    return then();
   }
 
   function b64(s) {
