@@ -1,6 +1,7 @@
-- combine flex and ndx search signals
-- add fuzzysort as another search signal
+- fix ndx _vacuumIndex to use stack (for scalability)
+- add fuzzysort as another search signal (but maybe just for queries?)
   - maybe merge all outstanding PRs for fuzzy into fuzzy since it hasn't been maintained since 2018
+- combine all search signals
 - Snippets with highlights via levenshtein distance search from natural
 - Improve search page look
 - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
