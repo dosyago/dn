@@ -1,0 +1,12 @@
+- ndx index seems to lose documents.
+  - e.g.
+  1. visit goog:hell
+  2. visit top link: wiki - hell
+  3. visit hellomagainze.com
+  4. search hell
+  5. see results: goog/hell, wiki/hell, hellomag
+  6. reload wiki - hell
+  7. search hell
+  8. see results: wiki/hell, hellomag
+  - WHERE THE HELL DID goog/hell go? 
+

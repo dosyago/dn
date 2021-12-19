@@ -1,3 +1,4 @@
+- combine flex and ndx search signals
 - add fuzzysort as another search signal
   - maybe merge all outstanding PRs for fuzzy into fuzzy since it hasn't been maintained since 2018
 - Snippets with highlights via levenshtein distance search from natural
