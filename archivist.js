@@ -729,7 +729,7 @@ export default Archivist;
     }
 
     Id = Math.round(State.Index.size / 2) + 3;
-    NDXId = State.Index.has(NDX_ID_KEY) ? State.Index.get(NDX_ID_KEY) + 3 : (Id + 1000000);
+    NDXId = State.Index.has(NDX_ID_KEY) ? State.Index.get(NDX_ID_KEY) + 3000 : (Id + 1000000);
     if ( !Number.isInteger(NDXId) ) NDXId = Id;
     DEBUG && console.log({firstFreeId: Id, firstFreeNDXId: NDXId});
 
@@ -960,7 +960,6 @@ export default Archivist;
         },
         update: (doc, old_id) => {
           retVal.remove(old_id);
-          //maybeClean();
           retVal.add(doc);
         },
         // `search()` function will be used to perform queries.
@@ -978,7 +977,7 @@ export default Archivist;
           q,
         ),
         save: () => {
-          //maybeClean();
+          maybeClean();
           const obj = toSerializable(retVal.index);
           const objStr = JSON.stringify(obj);
           const path = Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx');
@@ -1007,8 +1006,8 @@ export default Archivist;
     DEBUG && console.log('ndx setup', {retVal});
     return retVal;
 
-    function maybeClean() {
-      if ( NDXRemoved.size >= REMOVED_CAP_TO_VACUUM_NDX ) {
+    function maybeClean(doIt = false) {
+      if ( (doIt && NDXRemoved.size) || NDXRemoved.size >= REMOVED_CAP_TO_VACUUM_NDX ) {
         vacuumIndex(retVal.index, NDXRemoved);
       }
     }
