@@ -390,6 +390,9 @@ export default Archivist;
       let id;
       if ( State.Index.has(url) ) {
         ({id} = State.Index.get(url));
+      } else {
+        Id++;
+        id = Id;
       }
       const doc = toNDXDoc({id, url, title, pageText});
       State.Index.set(url, {id:doc.id, title});   
@@ -868,7 +871,7 @@ export default Archivist;
     saveFiles({forceSave:true});
     Close && Close();
     DEBUG && console.log(`Archivist shut down.`);
-    return then();
+    return then && then();
   }
 
   function b64(s) {
@@ -941,10 +944,12 @@ export default Archivist;
           maybeClean();
           const obj = toSerializable(retVal.index);
           const objStr = JSON.stringify(obj);
+          const path = Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx');
           Fs.writeFileSync(
-            Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
+            path,
             objStr
           );
+          console.log("Write NDX to ", path);
         },
         load: newIndex => {
           retVal.index = newIndex;
@@ -988,7 +993,6 @@ export default Archivist;
 
   function toNDXDoc({id, url, title, pageText}) {
     // use existing defined id or a new one
-    id = id || Id++;
     return {
       id,
       url: url.split(URI_SPLIT).join(' '), 
