@@ -103,7 +103,8 @@ function addHandlers() {
     const change = args.updateBasePath(base_path);
 
     if ( change ) {
-      Archivist.handlePathChanged();
+      res.send(`Changing base path. See the console for progress.`);
+      await Archivist.handlePathChanged();
       Server.close(async () => {
         running = false;
         console.log(`Server closed.`);

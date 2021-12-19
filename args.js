@@ -49,9 +49,10 @@ const args = {
 
 export default args;
 
-function updateBasePath(new_base_path) {
+function updateBasePath(new_base_path, {force:force = false} = {}) {
   new_base_path = path.resolve(new_base_path);
-  if ( BasePath == new_base_path ) {
+  console.log({new_base_path, BasePath});
+  if ( !force && (BasePath == new_base_path) ) {
     return false;
   }
 
