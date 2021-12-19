@@ -8,7 +8,12 @@
   import hasha from 'hasha';
   import {URL} from 'url';
   import Path from 'path';
+  import os from 'os';
   import fs from 'fs';
+  import { stdin as input, stdout as output } from 'process';
+  import util from 'util';
+  import readline from 'readline';
+
   // search related
     import FlexSearch from 'flexsearch';
     import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
@@ -148,7 +153,7 @@ export default Archivist;
 
     let requestStage;
     
-    loadFiles();
+    await loadFiles();
 
     clearSavers();
 
@@ -605,12 +610,13 @@ export default Archivist;
     }
   }
 
-  function loadFiles() {
-    try {
-      const cacheFile = CACHE_FILE();
-      const indexFile = INDEX_FILE();
-      const ftsDir = FTS_INDEX_DIR();
+  async function loadFiles() {
+    const DEBUG = true;
+    let cacheFile = CACHE_FILE();
+    let indexFile = INDEX_FILE();
+    let ftsDir = FTS_INDEX_DIR();
 
+    try {
       State.Cache = new Map(JSON.parse(Fs.readFileSync(cacheFile)));
       State.Index = new Map(JSON.parse(Fs.readFileSync(indexFile)));
       Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
@@ -621,20 +627,69 @@ export default Archivist;
       });
       loadNDXIndex(NDX_FTSIndex);
 
-      Id = State.Index.size / 2 + 3;
-      DEBUG && console.log({firstFreeId: Id});
-
-      State.SavedCacheFilePath = cacheFile;
-      State.SavedIndexFilePath = indexFile;
-      State.SavedFTSIndexDirPath = ftsDir;
-      DEBUG && console.log(`Loaded cache key file ${cacheFile}`);
-      DEBUG && console.log(`Loaded index file ${indexFile}`);
-      DEBUG && console.log(`Need to load FTS index dir ${ftsDir}`);
     } catch(e) {
-      console.warn('Error reading archive file', e);
+      const rl = readline.createInterface({input, output});
+      const question = util.promisify(rl.question).bind(rl);
+      console.warn('Error reading archive file. Your archive directory is corrupted. We will attempt to patch it so you can use it going forward, but because we replace a missing or corrupt index, cache, or full-text search index files with new blank copies, existing resources already indexed and cached may become inaccessible from your new index. A future version of this software should be able to more completely repair your archive directory, reconnecting and re-existing all cached resources and notifying you about and purging from the index any missing resources.\n');
+      console.log('Sorry about this, we are not sure why this happened, but we know this must be very distressing for you.\n');
+      console.log(`For your information, the corruped archive directory is at: ${args.getBasePath()}\n`);
+      console.info('Because this repair as described above is not a perfect solution, we will give you a choice of how to proceed. You have two options: 1) attempt a basic repair that may leave some resources inaccessible from the repaired archive, or 2) do not touch the corrupted archive, but instead create a new fresh blank archive to begin saving to. Which option would you like to proceed with?');
+      console.log('1) Basic repair with possible inaccessible pages');
+      console.log('2) Leave the corrupt archive untouched, start a new archive');
+      let correctAnswer = false;
+      let newBasePath = '';
+      while(!correctAnswer) {
+        let answer = await question('Which option would you like (1 or 2)? ');
+        answer = parseInt(answer);
+        switch(answer) {
+          case 1: {
+            console.log('Alright, selecting option 1. Using the existing archive and patching a simple repair.');
+            newBasePath = args.getBasePath();
+            correctAnswer = true;
+          }; break;
+          case 2: {
+            console.log('Alright, selection option 2. Leaving the existing archive along and creating a new, fresh, blank archive.');
+            let correctAnswer2 = false;
+            while( ! correctAnswer2 ) {
+              try {
+                newBasePath = Path.resolve(os.homedir(), await question(
+                  'Please enter a directory name for your new archive.\n' +
+                  `${os.homedir()}/`
+                ));
+                correctAnswer2 = true;
+              } catch(e2) {
+                console.warn(e2);
+                console.info('Sorry that was not a valid directory name.');
+                await question('enter to continue');
+              }
+            }
+            correctAnswer = true;
+          }; break;
+          default: {
+            correctAnswer = false;
+            console.log('Sorry, that was not a valid option. Please input 1 or 2.');
+          }; break;
+        }
+      }
+      DEBUG && console.warn(e);
       State.Cache = new Map();
       State.Index = new Map();
+      console.log('Resetting base path', newBasePath);
+      args.updateBasePath(newBasePath, {force:true});
+      saveFiles();
+      cacheFile = CACHE_FILE();
+      indexFile = INDEX_FILE();
+      ftsDir = FTS_INDEX_DIR();
     }
+    Id = State.Index.size / 2 + 3;
+    DEBUG && console.log({firstFreeId: Id});
+
+    State.SavedCacheFilePath = cacheFile;
+    State.SavedIndexFilePath = indexFile;
+    State.SavedFTSIndexDirPath = ftsDir;
+    DEBUG && console.log(`Loaded cache key file ${cacheFile}`);
+    DEBUG && console.log(`Loaded index file ${indexFile}`);
+    DEBUG && console.log(`Need to load FTS index dir ${ftsDir}`);
 
     try {
       if ( !Fs.existsSync(NO_FILE()) ) {
@@ -656,12 +711,23 @@ export default Archivist;
 
   function getMode() { return Mode; }
 
+  function saveFiles({useState: useState = false} = {}) {
+    clearSavers();
+    if ( useState ) {
+      // saves the old cache path
+      saveCache(State.SavedCacheFilePath);
+      saveIndex(State.SavedIndexFilePath);
+      saveFTS(State.SavedFTSIndexDirPath);
+    } else {
+      saveCache();
+      saveIndex();
+      saveFTS();
+    }
+  }
+
   async function changeMode(mode) { 
     DEBUG && console.log({modeChange:mode});
-    clearSavers();
-    saveCache();
-    saveIndex();
-    saveFTS();
+    saveFiles();
     Close && Close();
     Mode = mode;
     await collect({chrome_port:args.chrome_port, mode});
@@ -674,15 +740,11 @@ export default Archivist;
     return {url, title, id};
   }
 
-  function handlePathChanged() { 
+  async function handlePathChanged() { 
     DEBUG && console.log({libraryPathChange:args.library_path()});
-    clearSavers();
-    // saves the old cache path
-    saveCache(State.SavedCacheFilePath);
-    saveIndex(State.SavedIndexFilePath);
-    saveFTS(State.SavedFTSIndexDirPath);
+    saveFiles({useState:true});
     // reloads from new path and updates Saved FilePaths
-    loadFiles();
+    await loadFiles();
   }
 
   function saveCache(path) {
