@@ -16,7 +16,12 @@
 
   // search related
     import FlexSearch from 'flexsearch';
-    import { createIndex as NDX, addDocumentToIndex as ndx } from 'ndx';
+    import { 
+      createIndex as NDX, 
+      addDocumentToIndex as ndx, 
+      removeDocumentFromIndex, 
+      vacuumIndex 
+    } from 'ndx';
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
     //import { DocumentIndex } from 'ndx';
@@ -59,6 +64,7 @@
 
   // NDX
     let Id;
+    const REMOVED_CAP_TO_VACUUM_NDX = 10;
     const NDX_FIELDS = ndxDocFields();
     const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     DEBUG && console.log({NDX_FTSIndex});
@@ -75,6 +81,7 @@
   const UpdatedKeys = new Set();
   const Cache = new Map();
   const Index = new Map();
+  const NDX_Removed = new Set();
   const Indexing = new Set();
   const State = {
     Indexing,
@@ -810,7 +817,12 @@ export default Archivist;
       results = ndxResults;
     }
 
-    console.log({query, flexResults, ndxResults, using: USE_FLEX ? 'flex' : 'ndx'});
+    console.log({
+      query, 
+      flexResults: flexResults.map(id=> ({id, url: State.Index.get(id)})),
+      ndxResults: ndxResults.map(r => ({id: r.key, url: State.Index.get(r.key), ...r})),
+      using: USE_FLEX ? 'flex' : 'ndx'
+    });
 
     return {query,results};
   }
@@ -820,8 +832,6 @@ export default Archivist;
     State.ftsSaveInProgress = true;
 
     clearTimeout(State.ftsIndexSaver);
-
-    const DEBUG = true;
 
     if ( context == 'node' ) {
       DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
@@ -907,6 +917,10 @@ export default Archivist;
           // Document.
           doc,
         ),
+        remove: id => {
+          removeDocumentFromIndex(retVal.index, NDXRemoved, id);
+          maybeClean();
+        },
         // `search()` function will be used to perform queries.
         search: q => NDXQuery(
           retVal.index,
@@ -918,10 +932,11 @@ export default Archivist;
           termFilter,
           // Set of removed documents, in this example we don't want to support removing documents from the index,
           // so we can ignore it by specifying this set as `undefined` value.
-          undefined, 
+          NDXRemoved, 
           q,
         ),
         save: () => {
+          maybeClean();
           const obj = toSerializable(retVal.index);
           const objStr = JSON.stringify(obj);
           Fs.writeFileSync(
@@ -947,6 +962,12 @@ export default Archivist;
 
     DEBUG && console.log('ndx setup', {retVal});
     return retVal;
+
+    function maybeClean() {
+      if ( NDXRemoved.size >= REMOVED_CAP_TO_VACUUM_NDX ) {
+        vacuumIndex(retVal.index, NDXRemoved);
+      }
+    }
   }
 
   function loadNDXIndex(ndxFTSIndex) {
