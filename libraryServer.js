@@ -100,10 +100,11 @@ function addHandlers() {
 
   app.post('/base_path', async (req, res) => {
     const {base_path} = req.body;
+    Archivist.beforePathChanged();
     const change = args.updateBasePath(base_path);
 
     if ( change ) {
-      await Archivist.handlePathChanged();
+      await Archivist.afterPathChanged();
       Server.close(async () => {
         running = false;
         console.log(`Server closed.`);
