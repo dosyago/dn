@@ -35,7 +35,7 @@
 // search related state: constants and variables
   // common
     const NDX_OLD = false;
-    const USE_FLEX = false;
+    const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
     const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
 
