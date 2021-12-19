@@ -21,6 +21,7 @@ const cache_file = () => path.resolve(library_path(), 'cache.json');
 const index_file = () => path.resolve(library_path(), 'index.json');
 const fts_index_dir = () => path.resolve(library_path(), 'flex-fts');
 const ndx_fts_index_dir = () => path.resolve(library_path(), 'ndx-fts');
+const fuzzy_fts_index_dir = () => path.resolve(library_path(), 'fuzzy-fts');
 const results_per_page = 10;
 
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
@@ -43,6 +44,7 @@ const args = {
   index_file,
   fts_index_dir,
   ndx_fts_index_dir,
+  fuzzy_fts_index_dir,
 
   results_per_page
 };

@@ -21,10 +21,11 @@
       addDocumentToIndex as ndx, 
       removeDocumentFromIndex, 
       vacuumIndex 
-    } from 'ndx';
+    } from './lib/ndx.js';
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
     //import { DocumentIndex } from 'ndx';
+    import fuzzy from 'fuzzysort';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -43,6 +44,7 @@
     const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
     const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
+    const FUZZY_FTS_INDEX_DIR = args.fuzzy_fts_index_dir;
     const URI_SPLIT = /[\/.]/g;
     const NDX_ID_KEY = 'ndx_id';
     const INDEX_HIDDEN_KEYS = new Set([
@@ -78,6 +80,9 @@
     let NDXId;
     DEBUG && console.log({NDX_FTSIndex});
 
+  // fuzzy (maybe just for queries ?)
+    const Docs = [];
+
 // module state: constants and variables
   // cache is a simple map
     // that holds the serialized requests
@@ -91,6 +96,7 @@
   const Index = new Map();
   const Indexing = new Set();
   const BLANK_STATE = {
+    Docs,
     Indexing,
     Cache, 
     Index,
@@ -412,7 +418,7 @@ export default Archivist;
       //New NDX code
       const res = NDX_FTSIndex.update(doc, ndx_id);
 
-      console.log("NDX updated", doc.ndx_id);
+      DEBUG && console.log("NDX updated", doc.ndx_id);
 
       UpdatedKeys.add(url);
 
@@ -624,6 +630,15 @@ export default Archivist;
     return await untilHas(Status, 'loaded');
   }
 
+  async function loadFuzzy() {
+    const fuzzyDocs = Fs.readFileSync(
+      Path.resolve(FUZZY_FTS_INDEX_DIR(), 'docs.fuzz'),
+    ).toString();
+    State.Docs = JSON.parse(fuzzyDocs);
+    await Promise.all(State.Docs.map(async doc => fuzzy.prepare(doc.content)));
+    console.log('Fuzzy loaded');
+  }
+
   function clearSavers() {
     if ( State.saver ) {
       clearInterval(State.saver);
@@ -642,7 +657,6 @@ export default Archivist;
   }
 
   async function loadFiles() {
-    const DEBUG = true;
     let cacheFile = CACHE_FILE();
     let indexFile = INDEX_FILE();
     let ftsDir = FTS_INDEX_DIR();
@@ -1014,7 +1028,6 @@ export default Archivist;
   }
 
   function loadNDXIndex(ndxFTSIndex) {
-    const DEBUG = true;
     try {
       const indexContent = Fs.readFileSync(
         Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
