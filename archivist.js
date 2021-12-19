@@ -394,15 +394,15 @@ export default Archivist;
       const pageText = processDoc(flatDoc);
 
       const {title, url} = Targets.get(sessionId);
-      let id;
+      let id, ndx_id;
       if ( State.Index.has(url) ) {
-        ({id} = State.Index.get(url));
+        ({ndx_id, id} = State.Index.get(url));
       } else {
         Id++;
         id = Id;
       }
       const doc = toNDXDoc({id, url, title, pageText});
-      State.Index.set(url, {id:doc.id, title});   
+      State.Index.set(url, {id:doc.id, ndx_id:doc.ndx_id, title});   
       State.Index.set(doc.id, url);
       State.Index.set('ndx'+doc.ndx_id, url);
 
@@ -410,9 +410,9 @@ export default Archivist;
       Flex.update(doc.id, doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' '));
 
       //New NDX code
-      const res = NDX_FTSIndex.update(doc);
+      const res = NDX_FTSIndex.update(doc, ndx_id);
 
-      console.log("NDX updated", doc.id);
+      console.log("NDX updated", doc.ndx_id);
 
       UpdatedKeys.add(url);
 
@@ -958,8 +958,8 @@ export default Archivist;
           removeDocumentFromIndex(retVal.index, NDXRemoved, id);
           maybeClean();
         },
-        update: doc => {
-          retVal.remove(doc.ndx_id);
+        update: (doc, old_id) => {
+          retVal.remove(old_id);
           maybeClean();
           retVal.add(doc);
         },
