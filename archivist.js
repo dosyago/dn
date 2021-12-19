@@ -43,6 +43,7 @@
     const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
     const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
+    const URI_SPLIT = /[\/.]/g;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
     const Tokenizer = new Nat.WordTokenizer();
@@ -55,15 +56,17 @@
   // FlexSearch
     const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
     const FLEX_OPTS = {
+      charset: "utf8",
       context: true,
       language: "en",
-      tokenize: s => words(s).map(w => termFilter(w))
+      tokenize: "reverse"
     };
     const Flex = new FTSIndex(FLEX_OPTS);
     DEBUG && console.log({Flex});
 
   // NDX
     let Id;
+    const NDXRemoved = new Set();
     const REMOVED_CAP_TO_VACUUM_NDX = 10;
     const NDX_FIELDS = ndxDocFields();
     const NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
@@ -81,7 +84,6 @@
   const UpdatedKeys = new Set();
   const Cache = new Map();
   const Index = new Map();
-  const NDX_Removed = new Set();
   const Indexing = new Set();
   const State = {
     Indexing,
@@ -393,8 +395,8 @@ export default Archivist;
       State.Index.set(url, {id:doc.id, title});   
       State.Index.set(doc.id, url);
 
-      //Old Flex code
-      Flex.update(doc.id, doc.title + ' ' + doc.content);
+      //Flex code
+      Flex.update(doc.id, doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' '));
 
       //New NDX code
       const res = NDX_FTSIndex.add(doc);
@@ -989,7 +991,8 @@ export default Archivist;
     id = id || Id++;
     return {
       id,
-      url, title, 
+      url: url.split(URI_SPLIT).join(' '), 
+      title, 
       content: pageText
     };
   }
