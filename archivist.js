@@ -799,14 +799,19 @@ export default Archivist;
   }
 
   async function search(query) {
+    const flexResults = await Flex.searchAsync(query, args.results_per_page);
+    const ndxResults = NDX_FTSIndex.search(query);
+
     let results;
+
     if ( USE_FLEX ) {
-      results = await Flex.searchAsync(query, args.results_per_page);
+      results = flexResults;
     } else {
-      // NDX code
-      results = NDX_FTSIndex.search(query);
+      results = ndxResults;
     }
-    console.log({query, results});
+
+    console.log({query, flexResults, ndxResults, using: USE_FLEX ? 'flex' : 'ndx'});
+
     return {query,results};
   }
 
