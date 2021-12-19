@@ -960,7 +960,7 @@ export default Archivist;
         },
         update: (doc, old_id) => {
           retVal.remove(old_id);
-          maybeClean();
+          //maybeClean();
           retVal.add(doc);
         },
         // `search()` function will be used to perform queries.
@@ -978,7 +978,7 @@ export default Archivist;
           q,
         ),
         save: () => {
-          maybeClean();
+          //maybeClean();
           const obj = toSerializable(retVal.index);
           const objStr = JSON.stringify(obj);
           const path = Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx');
