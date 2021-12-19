@@ -83,8 +83,7 @@ function addHandlers() {
 
   app.get('/archive_index.html', async (req, res) => {
     Archivist.saveIndex();
-    const index = JSON.parse(fs.readFileSync(INDEX_FILE()))
-      .filter(([key, val]) => typeof key === 'string');
+    const index = Archivist.getIndex();
     res.end(IndexView(index));
   });
 

@@ -9,7 +9,7 @@
   import {URL} from 'url';
   import Path from 'path';
   import os from 'os';
-  import fs from 'fs';
+  import Fs from 'fs';
   import { stdin as input, stdout as output } from 'process';
   import util from 'util';
   import readline from 'readline';
@@ -44,6 +44,12 @@
     const FTS_INDEX_DIR = args.fts_index_dir;
     const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
     const URI_SPLIT = /[\/.]/g;
+    const NDX_ID_KEY = 'ndx_id';
+    const INDEX_HIDDEN_KEYS = new Set([
+      NDX_ID_KEY
+    ]);
+    const hiddenKey = key => key.startsWith('ndx') || INDEX_HIDDEN_KEYS.has(key);
+    let Id;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
     const Tokenizer = new Nat.WordTokenizer();
@@ -65,18 +71,17 @@
     DEBUG && console.log({Flex});
 
   // NDX
-    let Id;
     const NDXRemoved = new Set();
     const REMOVED_CAP_TO_VACUUM_NDX = 10;
     const NDX_FIELDS = ndxDocFields();
     let NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
+    let NDXId;
     DEBUG && console.log({NDX_FTSIndex});
 
 // module state: constants and variables
   // cache is a simple map
     // that holds the serialized requests
     // that are saved on disk
-  let Fs, Mode, Close;
   const Status = {
     loaded: false
   };
@@ -101,7 +106,6 @@
     ftsSaveInProgress: false
   };
   const State = Object.assign({}, BLANK_STATE);
-
   const IGNORE_NODES = new Set([
     'script',
     'style',
@@ -110,7 +114,6 @@
   ]);
   const TextNode = 3;
   const AttributeNode = 2;
-
   const Archivist = { 
     NDX_OLD,
     USE_FLEX,
@@ -118,11 +121,11 @@
     beforePathChanged,
     afterPathChanged,
     saveIndex,
+    getIndex,
     search,
     getDetails,
     isReady,
   }
-
   const BODYLESS = new Set([
     301,
     302,
@@ -148,6 +151,8 @@
   const UNCACHED = {
     body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
   }
+  let Mode, Close;
+
 
 // shutdown and cleanup
   // handle writing out indexes and closing browser connection when resetting under nodemon
@@ -161,10 +166,6 @@ export default Archivist;
 
 // main
   async function collect({chrome_port:port, mode} = {}) {
-    if ( context == 'node' ) {
-      const {default:fs} = await import('fs');
-      Fs = fs;
-    }
     const {library_path} = args;
     const {send, on, close} = await connect({port});
     const Sessions = new Map();
@@ -403,6 +404,7 @@ export default Archivist;
       const doc = toNDXDoc({id, url, title, pageText});
       State.Index.set(url, {id:doc.id, title});   
       State.Index.set(doc.id, url);
+      State.Index.set('ndx'+doc.ndx_id, url);
 
       //Flex code
       Flex.update(doc.id, doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' '));
@@ -640,6 +642,7 @@ export default Archivist;
   }
 
   async function loadFiles() {
+    const DEBUG = true;
     let cacheFile = CACHE_FILE();
     let indexFile = INDEX_FILE();
     let ftsDir = FTS_INDEX_DIR();
@@ -720,13 +723,15 @@ export default Archivist;
           }; break;
         }
       }
-      DEBUG && console.warn(e);
       console.log('Resetting base path', newBasePath);
       args.updateBasePath(newBasePath, {force:true});
       saveFiles({forceSave:true});
     }
 
-    DEBUG && console.log({firstFreeId: Id});
+    Id = Math.round(State.Index.size / 2) + 3;
+    NDXId = State.Index.has(NDX_ID_KEY) ? State.Index.get(NDX_ID_KEY) + 3 : (Id + 1000000);
+    if ( !Number.isInteger(NDXId) ) NDXId = Id;
+    DEBUG && console.log({firstFreeId: Id, firstFreeNDXId: NDXId});
 
     State.SavedCacheFilePath = cacheFile;
     State.SavedIndexFilePath = indexFile;
@@ -757,6 +762,7 @@ export default Archivist;
 
   function saveFiles({useState: useState = false, forceSave:forceSave = false} = {}) {
     clearSavers();
+    State.Index.set(NDX_ID_KEY, NDXId);
     if ( useState ) {
       // saves the old cache path
       saveCache(State.SavedCacheFilePath);
@@ -791,7 +797,6 @@ export default Archivist;
     State.Cache.clear();
     State.NDX_FTSIndex = NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     State.Flex = Flex = new FTSIndex(FLEX_OPTS);
-    Id = State.Index.size / 2 + 3;
   }
 
   async function afterPathChanged() { 
@@ -828,6 +833,11 @@ export default Archivist;
     State.saveInProgress = false;
   }
 
+  function getIndex() {
+    return JSON.parse(Fs.readFileSync(INDEX_FILE()))
+      .filter(([key, val]) => typeof key === 'string' && !hiddenKey(key));
+  }
+
   async function search(query) {
     const flexResults = await Flex.searchAsync(query, args.results_per_page);
     const ndxResults = NDX_FTSIndex.search(query);
@@ -840,11 +850,14 @@ export default Archivist;
       results = ndxResults;
     }
 
-    console.log(State.Index, {flexResults, ndxResults}, NDX_FTS_INDEX_DIR(), Id);
     console.log({
       query, 
       flexResults: flexResults.map(id=> ({id, url: State.Index.get(id)})),
-      ndxResults: ndxResults.map(r => ({id: r.key, url: State.Index.get(r.key), ...r})),
+      ndxResults: ndxResults.map(r => ({
+        ndx_id: r.key, 
+        url: State.Index.get('ndx'+r.key), 
+        score: r.score
+      })),
       using: USE_FLEX ? 'flex' : 'ndx'
     });
 
@@ -937,7 +950,7 @@ export default Archivist;
           termFilter,
           // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
           // in memory.
-          doc.id,
+          doc.ndx_id,
           // Document.
           doc,
         ),
@@ -946,9 +959,9 @@ export default Archivist;
           maybeClean();
         },
         update: doc => {
-          retVal.remove(doc.id);
+          retVal.remove(doc.ndx_id);
           maybeClean();
-          retVal.add(doc.id);
+          retVal.add(doc);
         },
         // `search()` function will be used to perform queries.
         search: q => NDXQuery(
@@ -1018,7 +1031,8 @@ export default Archivist;
   function toNDXDoc({id, url, title, pageText}) {
     // use existing defined id or a new one
     return {
-      id,
+      id, 
+      ndx_id: NDXId++,
       url: url.split(URI_SPLIT).join(' '), 
       title, 
       content: pageText
