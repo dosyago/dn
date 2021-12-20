@@ -81,7 +81,12 @@
     DEBUG && console.log({NDX_FTSIndex});
 
   // fuzzy (maybe just for queries ?)
-    const Docs = [];
+    const Docs = new Map();
+    const FUZZ_OPTS = {
+      keys: ['fuzzed']
+    };
+    const fuzzTargets = [];
+    let fuzzTargetsInvalidated = true;
 
 // module state: constants and variables
   // cache is a simple map
@@ -412,11 +417,27 @@ export default Archivist;
       State.Index.set(doc.id, url);
       State.Index.set('ndx'+doc.ndx_id, url);
 
+      const contentSignature = doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' ');
+
       //Flex code
-      Flex.update(doc.id, doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' '));
+      Flex.update(doc.id, contentSignature);
 
       //New NDX code
       const res = NDX_FTSIndex.update(doc, ndx_id);
+
+      // Fuzzy 
+      let updateFuzz = true;
+      if ( State.Docs.has(url) ) {
+        const current = State.Docs.get(url);
+        if ( current.contentSignature === contentSignature ) {
+          updateFuzz = false;
+        }
+      }
+      if ( updateFuzz ) {
+        const fuzzed = fuzzy.prepare(contentSignature);
+        State.Docs.set(url, {doc, fuzzed, contentSignature});
+        fuzzTargetsInvalidated = true;
+      }
 
       DEBUG && console.log("NDX updated", doc.ndx_id);
 
@@ -631,6 +652,7 @@ export default Archivist;
   }
 
   async function loadFuzzy() {
+    return;
     const fuzzyDocs = Fs.readFileSync(
       Path.resolve(FUZZY_FTS_INDEX_DIR(), 'docs.fuzz'),
     ).toString();
@@ -855,6 +877,7 @@ export default Archivist;
   async function search(query) {
     const flexResults = await Flex.searchAsync(query, args.results_per_page);
     const ndxResults = NDX_FTSIndex.search(query);
+    const fuzzResults = fuzzy.go(query, getFuzzTargets(), FUZZ_OPTS);
 
     let results;
 
@@ -872,10 +895,22 @@ export default Archivist;
         url: State.Index.get('ndx'+r.key), 
         score: r.score
       })),
+      fuzzResults,
       using: USE_FLEX ? 'flex' : 'ndx'
     });
 
+    console.log(fuzzResults);
+
     return {query,results};
+  }
+
+  function getFuzzTargets() {
+    if ( fuzzTargetsInvalidated ) {
+      fuzzTargets.length = 0;
+      State.Docs.forEach(({doc,fuzzed}) => fuzzTargets.push({doc,fuzzed})); 
+      fuzzTargetsInvalidated = false;
+    }
+    return fuzzTargets;
   }
 
   async function saveFTS(path = undefined, {forceSave:forceSave = false} = {}) {
@@ -1051,8 +1086,8 @@ export default Archivist;
     };
   }
 
-  function ndxDocFields() {
-    if ( !NDX_OLD ) {
+  function ndxDocFields({namesOnly:namesOnly = false} = {}) {
+    if ( !namesOnly && !NDX_OLD ) {
       /* old format (for newer ndx >= v1 ) */
       return [
         { name: "url" },
