@@ -1026,7 +1026,7 @@ export default Archivist;
           q,
         ),
         save: () => {
-          maybeClean();
+          maybeClean(true);
           const obj = toSerializable(retVal.index);
           const objStr = JSON.stringify(obj);
           const path = Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx');
