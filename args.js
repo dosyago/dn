@@ -90,6 +90,12 @@ function updateBasePath(new_base_path, {force:force = false} = {}) {
     console.log(`Created!`);
   }
 
+  if ( !fs.existsSync(fuzzy_fts_index_dir()) ) {
+    console.log(`FUZZY FTS Index directory does not exist, creating...`); 
+    fs.mkdirSync(fuzzy_fts_index_dir(), {recursive:true});
+    console.log(`Created!`);
+  }
+
   console.log(`Base path updated to: ${BasePath}. Saving to preferences...`);
   Pref.BasePath = BasePath;
   savePref();

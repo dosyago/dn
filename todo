@@ -1,6 +1,6 @@
+- fiz full text search directory for all: ndx, fuzzy, flex (and others we may add in future)
 - add fuzzysort as another search signal (but maybe just for queries?)
   - https://github.com/jeancroy/FuzzySearch ?
-  - https://github.com/bevacqua/fuzzysearch ? 
 - combine all search signals
 - fix ndx _vacuumIndex to use stack (for scalability)
 - Snippets with highlights via levenshtein distance search from natural
