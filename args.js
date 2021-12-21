@@ -19,9 +19,12 @@ const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cach
 const library_path = () => path.resolve(archive_root(), 'public', 'library');
 const cache_file = () => path.resolve(library_path(), 'cache.json');
 const index_file = () => path.resolve(library_path(), 'index.json');
-const fts_index_dir = () => path.resolve(library_path(), 'flex-fts');
-const ndx_fts_index_dir = () => path.resolve(library_path(), 'ndx-fts');
-const fuzzy_fts_index_dir = () => path.resolve(library_path(), 'fuzzy-fts');
+const fts_index_dir = () => path.resolve(library_path(), 'fts');
+
+const flex_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'flex');
+const ndx_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'ndx');
+const fuzzy_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'fuzzy');
+
 const results_per_page = 10;
 
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
@@ -43,6 +46,7 @@ const args = {
   cache_file,
   index_file,
   fts_index_dir,
+  flex_fts_index_dir,
   ndx_fts_index_dir,
   fuzzy_fts_index_dir,
 
@@ -78,9 +82,9 @@ function updateBasePath(new_base_path, {force:force = false} = {}) {
     console.log(`Created!`);
   }
 
-  if ( !fs.existsSync(fts_index_dir()) ) {
+  if ( !fs.existsSync(flex_fts_index_dir()) ) {
     console.log(`FTS Index directory does not exist, creating...`); 
-    fs.mkdirSync(fts_index_dir(), {recursive:true});
+    fs.mkdirSync(flex_fts_index_dir(), {recursive:true});
     console.log(`Created!`);
   }
 
@@ -89,6 +93,16 @@ function updateBasePath(new_base_path, {force:force = false} = {}) {
     fs.mkdirSync(ndx_fts_index_dir(), {recursive:true});
     console.log(`Created!`);
   }
+
+  if ( !fs.existsSync(fuzzy_fts_index_dir()) ) {
+    console.log(`FUZZY FTS Index directory does not exist, creating...`); 
+    fs.mkdirSync(fuzzy_fts_index_dir(), {recursive:true});
+    fs.writeFileSync(path.resolve(fuzzy_fts_index_dir(), 'docs.fzz'), JSON.stringify([]));
+    console.log('Also creating FUZZY FTS Index docs file...');
+    console.log(`Created all!`);
+  }
+
+
 
   console.log(`Base path updated to: ${BasePath}. Saving to preferences...`);
   Pref.BasePath = BasePath;
