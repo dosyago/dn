@@ -49,6 +49,7 @@
       NDX_ID_KEY
     ]);
     const hiddenKey = key => key.startsWith('ndx') || INDEX_HIDDEN_KEYS.has(key);
+    const findOffset = (query, doc) => Nat.LevenshteinDistanceSearch(query, doc);
     let Id;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
@@ -135,6 +136,7 @@
     search,
     getDetails,
     isReady,
+    findOffset,
   }
   const BODYLESS = new Set([
     301,
@@ -845,11 +847,10 @@ export default Archivist;
   }
 
   function getDetails(id) {
-    const DEBUG = true;
     const url = State.Index.get(id);
-    DEBUG && console.log(id, url);
     const {title} = State.Index.get(url);
-    return {url, title, id};
+    const {content} = State.Docs.get(url.split(URI_SPLIT).join(' '));
+    return {url, title, id, content};
   }
 
   function beforePathChanged() {
@@ -913,23 +914,27 @@ export default Archivist;
     const fuzz = processFuzzResults(fuzzRaw);
 
     const results = combineResults({flex, ndx, fuzz});
-    const highlights = fuzzRaw.map(obj => ({
-      url: State.Index.get(obj.id),
-      title: fuzzy.highlight(obj.title),
-    }));
-    const HL = new Map();
-    highlights.forEach(doc => HL.set(doc.url, doc));
 
-    /*
-    console.log({
-      query, 
-      flex,
-      ndx,
-      fuzz,
-    });
-    */
+    // highlights and logging
+      /*
+      const highlights = fuzzRaw.map(obj => ({
+        url: State.Index.get(obj.id),
+        title: fuzzy.highlight(obj.title),
+      }));
+      const HL = new Map();
+      highlights.forEach(doc => HL.set(doc.url, doc));
+      */
 
-    return {query,results,HL};
+      /*
+      console.log({
+        query, 
+        flex,
+        ndx,
+        fuzz,
+      });
+      */
+
+    return {query,results};
   }
 
   function combineResults({flex,ndx,fuzz}) {
@@ -939,14 +944,11 @@ export default Archivist;
     fuzz.forEach(countRank(score));
   
     const results = [...Object.values(score)].map(obj => {
-      console.log({obj});
-      const {id,title} = State.Index.get(obj.url); 
+      const {id} = State.Index.get(obj.url); 
       obj.id = id;
-      obj.title = title;
       return obj;
     });
     results.sort(({score:scoreA}, {score:scoreB}) => scoreA-scoreB);
-    console.log(results);
     const resultIds = results.map(({id}) => id);
     return resultIds;
   }
@@ -968,7 +970,7 @@ export default Archivist;
   function processFuzzResults(docs) {
     const docIds = docs.map(({id}) => id); 
     const uniqueIds = new Set(docIds);
-    return [...uniqueIds.keys()].map(getDetails);
+    return [...uniqueIds.keys()].map(id => ({id, url:State.Index.get(id)}));
   }
 
   async function saveFTS(path = undefined, {forceSave:forceSave = false} = {}) {
