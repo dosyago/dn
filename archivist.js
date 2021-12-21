@@ -25,7 +25,7 @@
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
     //import { DocumentIndex } from 'ndx';
-    //import fuzzy from 'fz-search';
+    import Fuzzy from 'fz-search';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -43,8 +43,6 @@
     const NDX_OLD = false;
     const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
-    const NDX_FTS_INDEX_DIR = args.ndx_fts_index_dir;
-    const FUZZY_FTS_INDEX_DIR = args.fuzzy_fts_index_dir;
     const URI_SPLIT = /[\/.]/g;
     const NDX_ID_KEY = 'ndx_id';
     const INDEX_HIDDEN_KEYS = new Set([
@@ -81,12 +79,12 @@
     DEBUG && console.log({NDX_FTSIndex});
 
   // fuzzy (maybe just for queries ?)
-    const Docs = new Map();
     const FUZZ_OPTS = {
-      keys: ['fuzzed']
+      keys: ndxDocFields({namesOnly:true})
     };
+    const Docs = new Map();
+    const fuzzy = new Fuzzy({source: [...Docs.values()], keys: FUZZ_OPTS.keys});
     const fuzzTargets = [];
-    let fuzzTargetsInvalidated = true;
 
 // module state: constants and variables
   // cache is a simple map
@@ -110,6 +108,7 @@
     SavedCacheFilePath: null,
     SavedIndexFilePath: null,
     SavedFTSIndexDirPath: null,
+    SavedFuzzyIndexDirPath: null,
     saver: null,
     indexSaver: null,
     ftsIndexSaver: null,
@@ -417,7 +416,7 @@ export default Archivist;
       State.Index.set(doc.id, url);
       State.Index.set('ndx'+doc.ndx_id, url);
 
-      const contentSignature = doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' ');
+      const contentSignature = getContentSig(doc);
 
       //Flex code
       Flex.update(doc.id, contentSignature);
@@ -426,6 +425,7 @@ export default Archivist;
       const res = NDX_FTSIndex.update(doc, ndx_id);
 
       // Fuzzy 
+      // eventually we can use this update logic for everyone
       let updateFuzz = true;
       if ( State.Docs.has(url) ) {
         const current = State.Docs.get(url);
@@ -434,9 +434,9 @@ export default Archivist;
         }
       }
       if ( updateFuzz ) {
-        //const fuzzed = fuzzy.prepare(contentSignature);
-        //State.Docs.set(url, {doc, fuzzed, contentSignature});
-        fuzzTargetsInvalidated = true;
+        doc.contentSignature = contentSignature;
+        fuzzy.add(doc);
+        State.Docs.set(url, doc);
       }
 
       DEBUG && console.log("NDX updated", doc.ndx_id);
@@ -652,13 +652,27 @@ export default Archivist;
   }
 
   async function loadFuzzy() {
-    return;
-    const fuzzyDocs = Fs.readFileSync(
-      Path.resolve(FUZZY_FTS_INDEX_DIR(), 'docs.fuzz'),
-    ).toString();
-    State.Docs = JSON.parse(fuzzyDocs);
-    await Promise.all(State.Docs.map(async doc => fuzzy.prepare(doc.content)));
-    console.log('Fuzzy loaded');
+    const DEBUG = true;
+    const fuzzyDocs = Fs.readFileSync(getFuzzyPath()).toString();
+    State.Docs = new Map(JSON.parse(fuzzyDocs).map(doc => {
+      doc.contentSignature = getContentSig(doc);
+      return [doc.url, doc];
+    }));
+    await Promise.all([...State.Docs.values()].map(async doc => fuzzy.add(doc)));
+    DEBUG && console.log('Fuzzy loaded');
+  }
+
+  function getContentSig(doc) { 
+    return doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' ');
+  }
+
+  function saveFuzzy(basePath) {
+    const docs = [...State.Docs.values()]
+      .map(({url, title, content, id}) => ({url, title, content, id}));
+    Fs.writeFileSync(
+      getFuzzyPath(basePath),
+      JSON.stringify(docs)
+    );
   }
 
   function clearSavers() {
@@ -699,18 +713,27 @@ export default Archivist;
     }
 
     try {
-      Fs.readdirSync(ftsDir, {withFileTypes:true}).forEach(dirEnt => {
+      const DEBUG = true;
+      const flexBase = getFlexBase();
+      Fs.readdirSync(flexBase, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
-          const content = Fs.readFileSync(Path.resolve(ftsDir, dirEnt.name)).toString();
+          const content = Fs.readFileSync(Path.resolve(flexBase, dirEnt.name)).toString();
           Flex.import(dirEnt.name, JSON.parse(content));
         }
       });
+      DEBUG && console.log('Flex loaded');
     } catch(e) {
       someError = true;
     }
 
     try {
       loadNDXIndex(NDX_FTSIndex);
+    } catch(e) {
+      someError = true;
+    }
+
+    try {
+      loadFuzzy();
     } catch(e) {
       someError = true;
     }
@@ -877,7 +900,7 @@ export default Archivist;
   async function search(query) {
     const flexResults = await Flex.searchAsync(query, args.results_per_page);
     const ndxResults = NDX_FTSIndex.search(query);
-    //const fuzzResults = fuzzy.go(query, getFuzzTargets(), FUZZ_OPTS);
+    const fuzzResults = processFuzzResults(fuzzy.search(query));
 
     let results;
 
@@ -899,18 +922,13 @@ export default Archivist;
       using: USE_FLEX ? 'flex' : 'ndx'
     });
 
-    //console.log(fuzzResults);
-
     return {query,results};
   }
 
-  function getFuzzTargets() {
-    if ( fuzzTargetsInvalidated ) {
-      fuzzTargets.length = 0;
-      State.Docs.forEach(({doc,fuzzed}) => fuzzTargets.push({doc,fuzzed})); 
-      fuzzTargetsInvalidated = false;
-    }
-    return fuzzTargets;
+  function processFuzzResults(docs) {
+    const docIds = docs.map(({id}) => id); 
+    const uniqueIds = new Set(docIds);
+    return [...uniqueIds.keys()].map(getDetails);
   }
 
   async function saveFTS(path = undefined, {forceSave:forceSave = false} = {}) {
@@ -925,18 +943,20 @@ export default Archivist;
 
       if ( forceSave || UpdatedKeys.size ) {
         DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
+        const flexBase = getFlexBase(dir);
         Flex.export((key, data) => {
           key = key.split('.').pop();
           try {
             Fs.writeFileSync(
-              Path.resolve(dir, key),
+              Path.resolve(flexBase, key),
               JSON.stringify(data)
             );
           } catch(e) {
             console.error('Error writing full text search index', e);
           }
         });
-        NDX_FTSIndex.save();
+        NDX_FTSIndex.save(dir);
+        saveFuzzy(dir);
         UpdatedKeys.clear();
       } else {
         DEBUG && console.log("No FTS keys updated, no writes needed this time.");
@@ -1025,11 +1045,11 @@ export default Archivist;
           NDXRemoved, 
           q,
         ),
-        save: () => {
+        save: (basePath) => {
           maybeClean(true);
           const obj = toSerializable(retVal.index);
           const objStr = JSON.stringify(obj);
-          const path = Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx');
+          const path = getNDXPath(basePath);
           Fs.writeFileSync(
             path,
             objStr
@@ -1063,16 +1083,13 @@ export default Archivist;
   }
 
   function loadNDXIndex(ndxFTSIndex) {
-    try {
-      const indexContent = Fs.readFileSync(
-        Path.resolve(NDX_FTS_INDEX_DIR(), 'index.ndx'),
-      ).toString();
+    const DEBUG = true;
+    if ( Fs.existsSync(getNDXPath()) ) {
+      const indexContent = Fs.readFileSync(getNDXPath()).toString();
       const index = fromSerializable(JSON.parse(indexContent));
       ndxFTSIndex.load(index);
-    } catch(e) {
-      DEBUG && console.warn('Could not load NDX FTS index from disk', e);
-      DEBUG && console.log(ndxFTSIndex);
     }
+    DEBUG && console.log('NDX loaded');
   }
 
   function toNDXDoc({id, url, title, pageText}) {
@@ -1160,3 +1177,18 @@ export default Archivist;
       throw new TypeError(`untilHas with thing of type ${thing} is not yet implemented!`);
     }
   }
+
+  function getNDXPath(basePath) {
+    return Path.resolve(args.ndx_fts_index_dir(basePath), 'index.ndx');
+  }
+
+  function getFuzzyPath(basePath) {
+    return Path.resolve(args.fuzzy_fts_index_dir(basePath), 'docs.fzz');
+  }
+
+  function getFlexBase(basePath) {
+    return args.flex_fts_index_dir(basePath);
+  }
+
+
+
