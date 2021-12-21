@@ -909,18 +909,27 @@ export default Archivist;
         url: State.Index.get('ndx'+r.key), 
         score: r.score
       }));
-    const fuzz = processFuzzResults(fuzzy.search(query));
+    const fuzzRaw = fuzzy.search(query);
+    const fuzz = processFuzzResults(fuzzRaw);
 
     const results = combineResults({flex, ndx, fuzz});
+    const highlights = fuzzRaw.map(obj => ({
+      url: State.Index.get(obj.id),
+      title: fuzzy.highlight(obj.title),
+    }));
+    const HL = new Map();
+    highlights.forEach(doc => HL.set(doc.url, doc));
 
+    /*
     console.log({
       query, 
       flex,
       ndx,
       fuzz,
     });
+    */
 
-    return {query,results};
+    return {query,results,HL};
   }
 
   function combineResults({flex,ndx,fuzz}) {
@@ -931,8 +940,9 @@ export default Archivist;
   
     const results = [...Object.values(score)].map(obj => {
       console.log({obj});
-      const {id} = State.Index.get(obj.url); 
+      const {id,title} = State.Index.get(obj.url); 
       obj.id = id;
+      obj.title = title;
       return obj;
     });
     results.sort(({score:scoreA}, {score:scoreB}) => scoreA-scoreB);

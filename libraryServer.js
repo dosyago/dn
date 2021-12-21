@@ -55,7 +55,7 @@ function addHandlers() {
 
   app.get('/search(.json)?', async (req, res) => {
     await Archivist.isReady();
-    const {query, results:resultIds} = await Archivist.search(req.query.query);
+    const {query, HL, results:resultIds} = await Archivist.search(req.query.query);
     let results;
     if ( Archivist.USE_FLEX ) {
       results = resultIds.map(docId => Archivist.getDetails(docId));
@@ -73,7 +73,7 @@ function addHandlers() {
         results, query
       }, null, 2));
     } else {
-      res.end(SearchResultView({results, query}));
+      res.end(SearchResultView({results, query, HL}));
     }
   });
 
@@ -194,7 +194,8 @@ function IndexView(urls) {
   `
 }
 
-function SearchResultView({results, query}) {
+function SearchResultView({results, query, HL}) {
+  console.log(HL);
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
