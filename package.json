@@ -38,7 +38,7 @@
     "esm": "latest",
     "express": "latest",
     "flexsearch": "^0.7.21",
-    "fuzzysort": "^1.1.4",
+    "fz-search": "^1.0.0",
     "hasha": "latest",
     "natural": "^5.1.11",
     "ndx": "^1.0.2",
