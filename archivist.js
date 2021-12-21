@@ -25,7 +25,7 @@
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
     //import { DocumentIndex } from 'ndx';
-    import fuzzy from 'fuzzysort';
+    //import fuzzy from 'fz-search';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -434,8 +434,8 @@ export default Archivist;
         }
       }
       if ( updateFuzz ) {
-        const fuzzed = fuzzy.prepare(contentSignature);
-        State.Docs.set(url, {doc, fuzzed, contentSignature});
+        //const fuzzed = fuzzy.prepare(contentSignature);
+        //State.Docs.set(url, {doc, fuzzed, contentSignature});
         fuzzTargetsInvalidated = true;
       }
 
@@ -877,7 +877,7 @@ export default Archivist;
   async function search(query) {
     const flexResults = await Flex.searchAsync(query, args.results_per_page);
     const ndxResults = NDX_FTSIndex.search(query);
-    const fuzzResults = fuzzy.go(query, getFuzzTargets(), FUZZ_OPTS);
+    //const fuzzResults = fuzzy.go(query, getFuzzTargets(), FUZZ_OPTS);
 
     let results;
 
@@ -895,11 +895,11 @@ export default Archivist;
         url: State.Index.get('ndx'+r.key), 
         score: r.score
       })),
-      fuzzResults,
+      /*fuzzResults,*/
       using: USE_FLEX ? 'flex' : 'ndx'
     });
 
-    console.log(fuzzResults);
+    //console.log(fuzzResults);
 
     return {query,results};
   }
