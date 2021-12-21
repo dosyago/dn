@@ -1,12 +1,8 @@
-- fix ndx _vacuumIndex to use stack (for scalability)
-  - ndx seems to be having problems (particularly if we are restarting)
-  - incomplete writes or nodemon restarts seems to be creating an issue for ndx
-  - this is not great for a signal of stability
 - add fuzzysort as another search signal (but maybe just for queries?)
-  - maybe merge all outstanding PRs for fuzzy into fuzzy since it hasn't been maintained since 2018
-  - it seems to have some perf issues (CPU hanging, this is not acceptable). 
-  - i should experiment more, but also look around for another library.
+  - https://github.com/jeancroy/FuzzySearch ?
+  - https://github.com/bevacqua/fuzzysearch ? 
 - combine all search signals
+- fix ndx _vacuumIndex to use stack (for scalability)
 - Snippets with highlights via levenshtein distance search from natural
 - Improve search page look
 - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
