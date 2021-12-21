@@ -1,4 +1,5 @@
 - fiz full text search directory for all: ndx, fuzzy, flex (and others we may add in future)
+
 - add fuzzysort as another search signal (but maybe just for queries?)
   - https://github.com/jeancroy/FuzzySearch ?
 - combine all search signals
