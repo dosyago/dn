@@ -1,3 +1,4 @@
+- url in doc is in two forms, split and regular. Clarify where we use each because it's not clear which form is used as a key in which index
 - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this
 - Snippets with highlights via levenshtein distance search from natural
 - Improve search page look

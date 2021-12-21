@@ -55,25 +55,20 @@ function addHandlers() {
 
   app.get('/search(.json)?', async (req, res) => {
     await Archivist.isReady();
-    const {query, HL, results:resultIds} = await Archivist.search(req.query.query);
-    let results;
-    if ( Archivist.USE_FLEX ) {
-      results = resultIds.map(docId => Archivist.getDetails(docId));
-    } else {
-      if ( Archivist.NDX_OLD ) {
-        // Old ndx code
-        results = resultIds.map(({docId}) => Archivist.getDetails(docId));
-      } else {
-        // New ndx code
-        results = resultIds.map(({key}) => Archivist.getDetails(key));
-      }
-    }
+    const {query, results:resultIds} = await Archivist.search(req.query.query);
+    const results = resultIds.map(docId => Archivist.getDetails(docId));
     if ( req.path.endsWith('.json') ) {
       res.end(JSON.stringify({
         results, query
       }, null, 2));
     } else {
-      res.end(SearchResultView({results, query, HL}));
+      results.forEach(r => {
+        const {substring, offset} = Archivist.findOffset(query, r.content);
+        r.snippet = r.content.substring(offset-50, offset) + 
+          `<strong>${substring}</strong>` + 
+          r.content.substr(offset+substring.length, 50);
+      });
+      res.end(SearchResultView({results, query}));
     }
   });
 
@@ -194,8 +189,7 @@ function IndexView(urls) {
   `
 }
 
-function SearchResultView({results, query, HL}) {
-  console.log(HL);
+function SearchResultView({results, query}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
@@ -248,9 +242,10 @@ function SearchResultView({results, query, HL}) {
     </p>
     <ol>
     ${
-      results.map(({url,title,id}) => `
+      results.map(({snippet, url,title,id}) => `
         <li>
-          ${DEBUG ? id + ':' : ''}: <a target=_blank href=${url}>${title||url}</a>
+          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${title||url}</a>
+          <p>${snippet}</p>
         </li>
       `).join('\n')
     }
