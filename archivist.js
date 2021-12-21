@@ -669,10 +669,12 @@ export default Archivist;
   function saveFuzzy(basePath) {
     const docs = [...State.Docs.values()]
       .map(({url, title, content, id}) => ({url, title, content, id}));
+    const path = getFuzzyPath(basePath);
     Fs.writeFileSync(
-      getFuzzyPath(basePath),
+      path,
       JSON.stringify(docs)
     );
+    console.log(`Wrote fuzzy to ${path}`);
   }
 
   function clearSavers() {
@@ -918,7 +920,7 @@ export default Archivist;
         url: State.Index.get('ndx'+r.key), 
         score: r.score
       })),
-      /*fuzzResults,*/
+      fuzzResults,
       using: USE_FLEX ? 'flex' : 'ndx'
     });
 
@@ -955,6 +957,7 @@ export default Archivist;
             console.error('Error writing full text search index', e);
           }
         });
+        console.log(`Wrote Flex to ${flexBase}`);
         NDX_FTSIndex.save(dir);
         saveFuzzy(dir);
         UpdatedKeys.clear();
