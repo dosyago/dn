@@ -845,6 +845,7 @@ export default Archivist;
   }
 
   function getDetails(id) {
+    const DEBUG = true;
     const url = State.Index.get(id);
     DEBUG && console.log(id, url);
     const {title} = State.Index.get(url);
@@ -900,31 +901,58 @@ export default Archivist;
   }
 
   async function search(query) {
-    const flexResults = await Flex.searchAsync(query, args.results_per_page);
-    const ndxResults = NDX_FTSIndex.search(query);
-    const fuzzResults = processFuzzResults(fuzzy.search(query));
-
-    let results;
-
-    if ( USE_FLEX ) {
-      results = flexResults;
-    } else {
-      results = ndxResults;
-    }
-
-    console.log({
-      query, 
-      flexResults: flexResults.map(id=> ({id, url: State.Index.get(id)})),
-      ndxResults: ndxResults.map(r => ({
+    const flex = (await Flex.searchAsync(query, args.results_per_page))
+      .map(id=> ({id, url: State.Index.get(id)}));
+    const ndx = NDX_FTSIndex.search(query)
+      .map(r => ({
         ndx_id: r.key, 
         url: State.Index.get('ndx'+r.key), 
         score: r.score
-      })),
-      fuzzResults,
-      using: USE_FLEX ? 'flex' : 'ndx'
+      }));
+    const fuzz = processFuzzResults(fuzzy.search(query));
+
+    const results = combineResults({flex, ndx, fuzz});
+
+    console.log({
+      query, 
+      flex,
+      ndx,
+      fuzz,
     });
 
     return {query,results};
+  }
+
+  function combineResults({flex,ndx,fuzz}) {
+    const score = {};
+    flex.forEach(countRank(score));
+    ndx.forEach(countRank(score));
+    fuzz.forEach(countRank(score));
+  
+    const results = [...Object.values(score)].map(obj => {
+      console.log({obj});
+      const {id} = State.Index.get(obj.url); 
+      obj.id = id;
+      return obj;
+    });
+    results.sort(({score:scoreA}, {score:scoreB}) => scoreA-scoreB);
+    console.log(results);
+    const resultIds = results.map(({id}) => id);
+    return resultIds;
+  }
+
+  function countRank(record, weight = 1.0) {
+    return ({url,id}, rank, all) => {
+      let score = record[url];
+      if ( ! score ) {
+        score = record[url] = {
+          url,
+          value: 0
+        };
+      }
+
+      score.value += weight*(all.length - rank)
+    };
   }
 
   function processFuzzResults(docs) {
