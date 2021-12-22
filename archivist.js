@@ -32,6 +32,7 @@
   import {
     APP_ROOT, context, sleep, DEBUG, 
     clone,
+    SNIP_CONTEXT,
     CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
   } from './common.js';
   import {connect} from './protocol.js';
@@ -49,7 +50,10 @@
       NDX_ID_KEY
     ]);
     const hiddenKey = key => key.startsWith('ndx') || INDEX_HIDDEN_KEYS.has(key);
-    const findOffset = (query, doc) => Nat.LevenshteinDistanceSearch(query, doc);
+    const nextOffset = (query, doc, startAt = 0) => Nat.LevenshteinDistanceSearch(
+      query, 
+      doc.slice(startAt)
+    );
     let Id;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
@@ -135,7 +139,7 @@
     search,
     getDetails,
     isReady,
-    findOffset,
+    findOffsets,
   }
   const BODYLESS = new Set([
     301,
@@ -853,6 +857,24 @@ export default Archivist;
     const {title} = State.Index.get(url);
     const {content} = State.Docs.get(url);
     return {url, title, id, content};
+  }
+
+  function findOffsets(query, doc, count) {
+    let res = [];
+      
+    let i = 0;
+    while(i < doc.length) {
+      const result = nextOffset(query, doc, i); 
+      console.log(result, i);
+      i += result.offset + result.substring.length + SNIP_CONTEXT;
+      res.push(result);
+    }
+
+    res.sort(({distance:a}, {distance:b}) => a-b);
+    console.log({res});
+    res = res.slice(0, count);
+
+    return res;
   }
 
   function beforePathChanged() {

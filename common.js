@@ -46,6 +46,8 @@ export const ERROR_CODE_SAFE_TO_IGNORE = new Set([
            */
 ]);
 
+export const SNIP_CONTEXT = 31;
+
 export const NO_SANDBOX = process.env.DEBUG_22120 || false;
 
 //export const APP_ROOT = __dirname;
