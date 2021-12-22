@@ -45,6 +45,7 @@
     "ndx-query": "^1.0.1",
     "ndx-serializable": "^1.0.0",
     "node-fetch": "latest",
+    "ukkonen": "^1.4.0",
     "ws": "latest"
   },
   "devDependencies": {

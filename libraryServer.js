@@ -3,7 +3,7 @@ import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {DEBUG, say, sleep, APP_ROOT} from './common.js';
+import {DEBUG, say, sleep, APP_ROOT, SNIP_CONTEXT} from './common.js';
 import Archivist from './archivist.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, 'public');
@@ -63,10 +63,15 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        const {substring, offset} = Archivist.findOffset(query, r.content);
-        r.snippet = r.content.substring(offset-50, offset) + 
-          `<strong>${substring}</strong>` + 
-          r.content.substr(offset+substring.length, 50);
+        const Offsets = Archivist.findOffsets(query, r.content, 3);
+        
+        r.snippet = [];
+        for ( const {substring,offset} of Offsets ) {
+          r.snippet.push(r.content.substring(offset-SNIP_CONTEXT, offset) + 
+            `<strong>${substring}</strong>` + 
+            r.content.substr(offset+substring.length, SNIP_CONTEXT)
+          );
+        }
       });
       res.end(SearchResultView({results, query}));
     }
@@ -245,7 +250,7 @@ function SearchResultView({results, query}) {
       results.map(({snippet, url,title,id}) => `
         <li>
           ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${title||url}</a>
-          <p>${snippet}</p>
+          <p>${snippet.join('&hellip;')}</p>
         </li>
       `).join('\n')
     }
