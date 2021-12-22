@@ -65,12 +65,7 @@ function addHandlers() {
       results.forEach(r => {
         const m = Archivist.findOffsets(query, r.content);
         if ( m.length ) {
-          const {substring, offset} = m[0];
-
-          r.snippet = [r.content.slice(50-offset, offset) +
-            `<strong>${substring}</strong>` + 
-            r.content.substr(substring.length + offset, 50)
-          ];
+          r.snippet = m;
         } else {
           r.snippet = [r.content.slice(0, 150)];
         }

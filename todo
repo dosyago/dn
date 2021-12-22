@@ -1,4 +1,3 @@
-- snippets are OK, but we aligning query and content is the hard part. it's slow. we can improve a lot but still...try ukonnen. but let's get the pipeline and code for this tight first, then improve the algorithm and its perf more.
 - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
 - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this
 - Improve search page look

@@ -658,8 +658,8 @@ export default Archivist;
     const DEBUG = true;
     const fuzzyDocs = Fs.readFileSync(getFuzzyPath()).toString();
     State.Docs = new Map(JSON.parse(fuzzyDocs).map(doc => {
+      doc.i_url = getURI(doc.url);
       doc.contentSignature = getContentSig(doc);
-      console.log(doc.url, doc);
       return [doc.url, doc];
     }));
     await Promise.all([...State.Docs.values()].map(async doc => fuzzy.add(doc)));
@@ -676,7 +676,7 @@ export default Archivist;
 
   function saveFuzzy(basePath) {
     const docs = [...State.Docs.values()]
-      .map(({i_url, url, title, content, id}) => ({i_url, url, title, content, id}));
+      .map(({url, title, content, id}) => ({url, title, content, id}));
     const path = getFuzzyPath(basePath);
     Fs.writeFileSync(
       path,
@@ -866,7 +866,12 @@ export default Archivist;
     const result = Nat.LevenshteinDistanceSearch(query, doc);
 
     if ( result.distance/result.substring.length < 0.5 ) {
-      res.push(result);
+      const {substring,offset} = result;
+      res.push(
+        doc.substring(offset-50, offset) +
+        `<strong>${substring}</strong>` + 
+        doc.substr(substring.length + offset, 50)
+      );
     }
 
     return res;
@@ -935,18 +940,21 @@ export default Archivist;
     const results = combineResults({flex, ndx, fuzz});
 
     const HL = new Map();
-    const highlights = fuzzRaw.map(obj => ({
-      id: obj.id,
-      url: fuzzy.highlight(obj.url),
-      title: fuzzy.highlight(State.Index.get(obj.url).title),
-    }));
+    const highlights = fuzzRaw.map(obj => {
+      const title = State.Index.get(obj.url)?.title;
+      return {
+        id: obj.id,
+        url: Archivist.findOffsets(query, obj.url)[0] || obj.url,
+        title: Archivist.findOffsets(query, title)[0] || title,
+      };
+    });
     highlights.forEach(hl => HL.set(hl.id, hl));
 
     return {query,results, HL};
   }
 
   function combineResults({flex,ndx,fuzz}) {
-    console.log({flex,ndx,fuzz});
+    DEBUG && console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
     ndx.forEach(countRank(score));
