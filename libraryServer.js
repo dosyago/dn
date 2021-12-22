@@ -55,7 +55,7 @@ function addHandlers() {
 
   app.get('/search(.json)?', async (req, res) => {
     await Archivist.isReady();
-    const {query, results:resultIds} = await Archivist.search(req.query.query);
+    const {query, results:resultIds, HL} = await Archivist.search(req.query.query);
     const results = resultIds.map(docId => Archivist.getDetails(docId));
     if ( req.path.endsWith('.json') ) {
       res.end(JSON.stringify({
@@ -63,17 +63,9 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        const Offsets = Archivist.findOffsets(query, r.content, 3);
-        
-        r.snippet = [];
-        for ( const {substring,offset} of Offsets ) {
-          r.snippet.push(r.content.substring(offset-SNIP_CONTEXT, offset) + 
-            `<strong>${substring}</strong>` + 
-            r.content.substr(offset+substring.length, SNIP_CONTEXT)
-          );
-        }
+        r.snippet = ['no snippet']
       });
-      res.end(SearchResultView({results, query}));
+      res.end(SearchResultView({results, query, HL}));
     }
   });
 
@@ -194,7 +186,7 @@ function IndexView(urls) {
   `
 }
 
-function SearchResultView({results, query}) {
+function SearchResultView({results, query, HL}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
@@ -249,7 +241,9 @@ function SearchResultView({results, query}) {
     ${
       results.map(({snippet, url,title,id}) => `
         <li>
-          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${title||url}</a>
+          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${HL.get(id)?.title||title||url}</a>
+          <br>
+          <small>${(HL.get(id)?.url||url).slice(0,128)}</small>
           <p>${snippet.join('&hellip;')}</p>
         </li>
       `).join('\n')

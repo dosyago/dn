@@ -21,11 +21,12 @@
       addDocumentToIndex as ndx, 
       removeDocumentFromIndex, 
       vacuumIndex 
-    } from './lib/ndx.js';
+    } from 'ndx';
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
     //import { DocumentIndex } from 'ndx';
-    import Fuzzy from 'fz-search';
+    //import Fuzzy from 'fz-search';
+    import * as _Fuzzy from './lib/fz.js';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -41,6 +42,7 @@
 
 // search related state: constants and variables
   // common
+    const Fuzzy = globalThis.FuzzySearch;
     const NDX_OLD = false;
     const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
@@ -50,10 +52,6 @@
       NDX_ID_KEY
     ]);
     const hiddenKey = key => key.startsWith('ndx') || INDEX_HIDDEN_KEYS.has(key);
-    const nextOffset = (query, doc, startAt = 0) => Nat.LevenshteinDistanceSearch(
-      query, 
-      doc.slice(startAt)
-    );
     let Id;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
@@ -441,6 +439,7 @@ export default Archivist;
         doc.contentSignature = contentSignature;
         fuzzy.add(doc);
         State.Docs.set(url, doc);
+        console.log(doc,url);
       }
 
       DEBUG && console.log("NDX updated", doc.ndx_id);
@@ -660,6 +659,7 @@ export default Archivist;
     const fuzzyDocs = Fs.readFileSync(getFuzzyPath()).toString();
     State.Docs = new Map(JSON.parse(fuzzyDocs).map(doc => {
       doc.contentSignature = getContentSig(doc);
+      console.log(doc.url, doc);
       return [doc.url, doc];
     }));
     await Promise.all([...State.Docs.values()].map(async doc => fuzzy.add(doc)));
@@ -676,7 +676,7 @@ export default Archivist;
 
   function saveFuzzy(basePath) {
     const docs = [...State.Docs.values()]
-      .map(({url, title, content, id}) => ({url, title, content, id}));
+      .map(({i_url, url, title, content, id}) => ({i_url, url, title, content, id}));
     const path = getFuzzyPath(basePath);
     Fs.writeFileSync(
       path,
@@ -862,17 +862,11 @@ export default Archivist;
   function findOffsets(query, doc, count) {
     let res = [];
       
-    let i = 0;
-    while(i < doc.length) {
-      const result = nextOffset(query, doc, i); 
-      console.log(result, i);
-      i += result.offset + result.substring.length + SNIP_CONTEXT;
+    const result = Nat.LevenshteinDistanceSearch(query, doc);
+
+    if ( result.distance/result.substring.length < 0.5 ) {
       res.push(result);
     }
-
-    res.sort(({distance:a}, {distance:b}) => a-b);
-    console.log({res});
-    res = res.slice(0, count);
 
     return res;
   }
@@ -939,7 +933,15 @@ export default Archivist;
 
     const results = combineResults({flex, ndx, fuzz});
 
-    return {query,results};
+    const highlights = fuzzRaw.map(obj => ({
+      id: obj.id,
+      url: fuzzy.highlight(obj.url),
+      title: fuzzy.highlight(State.Index.get(obj.id).title),
+    }));
+    const HL = new Map();
+    highlights.forEach(hl => HL.set(hl.id, hl));
+
+    return {query,results, HL};
   }
 
   function combineResults({flex,ndx,fuzz}) {
