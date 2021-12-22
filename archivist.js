@@ -85,7 +85,6 @@
     };
     const Docs = new Map();
     const fuzzy = new Fuzzy({source: [...Docs.values()], keys: FUZZ_OPTS.keys});
-    const fuzzTargets = [];
 
 // module state: constants and variables
   // cache is a simple map
@@ -164,7 +163,6 @@
     body:UNCACHED_BODY, responseCode:UNCACHED_CODE, responseHeaders:UNCACHED_HEADERS
   }
   let Mode, Close;
-
 
 // shutdown and cleanup
   // handle writing out indexes and closing browser connection when resetting under nodemon
@@ -665,7 +663,11 @@ export default Archivist;
   }
 
   function getContentSig(doc) { 
-    return doc.title + ' ' + doc.content + ' ' + doc.url.split(URI_SPLIT).join(' ');
+    return doc.title + ' ' + doc.content + ' ' + getURI(doc.url);
+  }
+
+  function getURI(url) {
+    return url.split(URI_SPLIT).join(' ');
   }
 
   function saveFuzzy(basePath) {
@@ -849,7 +851,7 @@ export default Archivist;
   function getDetails(id) {
     const url = State.Index.get(id);
     const {title} = State.Index.get(url);
-    const {content} = State.Docs.get(url.split(URI_SPLIT).join(' '));
+    const {content} = State.Docs.get(url);
     return {url, title, id, content};
   }
 
@@ -914,25 +916,6 @@ export default Archivist;
     const fuzz = processFuzzResults(fuzzRaw);
 
     const results = combineResults({flex, ndx, fuzz});
-
-    // highlights and logging
-      /*
-      const highlights = fuzzRaw.map(obj => ({
-        url: State.Index.get(obj.id),
-        title: fuzzy.highlight(obj.title),
-      }));
-      const HL = new Map();
-      highlights.forEach(doc => HL.set(doc.url, doc));
-      */
-
-      /*
-      console.log({
-        query, 
-        flex,
-        ndx,
-        fuzz,
-      });
-      */
 
     return {query,results};
   }
@@ -1140,7 +1123,8 @@ export default Archivist;
     return {
       id, 
       ndx_id: NDXId++,
-      url: url.split(URI_SPLIT).join(' '), 
+      url,
+      i_url: getURI(url),
       title, 
       content: pageText
     };
@@ -1150,14 +1134,15 @@ export default Archivist;
     if ( !namesOnly && !NDX_OLD ) {
       /* old format (for newer ndx >= v1 ) */
       return [
-        { name: "url" },
+        /* we index over the special indexable url field, not the regular url field */
+        { name: "i_url" }, 
         { name: "title" },
         { name: "content" },
       ];
     } else {
       /* new format (for older ndx ~ v0.4 ) */
       return [
-        "url",
+        "i_url",
         "title",
         "content"
       ];
