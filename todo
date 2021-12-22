@@ -1,4 +1,5 @@
 - switch to a new query term highlighter in search result / title and url. Nat works OK for short documents (title, url), but fucks up sometimes for long ones.
+DONE - made my own! ;p ;) xx;p
 - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
 - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this
 - Improve search page look
