@@ -1,3 +1,4 @@
+- fix snippets
 - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this
 - Snippets with highlights via levenshtein distance search from natural
 - Improve search page look
