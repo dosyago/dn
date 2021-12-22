@@ -63,7 +63,17 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        r.snippet = ['no snippet']
+        const m = Archivist.findOffsets(query, r.content);
+        if ( m.length ) {
+          const {substring, offset} = m[0];
+
+          r.snippet = [r.content.slice(50-offset, offset) +
+            `<strong>${substring}</strong>` + 
+            r.content.substr(substring.length + offset, 50)
+          ];
+        } else {
+          r.snippet = [r.content.slice(0, 150)];
+        }
       });
       res.end(SearchResultView({results, query, HL}));
     }
