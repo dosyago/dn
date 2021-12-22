@@ -860,6 +860,7 @@ export default Archivist;
   }
 
   function findOffsets(query, doc, count) {
+    // this is the slow part
     let res = [];
       
     const result = Nat.LevenshteinDistanceSearch(query, doc);
@@ -933,18 +934,19 @@ export default Archivist;
 
     const results = combineResults({flex, ndx, fuzz});
 
+    const HL = new Map();
     const highlights = fuzzRaw.map(obj => ({
       id: obj.id,
       url: fuzzy.highlight(obj.url),
-      title: fuzzy.highlight(State.Index.get(obj.id).title),
+      title: fuzzy.highlight(State.Index.get(obj.url).title),
     }));
-    const HL = new Map();
     highlights.forEach(hl => HL.set(hl.id, hl));
 
     return {query,results, HL};
   }
 
   function combineResults({flex,ndx,fuzz}) {
+    console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
     ndx.forEach(countRank(score));
