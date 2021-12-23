@@ -1,3 +1,5 @@
+- use ukkonen to find snippets
+- we could also add signal from the highlighting to just in time alter the order (e.g. 'hell wiki' search brings google search to top rank, but the Hell wikipedia page has more highlight visible)
 - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
 - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this
 - Improve search page look
