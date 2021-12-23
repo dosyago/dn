@@ -862,8 +862,9 @@ export default Archivist;
   }
 
   function findOffsets(query, doc, count = 0) {
+    const DEBUG = true;
     const hl = fuzzy.highlight(doc); 
-    DEBUG && console.log(hl);
+    DEBUG && console.log(query, hl);
     return hl;
   }
 
@@ -928,9 +929,10 @@ export default Archivist;
     const fuzz = processFuzzResults(fuzzRaw);
 
     const results = combineResults({flex, ndx, fuzz});
+    const ids = new Set(results);
 
     const HL = new Map();
-    const highlights = fuzzRaw.map(obj => {
+    const highlights = fuzzRaw.filter(({id}) => ids.has(id)).map(obj => {
       const title = State.Index.get(obj.url)?.title;
       return {
         id: obj.id,
