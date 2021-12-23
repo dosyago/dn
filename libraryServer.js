@@ -63,12 +63,7 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        const m = Archivist.findOffsets(query, r.content);
-        if ( m.length ) {
-          r.snippet = m;
-        } else {
-          r.snippet = [r.content.slice(0, 150)];
-        }
+        r.snippet = Archivist.findOffsets(query, r.content.slice(0,150));
       });
       res.end(SearchResultView({results, query, HL}));
     }
@@ -249,7 +244,7 @@ function SearchResultView({results, query, HL}) {
           ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${HL.get(id)?.title||title||url}</a>
           <br>
           <small>${(HL.get(id)?.url||url).slice(0,128)}</small>
-          <p>${snippet.join('&hellip;')}</p>
+          <p>${snippet}</p>
         </li>
       `).join('\n')
     }

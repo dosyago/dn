@@ -28,6 +28,8 @@
     //import Fuzzy from 'fz-search';
     import * as _Fuzzy from './lib/fz.js';
     import Nat from 'natural';
+    //import match from 'autosuggest-highlight/match';
+    //import parse from 'autosuggest-highlight/parse';
 
   import args from './args.js';
   import {
@@ -859,22 +861,10 @@ export default Archivist;
     return {url, title, id, content};
   }
 
-  function findOffsets(query, doc, count) {
-    // this is the slow part
-    let res = [];
-      
-    const result = Nat.LevenshteinDistanceSearch(query, doc);
-
-    if ( result.distance/result.substring.length < 0.5 ) {
-      const {substring,offset} = result;
-      res.push(
-        doc.substring(offset-50, offset) +
-        `<strong>${substring}</strong>` + 
-        doc.substr(substring.length + offset, 50)
-      );
-    }
-
-    return res;
+  function findOffsets(query, doc, count = 0) {
+    const hl = fuzzy.highlight(doc); 
+    DEBUG && console.log(hl);
+    return hl;
   }
 
   function beforePathChanged() {
@@ -944,8 +934,8 @@ export default Archivist;
       const title = State.Index.get(obj.url)?.title;
       return {
         id: obj.id,
-        url: Archivist.findOffsets(query, obj.url)[0] || obj.url,
-        title: Archivist.findOffsets(query, title)[0] || title,
+        url: Archivist.findOffsets(query, obj.url) || obj.url,
+        title: Archivist.findOffsets(query, title) || title,
       };
     });
     highlights.forEach(hl => HL.set(hl.id, hl));
@@ -961,9 +951,14 @@ export default Archivist;
     fuzz.forEach(countRank(score));
   
     const results = [...Object.values(score)].map(obj => {
-      const {id} = State.Index.get(obj.url); 
-      obj.id = id;
-      return obj;
+      try {
+        const {id} = State.Index.get(obj.url); 
+        obj.id = id;
+        return obj;
+      } catch(e) {
+        console.log(obj, State.Index, e);
+        throw e;
+      }
     });
     results.sort(({score:scoreA}, {score:scoreB}) => scoreA-scoreB);
     const resultIds = results.map(({id}) => id);
