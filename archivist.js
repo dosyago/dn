@@ -88,7 +88,7 @@
       keys: ndxDocFields({namesOnly:true})
     };
     const Docs = new Map();
-    const fuzzy = new Fuzzy({source: [...Docs.values()], keys: FUZZ_OPTS.keys});
+    let fuzzy = new Fuzzy({source: [...Docs.values()], keys: FUZZ_OPTS.keys});
 
 // module state: constants and variables
   // cache is a simple map
@@ -664,7 +664,7 @@ export default Archivist;
       doc.contentSignature = getContentSig(doc);
       return [doc.url, doc];
     }));
-    await Promise.all([...State.Docs.values()].map(async doc => fuzzy.add(doc)));
+    State.Fuzzy = fuzzy = new Fuzzy({source: [...State.Docs.values()], keys: FUZZ_OPTS.keys});
     DEBUG && console.log('Fuzzy loaded');
   }
 
@@ -873,8 +873,10 @@ export default Archivist;
     // clear all memory cache, index and full text indexes
     State.Index.clear();
     State.Cache.clear();
+    State.Docs.clear();
     State.NDX_FTSIndex = NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     State.Flex = Flex = new FTSIndex(FLEX_OPTS);
+    State.fuzzy = fuzzy = new Fuzzy({source: [...State.Docs.values()], keys: FUZZ_OPTS.keys});
   }
 
   async function afterPathChanged() { 
@@ -946,6 +948,7 @@ export default Archivist;
   }
 
   function combineResults({flex,ndx,fuzz}) {
+    const DEBUG = true;
     DEBUG && console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
@@ -958,7 +961,7 @@ export default Archivist;
         obj.id = id;
         return obj;
       } catch(e) {
-        console.log(obj, State.Index, e);
+        console.log({obj, index:State.Index, e, ndx, flex, fuzz});
         throw e;
       }
     });

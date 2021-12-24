@@ -1,3 +1,4 @@
+- flex search not saving results seemingly
 - still stability issues:
   - build archive and search for 'devil in hell' highlight should fuck up
   OR  
