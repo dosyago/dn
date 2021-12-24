@@ -5,6 +5,7 @@ import express from 'express';
 import args from './args.js';
 import {DEBUG, say, sleep, APP_ROOT, SNIP_CONTEXT} from './common.js';
 import Archivist from './archivist.js';
+import {highlight} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, 'public');
 
@@ -63,7 +64,9 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        r.snippet = Archivist.findOffsets(query, r.content.slice(0,150));
+        r.snippet = Archivist.findOffsets(query, 
+          highlight(query, r.content).map(hl => hl.fragment.text).join('&hellip;')
+        );
       });
       res.end(SearchResultView({results, query, HL}));
     }

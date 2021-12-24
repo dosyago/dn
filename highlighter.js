@@ -5,21 +5,29 @@ const CHUNK_SIZE = 24;
 
 testHighlighter();
 
-export function highlight(query, doc, {
-  maxAcceptScore: maxAcceptScore = MAX_ACCEPT_SCORE
-} = {}) {
+function params(qLength, chunkSize) {
   const MaxDist = CHUNK_SIZE;
+  const MinScore = Math.abs(qLength - CHUNK_SIZE);
+  const MaxScore = Math.max(qLength, CHUNK_SIZE) - MinScore;
+  return {MaxDist,MinScore,MaxScore};
+}
+
+export function highlight(query, doc, {
+  maxAcceptScore: maxAcceptScore = MAX_ACCEPT_SCORE,
+  chunkSize: chunkSize = CHUNK_SIZE
+} = {}) {
+  doc = Array.from(doc);
   const highlights = [];
   // use array from then length rather than string length to 
   // give accurate length for all unicode
   const qLength = Array.from(query).length;
-  const MinScore = Math.abs(qLength - CHUNK_SIZE);
-  const MaxScore = Math.max(qLength, CHUNK_SIZE) - MinScore;
-
-  const fragments = Array.from(doc).reduce(getFragmenter(CHUNK_SIZE), []);
+  const {MaxDist,MinScore,MaxScore} = params(qLength, chunkSize);
+  const fragments = doc.reduce(getFragmenter(chunkSize), []);
+  query.toLocaleLowerCase();
+  console.log(fragments);
 
   const scores = fragments.map(fragment => {
-    const distance = ukkonen(query, fragment, MaxDist);
+    const distance = ukkonen(query, fragment.text.toLocaleLowerCase(), MaxDist);
     // the min score possible = the minimum number of edits between 
     const scaledScore = (distance - MinScore)/MaxScore;
     return {score: scaledScore, fragment};
@@ -27,7 +35,6 @@ export function highlight(query, doc, {
 
   // sort ascending (smallest scores win)
   scores.sort(({score:a}, {score:b}) => a-b);
-  console.log({scores});
 
   for( const {score, fragment} of scores ) {
     if ( score > maxAcceptScore ) {
@@ -38,6 +45,26 @@ export function highlight(query, doc, {
 
   if ( highlights.length === 0 ) {
     console.log('Zero highlights, showing first score', scores[0]);
+    return scores.slice(0,1);
+  } else {
+    let better = JSON.parse(JSON.stringify(highlights)).slice(0, 10);
+    better = better.map(hl => {
+      const length = Array.from(hl.fragment.text).length;
+      const extra = Math.round(length/2);
+      let {offset} = hl.fragment;
+      const newText = doc.slice(Math.max(0,offset - extra), offset).join('') + hl.fragment.text + doc.slice(offset + length, offset + length + extra).join('');
+      //console.log({newText, oldText:hl.fragment.text});
+      hl.fragment.text = newText;
+      const {MaxDist,MinScore,MaxScore} = params(Array.from(newText).length);
+      const distance = ukkonen(query, hl.fragment.text.toLocaleLowerCase(), MaxDist);
+      // the min score possible = the minimum number of edits between 
+      const scaledScore = (distance - MinScore)/MaxScore;
+      hl.score = scaledScore;
+      return hl;
+    });
+    better.sort(({score:a}, {score:b}) => a-b);
+    console.log(JSON.stringify({better},null,2));
+    return better.slice(0,3);
   }
 
   return highlights;
@@ -60,9 +87,9 @@ function getFragmenter(chunkSize) {
       // keep adding to the currentFragment
     if ( frags.length && ((currentLength + 1) <= chunkSize) ) {
       currentFrag = frags.pop();
-      currentFrag += nextSymbol;
+      currentFrag.text += nextSymbol;
     } else {
-      currentFrag = nextSymbol;
+      currentFrag = {text:nextSymbol, offset:index};
       currentLength = 0;
     }
     currentLength++;
