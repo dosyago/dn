@@ -1,9 +1,10 @@
 import ukkonen from 'ukkonen';
+import {DEBUG} from './common.js';
 
 const MAX_ACCEPT_SCORE = 0.5;
 const CHUNK_SIZE = 24;
 
-testHighlighter();
+//testHighlighter();
 
 function params(qLength, chunkSize) {
   const MaxDist = CHUNK_SIZE;
@@ -13,10 +14,15 @@ function params(qLength, chunkSize) {
 }
 
 export function highlight(query, doc, {
+  /* 0 is no maxLength */
+  maxLength: maxLength = 0,
   maxAcceptScore: maxAcceptScore = MAX_ACCEPT_SCORE,
   chunkSize: chunkSize = CHUNK_SIZE
 } = {}) {
   doc = Array.from(doc);
+  if ( maxLength ) {
+    doc = doc.slice(0, maxLength);
+  }
   const highlights = [];
   // use array from then length rather than string length to 
   // give accurate length for all unicode
@@ -24,7 +30,7 @@ export function highlight(query, doc, {
   const {MaxDist,MinScore,MaxScore} = params(qLength, chunkSize);
   const fragments = doc.reduce(getFragmenter(chunkSize), []);
   query.toLocaleLowerCase();
-  console.log(fragments);
+  DEBUG && console.log(fragments);
 
   const scores = fragments.map(fragment => {
     const distance = ukkonen(query, fragment.text.toLocaleLowerCase(), MaxDist);
@@ -63,7 +69,7 @@ export function highlight(query, doc, {
       return hl;
     });
     better.sort(({score:a}, {score:b}) => a-b);
-    console.log(JSON.stringify({better},null,2));
+    DEBUG && console.log(JSON.stringify({better},null,2));
     return better.slice(0,3);
   }
 
