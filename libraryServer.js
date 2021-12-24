@@ -64,9 +64,9 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        r.snippet = Archivist.findOffsets(query, 
-          highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH}).map(hl => hl.fragment.text).join(' ... ')
-        );
+        r.snippet = highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
+          .map(hl => Archivist.findOffsets(query, hl.fragment.text))
+          .join(' ... ');
       });
       res.end(SearchResultView({results, query, HL}));
     }
