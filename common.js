@@ -26,6 +26,11 @@ export const SHOW_FETCH = false;
 
 export const CHECK_INTERVAL = 400;
 export const TEXT_NODE = 3;
+export const MAX_HIGHLIGHTABLE_LENGTH = 0;    /* 0 is no max length for highlight */
+export const MAX_TITLE_LENGTH = 140;
+export const MAX_URL_LENGTH = 140;
+
+/* text nodes inside these elements that are ignored */
 export const FORBIDDEN_TEXT_PARENT = new Set([
   'STYLE',
   'SCRIPT',

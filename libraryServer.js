@@ -3,7 +3,7 @@ import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {DEBUG, say, sleep, APP_ROOT, SNIP_CONTEXT} from './common.js';
+import {MAX_HIGHLIGHTABLE_LENGTH, DEBUG, say, sleep, APP_ROOT, SNIP_CONTEXT} from './common.js';
 import Archivist from './archivist.js';
 import {highlight} from './highlighter.js';
 
@@ -65,7 +65,7 @@ function addHandlers() {
     } else {
       results.forEach(r => {
         r.snippet = Archivist.findOffsets(query, 
-          highlight(query, r.content).map(hl => hl.fragment.text).join('&hellip;')
+          highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH}).map(hl => hl.fragment.text).join(' ... ')
         );
       });
       res.end(SearchResultView({results, query, HL}));
@@ -227,9 +227,13 @@ function SearchResultView({results, query, HL}) {
       h2 {
         margin-top: 0;
       }
+      small.url {
+        word-break: break-all;
+      }
     </style>
     <h1><a href=/>22120</a></h1>
     <h2>Search results</h2>
+    Or view <a href=/archive_index.html>your index</a>.
     <form method=GET action=/search>
       <fieldset>
         <legend>Search again</legend>
@@ -246,7 +250,7 @@ function SearchResultView({results, query, HL}) {
         <li>
           ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${HL.get(id)?.title||title||url}</a>
           <br>
-          <small>${(HL.get(id)?.url||url).slice(0,128)}</small>
+          <small class=url>${(HL.get(id)?.url||url)}</small>
           <p>${snippet}</p>
         </li>
       `).join('\n')

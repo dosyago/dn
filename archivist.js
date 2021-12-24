@@ -10,7 +10,7 @@
   import Path from 'path';
   import os from 'os';
   import Fs from 'fs';
-  import { stdin as input, stdout as output } from 'process';
+  import {stdin as input, stdout as output} from 'process';
   import util from 'util';
   import readline from 'readline';
 
@@ -28,12 +28,12 @@
     //import Fuzzy from 'fz-search';
     import * as _Fuzzy from './lib/fz.js';
     import Nat from 'natural';
-    //import match from 'autosuggest-highlight/match';
-    //import parse from 'autosuggest-highlight/parse';
 
   import args from './args.js';
   import {
     APP_ROOT, context, sleep, DEBUG, 
+    MAX_TITLE_LENGTH,
+    MAX_URL_LENGTH,
     clone,
     SNIP_CONTEXT,
     CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
@@ -417,7 +417,7 @@ export default Archivist;
         id = Id;
       }
       const doc = toNDXDoc({id, url, title, pageText});
-      State.Index.set(url, {id:doc.id, ndx_id:doc.ndx_id, title});   
+      State.Index.set(url, {date:Date.now(),id:doc.id, ndx_id:doc.ndx_id, title});   
       State.Index.set(doc.id, url);
       State.Index.set('ndx'+doc.ndx_id, url);
 
@@ -860,7 +860,10 @@ export default Archivist;
     return {url, title, id, content};
   }
 
-  function findOffsets(query, doc, count = 0) {
+  function findOffsets(query, doc, maxLength = 0) {
+    if ( maxLength ) {
+      doc = Array.from(doc).slice(0, maxLength).join('');
+    }
     const hl = fuzzy.highlight(doc); 
     DEBUG && console.log(query, hl);
     return hl;
@@ -912,8 +915,11 @@ export default Archivist;
   }
 
   function getIndex() {
-    return JSON.parse(Fs.readFileSync(INDEX_FILE()))
-      .filter(([key, val]) => typeof key === 'string' && !hiddenKey(key));
+    const idx = JSON.parse(Fs.readFileSync(INDEX_FILE()))
+      .filter(([key, val]) => typeof key === 'string' && !hiddenKey(key))
+      .sort(([,{date:a}], [,{date:b}]) => b-a);
+    DEBUG && console.log(idx);
+    return idx;
   }
 
   async function search(query) {
@@ -936,8 +942,8 @@ export default Archivist;
       const title = State.Index.get(obj.url)?.title;
       return {
         id: obj.id,
-        url: Archivist.findOffsets(query, obj.url) || obj.url,
-        title: Archivist.findOffsets(query, title) || title,
+        url: Archivist.findOffsets(query, obj.url, MAX_URL_LENGTH) || obj.url,
+        title: Archivist.findOffsets(query, title, MAX_TITLE_LENGTH) || title,
       };
     });
     highlights.forEach(hl => HL.set(hl.id, hl));
