@@ -1,3 +1,5 @@
+- highlights are mostly rubbish right now
+- try an exact match on the query term if possible for highlight. first one.
 - don't highlight small matches like:
   - search: Zuckerberg, top result: Hacker News - Top Links
   - highlight Ha<strong>cker</strong> News
