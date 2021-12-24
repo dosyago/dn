@@ -278,7 +278,7 @@ export default Archivist;
       const {sessionId} = install;
       if ( ! ConfirmedInstalls.has(sessionId) ) {
         ConfirmedInstalls.add(sessionId);
-        console.log({confirmedInstall:val, context});
+        DEBUG && console.log({confirmedInstall:val, context});
       }
     }
 
@@ -293,8 +293,9 @@ export default Archivist;
     }
 
     function displayTargetInfo({targetInfo}) {
+      const DEBUG = true;
       if ( targetInfo.type === 'page' ) {
-        console.log("Target info", JSON.stringify(targetInfo, null, 2));
+        DEBUG && console.log("Target info", JSON.stringify(targetInfo, null, 2));
       }
     }
 
@@ -385,7 +386,7 @@ export default Archivist;
       if ( info.url.startsWith('chrome') ) return;
       if ( dontCache(info) ) return;
 
-      console.log('Index URL called', info);
+      DEBUG && console.log('Index URL called', info);
 
       if ( State.Indexing.has(info.targetId) ) return;
       State.Indexing.add(info.targetId);
@@ -441,14 +442,14 @@ export default Archivist;
         doc.contentSignature = contentSignature;
         fuzzy.add(doc);
         State.Docs.set(url, doc);
-        console.log(doc,url);
+        DEBUG && console.log({updateFuzz: {doc,url}});
       }
 
       DEBUG && console.log("NDX updated", doc.ndx_id);
 
       UpdatedKeys.add(url);
 
-      console.log({id: doc.id, title, url, indexed: true});
+      DEBUG && console.log({id: doc.id, title, url, indexed: true});
 
       State.Indexing.delete(info.targetId);
     }
@@ -657,7 +658,6 @@ export default Archivist;
   }
 
   async function loadFuzzy() {
-    const DEBUG = true;
     const fuzzyDocs = Fs.readFileSync(getFuzzyPath()).toString();
     State.Docs = new Map(JSON.parse(fuzzyDocs).map(doc => {
       doc.i_url = getURI(doc.url);
@@ -684,7 +684,7 @@ export default Archivist;
       path,
       JSON.stringify(docs)
     );
-    console.log(`Wrote fuzzy to ${path}`);
+    DEBUG && console.log(`Wrote fuzzy to ${path}`);
   }
 
   function clearSavers() {
@@ -725,7 +725,6 @@ export default Archivist;
     }
 
     try {
-      const DEBUG = true;
       const flexBase = getFlexBase();
       Fs.readdirSync(flexBase, {withFileTypes:true}).forEach(dirEnt => {
         if ( dirEnt.isFile() ) {
@@ -862,7 +861,6 @@ export default Archivist;
   }
 
   function findOffsets(query, doc, count = 0) {
-    const DEBUG = true;
     const hl = fuzzy.highlight(doc); 
     DEBUG && console.log(query, hl);
     return hl;
@@ -948,7 +946,6 @@ export default Archivist;
   }
 
   function combineResults({flex,ndx,fuzz}) {
-    const DEBUG = true;
     DEBUG && console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
@@ -1014,7 +1011,7 @@ export default Archivist;
             console.error('Error writing full text search index', e);
           }
         });
-        console.log(`Wrote Flex to ${flexBase}`);
+        DEBUG && console.log(`Wrote Flex to ${flexBase}`);
         NDX_FTSIndex.save(dir);
         saveFuzzy(dir);
         UpdatedKeys.clear();
@@ -1114,7 +1111,7 @@ export default Archivist;
             path,
             objStr
           );
-          console.log("Write NDX to ", path);
+          DEBUG && console.log("Write NDX to ", path);
         },
         load: newIndex => {
           retVal.index = newIndex;
@@ -1143,7 +1140,6 @@ export default Archivist;
   }
 
   function loadNDXIndex(ndxFTSIndex) {
-    const DEBUG = true;
     if ( Fs.existsSync(getNDXPath()) ) {
       const indexContent = Fs.readFileSync(getNDXPath()).toString();
       const index = fromSerializable(JSON.parse(indexContent));
