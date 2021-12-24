@@ -1,4 +1,4 @@
-- use ukkonen to find snippets
+- fix 0 score for unrelated framgnets, or neg score for short guys.
 - don't highlight small matches like:
   - search: Zuckerberg, top result: Hacker News - Top Links
   - highlight Ha<strong>cker</strong> News
