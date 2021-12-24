@@ -19,6 +19,9 @@ export function highlight(query, doc, {
   maxAcceptScore: maxAcceptScore = MAX_ACCEPT_SCORE,
   chunkSize: chunkSize = CHUNK_SIZE
 } = {}) {
+  if ( chunkSize % 2 ) {
+    throw new TypeError(`chunkSize must be even. Was: ${chunkSize} which is odd.`);
+  }
   doc = Array.from(doc);
   if ( maxLength ) {
     doc = doc.slice(0, maxLength);
@@ -28,11 +31,19 @@ export function highlight(query, doc, {
   // give accurate length for all unicode
   const qLength = Array.from(query).length;
   const {MaxDist,MinScore,MaxScore} = params(qLength, chunkSize);
+  const doc2 = Array.from(doc);
+  // make doc length === 0 % chunkSize
+  doc.splice(doc.length, 0, ...(new Array((chunkSize - doc.length % chunkSize) % chunkSize)).join(' ').split(''));
   const fragments = doc.reduce(getFragmenter(chunkSize), []);
+  // pad start of doc2 by half chunkSize
+  doc2.splice(0, 0, ...(new Array(chunkSize/2 + 1)).join(' ').split(''));
+  // make doc2 length === 0 % chunkSize
+  doc2.splice(doc2.length, 0, ...(new Array((chunkSize - doc2.length % chunkSize) % chunkSize)).join(' ').split(''));
+  const fragments2 = doc2.reduce(getFragmenter(chunkSize), []);  
   query.toLocaleLowerCase();
   DEBUG && console.log(fragments);
 
-  const scores = fragments.map(fragment => {
+  const scores = [...fragments, ...fragments2].map(fragment => {
     const distance = ukkonen(query, fragment.text.toLocaleLowerCase(), MaxDist);
     // the min score possible = the minimum number of edits between 
     const scaledScore = (distance - MinScore)/MaxScore;
