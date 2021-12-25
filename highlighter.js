@@ -4,7 +4,7 @@ import {DEBUG} from './common.js';
 const MAX_ACCEPT_SCORE = 0.5;
 const CHUNK_SIZE = 12;
 
-testHighlighter();
+//testHighlighter();
 
 function params(qLength, chunkSize) {
   const MaxDist = CHUNK_SIZE;
