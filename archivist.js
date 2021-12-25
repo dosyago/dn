@@ -1027,7 +1027,7 @@ export default Archivist;
           try {
             Fs.writeFileSync(
               Path.resolve(flexBase, key),
-              JSON.stringify(data)
+              JSON.stringify(data, null, 2)
             );
           } catch(e) {
             console.error('Error writing full text search index', e);
@@ -1127,7 +1127,7 @@ export default Archivist;
         save: (basePath) => {
           maybeClean(true);
           const obj = toSerializable(retVal.index);
-          const objStr = JSON.stringify(obj);
+          const objStr = JSON.stringify(obj, null, 2);
           const path = getNDXPath(basePath);
           Fs.writeFileSync(
             path,
