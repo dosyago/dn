@@ -5,17 +5,44 @@
   }
   body {
     display: table;
-    margin: 0 auto;
-    background: silver;
+    margin: 0 auto 0 min(10%, 5em);
+    background: white;
     padding: 0.5em;
-    box-shadow: 0 1px 1px purple;
+    border-bottom: 1px solid purple;
+    max-width: min(777px, 80%);
+  }
+  header {
+    font-size: smaller;
+    margin-bottom: 3em;  
   }
   form {
+    margin-bottom: 2em;
+  }
+  label.cmd {
+    border-bottom: thin solid dodgerblue;
+    cursor: default;
+    font-style: italic;
+  }
+  em.caps {
+    font-style: normal;
+    font-variant: small-caps;
+  }
+  :is(form:hover, form:active) em.caps {
+    background: yellow;
+  }
+
+  legend {
+    font-weight: 600;
   }
   fieldset {
-    border: thin solid purple;
+    border: thin solid transparent;
+  }
+  fieldset.search {
+    display: flex;
   }
   button, input, output {
+  }
+  button {
   }
   input.long {
     width: 100%;
@@ -33,4 +60,15 @@
   }
   small.url {
     word-break: break-all;
+  }
+  input.search {
+    flex-grow: 1;
+    padding: 0.25em 0.5em;
+  }
+  input.search, 
+  input.search + button {
+    font-size: 1em;
+  }
+  ol {
+    list-style-type: none;
   }

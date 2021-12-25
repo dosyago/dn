@@ -1,4 +1,3 @@
-- Improve search page look
 - search improvements
   - implement trigram index
   - use different min score options for different sources (noticed URL not match meghan highlight for hello mag even tho query got megan and did match and highlight queen in url)
