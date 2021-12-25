@@ -1,10 +1,5 @@
-- highlights are mostly rubbish right now
+- implement trigram index
 - try an exact match on the query term if possible for highlight. first one.
-- don't highlight small matches like:
-  - search: Zuckerberg, top result: Hacker News - Top Links
-  - highlight Ha<strong>cker</strong> News
-  - WTF come on... I need a threshold on this stuff....or like, if I can find a good match in 
-  body then don't highlight worse match in title...or maybe I can use ukkonen as part of threshold
 - we could also add signal from the highlighting to just in time alter the order (e.g. 'hell wiki' search brings google search to top rank, but the Hell wikipedia page has more highlight visible)
 - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
 - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this

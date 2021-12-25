@@ -84,6 +84,13 @@
     DEBUG && console.log({NDX_FTSIndex});
 
   // fuzzy (maybe just for queries ?)
+    const REGULAR_SEARCH_OPTIONS_FUZZY = {
+      minimum_match: 1.0
+    };
+
+    const HIGHLIGHT_OPTIONS_FUZZY = {
+      minimum_match: 3.0
+    };
     const FUZZ_OPTS = {
       keys: ndxDocFields({namesOnly:true})
     };
@@ -864,6 +871,7 @@ export default Archivist;
     if ( maxLength ) {
       doc = Array.from(doc).slice(0, maxLength).join('');
     }
+    Object.assign(fuzzy.options, HIGHLIGHT_OPTIONS_FUZZY);
     const hl = fuzzy.highlight(doc); 
     DEBUG && console.log(query, hl);
     return hl;
@@ -931,6 +939,7 @@ export default Archivist;
         url: State.Index.get('ndx'+r.key), 
         score: r.score
       }));
+    Object.assign(fuzzy.options, REGULAR_SEARCH_OPTIONS_FUZZY);
     const fuzzRaw = fuzzy.search(query);
     const fuzz = processFuzzResults(fuzzRaw);
 
