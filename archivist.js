@@ -413,7 +413,7 @@ export default Archivist;
       const flatDoc = await send("DOMSnapshot.captureSnapshot", {
         computedStyles: [],
       }, sessionId);
-      const pageText = processDoc(flatDoc);
+      const pageText = processDoc(flatDoc).replace(/\t\n/g, ' ');
 
       const {title, url} = Targets.get(sessionId);
       let id, ndx_id;

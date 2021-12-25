@@ -65,6 +65,7 @@ function addHandlers() {
     } else {
       results.forEach(r => {
         r.snippet = highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
+          .sort(({fragment:{offset:a}}, {fragment:{offset:b}}) => a-b)
           .map(hl => Archivist.findOffsets(query, hl.fragment.text))
           .join(' ... ');
       });
