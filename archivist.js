@@ -31,25 +31,26 @@
 
   import args from './args.js';
   import {
-    APP_ROOT, context, sleep, DEBUG, 
+    sleep, DEBUG, 
     MAX_TITLE_LENGTH,
     MAX_URL_LENGTH,
     clone,
-    SNIP_CONTEXT,
     CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
   } from './common.js';
   import {connect} from './protocol.js';
   import {getInjection} from './public/injection.js';
-  import {BLOCKED_BODY, BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
+  import {BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
 
 // search related state: constants and variables
   // common
+    /* eslint-disable no-control-regex */
     const STRIP_CHARS = /[\u0001-\u001a\0\v\f\r\t\n]/g;
+    /* eslint-enable no-control-regex */
     //const Fuzzy = globalThis.FuzzySearch;
     const NDX_OLD = false;
     const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
-    const URI_SPLIT = /[\/.]/g;
+    const URI_SPLIT = /[/.]/g;
     const NDX_ID_KEY = 'ndx_id';
     const INDEX_HIDDEN_KEYS = new Set([
       NDX_ID_KEY
@@ -66,7 +67,7 @@
     //const termFilter = s => s.toLocaleLowerCase();
 
   // FlexSearch
-    const {Index: FTSIndex, registerCharset, registerLanguage} = FlexSearch;
+    const {Index: FTSIndex, /*registerCharset, registerLanguage*/} = FlexSearch;
     const FLEX_OPTS = {
       charset: "utf8",
       context: true,
@@ -89,7 +90,7 @@
       minimum_match: 1.0
     };
     const HIGHLIGHT_OPTIONS_FUZZY = {
-      minimum_match: 2.0
+      minimum_match: 2.0 // or 3.0 seems to be good
     };
     const FUZZ_OPTS = {
       keys: ndxDocFields({namesOnly:true})
@@ -127,14 +128,6 @@
     ftsSaveInProgress: false
   };
   const State = Object.assign({}, BLANK_STATE);
-  const IGNORE_NODES = new Set([
-    'script',
-    'style',
-    'noscript',
-    'datalist'
-  ]);
-  const TextNode = 3;
-  const AttributeNode = 2;
   const Archivist = { 
     NDX_OLD,
     USE_FLEX,
@@ -247,16 +240,8 @@ export default Archivist;
 
     return Status.loaded;
 
-    function guard(func, text = '') {
-      return (...args) => {
-        //DEBUG && console.log({text, func:func.name, args:JSON.stringify(args,null,2)});
-
-        return func(...args);
-      };
-    }
-
     function handleMessage(args) {
-      const {type, args:[{value:strVal}], context} = args;
+      const {type, args:[{value:strVal}]} = args;
       if ( type == 'info' ) {
         try {
           const val = JSON.parse(strVal);
@@ -265,19 +250,19 @@ export default Archivist;
           switch(true) {
             case !!install: {
                 confirmInstall({install});
-              }; break;
+              } break;
             case !!titleChange: {
                 reindexOnTitleChange({titleChange});
-              }; break;
+              } break;
             default: {
                 if ( DEBUG ) {
                   console.warn(`Unknown message`, strVal);
                 }
-              }; break;
+              } break;
           }
         } catch(e) {
           DEBUG && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
-        } finally {} 
+        } 
       }
     }
 
@@ -285,12 +270,12 @@ export default Archivist;
       const {sessionId} = install;
       if ( ! ConfirmedInstalls.has(sessionId) ) {
         ConfirmedInstalls.add(sessionId);
-        DEBUG && console.log({confirmedInstall:val, context});
+        DEBUG && console.log({confirmedInstall:install});
       }
     }
 
     async function reindexOnTitleChange({titleChange}) {
-      const {currentTitle, url, sessionId} = titleChange;
+      const {currentTitle, sessionId} = titleChange;
       DEBUG && console.log('Received titleChange', titleChange);
       const latestTargetInfo = clone(await untilHas(Targets, sessionId));
       latestTargetInfo.title = currentTitle;
@@ -299,12 +284,14 @@ export default Archivist;
       indexURL({targetInfo:latestTargetInfo});
     }
 
+    /*
     function displayTargetInfo({targetInfo}) {
       const DEBUG = true;
       if ( targetInfo.type === 'page' ) {
         DEBUG && console.log("Target info", JSON.stringify(targetInfo, null, 2));
       }
     }
+    */
 
     function updateTargetInfo({targetInfo}) {
       if ( targetInfo.type === 'page' ) {
@@ -345,6 +332,10 @@ export default Archivist;
     }
 
     async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
+      if ( waitingForDebugger ) {
+        console.warn(targetInfo);
+        throw new TypeError(`Target not ready for install`);
+      }
       if ( ! sessionId ) {
         throw new TypeError(`installForSession needs a sessionId`);
       }
@@ -387,6 +378,10 @@ export default Archivist;
     }
 
     async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
+      if ( waitingForDebugger ) {
+        console.warn(info);
+        throw new TypeError(`Target not ready for install`);
+      }
       if ( Mode == 'serve' ) return;
       if ( info.type != 'page' ) return;
       if ( ! info.url  || info.url == 'about:blank' ) return;
@@ -434,7 +429,7 @@ export default Archivist;
       Flex.update(doc.id, contentSignature);
 
       //New NDX code
-      const res = NDX_FTSIndex.update(doc, ndx_id);
+      NDX_FTSIndex.update(doc, ndx_id);
 
       // Fuzzy 
       // eventually we can use this update logic for everyone
@@ -524,7 +519,6 @@ export default Archivist;
         requestId, request, resourceType, 
         responseStatusCode, responseHeaders, responseErrorReason
       } = pausedRequest;
-      const {url} = request;
       const isNavigationRequest = resourceType == "Document";
       const isFont = resourceType == "Font";
 
@@ -532,7 +526,7 @@ export default Archivist;
         DEBUG && console.log("Not caching", request.url);
         return send("Fetch.continueRequest", {requestId});
       }
-      const key = serializeRequest(request);
+      const key = serializeRequestKey(request);
       if ( Mode == 'serve' ) {
         if ( State.Cache.has(key) ) {
           let {body, responseCode, responseHeaders} = await getResponseData(State.Cache.get(key));
@@ -551,7 +545,7 @@ export default Archivist;
       } else if ( Mode == 'save' ) {
         const response = {key, responseCode: responseStatusCode, responseHeaders};
         const resp = await getBody({requestId, responseStatusCode});
-        if ( !! resp ) {
+        if ( resp ) {
           let {body, base64Encoded} = resp;
           if ( ! base64Encoded ) {
             body = b64(body);
@@ -587,7 +581,7 @@ export default Archivist;
               },
             );
           } catch(e) {
-            console.warn("Issue with continuing request", e, message);
+            console.warn("Issue with continuing request", e);
           }
         }
       }
@@ -644,8 +638,8 @@ export default Archivist;
       return responsePath;
     }
 
-    function serializeRequest(request) {
-      const {url, urlFragment, method, headers, postData, hasPostData} = request;
+    function serializeRequestKey(request) {
+      const {url, /*urlFragment,*/ method, /*headers, postData, hasPostData*/} = request;
 
       /**
       let sortedHeaders = '';
@@ -780,7 +774,7 @@ export default Archivist;
             console.log('Alright, selecting option 1. Using the existing archive and patching a simple repair.');
             newBasePath = args.getBasePath();
             correctAnswer = true;
-          }; break;
+          } break;
           case 2: {
             console.log('Alright, selection option 2. Leaving the existing archive along and creating a new, fresh, blank archive.');
             let correctAnswer2 = false;
@@ -798,11 +792,11 @@ export default Archivist;
               }
             }
             correctAnswer = true;
-          }; break;
+          } break;
           default: {
             correctAnswer = false;
             console.log('Sorry, that was not a valid option. Please input 1 or 2.');
-          }; break;
+          } break;
         }
       }
       console.log('Resetting base path', newBasePath);
@@ -902,10 +896,8 @@ export default Archivist;
   }
 
   function saveCache(path) {
-    if ( context == 'node' ) {
-      //DEBUG && console.log("Writing to", path || CACHE_FILE());
-      Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()],null,2));
-    }
+    //DEBUG && console.log("Writing to", path || CACHE_FILE());
+    Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()],null,2));
   }
 
   function saveIndex(path) {
@@ -914,14 +906,12 @@ export default Archivist;
 
     clearTimeout(State.indexSaver);
 
-    if ( context == 'node' ) {
-      //DEBUG && console.log("Writing to", path || INDEX_FILE());
-      //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
-      Fs.writeFileSync(
-        path || INDEX_FILE(), 
-        JSON.stringify([...State.Index.entries()].sort(SORT_URLS),null,2)
-      );
-    }
+    //DEBUG && console.log("Writing to", path || INDEX_FILE());
+    //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
+    Fs.writeFileSync(
+      path || INDEX_FILE(), 
+      JSON.stringify([...State.Index.entries()].sort(SORT_URLS),null,2)
+    );
 
     State.indexSaver = setTimeout(saveIndex, 11001);
 
@@ -930,7 +920,7 @@ export default Archivist;
 
   function getIndex() {
     const idx = JSON.parse(Fs.readFileSync(INDEX_FILE()))
-      .filter(([key, val]) => typeof key === 'string' && !hiddenKey(key))
+      .filter(([key]) => typeof key === 'string' && !hiddenKey(key))
       .sort(([,{date:a}], [,{date:b}]) => b-a);
     DEBUG && console.log(idx);
     return idx;
@@ -989,7 +979,7 @@ export default Archivist;
   }
 
   function countRank(record, weight = 1.0) {
-    return ({url,id}, rank, all) => {
+    return ({url}, rank, all) => {
       let score = record[url];
       if ( ! score ) {
         score = record[url] = {
@@ -1014,31 +1004,29 @@ export default Archivist;
 
     clearTimeout(State.ftsIndexSaver);
 
-    if ( context == 'node' ) {
-      DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
-      const dir = path || FTS_INDEX_DIR();
+    DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
+    const dir = path || FTS_INDEX_DIR();
 
-      if ( forceSave || UpdatedKeys.size ) {
-        DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
-        const flexBase = getFlexBase(dir);
-        Flex.export((key, data) => {
-          key = key.split('.').pop();
-          try {
-            Fs.writeFileSync(
-              Path.resolve(flexBase, key),
-              JSON.stringify(data, null, 2)
-            );
-          } catch(e) {
-            console.error('Error writing full text search index', e);
-          }
-        });
-        DEBUG && console.log(`Wrote Flex to ${flexBase}`);
-        NDX_FTSIndex.save(dir);
-        saveFuzzy(dir);
-        UpdatedKeys.clear();
-      } else {
-        DEBUG && console.log("No FTS keys updated, no writes needed this time.");
-      }
+    if ( forceSave || UpdatedKeys.size ) {
+      DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
+      const flexBase = getFlexBase(dir);
+      Flex.export((key, data) => {
+        key = key.split('.').pop();
+        try {
+          Fs.writeFileSync(
+            Path.resolve(flexBase, key),
+            JSON.stringify(data, null, 2)
+          );
+        } catch(e) {
+          console.error('Error writing full text search index', e);
+        }
+      });
+      DEBUG && console.log(`Wrote Flex to ${flexBase}`);
+      NDX_FTSIndex.save(dir);
+      saveFuzzy(dir);
+      UpdatedKeys.clear();
+    } else {
+      DEBUG && console.log("No FTS keys updated, no writes needed this time.");
     }
 
     State.ftsIndexSaver = setTimeout(saveFTS, 31001);
@@ -1054,101 +1042,84 @@ export default Archivist;
   }
 
   function b64(s) {
-    if ( context == 'node' ) {
-      return Buffer.from(s).toString('base64');
-    } else {
-      return btoa(s);
-    }
+    return Buffer.from(s).toString('base64');
   }
 
   function NDXIndex(fields) {
     let retVal;
 
-    if ( ! NDX_OLD ) {
-      // Old code (from newer, in my opinion, worse, version)
-        // source: 
-          // adapted from:
-          // https://github.com/ndx-search/docs/blob/94530cbff6ae8ea66c54bba4c97bdd972518b8b4/README.md#creating-a-simple-indexer-with-a-search-function
+    // source: 
+      // adapted from:
+      // https://github.com/ndx-search/docs/blob/94530cbff6ae8ea66c54bba4c97bdd972518b8b4/README.md#creating-a-simple-indexer-with-a-search-function
 
-      if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
+    if ( ! new.target ) { throw `NDXIndex must be called with 'new'`; }
 
-      // `createIndex()` creates an index data structure.
-      // First argument specifies how many different fields we want to index.
-      const index = NDX(fields.length);
-      // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
-      const fieldAccessors = fields.map(f => doc => doc[f.name]);
-      // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
-      // identical factors.
-      const fieldBoostFactors = fields.map(() => 1);
-      
-      retVal = {
-        index,
-        // `add()` function will add documents to the index.
-        add: doc => ndx(
-          retVal.index,
-          fieldAccessors,
-          // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
-          // called tokens.
-          // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
-          // details.
-          words,
-          // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
-          // index documents.
-          termFilter,
-          // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
-          // in memory.
-          doc.ndx_id,
-          // Document.
-          doc,
-        ),
-        remove: id => {
-          removeDocumentFromIndex(retVal.index, NDXRemoved, id);
-          maybeClean();
-        },
-        update: (doc, old_id) => {
-          retVal.remove(old_id);
-          retVal.add(doc);
-        },
-        // `search()` function will be used to perform queries.
-        search: q => NDXQuery(
-          retVal.index,
-          fieldBoostFactors,
-          // BM25 ranking function constants:
-          1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
-          0.75, // BM25 b constant, controls to what degree document length normalizes tf values.
-          words,
-          termFilter,
-          // Set of removed documents, in this example we don't want to support removing documents from the index,
-          // so we can ignore it by specifying this set as `undefined` value.
-          NDXRemoved, 
-          q,
-        ),
-        save: (basePath) => {
-          maybeClean(true);
-          const obj = toSerializable(retVal.index);
-          const objStr = JSON.stringify(obj, null, 2);
-          const path = getNDXPath(basePath);
-          Fs.writeFileSync(
-            path,
-            objStr
-          );
-          DEBUG && console.log("Write NDX to ", path);
-        },
-        load: newIndex => {
-          retVal.index = newIndex;
-        }
-      };
-    } else {
-      // Even older code (from older but, to me, much better, version: 0.4.1)
-      const index = new DocumentIndex();
-      fields.forEach(name => index.addField(name));
-
-      retVal = {
-        index,
-        search: query => retVal.index.search(query),
-        add: doc => retVal.index.add(doc.id, doc),
-      };
-    }
+    // `createIndex()` creates an index data structure.
+    // First argument specifies how many different fields we want to index.
+    const index = NDX(fields.length);
+    // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
+    const fieldAccessors = fields.map(f => doc => doc[f.name]);
+    // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
+    // identical factors.
+    const fieldBoostFactors = fields.map(() => 1);
+    
+    retVal = {
+      index,
+      // `add()` function will add documents to the index.
+      add: doc => ndx(
+        retVal.index,
+        fieldAccessors,
+        // Tokenizer is a function that breaks text into words, phrases, symbols, or other meaningful elements
+        // called tokens.
+        // Lodash function `words()` splits string into an array of its words, see https://lodash.com/docs/#words for
+        // details.
+        words,
+        // Filter is a function that processes tokens and returns terms, terms are used in Inverted Index to
+        // index documents.
+        termFilter,
+        // Document key, it can be a unique document id or a refernce to a document if you want to store all documents
+        // in memory.
+        doc.ndx_id,
+        // Document.
+        doc,
+      ),
+      remove: id => {
+        removeDocumentFromIndex(retVal.index, NDXRemoved, id);
+        maybeClean();
+      },
+      update: (doc, old_id) => {
+        retVal.remove(old_id);
+        retVal.add(doc);
+      },
+      // `search()` function will be used to perform queries.
+      search: q => NDXQuery(
+        retVal.index,
+        fieldBoostFactors,
+        // BM25 ranking function constants:
+        1.2,  // BM25 k1 constant, controls non-linear term frequency normalization (saturation).
+        0.75, // BM25 b constant, controls to what degree document length normalizes tf values.
+        words,
+        termFilter,
+        // Set of removed documents, in this example we don't want to support removing documents from the index,
+        // so we can ignore it by specifying this set as `undefined` value.
+        NDXRemoved, 
+        q,
+      ),
+      save: (basePath) => {
+        maybeClean(true);
+        const obj = toSerializable(retVal.index);
+        const objStr = JSON.stringify(obj, null, 2);
+        const path = getNDXPath(basePath);
+        Fs.writeFileSync(
+          path,
+          objStr
+        );
+        DEBUG && console.log("Write NDX to ", path);
+      },
+      load: newIndex => {
+        retVal.index = newIndex;
+      }
+    };
 
     DEBUG && console.log('ndx setup', {retVal});
     return retVal;

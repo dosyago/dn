@@ -1,4 +1,4 @@
-import {DEBUG, context, sleep, NO_SANDBOX} from './common.js';
+import {DEBUG, sleep, NO_SANDBOX} from './common.js';
 
 import Archivist from './archivist.js';
 import LibraryServer from './libraryServer.js';
@@ -35,47 +35,45 @@ let quitting, ChildProcess;
 start();
 
 async function start() {
-  if ( context == 'node' ) {
-    console.log(`Running in node...`);
+  console.log(`Running in node...`);
 
-    process.on('beforeExit', cleanup);
-    process.on('SIGBREAK', cleanup);
-    process.on('SIGHUP', cleanup);
-    process.on('SIGINT', cleanup);
-    process.on('SIGTERM', cleanup);
+  process.on('beforeExit', cleanup);
+  process.on('SIGBREAK', cleanup);
+  process.on('SIGHUP', cleanup);
+  process.on('SIGINT', cleanup);
+  process.on('SIGTERM', cleanup);
 
-    console.log(`Importing dependencies...`);
-    const fs = await import('fs');
-    const {launch:ChromeLaunch} = await import('chrome-launcher');
+  console.log(`Importing dependencies...`);
+  const fs = await import('fs');
+  const {launch:ChromeLaunch} = await import('chrome-launcher');
 
-    await killChrome();
+  await killChrome();
 
-    console.log(`Removing 22120's existing temporary browser cache if it exists...`);
-    if ( fs.existsSync(args.temp_browser_cache()) ) {
-      console.log(`Temp browser cache directory (${args.temp_browser_cache()}) exists, deleting...`);
-      fs.rmdirSync(args.temp_browser_cache(), {recursive:true});
-      console.log(`Deleted.`);
-    }
-    console.log(`Launching library server...`);
-    await LibraryServer.start({server_port});
-    console.log(`Library server started.`);
-
-    console.log(`Waiting 1 second...`);
-    await sleep(1000);
-
-    console.log(`Launching chrome...`);
-    try {
-      await ChromeLaunch(LAUNCH_OPTS);
-    } catch(e) {
-      console.log(`Could not launch chrome.`);
-      DEBUG && console.info('Chrome launch error:', e);
-      process.exit(1);
-    }
-    console.log(`Chrome started.`);
-
-    console.log(`Waiting 1 second...`);
-    await sleep(1000);
+  console.log(`Removing 22120's existing temporary browser cache if it exists...`);
+  if ( fs.existsSync(args.temp_browser_cache()) ) {
+    console.log(`Temp browser cache directory (${args.temp_browser_cache()}) exists, deleting...`);
+    fs.rmdirSync(args.temp_browser_cache(), {recursive:true});
+    console.log(`Deleted.`);
   }
+  console.log(`Launching library server...`);
+  await LibraryServer.start({server_port});
+  console.log(`Library server started.`);
+
+  console.log(`Waiting 1 second...`);
+  await sleep(1000);
+
+  console.log(`Launching chrome...`);
+  try {
+    await ChromeLaunch(LAUNCH_OPTS);
+  } catch(e) {
+    console.log(`Could not launch chrome.`);
+    DEBUG && console.info('Chrome launch error:', e);
+    process.exit(1);
+  }
+  console.log(`Chrome started.`);
+
+  console.log(`Waiting 1 second...`);
+  await sleep(1000);
   console.log(`Launching archivist and connecting to browser...`);
   await Archivist.collect({chrome_port, mode});
   console.log(`System ready.`);
@@ -89,7 +87,7 @@ async function killChrome(wait = true) {
         const {default:child_process} = await import('child_process');
         ChildProcess = child_process;
       }
-      const [err, stdout, stderr] = (await new Promise(
+      const [err] = (await new Promise(
         res => ChildProcess.exec(KILL_ON[process.platform], (...a) => res(a))
       ));
       if ( err ) {
