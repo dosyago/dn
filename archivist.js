@@ -88,7 +88,6 @@
     const REGULAR_SEARCH_OPTIONS_FUZZY = {
       minimum_match: 1.0
     };
-
     const HIGHLIGHT_OPTIONS_FUZZY = {
       minimum_match: 2.0
     };
