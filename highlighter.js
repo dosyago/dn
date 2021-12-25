@@ -64,13 +64,13 @@ export function highlight(query, doc, {
     console.log('Zero highlights, showing first score', scores[0]);
     return scores.slice(0,1);
   } else {
-    let better = JSON.parse(JSON.stringify(highlights)).slice(0, 10);
+    let better = Array.from(highlights).slice(0, 10);
     better = better.map(hl => {
       const length = Array.from(hl.fragment.text).length;
       const extra = Math.round(length/2);
-      let {offset} = hl.fragment;
-      const newText = doc.slice(Math.max(0,offset - extra), offset).join('') + hl.fragment.text + doc.slice(offset + length, offset + length + extra).join('');
-      //console.log({newText, oldText:hl.fragment.text});
+      let {offset, symbols} = hl.fragment;
+      const newText = symbols.slice(Math.max(0,offset - extra), offset).join('') + hl.fragment.text + symbols.slice(offset + length, offset + length + extra).join('');
+      DEBUG && console.log({newText, oldText:hl.fragment.text, p:[Math.max(0,offset-extra), offset, offset+length, offset+length+extra], trueText: symbols.slice(offset, offset+length).join('')});
       hl.fragment.text = newText;
       const {MaxDist,MinScore,MaxScore} = params(Array.from(newText).length);
       const distance = ukkonen(query, hl.fragment.text.toLocaleLowerCase(), MaxDist);
@@ -106,7 +106,7 @@ function getFragmenter(chunkSize) {
       currentFrag = frags.pop();
       currentFrag.text += nextSymbol;
     } else {
-      currentFrag = {text:nextSymbol, offset:index};
+      currentFrag = {text:nextSymbol, offset:index, symbols};
       currentLength = 0;
     }
     currentLength++;
