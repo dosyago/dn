@@ -38,8 +38,8 @@
     CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
   } from './common.js';
   import {connect} from './protocol.js';
-  import {getInjection} from './public/injection.js';
   import {BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
+  import {getInjection} from '../public/injection.js';
 
 // search related state: constants and variables
   // common
