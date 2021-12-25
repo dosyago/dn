@@ -1,4 +1,3 @@
-- linting
 - Improve search page look
 - search improvements
   - implement trigram index
