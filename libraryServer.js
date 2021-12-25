@@ -1,16 +1,14 @@
-import fs from 'fs';
 import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {MAX_HIGHLIGHTABLE_LENGTH, DEBUG, say, sleep, APP_ROOT, SNIP_CONTEXT} from './common.js';
+import {MAX_HIGHLIGHTABLE_LENGTH, DEBUG, say, sleep, APP_ROOT} from './common.js';
 import Archivist from './archivist.js';
 import {highlight} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, 'public');
 
 const app = express();
-const INDEX_FILE = args.index_file;
 
 let running = false;
 let Server, upAt, port;
@@ -45,12 +43,10 @@ async function start({server_port}) {
 }
 
 function addHandlers() {
-  const {chrome_port} = args;
-
   app.use(express.urlencoded({extended:true}));
   app.use(express.static(SITE_PATH));
 
-  if ( !! args.library_path() ) {
+  if ( args.library_path() ) {
     app.use("/library", express.static(args.library_path()))
   }
 
