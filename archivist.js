@@ -90,7 +90,7 @@
     };
 
     const HIGHLIGHT_OPTIONS_FUZZY = {
-      minimum_match: 3.0
+      minimum_match: 2.0
     };
     const FUZZ_OPTS = {
       keys: ndxDocFields({namesOnly:true})
@@ -721,6 +721,7 @@ export default Archivist;
     try {
       State.Cache = new Map(JSON.parse(Fs.readFileSync(cacheFile)));
     } catch(e) {
+      console.warn(e+'');
       State.Cache = new Map();
       someError = true;
     }
@@ -728,6 +729,7 @@ export default Archivist;
     try {
       State.Index = new Map(JSON.parse(Fs.readFileSync(indexFile)));
     } catch(e) {
+      console.warn(e+'');
       State.Index = new Map();
       someError = true;
     }
@@ -742,18 +744,21 @@ export default Archivist;
       });
       DEBUG && console.log('Flex loaded');
     } catch(e) {
+      console.warn(e+'');
       someError = true;
     }
 
     try {
       loadNDXIndex(NDX_FTSIndex);
     } catch(e) {
+      console.warn(e+'');
       someError = true;
     }
 
     try {
       loadFuzzy();
     } catch(e) {
+      console.warn(e+'');
       someError = true;
     }
 
@@ -807,7 +812,7 @@ export default Archivist;
     }
 
     Id = Math.round(State.Index.size / 2) + 3;
-    NDXId = State.Index.has(NDX_ID_KEY) ? State.Index.get(NDX_ID_KEY) + 3000 : (Id + 1000000);
+    NDXId = State.Index.has(NDX_ID_KEY) ? State.Index.get(NDX_ID_KEY) + 1003000 : (Id + 1000000);
     if ( !Number.isInteger(NDXId) ) NDXId = Id;
     DEBUG && console.log({firstFreeId: Id, firstFreeNDXId: NDXId});
 
@@ -840,6 +845,7 @@ export default Archivist;
 
   function saveFiles({useState: useState = false, forceSave:forceSave = false} = {}) {
     clearSavers();
+    if ( State.Index.size === 0 ) return;
     State.Index.set(NDX_ID_KEY, NDXId);
     if ( useState ) {
       // saves the old cache path

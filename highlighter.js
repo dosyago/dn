@@ -27,6 +27,7 @@ export function highlight(query, doc, {
     doc = doc.slice(0, maxLength);
   }
   const highlights = [];
+  const extra = chunkSize;
   // use array from then length rather than string length to 
   // give accurate length for all unicode
   const qLength = Array.from(query).length;
@@ -67,7 +68,6 @@ export function highlight(query, doc, {
     let better = Array.from(highlights).slice(0, 10);
     better = better.map(hl => {
       const length = Array.from(hl.fragment.text).length;
-      const extra = Math.round(length/2);
       let {offset, symbols} = hl.fragment;
       const newText = symbols.slice(Math.max(0,offset - extra), offset).join('') + hl.fragment.text + symbols.slice(offset + length, offset + length + extra).join('');
       DEBUG && console.log({newText, oldText:hl.fragment.text, p:[Math.max(0,offset-extra), offset, offset+length, offset+length+extra], trueText: symbols.slice(offset, offset+length).join('')});

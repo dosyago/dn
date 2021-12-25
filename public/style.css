@@ -1,0 +1,36 @@
+
+  :root {
+    font-family: sans-serif;
+    background: lavenderblush;
+  }
+  body {
+    display: table;
+    margin: 0 auto;
+    background: silver;
+    padding: 0.5em;
+    box-shadow: 0 1px 1px purple;
+  }
+  form {
+  }
+  fieldset {
+    border: thin solid purple;
+  }
+  button, input, output {
+  }
+  input.long {
+    width: 100%;
+    min-width: 250px;
+  }
+  output {
+    font-size: smaller;
+    color: purple;
+  }
+  h1 {
+    margin: 0;
+  }
+  h2 {
+    margin-top: 0;
+  }
+  small.url {
+    word-break: break-all;
+  }
