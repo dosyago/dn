@@ -1,3 +1,4 @@
+- get snippets earlier (before rendering in lib server) and use to add to signal
 - implement trigram index
 - try an exact match on the query term if possible for highlight. first one.
 - we could also add signal from the highlighting to just in time alter the order (e.g. 'hell wiki' search brings google search to top rank, but the Hell wikipedia page has more highlight visible)

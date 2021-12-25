@@ -2,9 +2,9 @@ import ukkonen from 'ukkonen';
 import {DEBUG} from './common.js';
 
 const MAX_ACCEPT_SCORE = 0.5;
-const CHUNK_SIZE = 24;
+const CHUNK_SIZE = 12;
 
-//testHighlighter();
+testHighlighter();
 
 function params(qLength, chunkSize) {
   const MaxDist = CHUNK_SIZE;
@@ -216,5 +216,5 @@ function testHighlighter() {
 				46 points by helsinkiandrew 8 hours ago | hide | 17 comments
 				More
     `
-  ), null, 2));
+  ).map(({fragment:{text,offset}}) => offset + ':' + text), null, 2));
 }
