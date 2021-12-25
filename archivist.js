@@ -25,8 +25,8 @@
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
     //import { DocumentIndex } from 'ndx';
-    //import Fuzzy from 'fz-search';
-    import * as _Fuzzy from './lib/fz.js';
+    import Fuzzy from 'fz-search';
+    //import * as _Fuzzy from './lib/fz.js';
     import Nat from 'natural';
 
   import args from './args.js';
@@ -44,7 +44,8 @@
 
 // search related state: constants and variables
   // common
-    const Fuzzy = globalThis.FuzzySearch;
+    const STRIP_CHARS = /[\u0001-\u001a\0\v\f\r\t\n]/g;
+    //const Fuzzy = globalThis.FuzzySearch;
     const NDX_OLD = false;
     const USE_FLEX = true;
     const FTS_INDEX_DIR = args.fts_index_dir;
@@ -413,7 +414,7 @@ export default Archivist;
       const flatDoc = await send("DOMSnapshot.captureSnapshot", {
         computedStyles: [],
       }, sessionId);
-      const pageText = processDoc(flatDoc).replace(/\t\n/g, ' ');
+      const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
 
       const {title, url} = Targets.get(sessionId);
       let id, ndx_id;
@@ -689,7 +690,7 @@ export default Archivist;
     const path = getFuzzyPath(basePath);
     Fs.writeFileSync(
       path,
-      JSON.stringify(docs)
+      JSON.stringify(docs, null, 2)
     );
     DEBUG && console.log(`Wrote fuzzy to ${path}`);
   }
