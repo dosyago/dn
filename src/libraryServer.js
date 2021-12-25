@@ -131,13 +131,13 @@ function IndexView(urls) {
     <meta charset=utf-8>
     <title>Your HTML Library</title>
     <link rel=stylesheet href=/style.css>
-    <h1><a href=/>22120</a></h1>
-    <h2>Internet Offline Library</h2>
-    <h2>Archive Index</h2>
+    <header>
+      <h1><a href=/>22120</a> &mdash; Archive Index</h1>
+    </header>
     <form method=GET action=/search>
-      <fieldset>
+      <fieldset class=search>
         <legend>Search your archive</legend>
-        <input type=search name=query placeholder="search your library">
+        <input class=search type=search name=query placeholder="search your library">
         <button>Search</button>
       </fieldset>
     </form>
@@ -159,13 +159,16 @@ function SearchResultView({results, query, HL}) {
     <meta charset=utf-8>
     <title>${query} - 22120 search results</title>
     <link rel=stylesheet href=/style.css>
-    <h1><a href=/>22120</a></h1>
-    <h2>Search results</h2>
-    Or view <a href=/archive_index.html>your index</a>.
+    <header>
+      <h1><a href=/>22120</a> &mdash; Search Results</h1>
+    </header>
+    <p>
+    View <a href=/archive_index.html>your index</a>, or
+    </p>
     <form method=GET action=/search>
-      <fieldset>
+      <fieldset class=search>
         <legend>Search again</legend>
-        <input type=search name=query placeholder="search your library" value="${query}">
+        <input class=search type=search name=query placeholder="search your library" value="${query}">
         <button>Search</button>
       </fieldset>
     </form>

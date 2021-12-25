@@ -2,15 +2,16 @@
 <meta charset=utf-8>
 <title>Your HTML Library</title>
 <link rel=stylesheet href=/style.css>
-<h1><a href=/>22120</a></h1>
-<h2>Internet Offline Library</h2>
+<header>
+  <h1><a href=/>22120</a> &mdash; Internet Offline Library</h1>
+</header>
 <p>
   View <a href=/archive_index.html>the index</a>
 </p>
 <form method=GET action=/search>
-  <fieldset>
+  <fieldset class=search>
     <legend>Search your archive</legend>
-    <input type=search name=query placeholder="search your library">
+    <input class=search type=search name=query placeholder="search your library">
     <button>Search</button>
   </fieldset>
 </form>
@@ -18,12 +19,17 @@
   <fieldset>
     <legend>Save or Serve: Mode Control</legend>
     <p>
+      Control whether pages you browse are <label class=cmd for=save>saved to</label>, or 
+      <label class=cmd for=serve>served from</label> your archive
+      <br>
+      <small><em class=caps>Pro-Tip:</em> Serve pages when you're offline, and it will still feel like you're online</small>
+    <p>
       <label>
-        <input type=radio name=mode value=save>
+        <input type=radio name=mode value=save id=save>
         Save
       </label>
       <label>
-        <input type=radio name=mode value=serve>
+        <input type=radio name=mode value=serve id=serve>
         Serve
       </label>
       <output name=notification>

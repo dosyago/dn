@@ -670,7 +670,7 @@ export default Archivist;
   }
 
   function getContentSig(doc) { 
-    return doc.title + ' ' + doc.content + ' ' + getURI(doc.url);
+    return doc.title + ' ' + doc.title + ' ' + doc.content + ' ' + getURI(doc.url);
   }
 
   function getURI(url) {
@@ -957,6 +957,7 @@ export default Archivist;
   }
 
   function combineResults({flex,ndx,fuzz}) {
+    const DEBUG = true;
     DEBUG && console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
@@ -1059,9 +1060,7 @@ export default Archivist;
     const index = NDX(fields.length);
     // `fieldAccessors` is an array with functions that used to retrieve data from different fields. 
     const fieldAccessors = fields.map(f => doc => doc[f.name]);
-    // `fieldBoostFactors` is an array of boost factors for each field, in this example all fields will have
-    // identical factors.
-    const fieldBoostFactors = fields.map(() => 1);
+    const fieldBoostFactors = fields.map(f => f.boost);
     
     retVal = {
       index,
@@ -1157,15 +1156,15 @@ export default Archivist;
       /* old format (for newer ndx >= v1 ) */
       return [
         /* we index over the special indexable url field, not the regular url field */
-        { name: "i_url" }, 
-        { name: "title" },
-        { name: "content" },
+        { name: "title", boost: 1.3 },
+        { name: "i_url", boost: 1.15 }, 
+        { name: "content", boost: 1.0 },
       ];
     } else {
       /* new format (for older ndx ~ v0.4 ) */
       return [
-        "i_url",
         "title",
+        "i_url",
         "content"
       ];
     }
