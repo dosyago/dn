@@ -151,7 +151,18 @@ export function trilight(query, doc, {
     lastDi = di;
     return R;
   }, []);
-  console.log(runs);
+  let lastRun;
+  const gaps = runs.reduce((G, run) => {
+    const {tris, qi, di, length} = run;
+    if ( lastRun ) {
+      const gap = {runs: [lastRun, run], gap: run.di - (lastRun.di + lastRun.length)};
+      G.push(gap);
+    }
+    lastRun = run;
+    return G;
+  }, []);
+  gaps.sort(({gap:a}, {gap:b}) => a-b);
+  console.log(JSON.stringify({gaps}, null, 2));
   return [];
 }
 
