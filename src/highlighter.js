@@ -90,9 +90,11 @@ export function highlight(query, doc, {
   return result;
 }
 
+// use overlapping trigrams to index
 export function trilight(query, doc, {
   /* 0 is no maxLength */
   maxLength: maxLength = 0,
+  ngramSize: ngramSize = 3,
 } = {}) {
   query = Array.from(query);
   doc = Array.from(doc);
@@ -100,7 +102,7 @@ export function trilight(query, doc, {
     doc = doc.slice(0, maxLength);
   }
 
-  const trigrams = doc.reduce(getFragmenter(3, {overlap:true}), []);
+  const trigrams = doc.reduce(getFragmenter(ngramSize, {overlap:true}), []);
   const index = trigrams.reduce((idx, frag) => {
     let counts = idx[frag.text];
     if ( ! counts ) {
@@ -109,18 +111,47 @@ export function trilight(query, doc, {
     counts.push(frag.offset);
     return idx;
   }, {});
-  const qtris = query.reduce(getFragmenter(3, {overlap:true}), []);
-  const entries = [];
-  qtris.forEach(({offset, text}, qi) => {
+  const qtris = query.reduce(getFragmenter(ngramSize, {overlap:true}), []);
+  const entries = qtris.reduce((E, {offset, text}, qi) => {
     const counts = index[text];
-    if ( ! counts ) return;
-    counts.forEach(di => {
-      const entry = {text, qi, di};
-      entries.push(entry);
-    });
-  });
+    if ( counts ) {
+      counts.forEach(di => {
+        const entry = {text, qi, di};
+        E.push(entry);
+      });
+    }
+    return E;
+  }, []);
   entries.sort(({di:a}, {di:b}) => a-b);
-  console.log(entries);
+  let lastQi;
+  let lastDi;
+  let run;
+  const runs = entries.reduce((R, {text,qi,di}, ei) => {
+    if ( ! run ) {
+      run = {
+        tris: [text],
+        qi, di
+      };
+    } else {
+      const dQi = qi - lastQi; 
+      const dDi = di - lastDi;
+      if ( dQi === 1 && dDi === 1 ) {
+        run.tris.push(text);
+      } else {
+        /* add two for the size 2 suffix of the final trigram */
+        run.length = run.tris.length + (ngramSize - 1); 
+        R.push(run);
+        run = {
+          qi, di, 
+          tris: [text]
+        };
+      }
+    }
+    lastQi = qi;
+    lastDi = di;
+    return R;
+  }, []);
+  console.log(runs);
   return [];
 }
 
