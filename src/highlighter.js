@@ -4,7 +4,7 @@ import {DEBUG} from './common.js';
 const MAX_ACCEPT_SCORE = 0.5;
 const CHUNK_SIZE = 12;
 
-//testHighlighter();
+testHighlighter();
 
 function params(qLength, chunkSize = CHUNK_SIZE) {
   const MaxDist = chunkSize;
@@ -36,6 +36,7 @@ export function highlight(query, doc, {
   // make doc length === 0 % chunkSize
   doc.splice(doc.length, 0, ...(new Array((chunkSize - doc.length % chunkSize) % chunkSize)).join(' ').split(''));
   const fragments = doc.reduce(getFragmenter(chunkSize), []);
+  console.log(fragments);
   // pad start of doc2 by half chunkSize
   doc2.splice(0, 0, ...(new Array(chunkSize/2 + 1)).join(' ').split(''));
   // make doc2 length === 0 % chunkSize
@@ -89,8 +90,42 @@ export function highlight(query, doc, {
   return result;
 }
 
+export function trilight(query, doc, {
+  /* 0 is no maxLength */
+  maxLength: maxLength = 0,
+} = {}) {
+  query = Array.from(query);
+  doc = Array.from(doc);
+  if ( maxLength ) {
+    doc = doc.slice(0, maxLength);
+  }
+
+  const trigrams = doc.reduce(getFragmenter(3, {overlap:true}), []);
+  const index = trigrams.reduce((idx, frag) => {
+    let counts = idx[frag.text];
+    if ( ! counts ) {
+      counts = idx[frag.text] = [];
+    }
+    counts.push(frag.offset);
+    return idx;
+  }, {});
+  const qtris = query.reduce(getFragmenter(3, {overlap:true}), []);
+  const entries = [];
+  qtris.forEach(({offset, text}, qi) => {
+    const counts = index[text];
+    if ( ! counts ) return;
+    counts.forEach(di => {
+      const entry = {text, qi, di};
+      entries.push(entry);
+    });
+  });
+  entries.sort(({di:a}, {di:b}) => a-b);
+  console.log(entries);
+  return [];
+}
+
 // returns a function that creates non-overlapping fragments
-function getFragmenter(chunkSize) {
+function getFragmenter(chunkSize, {overlap: overlap = false} = {}) {
   if ( !Number.isInteger(chunkSize) || chunkSize < 1 ) {
     throw new TypeError(`chunkSize needs to be a whole number greater than 0`);
   }
@@ -98,21 +133,35 @@ function getFragmenter(chunkSize) {
   let currentLength;
 
   return function fragment(frags, nextSymbol, index, symbols) {
+    const pushBack = [];
     let currentFrag;
     // logic:
       // if there are no running fragments OR
       // adding the next symbol would exceed chunkSize
       // then start a new fragment OTHERWISE
       // keep adding to the currentFragment
-    if ( frags.length && ((currentLength + 1) <= chunkSize) ) {
-      currentFrag = frags.pop();
-      currentFrag.text += nextSymbol;
+    if ( overlap || (frags.length && ((currentLength + 1) <= chunkSize)) ) {
+      let count = 1;
+      if ( overlap ) {
+        count = Math.min(index+1, chunkSize);
+        currentFrag = {text:'', offset:index, symbols};
+        frags.push(currentFrag);
+      }
+      while(count--) {
+        currentFrag = frags.pop();
+        //console.log({frags,nextSymbol,index,currentFrag});
+        pushBack.push(currentFrag);
+        currentFrag.text += nextSymbol;
+      }
     } else {
       currentFrag = {text:nextSymbol, offset:index, symbols};
       currentLength = 0;
+      pushBack.push(currentFrag);
     }
     currentLength++;
-    frags.push(currentFrag);
+    while(pushBack.length) {
+      frags.push(pushBack.pop());
+    }
     return frags;
   }
 }
@@ -122,11 +171,9 @@ function getFragmenter(chunkSize) {
 
 
 // tests
-/*
   function testHighlighter() {
-    console.log(JSON.stringify(highlight(
-      'metahead search',
-      `
+    const query = 'metahead search';
+    const doc = `
           Hacker News new | past | comments | ask | show | jobs | submit 	login
         1. 	
           AWS appears to be down again
@@ -218,7 +265,12 @@ function getFragmenter(chunkSize) {
           Earth’s magnetic field illuminates Biblical history (economist.com)
           46 points by helsinkiandrew 8 hours ago | hide | 17 comments
           More
-      `
+      `;
+    /*
+    console.log(JSON.stringify(highlight(
+      query, doc
     ).map(({fragment:{text,offset}}) => offset + ':' + text), null, 2));
+    */
+
+    trilight('metahead search', doc.toLocaleLowerCase().replace(/\s+/g, ' '));
   }
-*/
