@@ -1,3 +1,4 @@
+- change name to ex libris ? exlibris?
 - implement trigram index run segmenter
 - search improvements
   - use different min score options for different sources (noticed URL not match meghan highlight for hello mag even tho query got megan and did match and highlight queen in url)
