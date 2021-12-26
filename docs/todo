@@ -1,5 +1,5 @@
+- implement trigram index run segmenter
 - search improvements
-  - implement trigram index
   - use different min score options for different sources (noticed URL not match meghan highlight for hello mag even tho query got megan and did match and highlight queen in url)
   - get snippets earlier (before rendering in lib server) and use to add to signal
   - if we have multiple query terms (multiple determined by some form of tokenization) then try to show all terms present in the snippet. even tho one term may be higher scoring. Should we do multiple passes of ukkonen distance one for whole query and one for each term? This will be easier / faster with trigrams I guess. Basically we want snippet to be a relevant summary that provides signal.
