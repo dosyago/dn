@@ -1,5 +1,5 @@
 import path from 'path';
-import {fileURLToPath} from 'url';
+//import {fileURLToPath} from 'url';
 
 export const DEBUG = process.env.DEBUG_22120 || false;
 export const SHOW_FETCH = false;
@@ -39,8 +39,9 @@ export const SNIP_CONTEXT = 31;
 
 export const NO_SANDBOX = process.env.DEBUG_22120 || false;
 
-//export const APP_ROOT = __dirname;
-export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
+//export const APP_ROOT = '.';
+export const APP_ROOT = __dirname;
+//export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 

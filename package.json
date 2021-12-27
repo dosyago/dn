@@ -5,14 +5,13 @@
   "main": "src/app.js",
   "module": "src/app.js",
   "bin": {
-    "archivist1": "22120.js"
+    "archivist1": "build/22120.js"
   },
   "scripts": {
     "start": "node src/app.js",
     "postinstall": "bash ./scripts/build_setup.sh",
-    "build": "bash ./scripts/compile.sh",
-    "clean": "rm 22120.js *22120.js 22120.??? *.LICENSE.txt",
-    "pack": "upx 22120.exe && upx 22120.nix && upx 22120.mac && upx 22120.win32.exe && upx 22120.nix32",
+    "build": "echo 'please run ./scripts/compile.sh'",
+    "clean": "rm -rf build/* bin/*",
     "test": "nodemon src/app.js",
     "save": "nodemon src/app.js 22120 save",
     "serve": "nodemon src/app.js 22120 serve",
@@ -22,6 +21,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dosyago/22120.git"
+  },
+  "pkg": {
+    "scripts": "build/*.js",
+    "assets": "public/**/*",
+    "outputPath": "bin"
   },
   "keywords": [
     "archivist",
