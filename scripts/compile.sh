@@ -8,4 +8,4 @@ nvm use v14.15.3
 
 npx webpack
 chmod +x 22120.js
-npx nexe -t windows -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && npx nexe -t linux-x64 -o 22120.nix -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && npx nexe -t macos-x64 -o 22120.mac -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && npx nexe -t windows-x32 -o 22120.win32.exe -i 22120.js -r \"./?.22120.js\" -r \"./public/*\" && npx nexe -t linux-x32 -o 22120.nix32 -i 22120.js -r \"./?.22120.js\" -r \"./public/*\"
+npx nexe -t windows -i ./build/22120.js -r \"./build/?.22120.js\" -r \"./public/*\" && npx nexe -t linux-x64 -o 22120.nix -i ./build/22120.js -r \"./build/?.22120.js\" -r \"./public/*\" && npx nexe -t macos-x64 -o 22120.mac -i ./build/22120.js -r \"./build/?.22120.js\" -r \"./public/*\" && npx nexe -t windows-x32 -o 22120.win32.exe -i ./build/22120.js -r \"./build/?.22120.js\" -r \"./public/*\" && npx nexe -t linux-x32 -o 22120.nix32 -i ./build/22120.js -r \"./build/?.22120.js\" -r \"./public/*\"
