@@ -1,4 +1,4 @@
-- implement trigram index run segmenter
+- trigram segmenter not working as expected. (e.g downey JR not getting correct on avenger endgame search page). fix
 - complete snippet generation
 - improve title boosting of ranks
 - save trigram index to disk

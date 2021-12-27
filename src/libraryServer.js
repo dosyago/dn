@@ -7,7 +7,7 @@ import {
   say, sleep, APP_ROOT
 } from './common.js';
 import Archivist from './archivist.js';
-import {highlight} from './highlighter.js';
+import {trilight, highlight} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, '..', 'public');
 
@@ -63,9 +63,14 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
+        /*
         r.snippet = '... ' + highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
           .sort(({fragment:{offset:a}}, {fragment:{offset:b}}) => a-b)
           .map(hl => Archivist.findOffsets(query, hl.fragment.text))
+          .join(' ... ');
+        */
+        r.snippet = '... ' + trilight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
+          .map(segment => Archivist.findOffsets(query, segment))
           .join(' ... ');
       });
       res.end(SearchResultView({results, query, HL}));
