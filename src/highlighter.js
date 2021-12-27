@@ -99,7 +99,8 @@ export function trilight(query, doc, {
   maxSegmentSize: maxSegmentSize = 140,
 } = {}) {
   query = Array.from(query);
-  doc = Array.from(doc);
+  const oDoc = Array.from(doc);
+  doc = Array.from(doc.toLocaleLowerCase());
   if ( maxLength ) {
     doc = doc.slice(0, maxLength);
   }
@@ -168,32 +169,36 @@ export function trilight(query, doc, {
   const runSegMap = {};
   while(gaps.length) {
     const nextGap = gaps.shift();
-    const leftSeg = runSegMap[nextGap.runs[0].di];
-    const rightSeg = runSegMap[nextGap.runs[1].di];
+    const {runs} = nextGap;
+    const leftSeg = runSegMap[runs[0].di];
+    const rightSeg = runSegMap[runs[1].di];
     let newSegmentLength = 0;
     let assigned = false;
     if ( leftSeg ) {
-      newSegmentLength = nextGap.runs[1].di + nextGap.runs[1].length - leftSeg.start;
+      newSegmentLength = runs[1].di + runs[1].length - leftSeg.start;
       if ( newSegmentLength <= maxSegmentSize ) {
-        leftSeg.end = nextGap.runs[1].di + nextGap.runs[1].length;
-        runSegMap[nextGap.runs[1].di] = leftSeg;
+        leftSeg.end = runs[1].di + runs[1].length;
+        leftSeg.score += runs[1].length;
+        runSegMap[runs[1].di] = leftSeg;
         assigned = leftSeg;
       }
     } else if ( rightSeg ) {
-      newSegmentLength = rightSeg.end - nextGap.runs[0].di;
+      newSegmentLength = rightSeg.end - runs[0].di;
       if ( newSegmentLength <= maxSegmentSize ) {
-        rightSeg.start = nextGap.runs[0].di;
-        runSegMap[nextGap.runs[0].di] = rightSeg;
+        rightSeg.start = runs[0].di;
+        rightSeg.score += runs[0].length;
+        runSegMap[runs[0].di] = rightSeg;
         assigned = rightSeg;
       }
     } else {
       const newSegment = {
-        start: nextGap.runs[0].di,
-        end: nextGap.runs[0].di + nextGap.runs[0].length + nextGap.gap + nextGap.runs[1].length
+        start: runs[0].di,
+        end: runs[0].di + runs[0].length + nextGap.gap + runs[1].length,
+        score: runs[0].length + runs[1].length
       };
       if ( newSegment.end - newSegment.start <= maxSegmentSize ) {
-        runSegMap[nextGap.runs[0].di] = newSegment;
-        runSegMap[nextGap.runs[1].di] = newSegment;
+        runSegMap[runs[0].di] = newSegment;
+        runSegMap[runs[1].di] = newSegment;
         segments.push(newSegment);
         assigned = newSegment;
         newSegmentLength = newSegment.end - newSegment.start;
@@ -207,8 +212,10 @@ export function trilight(query, doc, {
       );
     }
   }
-  const textSegments = segments.map(({start,end}) => doc.slice(start,end).join(''));
+  segments.sort(({score:a}, {score:b}) => b-a);
+  const textSegments = segments.map(({start,end}) => oDoc.slice(start,end).join(''));
   //console.log(JSON.stringify({gaps}, null, 2));
+  DEBUG && console.log(segments, textSegments);
   return textSegments.slice(0,3);
 }
 

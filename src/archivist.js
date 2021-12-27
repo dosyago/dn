@@ -868,7 +868,6 @@ export default Archivist;
   }
 
   function findOffsets(query, doc, maxLength = 0) {
-    const DEBUG = true;
     if ( maxLength ) {
       doc = Array.from(doc).slice(0, maxLength).join('');
     }
@@ -941,6 +940,7 @@ export default Archivist;
     const fuzz = processFuzzResults(fuzzRaw);
 
     const results = combineResults({flex, ndx, fuzz});
+    //console.log({flex,ndx,fuzz});
     const ids = new Set(results);
 
     const HL = new Map();
@@ -963,6 +963,7 @@ export default Archivist;
     flex.forEach(countRank(score));
     ndx.forEach(countRank(score));
     fuzz.forEach(countRank(score));
+    console.log(score);
   
     const results = [...Object.values(score)].map(obj => {
       try {
@@ -974,22 +975,23 @@ export default Archivist;
         throw e;
       }
     });
-    results.sort(({score:scoreA}, {score:scoreB}) => scoreA-scoreB);
+    results.sort(({score:scoreA}, {score:scoreB}) => scoreB-scoreA);
+    console.log(results);
     const resultIds = results.map(({id}) => id);
     return resultIds;
   }
 
   function countRank(record, weight = 1.0) {
-    return ({url}, rank, all) => {
-      let score = record[url];
-      if ( ! score ) {
-        score = record[url] = {
+    return ({url, score:res_score = 1.0}, rank, all) => {
+      let result = record[url];
+      if ( ! result ) {
+        result = record[url] = {
           url,
-          value: 0
+          score: 0
         };
       }
 
-      score.value += weight*(all.length - rank)
+      result.score += res_score*weight*(all.length - rank)/all.length
     };
   }
 
