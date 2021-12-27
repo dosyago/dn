@@ -23,6 +23,9 @@
     cursor: default;
     font-style: italic;
   }
+  :is(form, label)[disabled] {
+    color: grey;
+  }
   em.caps {
     font-style: normal;
     font-variant: small-caps;

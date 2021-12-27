@@ -1,10 +1,11 @@
-- trigram segmenter not working as expected. (e.g downey JR not getting correct on avenger endgame search page). fix
 - complete snippet generation
-- improve title boosting of ranks
+  - improve trigram segmenter: lower max segment length, increase fore and aft context
+  - sometimes snippets do not appear (e.g. avenger endgame google search result for hemsworth query)
 - save trigram index to disk
 - let's not reindex unless we have changed contentSignature
 - result paging
 - publish button
+  - added placeholder on dashboard page
 - We need to not open other localhosts if we already have one open
 - We need to reload on localhost 22120 if we open with that
 - ensure we are getting the page text to index once it is actually loaded (we should call again later, or add mutation observer and update on mutate)

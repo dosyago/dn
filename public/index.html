@@ -32,6 +32,10 @@
         <input type=radio name=mode value=serve id=serve>
         Serve
       </label>
+      <label disabled>
+        <input disabled type=radio name=mode value=select id=select>
+        Select (<em>Bookmark mode</em>)
+      </label>
       <output name=notification>
     <p>
       <button>Change mode</button>
@@ -78,6 +82,17 @@
         }
       }
     </script>
+  </fieldset>
+</form>
+<form disabled method=POST action=/publish>
+  <fieldset>
+    <legend>Publish your archive</legend>
+    <p>
+      Publish a search engine from your archive 
+      <br>
+      <small>This will generate a server.zip file that you can unzip and run</small>
+    <p>
+      <button disabled>Publish</button>
   </fieldset>
 </form>
 <footer>

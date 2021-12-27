@@ -95,7 +95,7 @@ export function trilight(query, doc, {
   /* 0 is no maxLength */
   maxLength: maxLength = 0,
   ngramSize: ngramSize = 3,
-  minSegmentGap: minSegmentGap = 20,
+  /*minSegmentGap: minSegmentGap = 20,*/
   maxSegmentSize: maxSegmentSize = 140,
 } = {}) {
   query = Array.from(query);
@@ -115,7 +115,7 @@ export function trilight(query, doc, {
     return idx;
   }, {});
   const qtris = query.reduce(getFragmenter(ngramSize, {overlap:true}), []);
-  const entries = qtris.reduce((E, {offset, text}, qi) => {
+  const entries = qtris.reduce((E, {text}, qi) => {
     const counts = index[text];
     if ( counts ) {
       counts.forEach(di => {
@@ -129,7 +129,7 @@ export function trilight(query, doc, {
   let lastQi;
   let lastDi;
   let run;
-  const runs = entries.reduce((R, {text,qi,di}, ei) => {
+  const runs = entries.reduce((R, {text,qi,di}) => {
     if ( ! run ) {
       run = {
         tris: [text],
@@ -156,7 +156,6 @@ export function trilight(query, doc, {
   }, []);
   let lastRun;
   const gaps = runs.reduce((G, run) => {
-    const {tris, qi, di, length} = run;
     if ( lastRun ) {
       const gap = {runs: [lastRun, run], gap: run.di - (lastRun.di + lastRun.length)};
       G.push(gap);
