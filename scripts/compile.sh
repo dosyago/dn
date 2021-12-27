@@ -9,4 +9,4 @@ echo "Bundling javascript..."
 npx webpack
 chmod +x ./build/22120.js
 echo "Building for windows nix and macos..."
-pkg . 
+pkg --compress Brotli . 
