@@ -2,7 +2,10 @@ import path from 'path';
 import express from 'express';
 
 import args from './args.js';
-import {MAX_HIGHLIGHTABLE_LENGTH, DEBUG, say, sleep, APP_ROOT} from './common.js';
+import {
+  MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, DEBUG, 
+  say, sleep, APP_ROOT
+} from './common.js';
 import Archivist from './archivist.js';
 import {highlight} from './highlighter.js';
 
@@ -179,9 +182,13 @@ function SearchResultView({results, query, HL}) {
     ${
       results.map(({snippet, url,title,id}) => `
         <li>
-          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${HL.get(id)?.title||title||url}</a>
+          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${
+            HL.get(id)?.title||(title||url||'').slice(0, MAX_HEAD)
+          }</a>
           <br>
-          <small class=url>${(HL.get(id)?.url||url)}</small>
+          <small class=url>${
+            HL.get(id)?.url||(url||'').slice(0, MAX_HEAD)
+          }</small>
           <p>${snippet}</p>
         </li>
       `).join('\n')
