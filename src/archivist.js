@@ -963,7 +963,7 @@ export default Archivist;
     flex.forEach(countRank(score));
     ndx.forEach(countRank(score));
     fuzz.forEach(countRank(score));
-    console.log(score);
+    DEBUG && console.log(score);
   
     const results = [...Object.values(score)].map(obj => {
       try {
@@ -976,7 +976,7 @@ export default Archivist;
       }
     });
     results.sort(({score:scoreA}, {score:scoreB}) => scoreB-scoreA);
-    console.log(results);
+    DEBUG && console.log(results);
     const resultIds = results.map(({id}) => id);
     return resultIds;
   }

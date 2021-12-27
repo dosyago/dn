@@ -7,7 +7,7 @@ import {
   say, sleep, APP_ROOT
 } from './common.js';
 import Archivist from './archivist.js';
-import {trilight, highlight} from './highlighter.js';
+import {trilight, /*highlight*/} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, '..', 'public');
 
