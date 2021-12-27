@@ -1,3 +1,4 @@
+- fix issue with URL too long on some searches (e.g. tom delaur -- the chris hemsworth url too long, why?)
 - change name to ex libris ? exlibris?
 - implement trigram index run segmenter
 - search improvements

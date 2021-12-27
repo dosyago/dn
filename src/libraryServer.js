@@ -145,7 +145,7 @@ function IndexView(urls) {
     ${
       urls.map(([url,{title, id}]) => `
         <li>
-          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${title||url}</a>
+          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${(title||url).slice(0, MAX_HEAD)}</a>
         </li>
       `).join('\n')
     }
