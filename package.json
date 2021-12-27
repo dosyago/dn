@@ -1,5 +1,5 @@
 {
-  "name": "archivist1",
+  "name": "exlibris",
   "version": "2.0.3",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
