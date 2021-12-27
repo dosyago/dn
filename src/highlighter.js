@@ -36,7 +36,7 @@ export function highlight(query, doc, {
   // make doc length === 0 % chunkSize
   doc.splice(doc.length, 0, ...(new Array((chunkSize - doc.length % chunkSize) % chunkSize)).join(' ').split(''));
   const fragments = doc.reduce(getFragmenter(chunkSize), []);
-  console.log(fragments);
+  //console.log(fragments);
   // pad start of doc2 by half chunkSize
   doc2.splice(0, 0, ...(new Array(chunkSize/2 + 1)).join(' ').split(''));
   // make doc2 length === 0 % chunkSize
@@ -65,7 +65,7 @@ export function highlight(query, doc, {
   let result;
 
   if ( highlights.length === 0 ) {
-    console.log('Zero highlights, showing first score', scores[0]);
+    DEBUG && console.log('Zero highlights, showing first score', scores[0]);
     result = scores.slice(0,1);
   } else {
     let better = Array.from(highlights).slice(0, 10);
@@ -162,7 +162,7 @@ export function trilight(query, doc, {
     return G;
   }, []);
   gaps.sort(({gap:a}, {gap:b}) => a-b);
-  console.log(JSON.stringify({gaps}, null, 2));
+  //console.log(JSON.stringify({gaps}, null, 2));
   return [];
 }
 

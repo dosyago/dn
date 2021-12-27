@@ -868,12 +868,13 @@ export default Archivist;
   }
 
   function findOffsets(query, doc, maxLength = 0) {
+    const DEBUG = true;
     if ( maxLength ) {
       doc = Array.from(doc).slice(0, maxLength).join('');
     }
     Object.assign(fuzzy.options, HIGHLIGHT_OPTIONS_FUZZY);
     const hl = fuzzy.highlight(doc); 
-    DEBUG && console.log(query, hl);
+    DEBUG && console.log(query, hl, maxLength);
     return hl;
   }
 
@@ -957,7 +958,6 @@ export default Archivist;
   }
 
   function combineResults({flex,ndx,fuzz}) {
-    const DEBUG = true;
     DEBUG && console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
