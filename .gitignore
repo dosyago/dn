@@ -6,6 +6,8 @@
 22120.mac
 22120.win32.exe
 22120.nix32
+bin/*
+build/*
 
 #Leave these to allow install by npm -g
 #22120.js
