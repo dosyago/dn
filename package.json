@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "module": "src/app.js",
   "bin": {
-    "archivist1": "build/22120.js"
+    "exlibris": "build/22120.js"
   },
   "scripts": {
     "start": "node src/app.js",
