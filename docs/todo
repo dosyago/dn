@@ -1,3 +1,4 @@
+- Index.json is randomly getting clobbered sometimes. Investigate and fix. This breaks the whole archive.
 - complete snippet generation
   - improve trigram segmenter: lower max segment length, increase fore and aft context
   - sometimes snippets do not appear (e.g. avenger endgame google search result for hemsworth query)
