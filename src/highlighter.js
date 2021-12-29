@@ -215,6 +215,19 @@ export function trilight(query, doc, {
   const textSegments = segments.map(({start,end}) => oDoc.slice(start,end).join(''));
   //console.log(JSON.stringify({gaps}, null, 2));
   DEBUG && console.log(segments, textSegments);
+
+  if ( textSegments.length === 0 ) {
+    console.log({query, doc, maxLength, ngramSize, maxSegmentSize, 
+      trigrams,
+      index,
+      entries,
+      runs,
+      gaps,
+      segments,
+      textSegments
+    });
+  }
+
   return textSegments.slice(0,3);
 }
 
