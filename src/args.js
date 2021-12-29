@@ -67,7 +67,7 @@ function updateBasePath(new_base_path, {force:force = false, before: before = []
   if ( Array.isArray(before) ) {
     for( const task of before ) {
       try { task(); } catch(e) { 
-        DEBUG && console.warn(`before updateBasePath task failed. Task: ${task}`);
+        console.error(`before updateBasePath task failed. Task: ${task}`);
       }
     }
   } else {
@@ -87,7 +87,7 @@ function updateBasePath(new_base_path, {force:force = false, before: before = []
   }
 
   if ( !fs.existsSync(index_file()) ) {
-    console.log(`INDEXLOG: Index file does not exist, creating...`); 
+    //console.log(`INDEXLOG: Index file does not exist, creating...`); 
     fs.writeFileSync(index_file(), JSON.stringify([]));
     console.log(`Created!`);
   }

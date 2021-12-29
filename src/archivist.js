@@ -254,8 +254,8 @@ export default Archivist;
             case !!titleChange: {
                 reindexOnContentChange({titleChange});
               } break;
-            case !!textChanged: {
-                reindexOnContentChange({textChanged});
+            case !!textChange: {
+                reindexOnContentChange({textChange});
               } break;
             default: {
                 if ( DEBUG ) {
@@ -287,12 +287,16 @@ export default Archivist;
         Targets.set(sessionId, latestTargetInfo);
         DEBUG && console.log('Updated stored target info', latestTargetInfo);
       } else if ( textChange ) {
-        const DEBUG = true;
         const {sessionId} = textChange;
+        DEBUG && console.log(
+          `Will reindex because we were told text content maybe changed.`, 
+          textChange
+        );
         latestTargetInfo = clone(await untilHas(Targets, sessionId));
-        DEBUG && console.log(`Will reindex because we were told text content maybe changed.`);
       }
-      indexURL({targetInfo:latestTargetInfo});
+      if ( latestTargetInfo ) {
+        indexURL({targetInfo:latestTargetInfo});
+      }
     }
 
     /*
@@ -919,7 +923,7 @@ export default Archivist;
   }
 
   function saveIndex(path) {
-    const DEBUG = true;
+    //const DEBUG = true;
     if ( State.saveInProgress ) return;
     State.saveInProgress = true;
 
