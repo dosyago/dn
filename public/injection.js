@@ -1,6 +1,6 @@
 import {DEBUG as debug} from '../src/common.js';
 
-const DEBUG = debug || true;
+const DEBUG = debug || false;
 
 export function getInjection({sessionId}) {
   // Notes:
@@ -80,10 +80,10 @@ export function getInjection({sessionId}) {
         }
 
         function beginTextNotifications() {
-          // listen for {textChanged:true} messages
+          // listen for {textChange:true} messages
           // throttle them
           // on leading throttle edge send message to controller with 
-          // console.info(JSON.stringify({textChanged:true}));
+          // console.info(JSON.stringify({textChange:...}));
           self.addEventListener('message', messageParser);
 
           console.log('Begun notifying of text changes.');
@@ -91,23 +91,23 @@ export function getInjection({sessionId}) {
           function messageParser({data, origin}) {
             let source;
             try {
-              ({source} = data.frameTextChangedNotification);
+              ({source} = data.frameTextChangeNotification);
               if ( count > MAX_NOTIFICATIONS ) {
                 self.removeEventListener('message', messageParser);
                 return;
               }
               count++;
-              handler({textChanged:{source}});
+              handler({textChange:{source}});
             } catch(e) {
               DEBUG && console.warn('could not parse message', data, e);
             }
           }
         }
 
-        function handleFrameMessage({textChanged}) {
-          const {source} = textChanged;
+        function handleFrameMessage({textChange}) {
+          const {source} = textChange;
           console.log('Telling controller that text changed');
-          say({textChanged:true, source, count});
+          say({textChange:{source, sessionId, count}});
         }
       } 
 
@@ -117,7 +117,7 @@ export function getInjection({sessionId}) {
         // create mutation observer for text
         // throttle output
 
-        const observer = new MutationObserver(check, /*throttle(check, MIN_CHECK_TEXT)*/);
+        const observer = new MutationObserver(throttle(check, MIN_CHECK_TEXT));
         observer.observe(document.documentElement || document, OBSERVER_OPTS);
 
         console.log('Begun observing text changes.');
@@ -128,23 +128,67 @@ export function getInjection({sessionId}) {
           if ( textMutated ) {
             DEBUG && console.log('Text changed');
             lastInnerText = document.documentElement.innerText;
-            Top.postMessage({frameTextChangedNotification:{source:location.href}}, '*');
+            Top.postMessage({frameTextChangeNotification:{source:location.href}}, '*');
           }
         }
       }
 
       // javascript throttle function
-		  // source: https://stackoverflow.com/a/59378445	
-			function throttle(func, timeFrame) {
-				var lastTime = 0;
-				return function (...args) {
-					var now = new Date();
-					if (now - lastTime >= timeFrame) {
-						func.apply(this, args);
-						lastTime = now;
-					}
-				};
-			}
+        // source: https://stackoverflow.com/a/59378445 
+        /*
+        function throttle(func, timeFrame) {
+          var lastTime = 0;
+          return function (...args) {
+            var now = new Date();
+            if (now - lastTime >= timeFrame) {
+              func.apply(this, args);
+              lastTime = now;
+            }
+          };
+        }
+        */
+
+      // alternate throttle function with trailing edge call
+        // source: https://stackoverflow.com/a/27078401
+        ///*
+        // Notes
+          // Returns a function, that, when invoked, will only be triggered at most once
+          // during a given window of time. Normally, the throttled function will run
+          // as much as it can, without ever going more than once per \`wait\` duration;
+          // but if you'd like to disable the execution on the leading edge, pass
+          // \`{leading: false}\`. To disable execution on the trailing edge, ditto.
+				function throttle(func, wait, options) {
+					var context, args, result;
+					var timeout = null;
+					var previous = 0;
+					if (!options) options = {};
+					var later = function() {
+						previous = options.leading === false ? 0 : Date.now();
+						timeout = null;
+						result = func.apply(context, args);
+						if (!timeout) context = args = null;
+					};
+					return function() {
+						var now = Date.now();
+						if (!previous && options.leading === false) previous = now;
+						var remaining = wait - (now - previous);
+						context = this;
+						args = arguments;
+						if (remaining <= 0 || remaining > wait) {
+							if (timeout) {
+								clearTimeout(timeout);
+								timeout = null;
+							}
+							previous = now;
+							result = func.apply(context, args);
+							if (!timeout) context = args = null;
+						} else if (!timeout && options.trailing !== false) {
+							timeout = setTimeout(later, remaining);
+						}
+						return result;
+					};
+				}
+        //*/
     }
   `;
 }
