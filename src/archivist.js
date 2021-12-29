@@ -246,13 +246,16 @@ export default Archivist;
         try {
           const val = JSON.parse(strVal);
           // possible messages
-          const {install, titleChange} = val;
+          const {install, titleChange, textChange} = val;
           switch(true) {
             case !!install: {
                 confirmInstall({install});
               } break;
             case !!titleChange: {
-                reindexOnTitleChange({titleChange});
+                reindexOnContentChange({titleChange});
+              } break;
+            case !!textChanged: {
+                reindexOnContentChange({textChanged});
               } break;
             default: {
                 if ( DEBUG ) {
@@ -274,13 +277,21 @@ export default Archivist;
       }
     }
 
-    async function reindexOnTitleChange({titleChange}) {
-      const {currentTitle, sessionId} = titleChange;
-      DEBUG && console.log('Received titleChange', titleChange);
-      const latestTargetInfo = clone(await untilHas(Targets, sessionId));
-      latestTargetInfo.title = currentTitle;
-      Targets.set(sessionId, latestTargetInfo);
-      DEBUG && console.log('Updated stored target info', latestTargetInfo);
+    async function reindexOnContentChange({titleChange, textChange}) {
+      let latestTargetInfo;
+      if ( titleChange ) {
+        const {currentTitle, sessionId} = titleChange;
+        DEBUG && console.log('Received titleChange', titleChange);
+        latestTargetInfo = clone(await untilHas(Targets, sessionId));
+        latestTargetInfo.title = currentTitle;
+        Targets.set(sessionId, latestTargetInfo);
+        DEBUG && console.log('Updated stored target info', latestTargetInfo);
+      } else if ( textChange ) {
+        const DEBUG = true;
+        const {sessionId} = textChange;
+        latestTargetInfo = clone(await untilHas(Targets, sessionId));
+        DEBUG && console.log(`Will reindex because we were told text content maybe changed.`);
+      }
       indexURL({targetInfo:latestTargetInfo});
     }
 
