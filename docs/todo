@@ -1,9 +1,11 @@
-- Index.json is randomly getting clobbered sometimes. Investigate and fix. This breaks the whole archive.
+- sometimes snippets do not appear (e.g. avenger endgame google search result for hemsworth query)
 - complete snippet generation
   - improve trigram segmenter: lower max segment length, increase fore and aft context
-  - sometimes snippets do not appear (e.g. avenger endgame google search result for hemsworth query)
+- Index.json is randomly getting clobbered sometimes. Investigate and fix. Important because this breaks the whole archive.
+  - No idea what's causing this after an small investigation. But I've added a log on saveIndex to see when it writes.
 - save trigram index to disk
 - let's not reindex unless we have changed contentSignature
+- let's not write FTS indexes unless we have changed them since last time (UpdatedKeys)
 - result paging
 - publish button
   - added placeholder on dashboard page
