@@ -99,8 +99,9 @@ function addHandlers() {
 
   app.post('/base_path', async (req, res) => {
     const {base_path} = req.body;
-    Archivist.beforePathChanged();
-    const change = args.updateBasePath(base_path);
+    const change = args.updateBasePath(base_path, {before: [
+      () => Archivist.beforePathChanged(base_path)
+    ]});
 
     if ( change ) {
       await Archivist.afterPathChanged();

@@ -800,7 +800,9 @@ export default Archivist;
         }
       }
       console.log('Resetting base path', newBasePath);
-      args.updateBasePath(newBasePath, {force:true});
+      args.updateBasePath(newBasePath, {force:true, before: [
+        () => Archivist.beforePathChanged(newBasePath, {force:true})
+      ]});
       saveFiles({forceSave:true});
     }
 
@@ -877,7 +879,11 @@ export default Archivist;
     return hl;
   }
 
-  function beforePathChanged() {
+  function beforePathChanged(new_path, {force: force = false} = {}) {
+    const currentBasePath = args.getBasePath();
+    if ( !force && (currentBasePath == new_path) ) {
+      return false;
+    }
     saveFiles({useState:true, forceSave:true});
     // clear all memory cache, index and full text indexes
     State.Index.clear();
@@ -886,6 +892,7 @@ export default Archivist;
     State.NDX_FTSIndex = NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     State.Flex = Flex = new FTSIndex(FLEX_OPTS);
     State.fuzzy = fuzzy = new Fuzzy({source: [...State.Docs.values()], keys: FUZZ_OPTS.keys});
+    return true;
   }
 
   async function afterPathChanged() { 
@@ -901,12 +908,15 @@ export default Archivist;
   }
 
   function saveIndex(path) {
+    const DEBUG = true;
     if ( State.saveInProgress ) return;
     State.saveInProgress = true;
 
     clearTimeout(State.indexSaver);
 
-    //DEBUG && console.log("Writing to", path || INDEX_FILE());
+    DEBUG && console.log(
+      `INDEXLOG: Writing Index (size: ${State.Index.size}) to`, path || INDEX_FILE()
+    );
     //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
     Fs.writeFileSync(
       path || INDEX_FILE(), 

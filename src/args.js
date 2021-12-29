@@ -55,7 +55,7 @@ const args = {
 
 export default args;
 
-function updateBasePath(new_base_path, {force:force = false} = {}) {
+function updateBasePath(new_base_path, {force:force = false, before: before = []} = {}) {
   new_base_path = path.resolve(new_base_path);
   if ( !force && (BasePath == new_base_path) ) {
     return false;
@@ -63,6 +63,16 @@ function updateBasePath(new_base_path, {force:force = false} = {}) {
 
   console.log(`Updating base path from ${BasePath} to ${new_base_path}...`);
   BasePath = new_base_path;
+
+  if ( Array.isArray(before) ) {
+    for( const task of before ) {
+      try { task(); } catch(e) { 
+        DEBUG && console.warn(`before updateBasePath task failed. Task: ${task}`);
+      }
+    }
+  } else {
+    throw new TypeError(`If given, argument before to updateBasePath() must be an array of functions.`);
+  }
 
   if ( !fs.existsSync(library_path()) ) {
     console.log(`Archive directory (${library_path()}) does not exist, creating...`);
@@ -77,7 +87,7 @@ function updateBasePath(new_base_path, {force:force = false} = {}) {
   }
 
   if ( !fs.existsSync(index_file()) ) {
-    console.log(`Index file does not exist, creating...`); 
+    console.log(`INDEXLOG: Index file does not exist, creating...`); 
     fs.writeFileSync(index_file(), JSON.stringify([]));
     console.log(`Created!`);
   }
