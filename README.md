@@ -8,6 +8,17 @@
 
 This feature is just released in version 2 so it will improve over time.
 
+**Build your own binaries:**
+
+```sh
+$ git clone https://github.com/i5ik/DiskerNet
+$ cd DiskerNet
+$ npm i 
+$ ./scripts/build_setup.sh
+$ ./scripts/compile.sh
+$ cd bin/
+```
+
 <span id=toc></span>
 ----------------
 - [Overview](#classical_building-22120---)
