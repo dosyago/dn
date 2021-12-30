@@ -1,6 +1,6 @@
 {
   "name": "archivist1",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
