@@ -87,6 +87,19 @@ function addHandlers() {
     res.end(IndexView(index));
   });
 
+  app.get('/edit_index.html', async (req, res) => {
+    Archivist.saveIndex();
+    const index = Archivist.getIndex();
+    res.end(IndexView(index, {edit:true}));
+  });
+
+  app.post('/edit_index.html', async (req, res) => {
+    const {url_to_delete} = req.body;
+    await Archivist.deleteFromIndexAndSearch(url_to_delete);
+    const index = Archivist.getIndex();
+    res.end(IndexView(index));
+  });
+
   app.post('/mode', async (req, res) => {
     const {mode} = req.body;
     await Archivist.changeMode(mode);
@@ -134,31 +147,96 @@ async function stop() {
   return pr;
 }
 
-function IndexView(urls) {
+function IndexView(urls, {edit:edit = false} = {}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
-    <title>Your HTML Library</title>
+    <title>
+      ${ edit ? 'Editing ' : ''}
+      Your HTML Library
+    </title>
     <link rel=stylesheet href=/style.css>
+    ${ edit ? `
+    <script>
+      const sleep = ms => new Promise(res => setTimeout(res, ms));
+      const StrikeThrough = 'line-through';
+    </script>
+    ` : ''}
     <header>
       <h1><a href=/>22120</a> &mdash; Archive Index</h1>
     </header>
-    <form method=GET action=/search>
+    <form method=GET action=/search style="margin-bottom: 1em;">
       <fieldset class=search>
         <legend>Search your archive</legend>
         <input class=search type=search name=query placeholder="search your library">
         <button>Search</button>
       </fieldset>
     </form>
+    <form style="display:flex; justify-content: end; margin-bottom:0" 
+        method=GET 
+        action=${ edit ? '/archive_index.html' : '/edit_index.html' }>
+      <details>
+        <summary style="display:inline-block; cursor: default;">
+          ${ edit ? `
+            <button 
+              style="
+                border: 0; 
+                background: 0; 
+                font-size: x-large;
+                line-height: 0.5;
+              "
+            >
+              &check;
+            </button>`
+              :
+            '&hellip;' 
+          }
+        </summary>
+        <div style="position: absolute;">
+          <button><em style=font-size:x-large;line-height:0.5;>&#9986;</em> edit</button>
+        </div>
+      </details>
+    </form>
     <ul>
     ${
       urls.map(([url,{title, id}]) => `
         <li>
-          ${DEBUG ? id + ':' : ''} <a target=_blank href=${url}>${(title||url).slice(0, MAX_HEAD)}</a>
+          ${ DEBUG ? id + ':' : ''} 
+          <a target=_blank href=${url}>${(title||url).slice(0, MAX_HEAD)}</a>
+          ${ edit ? `
+          <form style=display:contents; method=POST action=/edit_index.html>
+            <input name=url_to_delete type=url hidden value="${url}">
+            <button 
+              style="font-size: smaller; line-height: 0.618;" 
+              type=button 
+              onclick="double_confirm(event);"
+            >
+              X
+            </button>
+          </form>
+          ` : ''}
         </li>
       `).join('\n')
     }
     </ul>
+    ${ edit ? `
+    <script>
+      async function double_confirm(deleteClick) {
+        const form = deleteClick.target.closest('form');
+        let {host} = new URL(form.url_to_delete.value);
+        host = host.replace(/^www\./i, '');
+        const link = form.previousElementSibling;
+        const original = link.style.textDecoration;
+        link.style.textDecoration = StrikeThrough;
+        await sleep(300);
+        const reallyDelete = confirm(
+          \`\n are you sure you want to delete this \n\n  \${host} \n\n from the internet?\n\`
+        );
+        if ( reallyDelete ) return form.submit();
+        link.style.textDecoration = original;
+      }
+    </script>
+    ` : ''}
   `
 }
 
