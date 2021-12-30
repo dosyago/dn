@@ -1,5 +1,4 @@
 - bookmarks
-  - add ability to remove things from index
   - get bookmark folder on Windows, Mac, Debian
   - watch the file (chokidar?) and see when a new Bookmark is added. When it is, index that URL (bookmark mode)
 - complete snippet generation
