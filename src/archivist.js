@@ -136,6 +136,7 @@
     afterPathChanged,
     saveIndex,
     getIndex,
+    deleteFromIndexAndSearch,
     search,
     getDetails,
     isReady,
@@ -673,13 +674,15 @@ export default Archivist;
     return await untilHas(Status, 'loaded');
   }
 
-  async function loadFuzzy() {
-    const fuzzyDocs = Fs.readFileSync(getFuzzyPath()).toString();
-    State.Docs = new Map(JSON.parse(fuzzyDocs).map(doc => {
-      doc.i_url = getURI(doc.url);
-      doc.contentSignature = getContentSig(doc);
-      return [doc.url, doc];
-    }));
+  async function loadFuzzy({fromMemOnly: fromMemOnly = false} = {}) {
+    if ( ! fromMemOnly ) {
+      const fuzzyDocs = Fs.readFileSync(getFuzzyPath()).toString();
+      State.Docs = new Map(JSON.parse(fuzzyDocs).map(doc => {
+        doc.i_url = getURI(doc.url);
+        doc.contentSignature = getContentSig(doc);
+        return [doc.url, doc];
+      }));
+    }
     State.Fuzzy = fuzzy = new Fuzzy({source: [...State.Docs.values()], keys: FUZZ_OPTS.keys});
     DEBUG && console.log('Fuzzy loaded');
   }
@@ -949,6 +952,25 @@ export default Archivist;
       .sort(([,{date:a}], [,{date:b}]) => b-a);
     DEBUG && console.log(idx);
     return idx;
+  }
+
+  async function deleteFromIndexAndSearch(url) {
+    if ( State.Index.has(url) ) {
+      const {id, ndx_id, title, /*date,*/} = State.Index.get(url);
+      // delete index entries
+      State.Index.delete(url); 
+      State.Index.delete(id);
+      State.Index.delete('ndx'+ndx_id);
+      // delete FTS entries (where we can)
+      State.NDX_FTSIndex.remove(ndx_id);
+      State.Flex.remove(id);
+      State.Docs.delete(url);
+      // save it all (to ensure we don't load data from disk that contains delete entries)
+      saveFiles({forceSave:true});
+      // and just rebuild the whole FTS index (where we must)
+      await loadFuzzy({fromMemOnly:true});
+      return {title};
+    }
   }
 
   async function search(query) {
