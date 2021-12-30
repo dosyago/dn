@@ -1,13 +1,18 @@
+- bookmarks
+  - add ability to remove things from index
+  - get bookmark folder on Windows, Mac, Debian
+  - watch the file (chokidar?) and see when a new Bookmark is added. When it is, index that URL (bookmark mode)
 - complete snippet generation
   - improve trigram segmenter: lower max segment length, increase fore and aft context
 - Index.json is randomly getting clobbered sometimes. Investigate and fix. Important because this breaks the whole archive.
   - No idea what's causing this after an small investigation. But I've added a log on saveIndex to see when it writes.
+- publish button
+  - way to selectively add (bookmark mode) 
+  - way to remove (all modes) items from index
 - save trigram index to disk
 - let's not reindex unless we have changed contentSignature
 - let's not write FTS indexes unless we have changed them since last time (UpdatedKeys)
 - result paging
-- publish button
-  - added placeholder on dashboard page
 - We need to not open other localhosts if we already have one open
 - We need to reload on localhost 22120 if we open with that
   - throttle how often this can occur per URL
