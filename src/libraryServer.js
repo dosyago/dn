@@ -224,7 +224,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
       async function double_confirm(deleteClick) {
         const form = deleteClick.target.closest('form');
         let {host} = new URL(form.url_to_delete.value);
-        host = host.replace(/^www\./i, '');
+        host = host.replace(/^www./i, '');
         const link = form.previousElementSibling;
         const original = link.style.textDecoration;
         link.style.textDecoration = StrikeThrough;
