@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/dosyago/22120#readme",
   "dependencies": {
-    "autosuggest-highlight": "^3.2.0",
+    "chokidar": "^3.5.2",
     "chrome-launcher": "latest",
     "express": "latest",
     "flexsearch": "^0.7.21",
