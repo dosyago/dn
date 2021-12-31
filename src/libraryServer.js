@@ -193,7 +193,16 @@ function IndexView(urls, {edit:edit = false} = {}) {
           }
         </summary>
         <div style="position: absolute;">
-          <button><em style=font-size:x-large;line-height:0.5;>&#9986;</em> edit</button>
+          <button><em style="
+              font-size:x-large;
+              line-height:0.5;
+              position: relative;
+              top: 0.185em;
+            ">
+              &#9986;
+             </em>
+             edit
+         </button>
         </div>
       </details>
     </form>
