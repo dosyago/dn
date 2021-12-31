@@ -1,9 +1,9 @@
 import os from 'os';
-import path from 'path';
+import Path from 'path';
 import fs from 'fs';
 import {watch} from 'chokidar';
 
-import {DEBUG} from './common.js';
+import {sleep, DEBUG} from './common.js';
 
 // Chrome user data directories by platform. 
   // Source 1: https://chromium.googlesource.com/chromium/src/+/HEAD/docs/user_data_dir.md 
@@ -17,8 +17,8 @@ const CHOK_OPTS = {
 const UDD_PATHS = {
   'win': '%LOCALAPPDATA%\\Google\\Chrome\\User Data',
   'winxp' : '%USERPROFILE%\\Local Settings\\Application Data\\Google\\Chrome\\User Data',
-  'macos' : path.resolve(os.homedir(), 'Library/Application Support/Google/Chrome'),
-  'nix' : path.resolve(os.homedir(), '.config/google-chrome'),
+  'macos' : Path.resolve(os.homedir(), 'Library/Application Support/Google/Chrome'),
+  'nix' : Path.resolve(os.homedir(), '.config/google-chrome'),
   'chromeos': '/home/chronos',                        /* no support */
   'ios': 'Library/Application Support/Google/Chrome', /* no support */
 };
@@ -30,40 +30,40 @@ const PLAT_TABLE = {
 //const isProfileDir = name => PROFILE_DIR_NAME_REGEX.test(name);
 const BOOKMARK_FILE_NAME_REGEX = /^(Bookmark|Bookmark.bak)/i;
 const isBookmarkFile = name => BOOKMARK_FILE_NAME_REGEX.test(name);
-//const addWatchers = [];
-//const deleteWatchers = [];
 
 test();
 async function test() {
-  for await ( const event of watchBookmarks() ) {
+  for await ( const event of bookmarkChanges() ) {
     console.log({event});
   }
 }
 
-export function watchBookmarks() {
+async function* bookmarkChanges() {
   const rootDir = getProfileRootDir();
+  let change = false;
+  let notifyChange = false;
 
   if ( !fs.existsSync(rootDir) ) {
     throw new TypeError(`Sorry! The directory where we thought the Chrome profile directories may be found (${rootDir}), does not exist. We can't monitor changes to your bookmarks, so Bookmark Select Mode is not supported.`);
   }
 
   const bookmarkWatchGlobs = [
-    path.resolve(rootDir, '**', 'Book*'), 
-    path.resolve(rootDir, '**', 'book*')
+    Path.resolve(rootDir, '**', 'Book*'), 
+    Path.resolve(rootDir, '**', 'book*')
   ];
 
   DEBUG && console.log({bookmarkWatchGlobs});
 
-  const notify = notifier();
   const observer = watch(bookmarkWatchGlobs, CHOK_OPTS);
   observer.on('ready', () => {
     DEBUG && console.log(`Ready to watch`);
   });
   observer.on('all', (event, path) => {
-    DEBUG && console.log(event, path);
-    const name = path.basename(path);
+    const name = Path.basename(path);
     if ( isBookmarkFile(name) ) {
-      notify.next({event, path});
+      DEBUG && console.log(event, path, notifyChange);
+      change = {event, path};
+      notifyChange && notifyChange();
     }
   });
   observer.on('error', error => {
@@ -74,15 +74,9 @@ export function watchBookmarks() {
   process.on('SIGHUP', shutdown);
   process.on('SIGUSR1', shutdown);
 
-  return notify;
-
-  async function* notifier() {
-    while(true) {
-      // change is pushed in
-      const change = yield;
-      // change is taken out
-      yield change;
-    }
+  while(true) {
+    await new Promise(res => notifyChange = res);
+    yield change;
   }
 
   async function shutdown() {
@@ -90,29 +84,9 @@ export function watchBookmarks() {
     await observer.close();
     console.log('No longer observing.');
   }
-
-
-  /*
-  function onAddBookmark(func) {
-    if ( typeof func !== "function" ) {
-      throw new TypeError(`Only functions can be added to listen to the 'AddBookmark' event`);
-    }
-    
-    addWatchers.push(func);
-  }
-
-  function onDeleteBookmark(func) {
-    if ( typeof func !== "function" ) {
-      throw new TypeError(`Only functions can be added to listen to the 'DeleteBookmark' event`);
-    }
-    
-    deleteWatchers.push(func);
-  }
-  */
 }
 
 function getProfileRootDir() {
-  const DEBUG = true;
   const plat = os.platform();
   let name = PLAT_TABLE[plat];
   let rootDir;
@@ -142,7 +116,7 @@ function getProfileRootDir() {
   }
 
   if ( UDD_PATHS[name] ) {
-    rootDir = path.resolve(UDD_PATHS[name]);
+    rootDir = Path.resolve(UDD_PATHS[name]);
   } else {
     throw new TypeError(
       `Sorry! We don't know how to find the default Chrome profile on OS name: ${name}`
