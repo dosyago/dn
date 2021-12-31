@@ -26,12 +26,21 @@ const PLAT_TABLE = {
   'darwin': 'macos',
   'linux': 'nix'
 };
-const PROFILE_REGEX = /^(Default|Profile \d+)$/i;
-const isProfile = name => PROFILE_REGEX.test(name);
+//const PROFILE_DIR_NAME_REGEX = /^(Default|Profile \d+)$/i;
+//const isProfileDir = name => PROFILE_DIR_NAME_REGEX.test(name);
+const BOOKMARK_FILE_NAME_REGEX = /^(Bookmark|Bookmark.bak)/i;
+const isBookmarkFile = name => BOOKMARK_FILE_NAME_REGEX.test(name);
+//const addWatchers = [];
+//const deleteWatchers = [];
 
-findDefaultChromeProfile();
+test();
+async function test() {
+  for await ( const event of watchBookmarks() ) {
+    console.log({event});
+  }
+}
 
-function findDefaultChromeProfile() {
+export function watchBookmarks() {
   const rootDir = getProfileRootDir();
 
   if ( !fs.existsSync(rootDir) ) {
@@ -43,28 +52,63 @@ function findDefaultChromeProfile() {
     path.resolve(rootDir, '**', 'book*')
   ];
 
-  console.log({bookmarkWatchGlobs});
+  DEBUG && console.log({bookmarkWatchGlobs});
 
+  const notify = notifier();
   const observer = watch(bookmarkWatchGlobs, CHOK_OPTS);
   observer.on('ready', () => {
-    console.log(`Ready to watch`);
+    DEBUG && console.log(`Ready to watch`);
   });
   observer.on('all', (event, path) => {
-    console.log(event, path);
+    DEBUG && console.log(event, path);
+    const name = path.basename(path);
+    if ( isBookmarkFile(name) ) {
+      notify.next({event, path});
+    }
   });
   observer.on('error', error => {
-    console.warn(`Watcher error`, error);
+    console.warn(`Bookmark file watcher error`, error);
   });
 
   process.on('SIGINT',  shutdown);
   process.on('SIGHUP', shutdown);
   process.on('SIGUSR1', shutdown);
 
+  return notify;
+
+  async function* notifier() {
+    while(true) {
+      // change is pushed in
+      const change = yield;
+      // change is taken out
+      yield change;
+    }
+  }
+
   async function shutdown() {
     console.log('Shutdown');
     await observer.close();
     console.log('No longer observing.');
   }
+
+
+  /*
+  function onAddBookmark(func) {
+    if ( typeof func !== "function" ) {
+      throw new TypeError(`Only functions can be added to listen to the 'AddBookmark' event`);
+    }
+    
+    addWatchers.push(func);
+  }
+
+  function onDeleteBookmark(func) {
+    if ( typeof func !== "function" ) {
+      throw new TypeError(`Only functions can be added to listen to the 'DeleteBookmark' event`);
+    }
+    
+    deleteWatchers.push(func);
+  }
+  */
 }
 
 function getProfileRootDir() {
@@ -108,6 +152,7 @@ function getProfileRootDir() {
   return rootDir;
 }
 
+/*
 function* profileDirectoryEnumerator(maxN = 9999) {
   let index = 0;  
   while(index <= maxN) {
@@ -115,3 +160,4 @@ function* profileDirectoryEnumerator(maxN = 9999) {
     yield profileDirName;
   }
 }
+*/
