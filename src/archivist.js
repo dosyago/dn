@@ -1369,13 +1369,16 @@ export default Archivist;
 
   function addFrameNode(observedFrame) {
     const {frameId, parentFrameId} = observedFrame;
-    console.log({observedFrame});
     const node = {
       id: frameId,
       parentId: parentFrameId,
       parent: State.FrameNodes.get(parentFrameId)
     };
+
+    DEBUG && console.log({observedFrame});
+
     State.FrameNodes.set(node.id, node);
+
     return node;
   }
 
@@ -1390,9 +1393,10 @@ export default Archivist;
         */
       }
     } = frameNavigated;
-    console.log({frameNavigated});
     const url = urlFragment?.startsWith(rawUrl.slice(0,4)) ? urlFragment : rawUrl;
     let frameNode = State.FrameNodes.get(frameId);
+
+    DEBUG && console.log({frameNavigated});
 
     if ( ! frameNode ) {
       // Note
