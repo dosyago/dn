@@ -1,6 +1,5 @@
-- bookmarks
-  - convert bookmark file event changes into granular bookmark added or bookmark delete changes
 - complete snippet generation
+  - sometimes we are not getting any segments. In that case we should just show the first part of the file. 
   - improve trigram segmenter: lower max segment length, increase fore and aft context
 - Index.json is randomly getting clobbered sometimes. Investigate and fix. Important because this breaks the whole archive.
   - No idea what's causing this after an small investigation. But I've added a log on saveIndex to see when it writes.

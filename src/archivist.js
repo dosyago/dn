@@ -27,7 +27,7 @@
     //import { DocumentIndex } from 'ndx';
     import Fuzzy from 'fz-search';
     //import * as _Fuzzy from './lib/fz.js';
-    import {WordTokenizer, PorterStemmer} from 'natural';
+    import Nat from 'natural';
 
   import args from './args.js';
   import {
@@ -61,6 +61,7 @@
     let Id;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
+    const {WordTokenizer, PorterStemmer} = Nat;
     const Tokenizer = new WordTokenizer();
     const Stemmer = PorterStemmer;
     const words = Tokenizer.tokenize.bind(Tokenizer);
@@ -600,7 +601,7 @@ export default Archivist;
             DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
             response.body = '';
           }
-          await sleep(DELAY);
+          //await sleep(DELAY);
           if ( !isFont && responseErrorReason ) {
             if ( isNavigationRequest ) {
               await send("Fetch.fulfillRequest", {
