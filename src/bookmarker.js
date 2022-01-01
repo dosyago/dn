@@ -240,7 +240,7 @@ function getProfileRootDir() {
     );
   }
 
-  return rootDir;
+  return resolveEnvironmentVariablesToPathSegments(rootDir);
 }
 
 function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
@@ -306,6 +306,13 @@ function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
   }
 
   return map ? changes : urls;
+}
+
+// source: https://stackoverflow.com/a/33017068
+function resolveEnvironmentVariablesToPathSegments(path) {
+  return path.replace(/%([^%]+)%/g, function(_, key) {
+    return process.env[key];
+  });
 }
 
 /*
