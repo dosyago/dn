@@ -249,7 +249,7 @@ export default Archivist;
     await Promise.all(pageTargets.map(attachToTarget));
     await Promise.all(pageTargets.map(reloadIfNotLive));
 
-    //startObservingBookmarkChanges();
+    startObservingBookmarkChanges();
 
     Status.loaded = true;
 
@@ -700,7 +700,6 @@ export default Archivist;
 
     async function startObservingBookmarkChanges() {
       for await ( const change of bookmarkChanges() ) {
-        console.error(`Publish map needs implement!`);
         if ( Mode == 'select' ) {
           switch(change.type) {
             case 'publish-map': {

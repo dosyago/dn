@@ -1,7 +1,6 @@
 import os from 'os';
 import Path from 'path';
 import fs from 'fs';
-import {watch} from 'chokidar';
 
 import {DEBUG as debug} from './common.js';
 
@@ -10,7 +9,8 @@ const DEBUG = debug || false;
   // Source 1: https://chromium.googlesource.com/chromium/src/+/HEAD/docs/user_data_dir.md 
   // Source 2: https://superuser.com/questions/329112/where-are-the-user-profile-directories-of-google-chrome-located-in
 
-const CHOK_OPTS = {
+const FS_WATCH_OPTS = {
+  persistent: false,
 };
 
 // Note:
@@ -27,12 +27,14 @@ const PLAT_TABLE = {
   'darwin': 'macos',
   'linux': 'nix'
 };
-//const PROFILE_DIR_NAME_REGEX = /^(Default|Profile \d+)$/i;
-//const isProfileDir = name => PROFILE_DIR_NAME_REGEX.test(name);
+const PROFILE_DIR_NAME_REGEX = /^(Default|Profile \d+)$/i;
+const isProfileDir = name => PROFILE_DIR_NAME_REGEX.test(name);
 const BOOKMARK_FILE_NAME_REGEX = /^Bookmarks(.bak)?$/i;
 const isBookmarkFile = name => BOOKMARK_FILE_NAME_REGEX.test(name);
 const State = {
-  books: new Map(),
+  books: {
+
+  }
 };
 
 export async function* bookmarkChanges() {
@@ -44,41 +46,82 @@ export async function* bookmarkChanges() {
     }
 
   // state constants and variables (including chokidar file glob observer)
-    const bookmarkWatchGlobs = [
-      Path.resolve(rootDir, '**', 'Book*'), 
-      Path.resolve(rootDir, '**', 'book*')
-    ];
-    const observer = watch(bookmarkWatchGlobs, CHOK_OPTS);
+    const observers = [];
     const ps = [];
     let change = false;
-    let publish = false;
     let notifyChange = false;
-    let shuttingDown = false;
     let stopLooping = false;
+    let shuttingDown = false;
 
-  // listen for all events from the observer
-    observer.on('ready', () => {
-      DEBUG && console.log(`Ready to watch`);
-      // only publish changes, ie, events after the initial scan
-      publish = true;
-    });
-    observer.on('all', (event, path) => {
-      // listen to everything
-      const name = Path.basename(path);
-      if ( isBookmarkFile(name) ) {
-        // but only act if it is a bookmark file
-        DEBUG && console.log(event, path, notifyChange);
-        // save the event type and file it happened to
-        change = {event, path};
-        // drop the most recently pushed promise from our bookkeeping list
-        ps.pop();
-        // resolve the promise in the wait loop to process the bookmark file and emit the changes
-        notifyChange && notifyChange();
+  // create sufficient observers
+    const files = fs.readdirSync(rootDir, {withFileTypes:true}).reduce((Files, dirent) => {
+      if ( dirent.isDirectory() && isProfileDir(dirent.name) ) {
+        const filePath = Path.resolve(rootDir, dirent.name, 'Bookmarks');
+
+        if ( fs.existsSync(filePath) ) {
+          Files.push(filePath); 
+        }
       }
-    });
-    observer.on('error', error => {
-      console.warn(`Bookmark file watcher error`, error);
-    });
+      return Files;
+    }, []);
+    for( const filePath of files ) {
+      // first read it in
+        const key = `published-${filePath}`;
+        {
+          const data = fs.readFileSync(filePath);
+          const jData = JSON.parse(data);
+          State.books[filePath] = flatten(jData, {toMap:true});
+        }
+
+      const observer = fs.watch(filePath, FS_WATCH_OPTS);
+      // Note
+        // allow the parent process to exit 
+        //even if observer is still active somehow
+        observer.unref();
+
+      // listen for all events from the observer
+        observer.on('change', ({eventType: event, filename}) => {
+          // listen to everything
+          const path = filename || filePath;
+          const name = Path.basename(path);
+          if ( isBookmarkFile(name) ) {
+            // if it's first time and we haven't published map, then do
+              let publishMap = false;
+              if ( !State.books[key] ) {
+                State.books[key] = true;
+                publishMap = true;
+              }
+            // but only act if it is a bookmark file
+            DEBUG && console.log(event, path, notifyChange);
+            // save the event type and file it happened to
+            change = {event, path, publishMap};
+            // drop the most recently pushed promise from our bookkeeping list
+            ps.pop();
+            // resolve the promise in the wait loop to process the bookmark file and emit the changes
+            notifyChange && notifyChange();
+          }
+        });
+        observer.on('error', error => {
+          console.warn(`Bookmark file observer for ${filePath} error`, error);
+          observers.slice(observers.indexOf(observer), 1);
+          if ( observers.length ) {
+            notifyChange && notifyChange();
+          } else {
+            stopLooping && stopLooping();
+          }
+        });
+        observer.on('close', () => {
+          DEBUG && console.info(`Observer for ${filePath} closed`);
+          observers.slice(observers.indexOf(observer), 1);
+          if ( observers.length ) {
+            notifyChange && notifyChange();
+          } else {
+            stopLooping && stopLooping();
+          }
+        });
+
+      observers.push(observer);
+    }
 
   // make sure we kill the watcher on process restart or shutdown
     process.on('SIGTERM', shutdown);
@@ -96,16 +139,21 @@ export async function* bookmarkChanges() {
       // only do if the change is there (first time it won't be because
       // we haven't yielded out (async or yield) yet)
       if ( change && !change.path.endsWith('bak') ) {
-        const {path:file} = change;
+        const {path:file, publishMap} = change;
         change = false;
 
         const data = fs.readFileSync(file);
         const jData = JSON.parse(data);
-        const changes = flatten(jData, {toMap:true, map: State.books});
+        const changes = flatten(jData, {toMap:true, map: State.books[file]});
 
-        if ( publish ) {
-          for( const changeEvent of changes ) yield changeEvent;
+        if ( publishMap ) {
+          yield {
+            type: 'publish-map',
+            map: State.books[file]
+          };
         }
+
+        for( const changeEvent of changes ) yield changeEvent;
       }
 
     // wait for the next change
@@ -123,23 +171,26 @@ export async function* bookmarkChanges() {
       }
   }
 
-  // clean up any outstanding waiting promises
-    if ( ps.length ) {
-      console.info(`Cleaning up some outstanding waiting promises...`);
-      ps.forEach(({rej}) => {
-        /* eslint-disable no-empty */
-        try { rej(); } finally {}
-        /* eslint-enable no-empty */
-      });
-    }
+  shutdown();
 
   async function shutdown() {
     if ( shuttingDown ) return;
     shuttingDown = true;
     console.log('Bookmark observer shutting down...');
-    observer.unwatch(bookmarkWatchGlobs);
+    // clean up any outstanding waiting promises
+    while ( ps.length ) {
+      /* eslint-disable no-empty */
+      try { ps.pop().rej(); } finally {}
+      /* eslint-enable no-empty */
+    }
+    // stop the waiting loop
     stopLooping && setTimeout(() => stopLooping('bookmark watching stopped'), 0);
-    await observer.close();
+    // clean up any observers
+    while(observers.length) {
+      /* eslint-disable no-empty */
+      try { observers.pop().close(); } finally {}
+      /* eslint-enable no-empty */
+    }
     console.log('Bookmark observer shut down cleanly.');
   }
 }
