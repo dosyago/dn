@@ -84,6 +84,7 @@ export async function* bookmarkChanges() {
           // listen to everything
           const path = filename || filePath;
           const name = Path.basename(path);
+          console.log(event, filename);
           if ( isBookmarkFile(name) ) {
             // if it's first time and we haven't published map, then do
               let publishMap = false;
