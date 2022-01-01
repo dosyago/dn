@@ -225,7 +225,6 @@ export default Archivist;
       throw new TypeError(`Must specify mode, and must be one of: save, serve, select`);
     }
 
-    //on("Target.targetInfoChanged", displayTargetInfo);
     on("Target.targetInfoChanged", attachToTarget);
     on("Target.targetInfoChanged", reloadIfNotLive);
     on("Target.targetInfoChanged", updateTargetInfo);
@@ -294,35 +293,28 @@ export default Archivist;
     }
 
     async function reindexOnContentChange({titleChange, textChange}) {
-      let latestTargetInfo;
-      if ( titleChange ) {
-        const {currentTitle, sessionId} = titleChange;
-        DEBUG && console.log('Received titleChange', titleChange);
-        latestTargetInfo = clone(await untilHas(Targets, sessionId));
-        latestTargetInfo.title = currentTitle;
-        Targets.set(sessionId, latestTargetInfo);
-        DEBUG && console.log('Updated stored target info', latestTargetInfo);
-      } else if ( textChange ) {
-        const {sessionId} = textChange;
-        DEBUG && console.log(
-          `Will reindex because we were told text content maybe changed.`, 
-          textChange
-        );
-        latestTargetInfo = clone(await untilHas(Targets, sessionId));
-      }
-      if ( latestTargetInfo ) {
-        indexURL({targetInfo:latestTargetInfo});
-      }
-    }
-
-    /*
-    function displayTargetInfo({targetInfo}) {
-      const DEBUG = true;
-      if ( targetInfo.type === 'page' ) {
-        DEBUG && console.log("Target info", JSON.stringify(targetInfo, null, 2));
+      const data = titleChange || textChange;
+      if ( data ) {
+        const {sessionId} = data;
+        const latestTargetInfo = clone(await untilHas(Targets, sessionId));
+        if ( titleChange ) {
+          const {currentTitle} = titleChange;
+          DEBUG && console.log('Received titleChange', titleChange);
+          latestTargetInfo.title = currentTitle;
+          Targets.set(sessionId, latestTargetInfo);
+          DEBUG && console.log('Updated stored target info', latestTargetInfo);
+        } else {
+          DEBUG && console.log('Received textChange', textChange);
+        }
+        if ( ! dontCache(latestTargetInfo) ) {
+          DEBUG && console.log(
+            `Will reindex because we were told ${titleChange ? 'title' : 'text'} content maybe changed.`, 
+            data
+          );
+          indexURL({targetInfo:latestTargetInfo});
+        }
       }
     }
-    */
 
     function updateTargetInfo({targetInfo}) {
       if ( targetInfo.type === 'page' ) {
@@ -351,7 +343,6 @@ export default Archivist;
         const {url, targetId} = targetInfo;
         const sessionId = State.Sessions.get(targetId);
         if ( !!sessionId && !State.ConfirmedInstalls.has(sessionId) ) {
-          const DEBUG = true;
           DEBUG && console.log({
             reloadingAsNotConfirmedInstalled:{
               url, 
@@ -595,7 +586,7 @@ export default Archivist;
         } else if ( Mode == 'save' ) {
           saveIt = true;
         }
-        console.log({mode, saveIt});
+        console.log({mode, saveIt, BMarks:State.BMarks});
         if ( saveIt ) {
           const response = {key, responseCode: responseStatusCode, responseHeaders};
           const resp = await getBody({requestId, responseStatusCode});
@@ -659,6 +650,7 @@ export default Archivist;
     function dontCache(request) {
       if ( ! request.url ) return true;
       if ( neverCache(request.url) ) return true;
+      if ( Mode == 'select' && ! State.BMarks.has(request.url) ) return true;
       const url = new URL(request.url);
       return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
     }
@@ -708,7 +700,6 @@ export default Archivist;
     }
 
     async function startObservingBookmarkChanges() {
-      return;
       for await ( const change of bookmarkChanges() ) {
         console.error(`Publish map needs implement!`);
         if ( Mode == 'select' ) {
@@ -719,9 +710,11 @@ export default Archivist;
                 DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
               } break;
             case 'new': {
+                BMarks.set(change.url, change);
                 archiveAndIndexURL(change.url);
               } break;
             case 'delete': {
+                BMarks.delete(change.url);
                 deleteFromIndexAndSearch(change.url);
               } break;
             default: {
@@ -733,15 +726,14 @@ export default Archivist;
     }
 
     async function archiveAndIndexURL(url) {
-      const DEBUG = true;
       if ( Mode !== 'select' ) {
         throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
       }
-      if ( State.BMarks.has(url) && ! dontCache({url}) ) {
-        const targs = await send("Targets.getTargets", {});
+      if ( ! dontCache({url}) ) {
+        const {targetInfos:targs} = await send("Target.getTargets", {});
         const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
         if ( targets.has(url) ) {
-          const targetInfo = Targets.get(url);
+          const targetInfo = targets.get(url);
           const sessionId = State.Sessions.get(targetInfo.targetId);
           send("Page.stopLoading", {}, sessionId);
           await send("Page.reload", {}, sessionId);
@@ -1474,13 +1466,14 @@ export default Archivist;
   function getRootFrameURL(frameId) {
     let frameNode = State.FrameNodes.get(frameId);
     if ( ! frameNode ) {
-      throw new TypeError(
+      console.warn(new TypeError(
         `Sanity check failed: frameId ${
           frameId
         } is not in our FrameNodes data, which currently has ${
           State.FrameNodes.size
         } entries.`
-      );
+      ));
+      return;
     }
     if ( frameNode.id !== frameId ) {
       throw new TypeError(
