@@ -96,7 +96,6 @@ function addHandlers() {
   app.post('/edit_index.html', async (req, res) => {
     const {url_to_delete} = req.body;
     await Archivist.deleteFromIndexAndSearch(url_to_delete);
-    const index = Archivist.getIndex();
     res.redirect('/edit_index.html');
   });
 
