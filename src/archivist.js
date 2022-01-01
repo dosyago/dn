@@ -379,13 +379,11 @@ export default Archivist;
 
       const {targetId, url} = targetInfo;
 
-      if ( Mode == 'serve' ) return;
+      const installUneeded = dontInstall(targetInfo) ||
+        State.Installations.has(sessionId)
+      ;
 
-      if ( dontInstall(targetInfo) ) return;
-
-      if ( targetInfo.type != 'page' ) return;
-
-      if ( State.Installations.has(sessionId) ) return;
+      if ( installUneeded ) return;
 
       DEBUG && console.log("installForSession running on target " + targetId);
 
@@ -945,8 +943,8 @@ export default Archivist;
   function getMode() { return Mode; }
 
   function saveFiles({useState: useState = false, forceSave:forceSave = false} = {}) {
-    clearSavers();
     if ( State.Index.size === 0 ) return;
+    clearSavers();
     State.Index.set(NDX_ID_KEY, NDXId);
     if ( useState ) {
       // saves the old cache path
@@ -962,11 +960,10 @@ export default Archivist;
 
   async function changeMode(mode) { 
     const DEBUG = true;
-    DEBUG && console.log({modeChange:mode});
     saveFiles({forceSave:true});
-    Close && Close();
     Mode = mode;
     await collect({chrome_port:args.chrome_port, mode});
+    DEBUG && console.log('Mode changed', Mode);
   }
 
   function getDetails(id) {
