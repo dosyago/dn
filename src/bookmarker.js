@@ -159,12 +159,14 @@ function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
             if ( urls.has(url) ) {
               const {name:oldName} = urls.get(url);
               if ( name !== oldName ) {
-                changes.push({
-                  type: "Title updated",
-                  url,
-                  oldName, 
-                  name
-                });
+                if ( !urlSet.has(url) ) {
+                  changes.push({
+                    type: "Title updated",
+                    url,
+                    oldName, 
+                    name
+                  });
+                }
               }
             } else {
               changes.push({
@@ -172,9 +174,11 @@ function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
                 name, url
               });
             }
-            urlSet.add(url);
           } 
-          urls.set(url, next);
+          if ( !urlSet.has(url) ) {
+            urls.set(url, next);
+          }
+          urlSet.add(url);
         } else {
           urls.push(next);
         }
