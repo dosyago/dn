@@ -3,7 +3,7 @@ import Path from 'path';
 import fs from 'fs';
 import {watch} from 'chokidar';
 
-import {sleep, DEBUG} from './common.js';
+import {DEBUG} from './common.js';
 
 // Chrome user data directories by platform. 
   // Source 1: https://chromium.googlesource.com/chromium/src/+/HEAD/docs/user_data_dir.md 
@@ -34,14 +34,7 @@ const State = {
   books: new Map(),
 };
 
-test();
-async function test() {
-  for await ( const change of bookmarkChanges() ) {
-    console.log(change);
-  }
-}
-
-async function* bookmarkChanges() {
+export async function* bookmarkChanges() {
   const rootDir = getProfileRootDir();
   let change = false;
   let notifyChange = false;
@@ -80,7 +73,7 @@ async function* bookmarkChanges() {
 
   while(true) {
     await new Promise(res => notifyChange = res);
-    const {path:file, event} = change;
+    const {path:file} = change;
     if ( file.endsWith('bak') ) continue;
 
     const data = fs.readFileSync(file);
@@ -201,6 +194,15 @@ function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
 
   return map ? changes : urls;
 }
+
+/*
+test();
+async function test() {
+  for await ( const change of bookmarkChanges() ) {
+    console.log(change);
+  }
+}
+*/
 
 
 /*
