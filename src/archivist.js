@@ -582,11 +582,10 @@ export default Archivist;
           const rootFrameURL = getRootFrameURL(frameId);
           const frameDescendsFromBookmarkedURLFrame = BMarks.has(rootFrameURL);
           saveIt = frameDescendsFromBookmarkedURLFrame;
-          DEBUG && console.log({rootFrameURL, frameId, saveIt});
+          DEBUG && console.log({rootFrameURL, frameId, mode, saveIt, BMarks:State.BMarks});
         } else if ( Mode == 'save' ) {
           saveIt = true;
         }
-        console.log({mode, saveIt, BMarks:State.BMarks});
         if ( saveIt ) {
           const response = {key, responseCode: responseStatusCode, responseHeaders};
           const resp = await getBody({requestId, responseStatusCode});
