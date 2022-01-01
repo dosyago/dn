@@ -1383,6 +1383,16 @@ export default Archivist;
     } = frameNavigated;
     const frameNode = State.FrameNodes.get(frameId);
 
+    if ( ! frameNode ) {
+      throw new TypeError(
+        `Sanity check failed: frameId ${
+          frameId
+        } is not in our FrameNodes data, which currently has ${
+          State.FrameNodes.size
+        } entries.`
+      );
+    }
+
     if ( frameNode.id !== frameId ) {
       throw new TypeError(
         `Sanity check failed: Child frameId ${
