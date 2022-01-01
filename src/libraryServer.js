@@ -102,7 +102,7 @@ function addHandlers() {
 
   app.post('/mode', async (req, res) => {
     const {mode} = req.body;
-    await Archivist.changeMode(mode);
+    Archivist.changeMode(mode);
     res.end(`Mode set to ${mode}`);
   });
 
