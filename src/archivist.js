@@ -107,6 +107,7 @@
     loaded: false
   };
   const BMarks = new Map();
+  const FrameNodes = new Map();
   const Targets = new Map();
   const UpdatedKeys = new Set();
   const Cache = new Map();
@@ -114,6 +115,7 @@
   const Indexing = new Set();
   const BLANK_STATE = {
     BMarks,
+    FrameNodes,
     Docs,
     Indexing,
     Cache, 
@@ -140,7 +142,6 @@
     saveIndex,
     getIndex,
     deleteFromIndexAndSearch,
-    archiveAndIndexURL,
     search,
     getDetails,
     isReady,
@@ -385,6 +386,10 @@ export default Archivist;
         await send("Page.enable", {}, sessionId);
         await send("DOMSnapshot.enable", {}, sessionId);
 
+        on("Page.frameNavigated", updateFrameNode);
+        on("Page.frameAttached", addFrameNode);
+        // on("Page.frameDetached", updateFrameNodes); // necessary? maybe not 
+
         await send("Page.addScriptToEvaluateOnNewDocument", {
           source: getInjection({sessionId}),
           worldName: "Context-22120-Indexing"
@@ -541,6 +546,7 @@ export default Archivist;
     async function cacheRequest(pausedRequest) {
       const {
         requestId, request, resourceType, 
+        frameId,
         responseStatusCode, responseHeaders, responseErrorReason
       } = pausedRequest;
       const isNavigationRequest = resourceType == "Document";
@@ -566,48 +572,57 @@ export default Archivist;
             requestId, ...UNCACHED
           });
         } 
-      } else if ( Mode == 'save' ) {
-        const response = {key, responseCode: responseStatusCode, responseHeaders};
-        const resp = await getBody({requestId, responseStatusCode});
-        if ( resp ) {
-          let {body, base64Encoded} = resp;
-          if ( ! base64Encoded ) {
-            body = b64(body);
-          }
-          response.body = body;
-          const responsePath = await saveResponseData(key, request.url, response);
-          State.Cache.set(key, responsePath);
-        } else {
-          DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
-          response.body = '';
+      } else {
+        let saveIt = false;
+        if ( Mode == 'select' ) {
+          const frameDescendsFromBookmarkedURLFrame = BMarks.has(getRootFrameURL(frameId));
+          saveIt = frameDescendsFromBookmarkedURLFrame;
+        } else if ( Mode == 'save' ) {
+          saveIt = true;
         }
-        await sleep(DELAY);
-        if ( !isFont && responseErrorReason ) {
-          if ( isNavigationRequest ) {
-            await send("Fetch.fulfillRequest", {
-                requestId,
-                responseHeaders: BLOCKED_HEADERS,
-                responseCode: BLOCKED_CODE,
-                body: Buffer.from(responseErrorReason).toString("base64"),
-              },
-            );
+        if ( saveIt ) {
+          const response = {key, responseCode: responseStatusCode, responseHeaders};
+          const resp = await getBody({requestId, responseStatusCode});
+          if ( resp ) {
+            let {body, base64Encoded} = resp;
+            if ( ! base64Encoded ) {
+              body = b64(body);
+            }
+            response.body = body;
+            const responsePath = await saveResponseData(key, request.url, response);
+            State.Cache.set(key, responsePath);
           } else {
-            await send("Fetch.failRequest", {
-                requestId,
-                errorReason: responseErrorReason
-              },
-            );
+            DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
+            response.body = '';
           }
-        } else {
-          try {
-            await send("Fetch.continueRequest", {
-                requestId,
-              },
-            );
-          } catch(e) {
-            console.warn("Issue with continuing request", e);
+          await sleep(DELAY);
+          if ( !isFont && responseErrorReason ) {
+            if ( isNavigationRequest ) {
+              await send("Fetch.fulfillRequest", {
+                  requestId,
+                  responseHeaders: BLOCKED_HEADERS,
+                  responseCode: BLOCKED_CODE,
+                  body: Buffer.from(responseErrorReason).toString("base64"),
+                },
+              );
+            } else {
+              await send("Fetch.failRequest", {
+                  requestId,
+                  errorReason: responseErrorReason
+                },
+              );
+            }
+          } else {
+            try {
+              await send("Fetch.continueRequest", {
+                  requestId,
+                },
+              );
+            } catch(e) {
+              console.warn("Issue with continuing request", e);
+            }
           }
-        }
+        } 
       }
     }
 
@@ -679,14 +694,51 @@ export default Archivist;
     async function startObservingBookmarkChanges() {
       const DEBUG = true;
       for await ( const change of bookmarkChanges() ) {
-        if ( change.type === 'publish-map' ) {
-          State.BMarks = change.map;
-          DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
-        } else {
-          console.log(change);
+        console.error(`Publish map needs implement!`);
+        switch(change.type) {
+          case 'publish-map': {
+              // clone the map to avoid mutable shared data
+              State.BMarks = new Map([...change.map.entries()]);
+              DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
+            } break;
+          case 'new': {
+              archiveAndIndexURL(change.url);
+            } break;
+          case 'delete': {
+              deleteFromIndexAndSearch(change.url);
+            } break;
+          default: {
+            console.log(`We don't do anything about this bookmark change, currently`, change);
+          } break;
         }
       }
     }
+
+    async function archiveAndIndexURL(url) {
+      const DEBUG = true;
+      if ( Mode !== 'select' ) {
+        throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
+      }
+      if ( State.BMarks.has(url) ) {
+        const targs = await send("Targets.getTargets", {});
+        const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
+        if ( targets.has(url) ) {
+          const targetInfo = Targets.get(url);
+          const sessionId = Sessions.get(targetInfo.targetId);
+          send("Page.stopLoading", {}, sessionId);
+          await send("Page.reload", {}, sessionId);
+        }
+      } else {
+        DEBUG && console.warn(
+          `archiveAndIndexURL called in mode ${
+            Mode
+           } for URL ${
+            url
+           } but that URL is not in our Bookmarks list.`
+        );
+      }
+    }
+
   }
 
 // helpers
@@ -990,31 +1042,6 @@ export default Archivist;
       // and just rebuild the whole FTS index (where we must)
       await loadFuzzy({fromMemOnly:true});
       return {title};
-    }
-  }
-
-  async function archiveAndIndexURL(url) {
-    const DEBUG = true;
-    if ( Mode !== 'select' ) {
-      throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
-    }
-    if ( State.BMarks.has(url) ) {
-      const targs = await send("Targets.getTargets", {});
-      const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...test}]));
-      if ( targets.has(url) ) {
-        const targetInfo = Targets.get(url);
-        const sessionId = Sessions.get(targetInfo.targetId);
-        send("Page.stopLoading", {}, sessionId);
-        await send("Page.reload", {}, sessionId);
-      }
-    } else {
-      DEBUG && console.warn(
-        `archiveAndIndexURL called in mode ${
-          Mode
-         } for URL ${
-          url
-         } but that URL is not in our Bookmarks list.`
-      );
     }
   }
 
@@ -1333,3 +1360,100 @@ export default Archivist;
     return args.flex_fts_index_dir(basePath);
   }
 
+  function addFrameNode(frameAttached) {
+    const {frameId, parentFrameId} = frameAttached;
+    const node = {
+      id: frameId,
+      parentId: parentFrameId,
+      parent: State.FrameNodes.get(parentFrameId)
+    };
+    State.FrameNodes.set(node.id, node);
+  }
+
+  function updateFrameNode(frameNavigated) {
+    const {
+      frame: {
+        id: frameId, 
+        parentId, url, urlFragment, 
+        /*
+        domainAndRegistry, unreachableUrl, 
+        adFrameStatus
+        */
+      }
+    } = frameNavigated;
+    const frameNode = State.FrameNodes.get(frameId);
+
+    if ( frameNode.id !== frameId ) {
+      throw new TypeError(
+        `Sanity check failed: Child frameId ${
+          frameNode.frameId
+        } was supposed to be ${
+          frameId
+        }`
+      );
+    }
+
+    // Note:
+      // use the urlFragment (a URL + the hash fragment identifier) 
+      // only if it's actually a URL
+
+    // Update frame node url (and possible parent)
+      frameNode.url = urlFragment?.startsWith(url.slice(0,4)) ? urlFragment : url;
+      if ( parentId !== frameNode.parentId ) {
+        console.info(`Interesting. Frame parent changed from ${frameNode.parentId} to ${parentId}`);
+        frameNode.parentId = parentId;
+        frameNode.parent = State.FrameNodes.get(parentId);
+        if ( ! frameNode.parent ) {
+          throw new TypeError(
+            `!! FrameNode ${
+              frameId
+            } uses parentId ${
+              parentId
+            } but we don't have any record of ${
+              parentId
+            } in out FrameNodes data`
+          );
+        }
+      }
+
+    // comment out these details but reserve for possible future use
+      /*
+      frameNode.detail = {
+        unreachableUrl, urlFragment,  
+        domainAndRegistry, adFrameStatus
+      };
+      */
+  }
+
+  /*
+  function removeFrameNode(frameDetached) {
+    const {frameId, reason} = frameDetached;
+    throw new TypeError(`removeFrameNode is not implemented`);
+  }
+  */
+
+  function getRootFrameURL(frameId) {
+    let childNode = State.FrameNodes.get(frameId);
+    if ( ! childNode ) {
+      throw new TypeError(
+        `Sanity check failed: frameId ${
+          frameId
+        } is not in our FrameNodes data, which currently has ${
+          State.FrameNodes.size
+        } entries.`
+      );
+    }
+    if ( childNode.frameId !== frameId ) {
+      throw new TypeError(
+        `Sanity check failed: Child frameId ${
+          childNode.frameId
+        } was supposed to be ${
+          frameId
+        }`
+      );
+    }
+    while(childNode.parent) {
+      childNode = childNode.parent;
+    }
+    return childNode.url;
+  }
