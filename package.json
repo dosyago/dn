@@ -38,7 +38,6 @@
   },
   "homepage": "https://github.com/dosyago/22120#readme",
   "dependencies": {
-    "chokidar": "^3.5.2",
     "chrome-launcher": "latest",
     "express": "latest",
     "flexsearch": "^0.7.21",
