@@ -1,6 +1,6 @@
 {
   "name": "archivist1",
-  "version": "2.2.1",
+  "version": "2.1.1",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
@@ -16,7 +16,8 @@
     "test": "nodemon src/app.js",
     "save": "nodemon src/app.js 22120 save",
     "serve": "nodemon src/app.js 22120 serve",
-    "lint": "watch -n 5 npx eslint ."
+    "lint": "watch -n 5 npx eslint .",
+    "test-hl": "node src/highlighter.js"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
   },
   "homepage": "https://github.com/dosyago/22120#readme",
   "dependencies": {
+    "autosuggest-highlight": "^3.2.0",
     "chrome-launcher": "latest",
     "express": "latest",
     "flexsearch": "^0.7.21",
