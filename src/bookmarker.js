@@ -28,13 +28,29 @@ const PLAT_TABLE = {
 };
 //const PROFILE_DIR_NAME_REGEX = /^(Default|Profile \d+)$/i;
 //const isProfileDir = name => PROFILE_DIR_NAME_REGEX.test(name);
-const BOOKMARK_FILE_NAME_REGEX = /^(Bookmark|Bookmark.bak)/i;
+const BOOKMARK_FILE_NAME_REGEX = /^Bookmarks(.bak)?$/i;
 const isBookmarkFile = name => BOOKMARK_FILE_NAME_REGEX.test(name);
+const State = {
+  books: new Map(),
+};
 
 test();
 async function test() {
-  for await ( const event of bookmarkChanges() ) {
-    console.log({event});
+  for await ( const {path: file,event} of bookmarkChanges() ) {
+    if ( file.endsWith('bak') ) continue;
+    switch(event) {
+      default: {
+          try {
+            const data = fs.readFileSync(file);
+            const jData = JSON.parse(data);
+            const changes = flatten(jData, {toMap:true, map: State.books});
+            console.log(changes.length);
+            console.log(changes.slice(0,10));
+          } catch(e) {
+            console.warn(`Error reading file ${file} on event ${event}:`, e);
+          }
+        } break;
+    }
   }
 }
 
@@ -73,6 +89,7 @@ async function* bookmarkChanges() {
   process.on('SIGINT',  shutdown);
   process.on('SIGHUP', shutdown);
   process.on('SIGUSR1', shutdown);
+  process.on('SIGUSR2', shutdown);
 
   while(true) {
     await new Promise(res => notifyChange = res);
@@ -125,6 +142,68 @@ function getProfileRootDir() {
 
   return rootDir;
 }
+
+function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
+  const nodes = [...Object.values(bookmarkObj.roots)];
+  const urls = toMap? (map || new Map()) : [];
+  const urlSet = new Set();
+  const changes = [];
+
+  while(nodes.length) {
+    const next = nodes.pop();
+    const {name, type, url} = next;
+    switch(type) {
+      case "url":
+        if ( toMap ) {
+          if ( map ) {
+            if ( urls.has(url) ) {
+              const {name:oldName} = urls.get(url);
+              if ( name !== oldName ) {
+                changes.push({
+                  type: "Title updated",
+                  url,
+                  oldName, 
+                  name
+                });
+              }
+            } else {
+              changes.push({
+                type: "new",
+                name, url
+              });
+            }
+            urlSet.add(url);
+          } 
+          urls.set(url, next);
+        } else {
+          urls.push(next);
+        }
+        break;
+      case "folder":
+        nodes.push(...next.children);
+        break;
+      default:
+        console.info("New type", type, next);
+        break;
+      
+    }
+  }
+
+  if (map) {
+    [...map.keys()].forEach(url => {
+      if ( !urlSet.has(url) ) {
+        changes.push({
+          type: "delete",
+          url
+        });
+        map.delete(url);
+      }
+    });
+  }
+
+  return map ? changes : urls;
+}
+
 
 /*
 function* profileDirectoryEnumerator(maxN = 9999) {

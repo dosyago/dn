@@ -17,7 +17,8 @@
     "save": "nodemon src/app.js 22120 save",
     "serve": "nodemon src/app.js 22120 serve",
     "lint": "watch -n 5 npx eslint .",
-    "test-hl": "node src/highlighter.js"
+    "test-hl": "node src/highlighter.js",
+    "test-bk": "nodemon src/bookmarker.js"
   },
   "repository": {
     "type": "git",
