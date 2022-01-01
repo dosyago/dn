@@ -97,13 +97,14 @@ function addHandlers() {
     const {url_to_delete} = req.body;
     await Archivist.deleteFromIndexAndSearch(url_to_delete);
     const index = Archivist.getIndex();
-    res.end(IndexView(index));
+    res.redirect('/edit_index.html');
   });
 
   app.post('/mode', async (req, res) => {
     const {mode} = req.body;
     Archivist.changeMode(mode);
-    res.end(`Mode set to ${mode}`);
+    //res.end(`Mode set to ${mode}`);
+    res.redirect('/');
   });
 
   app.get('/base_path', async (req, res) => {
@@ -126,9 +127,11 @@ function addHandlers() {
         start({server_port:port});
         console.log(`Server restarting.`);
       });
-      res.end(`Base path set to ${base_path} and saved to preferences. See console for progress. Server restarting...`);
+      //res.end(`Base path set to ${base_path} and saved to preferences. See console for progress. Server restarting...`);
+      res.redirect('/#new_base_path');
     } else {
-      res.end(`Base path not changed.`);
+      //res.end(`Base path did not change.`);
+      res.redirect('/');
     }
   });
 }
@@ -232,12 +235,12 @@ function IndexView(urls, {edit:edit = false} = {}) {
     <script>
       async function double_confirm(deleteClick) {
         const form = deleteClick.target.closest('form');
-        let {host} = new URL(form.url_to_delete.value);
-        host = host.replace(/^www./i, '');
         const link = form.previousElementSibling;
         const original = link.style.textDecoration;
         link.style.textDecoration = StrikeThrough;
-        await sleep(300);
+        let {host} = new URL(form.url_to_delete.value);
+        host = host.replace(/^www./i, '');
+        await sleep(200);
         const reallyDelete = confirm(
           \`\n are you sure you want to delete this \n\n  \${host} \n\n from the internet?\n\`
         );

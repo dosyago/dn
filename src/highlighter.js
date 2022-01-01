@@ -217,7 +217,7 @@ export function trilight(query, doc, {
   DEBUG && console.log(segments, textSegments);
 
   if ( textSegments.length === 0 ) {
-    console.log({query, doc, maxLength, ngramSize, maxSegmentSize, 
+    DEBUG && console.log({query, doc, maxLength, ngramSize, maxSegmentSize, 
       trigrams,
       index,
       entries,

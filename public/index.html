@@ -43,7 +43,7 @@
       {
         const form = document.currentScript.closest('form');
         form.notification.value = "Getting current mode...";
-        setTimeout(showCurrentMode, 1000);
+        setTimeout(showCurrentMode, 300);
 
         async function showCurrentMode() {
           const mode = await fetch('/mode').then(r => r.text());
@@ -56,7 +56,7 @@
 </form>
 <form method=POST action=/base_path>
   <fieldset>
-    <legend>File system path of archive</legend>
+    <legend id=new_base_path>File system path of archive</legend>
     <p>
       Set the path to where your archive folder will go
       <br>
