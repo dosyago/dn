@@ -36,21 +36,8 @@ const State = {
 
 test();
 async function test() {
-  for await ( const {path: file,event} of bookmarkChanges() ) {
-    if ( file.endsWith('bak') ) continue;
-    switch(event) {
-      default: {
-          try {
-            const data = fs.readFileSync(file);
-            const jData = JSON.parse(data);
-            const changes = flatten(jData, {toMap:true, map: State.books});
-            console.log(changes.length);
-            console.log(changes.slice(0,10));
-          } catch(e) {
-            console.warn(`Error reading file ${file} on event ${event}:`, e);
-          }
-        } break;
-    }
+  for await ( const change of bookmarkChanges() ) {
+    console.log(change);
   }
 }
 
@@ -93,7 +80,14 @@ async function* bookmarkChanges() {
 
   while(true) {
     await new Promise(res => notifyChange = res);
-    yield change;
+    const {path:file, event} = change;
+    if ( file.endsWith('bak') ) continue;
+
+    const data = fs.readFileSync(file);
+    const jData = JSON.parse(data);
+    const changes = flatten(jData, {toMap:true, map: State.books});
+
+    for( const change of changes ) yield change;
   }
 
   async function shutdown() {
