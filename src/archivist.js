@@ -31,7 +31,7 @@
 
   import args from './args.js';
   import {
-    sleep, DEBUG, 
+    sleep, DEBUG as debug, 
     MAX_TITLE_LENGTH,
     MAX_URL_LENGTH,
     clone,
@@ -43,6 +43,7 @@
   import {bookmarkChanges} from './bookmarker.js';
 
 // search related state: constants and variables
+  const DEBUG = debug || true;
   // common
     /* eslint-disable no-control-regex */
     const STRIP_CHARS = /[\u0001-\u001a\0\v\f\r\t\n]/g;
@@ -193,7 +194,6 @@ export default Archivist;
     const ConfirmedInstalls = new Set();
     const DELAY = 100; // 500 ?
     Close = close;
-    Mode = mode; 
 
     let requestStage;
     
@@ -201,7 +201,7 @@ export default Archivist;
 
     clearSavers();
 
-    if ( Mode == 'save' ) {
+    if ( mode == 'save' || mode == 'select' ) {
       requestStage = "Response";
       // in case we get a updateBasePath call before an interval
       // and we don't clear it in time, leading us to erroneously save the old
@@ -212,11 +212,13 @@ export default Archivist;
       // only 1 call at 1 time
       State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 11001);
       State.ftsIndexSaver = setTimeout(() => saveFTS(State.SavedFTSIndexDirPath), 31001);
-    } else if ( Mode == 'serve' ) {
+    } else if ( mode == 'serve' ) {
       requestStage = "Request";
+      clearSavers();
     } else {
-      throw new TypeError(`Must specify mode`);
+      throw new TypeError(`Must specify mode, and must be one of: save, serve, select`);
     }
+    Mode = mode; 
 
     //on("Target.targetInfoChanged", displayTargetInfo);
     on("Target.targetInfoChanged", attachToTarget);
@@ -695,21 +697,23 @@ export default Archivist;
       const DEBUG = true;
       for await ( const change of bookmarkChanges() ) {
         console.error(`Publish map needs implement!`);
-        switch(change.type) {
-          case 'publish-map': {
-              // clone the map to avoid mutable shared data
-              State.BMarks = new Map([...change.map.entries()]);
-              DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
+        if ( Mode == 'select' ) {
+          switch(change.type) {
+            case 'publish-map': {
+                // clone the map to avoid mutable shared data
+                State.BMarks = new Map([...change.map.entries()]);
+                DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
+              } break;
+            case 'new': {
+                archiveAndIndexURL(change.url);
+              } break;
+            case 'delete': {
+                deleteFromIndexAndSearch(change.url);
+              } break;
+            default: {
+              console.log(`We don't do anything about this bookmark change, currently`, change);
             } break;
-          case 'new': {
-              archiveAndIndexURL(change.url);
-            } break;
-          case 'delete': {
-              deleteFromIndexAndSearch(change.url);
-            } break;
-          default: {
-            console.log(`We don't do anything about this bookmark change, currently`, change);
-          } break;
+          }
         }
       }
     }
@@ -738,7 +742,6 @@ export default Archivist;
         );
       }
     }
-
   }
 
 // helpers
@@ -999,7 +1002,7 @@ export default Archivist;
 
   function saveIndex(path) {
     //const DEBUG = true;
-    if ( State.saveInProgress ) return;
+    if ( State.saveInProgress || Mode == 'serve' ) return;
     State.saveInProgress = true;
 
     clearTimeout(State.indexSaver);
@@ -1121,7 +1124,7 @@ export default Archivist;
   }
 
   async function saveFTS(path = undefined, {forceSave:forceSave = false} = {}) {
-    if ( State.ftsSaveInProgress ) return;
+    if ( State.ftsSaveInProgress || Mode == 'serve' ) return;
     State.ftsSaveInProgress = true;
 
     clearTimeout(State.ftsIndexSaver);
@@ -1360,37 +1363,48 @@ export default Archivist;
     return args.flex_fts_index_dir(basePath);
   }
 
-  function addFrameNode(frameAttached) {
-    const {frameId, parentFrameId} = frameAttached;
+  function addFrameNode(observedFrame) {
+    const {frameId, parentFrameId} = observedFrame;
     const node = {
       id: frameId,
       parentId: parentFrameId,
       parent: State.FrameNodes.get(parentFrameId)
     };
     State.FrameNodes.set(node.id, node);
+    return node;
   }
 
   function updateFrameNode(frameNavigated) {
     const {
       frame: {
         id: frameId, 
-        parentId, url, urlFragment, 
+        parentId, url: rawUrl, urlFragment, 
         /*
         domainAndRegistry, unreachableUrl, 
         adFrameStatus
         */
       }
     } = frameNavigated;
-    const frameNode = State.FrameNodes.get(frameId);
+    const url = urlFragment?.startsWith(rawUrl.slice(0,4)) ? urlFragment : rawUrl;
+    let frameNode = State.FrameNodes.get(frameId);
 
     if ( ! frameNode ) {
-      throw new TypeError(
-        `Sanity check failed: frameId ${
-          frameId
-        } is not in our FrameNodes data, which currently has ${
-          State.FrameNodes.size
-        } entries.`
-      );
+      // Note
+        // This is not actually a panic because
+        // it can happen. It may just mean 
+        // this isn't a sub frame.
+        // So rather than panicing:
+          /*
+          throw new TypeError(
+            `Sanity check failed: frameId ${
+              frameId
+            } is not in our FrameNodes data, which currently has ${
+              State.FrameNodes.size
+            } entries.`
+          );
+          */
+        // We do this instead (just add it):
+      frameNode = addFrameNode({frameId, parentFrameId: parentId});
     }
 
     if ( frameNode.id !== frameId ) {
@@ -1408,12 +1422,12 @@ export default Archivist;
       // only if it's actually a URL
 
     // Update frame node url (and possible parent)
-      frameNode.url = urlFragment?.startsWith(url.slice(0,4)) ? urlFragment : url;
+      frameNode.url = url;
       if ( parentId !== frameNode.parentId ) {
         console.info(`Interesting. Frame parent changed from ${frameNode.parentId} to ${parentId}`);
         frameNode.parentId = parentId;
         frameNode.parent = State.FrameNodes.get(parentId);
-        if ( ! frameNode.parent ) {
+        if ( parentId && !frameNode.parent ) {
           throw new TypeError(
             `!! FrameNode ${
               frameId
@@ -1443,8 +1457,8 @@ export default Archivist;
   */
 
   function getRootFrameURL(frameId) {
-    let childNode = State.FrameNodes.get(frameId);
-    if ( ! childNode ) {
+    let frameNode = State.FrameNodes.get(frameId);
+    if ( ! frameNode ) {
       throw new TypeError(
         `Sanity check failed: frameId ${
           frameId
@@ -1453,17 +1467,17 @@ export default Archivist;
         } entries.`
       );
     }
-    if ( childNode.frameId !== frameId ) {
+    if ( frameNode.id !== frameId ) {
       throw new TypeError(
         `Sanity check failed: Child frameId ${
-          childNode.frameId
+          frameNode.id
         } was supposed to be ${
           frameId
         }`
       );
     }
-    while(childNode.parent) {
-      childNode = childNode.parent;
+    while(frameNode.parent) {
+      frameNode = frameNode.parent;
     }
-    return childNode.url;
+    return frameNode.url;
   }
