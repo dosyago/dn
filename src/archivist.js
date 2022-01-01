@@ -588,12 +588,14 @@ export default Archivist;
       } else {
         let saveIt = false;
         if ( Mode == 'select' ) {
-          const frameDescendsFromBookmarkedURLFrame = BMarks.has(getRootFrameURL(frameId));
+          const rootFrameURL = getRootFrameURL(frameId);
+          const frameDescendsFromBookmarkedURLFrame = BMarks.has(rootFrameURL);
           saveIt = frameDescendsFromBookmarkedURLFrame;
+          DEBUG && console.log({rootFrameURL, frameId, saveIt});
         } else if ( Mode == 'save' ) {
           saveIt = true;
         }
-        console.log(saveIt);
+        console.log({mode, saveIt});
         if ( saveIt ) {
           const response = {key, responseCode: responseStatusCode, responseHeaders};
           const resp = await getBody({requestId, responseStatusCode});
@@ -626,17 +628,17 @@ export default Archivist;
                 },
               );
             }
-          } else {
-            try {
-              await send("Fetch.continueRequest", {
-                  requestId,
-                },
-              );
-            } catch(e) {
-              console.warn("Issue with continuing request", e);
-            }
+            return;
           }
         } 
+        try {
+          await send("Fetch.continueRequest", {
+              requestId,
+            },
+          );
+        } catch(e) {
+          console.warn("Issue with continuing request", e);
+        }
       }
     }
 
@@ -1376,6 +1378,7 @@ export default Archivist;
 
   function addFrameNode(observedFrame) {
     const {frameId, parentFrameId} = observedFrame;
+    console.log({observedFrame});
     const node = {
       id: frameId,
       parentId: parentFrameId,
@@ -1396,6 +1399,7 @@ export default Archivist;
         */
       }
     } = frameNavigated;
+    console.log({frameNavigated});
     const url = urlFragment?.startsWith(rawUrl.slice(0,4)) ? urlFragment : rawUrl;
     let frameNode = State.FrameNodes.get(frameId);
 
