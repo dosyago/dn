@@ -40,6 +40,7 @@
   import {connect} from './protocol.js';
   import {BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
   import {getInjection} from '../public/injection.js';
+  import {bookmarkChanges} from './bookmarker.js';
 
 // search related state: constants and variables
   // common
@@ -236,6 +237,8 @@ export default Archivist;
     const {targetInfos:targets} = await send("Target.getTargets", {});
     const pageTargets = targets.filter(({type}) => type == 'page');
     await Promise.all(pageTargets.map(attachToTarget));
+
+    startObservingBookmarkChanges();
 
     Status.loaded = true;
 
@@ -666,6 +669,12 @@ export default Archivist;
 
       return `${method}${url}`;
       //return `${url}${urlFragment}:${method}:${sortedHeaders}:${postData}:${hasPostData}`;
+    }
+
+    async function startObservingBookmarkChanges() {
+      for await ( const change of bookmarkChanges() ) {
+        console.log(change);
+      }
     }
   }
 
@@ -1287,6 +1296,4 @@ export default Archivist;
   function getFlexBase(basePath) {
     return args.flex_fts_index_dir(basePath);
   }
-
-
 

@@ -38,6 +38,7 @@ export async function* bookmarkChanges() {
   const rootDir = getProfileRootDir();
   let change = false;
   let notifyChange = false;
+  let stopLooping = false;
 
   if ( !fs.existsSync(rootDir) ) {
     throw new TypeError(`Sorry! The directory where we thought the Chrome profile directories may be found (${rootDir}), does not exist. We can't monitor changes to your bookmarks, so Bookmark Select Mode is not supported.`);
@@ -51,8 +52,11 @@ export async function* bookmarkChanges() {
   DEBUG && console.log({bookmarkWatchGlobs});
 
   const observer = watch(bookmarkWatchGlobs, CHOK_OPTS);
+  let publish = false;
+  let shuttingDown = false;
   observer.on('ready', () => {
     DEBUG && console.log(`Ready to watch`);
+    publish = true;
   });
   observer.on('all', (event, path) => {
     const name = Path.basename(path);
@@ -71,21 +75,42 @@ export async function* bookmarkChanges() {
   process.on('SIGUSR1', shutdown);
   process.on('SIGUSR2', shutdown);
 
-  while(true) {
-    await new Promise(res => notifyChange = res);
-    const {path:file} = change;
-    if ( file.endsWith('bak') ) continue;
+  const ps = [];
+  try {
+    while(true) {
+      ps.push(
+        new Promise((res, rej) => {
+          notifyChange = res;
+          stopLooping = rej;
+        })
+      );
+      console.log('Creating new promise', ps[ps.length-1]);
+      await ps[ps.length-1];
+      console.log('Resolving one promise', ps.pop());
+      const {path:file} = change;
+      if ( file.endsWith('bak') ) continue;
 
-    const data = fs.readFileSync(file);
-    const jData = JSON.parse(data);
-    const changes = flatten(jData, {toMap:true, map: State.books});
+      const data = fs.readFileSync(file);
+      const jData = JSON.parse(data);
+      const changes = flatten(jData, {toMap:true, map: State.books});
 
-    for( const change of changes ) yield change;
+      if ( publish ) {
+        for( const change of changes ) yield change;
+      }
+    }
+  } catch(e) {
+    console.info('rejecting one promise', e, ps.pop());
+    console.log(ps.length);
+    return;
   }
 
-  async function shutdown() {
+  function shutdown() {
+    if ( shuttingDown ) return;
+    shuttingDown = true;
     console.log('Shutdown');
-    await observer.close();
+    observer.unwatch(bookmarkWatchGlobs);
+    stopLooping && setTimeout(() => stopLooping('bookmark watching stopped'), 0);
+    observer.close();
     console.log('No longer observing.');
   }
 }
