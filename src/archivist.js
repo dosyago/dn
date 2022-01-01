@@ -40,7 +40,7 @@
   import {connect} from './protocol.js';
   import {BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
   import {getInjection} from '../public/injection.js';
-  import {bookmarkChanges} from './bookmarker.js';
+  import {hasBookmark, bookmarkChanges} from './bookmarker.js';
 
 // search related state: constants and variables
   const DEBUG = debug || false;
@@ -107,7 +107,6 @@
   const Status = {
     loaded: false
   };
-  const BMarks = new Map();
   const FrameNodes = new Map();
   const Targets = new Map();
   const UpdatedKeys = new Set();
@@ -122,7 +121,6 @@
     Sessions,
     Installations,
     ConfirmedInstalls,
-    BMarks,
     FrameNodes,
     Docs,
     Indexing,
@@ -197,7 +195,7 @@ export default Archivist;
     const {library_path} = args;
     State.connection = State.connection || await connect({port});
     const {send, on, close} = State.connection;
-    const DELAY = 100; // 500 ?
+    //const DELAY = 100; // 500 ?
     Close = close;
 
     let requestStage;
@@ -249,7 +247,7 @@ export default Archivist;
     await Promise.all(pageTargets.map(attachToTarget));
     await Promise.all(pageTargets.map(reloadIfNotLive));
 
-    startObservingBookmarkChanges();
+    State.bookmarkObserver = State.bookmarkObserver || startObservingBookmarkChanges();
 
     Status.loaded = true;
 
@@ -580,9 +578,9 @@ export default Archivist;
         let saveIt = false;
         if ( Mode == 'select' ) {
           const rootFrameURL = getRootFrameURL(frameId);
-          const frameDescendsFromBookmarkedURLFrame = BMarks.has(rootFrameURL);
+          const frameDescendsFromBookmarkedURLFrame = hasBookmark(rootFrameURL);
           saveIt = frameDescendsFromBookmarkedURLFrame;
-          DEBUG && console.log({rootFrameURL, frameId, mode, saveIt, BMarks:State.BMarks});
+          DEBUG && console.log({rootFrameURL, frameId, mode, saveIt});
         } else if ( Mode == 'save' ) {
           saveIt = true;
         }
@@ -649,7 +647,7 @@ export default Archivist;
     function dontCache(request) {
       if ( ! request.url ) return true;
       if ( neverCache(request.url) ) return true;
-      if ( Mode == 'select' && ! State.BMarks.has(request.url) ) return true;
+      if ( Mode == 'select' && ! hasBookmark(request.url) ) return true;
       const url = new URL(request.url);
       return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
     }
@@ -702,17 +700,12 @@ export default Archivist;
       for await ( const change of bookmarkChanges() ) {
         if ( Mode == 'select' ) {
           switch(change.type) {
-            case 'publish-map': {
-                // clone the map to avoid mutable shared data
-                State.BMarks = new Map([...change.map.entries()]);
-                DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
-              } break;
             case 'new': {
-                BMarks.set(change.url, change);
+                DEBUG && console.log(change);
                 archiveAndIndexURL(change.url);
               } break;
             case 'delete': {
-                BMarks.delete(change.url);
+                DEBUG && console.log(change);
                 deleteFromIndexAndSearch(change.url);
               } break;
             default: {
@@ -733,9 +726,12 @@ export default Archivist;
         if ( targets.has(url) ) {
           const targetInfo = targets.get(url);
           const sessionId = State.Sessions.get(targetInfo.targetId);
+          DEBUG && console.log(
+            "Reloading to archive and index in select (Bookmark) mode", 
+            url
+          );
           send("Page.stopLoading", {}, sessionId);
           await send("Page.reload", {}, sessionId);
-          console.log("Reloading to archive and index", url);
         }
       } else {
         DEBUG && console.warn(
@@ -1468,7 +1464,7 @@ export default Archivist;
   function getRootFrameURL(frameId) {
     let frameNode = State.FrameNodes.get(frameId);
     if ( ! frameNode ) {
-      console.warn(new TypeError(
+      DEBUG && console.warn(new TypeError(
         `Sanity check failed: frameId ${
           frameId
         } is not in our FrameNodes data, which currently has ${

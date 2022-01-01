@@ -29,9 +29,10 @@ const PLAT_TABLE = {
 };
 const PROFILE_DIR_NAME_REGEX = /^(Default|Profile \d+)$/i;
 const isProfileDir = name => PROFILE_DIR_NAME_REGEX.test(name);
-const BOOKMARK_FILE_NAME_REGEX = /^Bookmarks(.bak)?$/i;
+const BOOKMARK_FILE_NAME_REGEX = /^Bookmarks$/i;
 const isBookmarkFile = name => BOOKMARK_FILE_NAME_REGEX.test(name);
 const State = {
+  active: new Set(), /* active Bookmark files (we don't know these until file changes) */
   books: {
 
   }
@@ -54,9 +55,9 @@ export async function* bookmarkChanges() {
     let shuttingDown = false;
 
   // create sufficient observers
-    const files = fs.readdirSync(rootDir, {withFileTypes:true}).reduce((Files, dirent) => {
+    const dirs = fs.readdirSync(rootDir, {withFileTypes:true}).reduce((Files, dirent) => {
       if ( dirent.isDirectory() && isProfileDir(dirent.name) ) {
-        const filePath = Path.resolve(rootDir, dirent.name, 'Bookmarks');
+        const filePath = Path.resolve(rootDir, dirent.name);
 
         if ( fs.existsSync(filePath) ) {
           Files.push(filePath); 
@@ -64,38 +65,36 @@ export async function* bookmarkChanges() {
       }
       return Files;
     }, []);
-    for( const filePath of files ) {
+    for( const dirPath of dirs ) {
       // first read it in
-        const key = `published-${filePath}`;
-        {
+        const filePath = Path.resolve(dirPath, 'Bookmarks');
+        if ( fs.existsSync(filePath) ) {
           const data = fs.readFileSync(filePath);
           const jData = JSON.parse(data);
           State.books[filePath] = flatten(jData, {toMap:true});
         }
 
-      const observer = fs.watch(filePath, FS_WATCH_OPTS);
+      const observer = fs.watch(dirPath, FS_WATCH_OPTS);
+      console.log(`Observing ${dirPath}`);
       // Note
         // allow the parent process to exit 
         //even if observer is still active somehow
         observer.unref();
 
       // listen for all events from the observer
-        observer.on('change', ({eventType: event, filename}) => {
+        observer.on('change', (event, filename) => {
+          filename = filename || '';
           // listen to everything
-          const path = filename || filePath;
-          const name = Path.basename(path);
-          console.log(event, filename);
-          if ( isBookmarkFile(name) ) {
-            // if it's first time and we haven't published map, then do
-              let publishMap = false;
-              if ( !State.books[key] ) {
-                State.books[key] = true;
-                publishMap = true;
-              }
+          const path = Path.resolve(dirPath, filename);
+          DEBUG && console.log(event, path);
+          if ( isBookmarkFile(filename) ) {
+            if ( ! State.active.has(path) ) {
+              State.active.add(path);
+            }
             // but only act if it is a bookmark file
             DEBUG && console.log(event, path, notifyChange);
             // save the event type and file it happened to
-            change = {event, path, publishMap};
+            change = {event, path};
             // drop the most recently pushed promise from our bookkeeping list
             ps.pop();
             // resolve the promise in the wait loop to process the bookmark file and emit the changes
@@ -103,7 +102,7 @@ export async function* bookmarkChanges() {
           }
         });
         observer.on('error', error => {
-          console.warn(`Bookmark file observer for ${filePath} error`, error);
+          console.warn(`Bookmark file observer for ${dirPath} error`, error);
           observers.slice(observers.indexOf(observer), 1);
           if ( observers.length ) {
             notifyChange && notifyChange();
@@ -112,7 +111,7 @@ export async function* bookmarkChanges() {
           }
         });
         observer.on('close', () => {
-          DEBUG && console.info(`Observer for ${filePath} closed`);
+          console.info(`Observer for ${dirPath} closed`);
           observers.slice(observers.indexOf(observer), 1);
           if ( observers.length ) {
             notifyChange && notifyChange();
@@ -139,22 +138,20 @@ export async function* bookmarkChanges() {
     // get, process and publish changes
       // only do if the change is there (first time it won't be because
       // we haven't yielded out (async or yield) yet)
-      if ( change && !change.path.endsWith('bak') ) {
-        const {path:file, publishMap} = change;
+      if ( change ) {
+        const {path} = change;
         change = false;
 
-        const data = fs.readFileSync(file);
-        const jData = JSON.parse(data);
-        const changes = flatten(jData, {toMap:true, map: State.books[file]});
+        try {
+          const changes = flatten(
+            JSON.parse(fs.readFileSync(path)), 
+            {toMap:true, map: State.books[path]}
+          );
 
-        if ( publishMap ) {
-          yield {
-            type: 'publish-map',
-            map: State.books[file]
-          };
+          for( const changeEvent of changes ) yield changeEvent;
+        } catch(e) {
+          console.warn(`Error publishing Bookmarks changes`, e);
         }
-
-        for( const changeEvent of changes ) yield changeEvent;
       }
 
     // wait for the next change
@@ -173,6 +170,8 @@ export async function* bookmarkChanges() {
   }
 
   shutdown();
+
+  return true;
 
   async function shutdown() {
     if ( shuttingDown ) return;
@@ -194,6 +193,14 @@ export async function* bookmarkChanges() {
     }
     console.log('Bookmark observer shut down cleanly.');
   }
+}
+
+export function hasBookmark(url) {
+  return Object.keys(State.books).filter(key => {
+    if ( State.active.size == 0 ) return true; 
+    return State.active.has(key);
+  }).map(key => State.books[key])
+    .some(map => map.has(url));
 }
 
 function getProfileRootDir() {
