@@ -43,7 +43,7 @@
   import {bookmarkChanges} from './bookmarker.js';
 
 // search related state: constants and variables
-  const DEBUG = debug || true;
+  const DEBUG = debug || false;
   // common
     /* eslint-disable no-control-regex */
     const STRIP_CHARS = /[\u0001-\u001a\0\v\f\r\t\n]/g;
@@ -114,7 +114,14 @@
   const Cache = new Map();
   const Index = new Map();
   const Indexing = new Set();
+  const Sessions = new Map();
+  const Installations = new Set();
+  const ConfirmedInstalls = new Set();
   const BLANK_STATE = {
+    Targets,
+    Sessions,
+    Installations,
+    ConfirmedInstalls,
     BMarks,
     FrameNodes,
     Docs,
@@ -188,10 +195,8 @@ export default Archivist;
 // main
   async function collect({chrome_port:port, mode} = {}) {
     const {library_path} = args;
-    const {send, on, close} = await connect({port});
-    const Sessions = new Map();
-    const Installations = new Set();
-    const ConfirmedInstalls = new Set();
+    State.connection = State.connection || await connect({port});
+    const {send, on, close} = State.connection;
     const DELAY = 100; // 500 ?
     Close = close;
 
@@ -201,7 +206,8 @@ export default Archivist;
 
     clearSavers();
 
-    if ( mode == 'save' || mode == 'select' ) {
+    Mode = mode; 
+    if ( Mode == 'save' || Mode == 'select' ) {
       requestStage = "Response";
       // in case we get a updateBasePath call before an interval
       // and we don't clear it in time, leading us to erroneously save the old
@@ -212,13 +218,12 @@ export default Archivist;
       // only 1 call at 1 time
       State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 11001);
       State.ftsIndexSaver = setTimeout(() => saveFTS(State.SavedFTSIndexDirPath), 31001);
-    } else if ( mode == 'serve' ) {
+    } else if ( Mode == 'serve' ) {
       requestStage = "Request";
       clearSavers();
     } else {
       throw new TypeError(`Must specify mode, and must be one of: save, serve, select`);
     }
-    Mode = mode; 
 
     //on("Target.targetInfoChanged", displayTargetInfo);
     on("Target.targetInfoChanged", attachToTarget);
@@ -281,8 +286,8 @@ export default Archivist;
 
     function confirmInstall({install}) {
       const {sessionId} = install;
-      if ( ! ConfirmedInstalls.has(sessionId) ) {
-        ConfirmedInstalls.add(sessionId);
+      if ( ! State.ConfirmedInstalls.has(sessionId) ) {
+        State.ConfirmedInstalls.add(sessionId);
         DEBUG && console.log({confirmedInstall:install});
       }
     }
@@ -320,7 +325,7 @@ export default Archivist;
 
     function updateTargetInfo({targetInfo}) {
       if ( targetInfo.type === 'page' ) {
-        const sessionId = Sessions.get(targetInfo.targetId); 
+        const sessionId = State.Sessions.get(targetInfo.targetId); 
         DEBUG && console.log('Updating target info', targetInfo, sessionId);
         if ( sessionId ) {
           const existingTargetInfo = Targets.get(sessionId);
@@ -343,9 +348,16 @@ export default Archivist;
       const {attached, type} = targetInfo;
       if ( attached && type == 'page' ) {
         const {url, targetId} = targetInfo;
-        const sessionId = Sessions.get(targetId);
-        if ( !!sessionId && !ConfirmedInstalls.has(sessionId) ) {
-          DEBUG && console.log({reloadingAsNotConfirmedInstalled:{url, sessionId}});
+        const sessionId = State.Sessions.get(targetId);
+        if ( !!sessionId && !State.ConfirmedInstalls.has(sessionId) ) {
+          const DEBUG = true;
+          DEBUG && console.log({
+            reloadingAsNotConfirmedInstalled:{
+              url, 
+              sessionId
+            },
+            confirmedInstalls: State.ConfirmedInstalls
+          });
           send("Page.stopLoading", {}, sessionId);
           send("Page.reload", {}, sessionId);
         }
@@ -373,11 +385,11 @@ export default Archivist;
 
       if ( targetInfo.type != 'page' ) return;
 
-      if ( Installations.has(sessionId) ) return;
+      if ( State.Installations.has(sessionId) ) return;
 
       DEBUG && console.log("installForSession running on target " + targetId);
 
-      Sessions.set(targetId, sessionId);
+      State.Sessions.set(targetId, sessionId);
       Targets.set(sessionId, clone(targetInfo));
 
       if ( Mode == 'save' || Mode == 'select' ) {
@@ -400,7 +412,7 @@ export default Archivist;
         DEBUG && console.log("Just request install", targetId, url);
       }
 
-      Installations.add(sessionId);
+      State.Installations.add(sessionId);
 
       DEBUG && console.log('Installed sessionId', sessionId);
       if ( Mode == 'save' ) {
@@ -425,11 +437,11 @@ export default Archivist;
       State.Indexing.add(info.targetId);
 
       if ( ! sessionId ) {
-        sessionId = await untilHas(Sessions, info.targetId);
+        sessionId = await untilHas(State.Sessions, info.targetId);
       }
 
-      if ( !Installations.has(sessionId) ) {
-        await untilHas(Installations, sessionId);
+      if ( !State.Installations.has(sessionId) ) {
+        await untilHas(State.Installations, sessionId);
       }
 
       send("DOMSnapshot.enable", {}, sessionId);
@@ -540,7 +552,7 @@ export default Archivist;
             targetId: targetInfo.targetId,
             flatten: true
           });
-          Sessions.set(targetInfo.targetId, sessionId);
+          State.Sessions.set(targetInfo.targetId, sessionId);
         }
       }
     }
@@ -694,7 +706,7 @@ export default Archivist;
     }
 
     async function startObservingBookmarkChanges() {
-      const DEBUG = true;
+      return;
       for await ( const change of bookmarkChanges() ) {
         console.error(`Publish map needs implement!`);
         if ( Mode == 'select' ) {
@@ -723,14 +735,15 @@ export default Archivist;
       if ( Mode !== 'select' ) {
         throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
       }
-      if ( State.BMarks.has(url) ) {
+      if ( State.BMarks.has(url) && ! dontCache({url}) ) {
         const targs = await send("Targets.getTargets", {});
         const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
         if ( targets.has(url) ) {
           const targetInfo = Targets.get(url);
-          const sessionId = Sessions.get(targetInfo.targetId);
+          const sessionId = State.Sessions.get(targetInfo.targetId);
           send("Page.stopLoading", {}, sessionId);
           await send("Page.reload", {}, sessionId);
+          console.log("Reloading to archive and index", url);
         }
       } else {
         DEBUG && console.warn(
@@ -948,6 +961,7 @@ export default Archivist;
   }
 
   async function changeMode(mode) { 
+    const DEBUG = true;
     DEBUG && console.log({modeChange:mode});
     saveFiles({forceSave:true});
     Close && Close();
