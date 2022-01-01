@@ -246,8 +246,9 @@ export default Archivist;
     });
 
     const {targetInfos:targets} = await send("Target.getTargets", {});
-    const pageTargets = targets.filter(({type}) => type == 'page');
+    const pageTargets = targets.filter(({type}) => type == 'page').map(targetInfo => ({targetInfo}));
     await Promise.all(pageTargets.map(attachToTarget));
+    await Promise.all(pageTargets.map(reloadIfNotLive));
 
     startObservingBookmarkChanges();
 
@@ -541,7 +542,7 @@ export default Archivist;
       return pageText;
     }
 
-    async function attachToTarget(targetInfo) {
+    async function attachToTarget({targetInfo}) {
       if ( dontInstall(targetInfo) ) return;
       const {url} = targetInfo;
       if ( url && targetInfo.type == 'page' ) {
@@ -592,6 +593,7 @@ export default Archivist;
         } else if ( Mode == 'save' ) {
           saveIt = true;
         }
+        console.log(saveIt);
         if ( saveIt ) {
           const response = {key, responseCode: responseStatusCode, responseHeaders};
           const resp = await getBody({requestId, responseStatusCode});
@@ -959,7 +961,6 @@ export default Archivist;
   }
 
   async function changeMode(mode) { 
-    const DEBUG = true;
     saveFiles({forceSave:true});
     Mode = mode;
     await collect({chrome_port:args.chrome_port, mode});
@@ -1012,7 +1013,6 @@ export default Archivist;
   }
 
   function saveIndex(path) {
-    //const DEBUG = true;
     if ( State.saveInProgress || Mode == 'serve' ) return;
     State.saveInProgress = true;
 
