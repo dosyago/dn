@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#./scripts/compile.sh
+./scripts/compile.sh
 description=$1
 latest_tag=$(git describe --abbrev=0)
 npm version $latest_tag
