@@ -27,7 +27,7 @@
     //import { DocumentIndex } from 'ndx';
     import Fuzzy from 'fz-search';
     //import * as _Fuzzy from './lib/fz.js';
-    import Nat from 'natural';
+    import {WordTokenizer, PorterStemmer} from 'natural';
 
   import args from './args.js';
   import {
@@ -61,9 +61,8 @@
     let Id;
 
   // natural (NLP tools -- stemmers and tokenizers, etc)
-    const Tokenizer = new Nat.WordTokenizer();
-    const Stemmer = Nat.PorterStemmer;
-    //const Stemmer = Nat.LancasterStemmer; // EN only
+    const Tokenizer = new WordTokenizer();
+    const Stemmer = PorterStemmer;
     const words = Tokenizer.tokenize.bind(Tokenizer);
     const termFilter = Stemmer.stem.bind(Stemmer);
     //const termFilter = s => s.toLocaleLowerCase();
@@ -249,7 +248,7 @@ export default Archivist;
     await Promise.all(pageTargets.map(attachToTarget));
     await Promise.all(pageTargets.map(reloadIfNotLive));
 
-    startObservingBookmarkChanges();
+    //startObservingBookmarkChanges();
 
     Status.loaded = true;
 
