@@ -3,8 +3,9 @@ import Path from 'path';
 import fs from 'fs';
 import {watch} from 'chokidar';
 
-import {DEBUG} from './common.js';
+import {DEBUG as debug} from './common.js';
 
+const DEBUG = debug || false;
 // Chrome user data directories by platform. 
   // Source 1: https://chromium.googlesource.com/chromium/src/+/HEAD/docs/user_data_dir.md 
   // Source 2: https://superuser.com/questions/329112/where-are-the-user-profile-directories-of-google-chrome-located-in
@@ -35,83 +36,111 @@ const State = {
 };
 
 export async function* bookmarkChanges() {
-  const rootDir = getProfileRootDir();
-  let change = false;
-  let notifyChange = false;
-  let stopLooping = false;
+  // try to get the profile directory
+    const rootDir = getProfileRootDir();
 
-  if ( !fs.existsSync(rootDir) ) {
-    throw new TypeError(`Sorry! The directory where we thought the Chrome profile directories may be found (${rootDir}), does not exist. We can't monitor changes to your bookmarks, so Bookmark Select Mode is not supported.`);
-  }
-
-  const bookmarkWatchGlobs = [
-    Path.resolve(rootDir, '**', 'Book*'), 
-    Path.resolve(rootDir, '**', 'book*')
-  ];
-
-  DEBUG && console.log({bookmarkWatchGlobs});
-
-  const observer = watch(bookmarkWatchGlobs, CHOK_OPTS);
-  let publish = false;
-  let shuttingDown = false;
-  observer.on('ready', () => {
-    DEBUG && console.log(`Ready to watch`);
-    publish = true;
-  });
-  observer.on('all', (event, path) => {
-    const name = Path.basename(path);
-    if ( isBookmarkFile(name) ) {
-      DEBUG && console.log(event, path, notifyChange);
-      change = {event, path};
-      notifyChange && notifyChange();
+    if ( !fs.existsSync(rootDir) ) {
+      throw new TypeError(`Sorry! The directory where we thought the Chrome profile directories may be found (${rootDir}), does not exist. We can't monitor changes to your bookmarks, so Bookmark Select Mode is not supported.`);
     }
-  });
-  observer.on('error', error => {
-    console.warn(`Bookmark file watcher error`, error);
-  });
 
-  process.on('SIGINT',  shutdown);
-  process.on('SIGHUP', shutdown);
-  process.on('SIGUSR1', shutdown);
-  process.on('SIGUSR2', shutdown);
+  // state constants and variables (including chokidar file glob observer)
+    const bookmarkWatchGlobs = [
+      Path.resolve(rootDir, '**', 'Book*'), 
+      Path.resolve(rootDir, '**', 'book*')
+    ];
+    const observer = watch(bookmarkWatchGlobs, CHOK_OPTS);
+    const ps = [];
+    let change = false;
+    let publish = false;
+    let notifyChange = false;
+    let shuttingDown = false;
+    let stopLooping = false;
 
-  const ps = [];
-  try {
-    while(true) {
-      ps.push(
-        new Promise((res, rej) => {
-          notifyChange = res;
-          stopLooping = rej;
-        })
-      );
-      console.log('Creating new promise', ps[ps.length-1]);
-      await ps[ps.length-1];
-      console.log('Resolving one promise', ps.pop());
-      const {path:file} = change;
-      if ( file.endsWith('bak') ) continue;
-
-      const data = fs.readFileSync(file);
-      const jData = JSON.parse(data);
-      const changes = flatten(jData, {toMap:true, map: State.books});
-
-      if ( publish ) {
-        for( const change of changes ) yield change;
+  // listen for all events from the observer
+    observer.on('ready', () => {
+      DEBUG && console.log(`Ready to watch`);
+      // only publish changes, ie, events after the initial scan
+      publish = true;
+    });
+    observer.on('all', (event, path) => {
+      // listen to everything
+      const name = Path.basename(path);
+      if ( isBookmarkFile(name) ) {
+        // but only act if it is a bookmark file
+        DEBUG && console.log(event, path, notifyChange);
+        // save the event type and file it happened to
+        change = {event, path};
+        // drop the most recently pushed promise from our bookkeeping list
+        ps.pop();
+        // resolve the promise in the wait loop to process the bookmark file and emit the changes
+        notifyChange && notifyChange();
       }
-    }
-  } catch(e) {
-    console.info('rejecting one promise', e, ps.pop());
-    console.log(ps.length);
-    return;
+    });
+    observer.on('error', error => {
+      console.warn(`Bookmark file watcher error`, error);
+    });
+
+  // make sure we kill the watcher on process restart or shutdown
+    process.on('SIGTERM', shutdown);
+    process.on('SIGHUP', shutdown);
+    process.on('SIGINT',  shutdown);
+    process.on('SIGBRK', shutdown);
+
+  // the main wait loop that enables us to turn a traditional NodeJS eventemitter
+  // into an asychronous stream generator
+  waiting: while(true) {
+    // Note: code resilience
+      //the below two statements can come in any order in this loop, both work
+
+    // get, process and publish changes
+      // only do if the change is there (first time it won't be because
+      // we haven't yielded out (async or yield) yet)
+      if ( change && !change.path.endsWith('bak') ) {
+        const {path:file} = change;
+        change = false;
+
+        const data = fs.readFileSync(file);
+        const jData = JSON.parse(data);
+        const changes = flatten(jData, {toMap:true, map: State.books});
+
+        if ( publish ) {
+          for( const changeEvent of changes ) yield changeEvent;
+        }
+      }
+
+    // wait for the next change
+      // always wait tho (to allow queueing of the next event to process)
+      try {
+        await new Promise((res, rej) => {
+          // save these
+          notifyChange = res;   // so we can turn the next turn of the loop
+          stopLooping = rej;    // so we can break out of the loop (on shutdown)
+          ps.push({res,rej});   // so we can clean up any left over promises
+        });
+      } catch { 
+        ps.pop();
+        break waiting; 
+      }
   }
 
-  function shutdown() {
+  // clean up any outstanding waiting promises
+    if ( ps.length ) {
+      console.info(`Cleaning up some outstanding waiting promises...`);
+      ps.forEach(({rej}) => {
+        /* eslint-disable no-empty */
+        try { rej(); } finally {}
+        /* eslint-enable no-empty */
+      });
+    }
+
+  async function shutdown() {
     if ( shuttingDown ) return;
     shuttingDown = true;
-    console.log('Shutdown');
+    console.log('Bookmark observer shutting down...');
     observer.unwatch(bookmarkWatchGlobs);
     stopLooping && setTimeout(() => stopLooping('bookmark watching stopped'), 0);
-    observer.close();
-    console.log('No longer observing.');
+    await observer.close();
+    console.log('Bookmark observer shut down cleanly.');
   }
 }
 
