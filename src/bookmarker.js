@@ -233,14 +233,14 @@ function getProfileRootDir() {
   }
 
   if ( UDD_PATHS[name] ) {
-    rootDir = Path.resolve(UDD_PATHS[name]);
+    rootDir = Path.resolve(resolveEnvironmentVariablesToPathSegments(UDD_PATHS[name]));
   } else {
     throw new TypeError(
       `Sorry! We don't know how to find the default Chrome profile on OS name: ${name}`
     );
   }
 
-  return resolveEnvironmentVariablesToPathSegments(rootDir);
+  return rootDir;
 }
 
 function flatten(bookmarkObj, {toMap: toMap = false, map} = {}) {
