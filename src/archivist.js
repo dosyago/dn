@@ -106,12 +106,14 @@
   const Status = {
     loaded: false
   };
+  const BMarks = new Map();
   const Targets = new Map();
   const UpdatedKeys = new Set();
   const Cache = new Map();
   const Index = new Map();
   const Indexing = new Set();
   const BLANK_STATE = {
+    BMarks,
     Docs,
     Indexing,
     Cache, 
@@ -138,6 +140,7 @@
     saveIndex,
     getIndex,
     deleteFromIndexAndSearch,
+    archiveAndIndexURL,
     search,
     getDetails,
     isReady,
@@ -374,7 +377,7 @@ export default Archivist;
       Sessions.set(targetId, sessionId);
       Targets.set(sessionId, clone(targetInfo));
 
-      if ( Mode == 'save' ) {
+      if ( Mode == 'save' || Mode == 'select' ) {
         send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
         send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
 
@@ -393,7 +396,9 @@ export default Archivist;
       Installations.add(sessionId);
 
       DEBUG && console.log('Installed sessionId', sessionId);
-      indexURL({targetInfo});
+      if ( Mode == 'save' ) {
+        indexURL({targetInfo});
+      }
     }
 
     async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
@@ -672,8 +677,14 @@ export default Archivist;
     }
 
     async function startObservingBookmarkChanges() {
+      const DEBUG = true;
       for await ( const change of bookmarkChanges() ) {
-        console.log(change);
+        if ( change.type === 'publish-map' ) {
+          State.BMarks = change.map;
+          DEBUG && console.log(`Loaded bookmarks. ${State.BMarks.size} marks loaded.`);
+        } else {
+          console.log(change);
+        }
       }
     }
   }
@@ -979,6 +990,31 @@ export default Archivist;
       // and just rebuild the whole FTS index (where we must)
       await loadFuzzy({fromMemOnly:true});
       return {title};
+    }
+  }
+
+  async function archiveAndIndexURL(url) {
+    const DEBUG = true;
+    if ( Mode !== 'select' ) {
+      throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
+    }
+    if ( State.BMarks.has(url) ) {
+      const targs = await send("Targets.getTargets", {});
+      const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...test}]));
+      if ( targets.has(url) ) {
+        const targetInfo = Targets.get(url);
+        const sessionId = Sessions.get(targetInfo.targetId);
+        send("Page.stopLoading", {}, sessionId);
+        await send("Page.reload", {}, sessionId);
+      }
+    } else {
+      DEBUG && console.warn(
+        `archiveAndIndexURL called in mode ${
+          Mode
+         } for URL ${
+          url
+         } but that URL is not in our Bookmarks list.`
+      );
     }
   }
 
