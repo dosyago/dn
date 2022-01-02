@@ -180,7 +180,7 @@ See this useful [issue](https://github.com/c9fe/22120/issues/68).
 
 ### What's the roadmap?
 
-- Full text search 
+- Full text search ✅
 - Library server to serve archive publicly.
 - Distributed p2p web browser on IPFS
 
