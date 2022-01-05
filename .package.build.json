@@ -23,6 +23,12 @@
     "url": "git+https://github.com/dosyago/22120.git"
   },
   "pkg": {
+    "patches": {
+      "./node_modules/fetch-blob/streams.cjs": [
+        "require('node:stream/web')", 
+        "require('stream').web"
+      ]
+    },
     "scripts": "build/*.js",
     "assets": "public/**/*",
     "outputPath": "bin"
@@ -58,6 +64,7 @@
     "nodemon": "latest",
     "npx": "^3.0.0",
     "webpack": "latest",
-    "webpack-cli": "latest"
+    "webpack-cli": "latest",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

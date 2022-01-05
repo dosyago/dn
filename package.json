@@ -1,5 +1,6 @@
 {
   "name": "archivist1",
+  "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
   "module": "src/app.js",
@@ -7,7 +8,6 @@
     "archivist1": "build/22120.js"
   },
   "scripts": {
-    "bundle": "npx rollup --config",
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
