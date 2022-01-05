@@ -1,6 +1,5 @@
 {
-  "name": "diskernet",
-  "type": "module",
+  "name": "archivist1",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
   "module": "src/app.js",
@@ -8,6 +7,7 @@
     "archivist1": "build/22120.js"
   },
   "scripts": {
+    "bundle": "npx rollup --config",
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
@@ -38,7 +38,6 @@
   },
   "homepage": "https://github.com/dosyago/22120#readme",
   "dependencies": {
-    "autosuggest-highlight": "^3.2.0",
     "chrome-launcher": "latest",
     "express": "latest",
     "flexsearch": "^0.7.21",
@@ -60,6 +59,5 @@
     "npx": "^3.0.0",
     "webpack": "latest",
     "webpack-cli": "latest"
-  },
-  "version": "2.4.5"
+  }
 }
