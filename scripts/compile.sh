@@ -5,7 +5,11 @@ source $HOME/.nvm/nvm.sh
 . $HOME/.profile
 nvm use --lts
 
-echo "Setting build mode..."
+echo "Cleaning old build and dist files..."
+
+rm -rf build/* dist/*
+
+echo "Setting build (CJS) mode..."
 ./scripts/go_build.sh
 
 patch_required=$(grep -ER "require\([\"'](node:)?stream/web[\"']\)" node_modules/*)
@@ -31,13 +35,14 @@ if [[ ! -z "$patch_required" ]]; then
 fi
 
 npm run bundle
-
 echo "Bundling javascript..."
 npx webpack
 chmod +x ./build/22120.js
 echo "Building for windows nix and macos..."
-#pkg --compress Brotli . 
-pkg .
+pkg --compress Brotli . 
 
-echo "Restoring dev mode..."
+echo "Restoring dev (ES module) mode..."
 ./scripts/go_dev.sh
+
+echo "Rebundling an es module for npm es module import..."
+npm run bundle

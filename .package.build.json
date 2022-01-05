@@ -1,7 +1,7 @@
 {
   "name": "archivist1",
   "description": "Library server and an archivist browser controller.",
-  "main": "src/app.js",
+  "main": "build/22120.js",
   "module": "src/app.js",
   "bin": {
     "archivist1": "build/22120.js"
