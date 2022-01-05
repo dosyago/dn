@@ -1,10 +1,9 @@
 {
   "name": "archivist1",
-  "version": "2.4.13",
-  "type": "module",
+  "version": "2.4.12",
   "description": "Library server and an archivist browser controller.",
-  "main": "src/app.js",
-  "module": "dist/22120-module.js",
+  "main": "build/22120.js",
+  "module": "src/app.js",
   "bin": {
     "archivist1": "build/22120.js"
   },
@@ -27,6 +26,12 @@
     "url": "git+https://github.com/dosyago/22120.git"
   },
   "pkg": {
+    "patches": {
+      "./node_modules/fetch-blob/streams.cjs": [
+        "Object.assign(globalThis, require('node:stream/web'))",
+        "Object.assign(globalThis, require('stream').web)"
+      ]
+    },
     "scripts": "build/*.js",
     "assets": "public/**/*",
     "outputPath": "bin"
@@ -62,6 +67,7 @@
     "nodemon": "latest",
     "npx": "^3.0.0",
     "webpack": "latest",
-    "webpack-cli": "latest"
+    "webpack-cli": "latest",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }
