@@ -348,6 +348,7 @@ export default Archivist;
             },
             confirmedInstalls: State.ConfirmedInstalls
           });
+          await sleep(600);
           send("Page.stopLoading", {}, sessionId);
           send("Page.reload", {}, sessionId);
         }
