@@ -8,6 +8,10 @@
 
 This feature is just released in version 2 so it will improve over time.
 
+## And one more thing...
+
+**Coming to a future release, soon!**: The ability to publish your own search engine that you curated with the best resources based on your expert knowledge and experience.
+
 **Build your own binaries:**
 
 ```sh
