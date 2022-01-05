@@ -37,6 +37,10 @@
     "outputPath": "bin"
   },
   "keywords": [
+    "web-archive",
+    "search-engine",
+    "self-hosted",
+    "offline",
     "archivist",
     "library"
   ],
