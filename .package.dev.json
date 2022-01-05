@@ -1,12 +1,12 @@
 {
-  "name": "archivist1",
+  "name": "diskernet",
   "version": "2.4.11",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
   "module": "dist/22120-module.js",
   "bin": {
-    "archivist1": "build/22120.js"
+    "diskernet": "build/22120.js"
   },
   "scripts": {
     "bundle": "npx rollup --config",
