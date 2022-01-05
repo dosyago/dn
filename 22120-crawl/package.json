@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "dependencies": {
+    "xml2js": "^0.4.23"
+  },
+  "name": "22120-crawl",
+  "version": "1.0.0",
+  "main": "parse.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
