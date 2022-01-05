@@ -1,6 +1,6 @@
 {
   "name": "archivist1",
-  "version": "2.4.8",
+  "version": "0.0.3",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
@@ -61,6 +61,5 @@
     "npx": "^3.0.0",
     "webpack": "latest",
     "webpack-cli": "latest"
-  },
-  "version": "0.0.2"
+  }
 }
