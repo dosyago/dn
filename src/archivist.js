@@ -844,7 +844,7 @@ export default Archivist;
     }
 
     try {
-      loadFuzzy();
+      await loadFuzzy();
     } catch(e) {
       console.warn(e+'');
       someError = true;
