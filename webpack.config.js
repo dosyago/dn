@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: "./src/app.js",
+  entry: "./dist/22120-module.js",
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: "22120.js"
