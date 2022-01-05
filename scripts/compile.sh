@@ -12,9 +12,9 @@ patch_required=$(grep -ER "require\([\"'](node:)?stream/web[\"']\)" node_modules
 files=$(grep -rlER "require\([\"'](node:)?stream/web[\"']\)" node_modules/*)
 if [[ ! -z "$patch_required" ]]; then
   while IFS= read -r file; do
-    echo '--->' $file
-    grep -q $file package.json
-    if [ $? == 1 ]; then
+    #echo '--->' $file
+    #grep -q $file package.json
+    #if [ $? == 1 ]; then
       echo '--->' $file "UNPATCHED!"
       echo "Found an error!"
       echo "Found something you need to patch before building"
@@ -25,8 +25,8 @@ if [[ ! -z "$patch_required" ]]; then
       echo "You need to add all these to pkg.patches to replace with require('stream').web"
       ./scripts/go_dev.sh
       exit 1
-    fi
-    echo "OK"
+    #fi
+    #echo "OK"
   done <<< $files
 fi
 
