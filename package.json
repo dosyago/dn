@@ -60,5 +60,6 @@
     "npx": "^3.0.0",
     "webpack": "latest",
     "webpack-cli": "latest"
-  }
+  },
+  "version": "0.0.1"
 }
