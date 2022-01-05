@@ -18,7 +18,8 @@
     "serve": "nodemon src/app.js 22120 serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
-    "postpublish": "cp package.json .package.build.json && ./scripts/go_dev.sh"
+    "postpublish": "cp package.json .package.build.json",
+    "prepublishOnly": "npm run bundle && npx webpack ."
   },
   "repository": {
     "type": "git",
