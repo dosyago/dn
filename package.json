@@ -1,5 +1,5 @@
 {
-  "name": "archivist1",
+  "name": "diskernet",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
