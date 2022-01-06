@@ -18,7 +18,7 @@ This feature is just released in version 2 so it will improve over time.
 
 or ...
 
-**Get it on npm:**
+**Get it on [npm](https://www.npmjs.com/package/diskernet):**
 
 ```sh
 $ npm i -g diskernet@latest
