@@ -1,4 +1,4 @@
-# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![npm downloads](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads)](https://npmjs.com/package/archivist1) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/i5ik/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
+# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/diskernet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/i5ik/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
 
 :floppy_disk: - an internet on yer Disk
 
@@ -18,7 +18,7 @@ This feature is just released in version 2 so it will improve over time.
 
 or ...
 
-**Get it on npm:**
+**Get it on [npm](https://www.npmjs.com/package/diskernet):**
 
 ```sh
 $ npm i -g diskernet@latest
@@ -68,11 +68,13 @@ $ cd bin/
 
 ## License 
 
-22120 is licensed under Polyform Strict License 1.0.0 (no modification, no distribution). You can purchase a license to use for personal, research, noncommercial purposes, below:
+22120 is licensed under Polyform Strict License 1.0.0 (no modification, no distribution). You can purchase a license for different uses below:
 
-- [Buy a Perpetual Non-commercial Use License of the current Version re-upped Monthly to the Latest Version, USD$1.99 per month](https://buy.stripe.com/fZeg0a45zdz58U028z) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Noncommercial-1.0.0.md)
-- [Buy a Perpetual Internal Use License of the current Version re-upped Monthly to the Latest Version, USD $12.99 per month](https://buy.stripe.com/00g4hsgSlbqXb288wY) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Internal-Use-1.0.0.md)
-- [Buy a Perpetual Small-medium Business License of the current Version re-upped Monthly to the Latest Version, USD $99 per month](https://buy.stripe.com/aEUbJUgSl2UreekdRj) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Small-Business-1.0.0.md)
+
+-  for personal, research, noncommercial purposes: 
+[Buy a Perpetual Non-commercial Use License of the current Version re-upped Monthly to the Latest Version, USD$1.99 per month](https://buy.stripe.com/fZeg0a45zdz58U028z) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Noncommercial-1.0.0.md)
+- for part of your internal tooling in your org: [Buy a Perpetual Internal Use License of the current Version re-upped Monthly to the Latest Version, USD $12.99 per month](https://buy.stripe.com/00g4hsgSlbqXb288wY) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Internal-Use-1.0.0.md)
+- for anywhere in your business: [Buy a Perpetual Small-medium Business License of the current Version re-upped Monthly to the Latest Version, USD $99 per month](https://buy.stripe.com/aEUbJUgSl2UreekdRj) [Read license](https://github.com/DOSYCORPS/polyform-licenses/blob/1.0.0/PolyForm-Small-Business-1.0.0.md)
 
 <p align=right><small><a href=#toc>Top</a></small></p>
 
