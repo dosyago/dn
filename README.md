@@ -1,4 +1,4 @@
-# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![source lines of code](https://sloc.xyz/github/i5ik/Diskernet)](https://sloc.xyz) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/diskernet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/i5ik/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
+# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![source lines of code](https://sloc.xyz/github/crisdosyago/Diskernet)](https://sloc.xyz) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/diskernet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/crisdosyago/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
 
 :floppy_disk: - an internet on yer Disk
 
@@ -14,7 +14,7 @@ This feature is just released in version 2 so it will improve over time.
 
 ## Get it
 
-[Download a release](https://github.com/i5ik/Diskernet/releases)
+[Download a release](https://github.com/crisdosyago/Diskernet/releases)
 
 or ...
 
@@ -29,7 +29,7 @@ or...
 **Build your own binaries:**
 
 ```sh
-$ git clone https://github.com/i5ik/DiskerNet
+$ git clone https://github.com/crisdosyago/DiskerNet
 $ cd DiskerNet
 $ npm i 
 $ ./scripts/build_setup.sh
