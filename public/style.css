@@ -47,7 +47,7 @@
   }
   button {
   }
-  input.long {
+  form .long {
     width: 100%;
     min-width: 250px;
   }

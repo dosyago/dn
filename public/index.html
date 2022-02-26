@@ -84,6 +84,45 @@
     </script>
   </fieldset>
 </form>
+<form method=POST action=/crawl>
+  <fieldset>
+    <legend>Crawl and Index</legend>
+    <p>
+      Crawl and index a list of links. 
+      <br>
+      <small>This will open 1 link at a time, and index it when it has loaded.</small>
+    <p>
+      <label>
+        Links
+        <br>
+        <textarea class=long name=links></textarea>
+        <br>
+        <small>List format is 1 link per line.</small>
+      </label>
+    </p>
+    <details>
+      <summary>Advanced settings</summary>
+      <p>
+        <label>
+          Timeout
+          <br>
+          <input type=number min=1 max=300 value=3.6 step=0.1>
+          <br>
+          <small>The number of seconds to wait for each page to load before indexing.</small>
+        </label>
+      <p>
+        <label>
+          Depth
+          <br>
+          <input type=number min=1 max=20 value=2 step=1>
+          <br>
+          <small>1 - Only each link. 2 - Plus anything 1 click from the link. 3 - Plus anything 2 clicks from the link. <em>And so on&hellip;</em></small>
+        </label>
+    </details>
+    <p>
+      <button>Crawl</button>
+  </fieldset>
+</form>
 <form disabled method=POST action=/publish>
   <fieldset>
     <legend>Publish your archive</legend>
