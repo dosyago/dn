@@ -273,7 +273,7 @@ function SearchResultView({results, query, HL}) {
     <p>
       Showing results for <b>${query}</b>
     </p>
-    <ol>
+    <ol class=results>
     ${
       results.map(({snippet, url,title,id}) => `
         <li>

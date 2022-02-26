@@ -64,6 +64,24 @@
   small.url {
     word-break: break-all;
   }
+  .small {
+    font-size: smaller;
+  }
+
+  label small {
+    font-style: italic;
+    color: darkslategrey;
+  }
+
+  .units {
+    color: grey;
+    font-size: smaller;
+  }
+
+  input[type="number"] {
+    text-align: right;
+  ]
+
   input.search {
     flex-grow: 1;
     padding: 0.25em 0.5em;
@@ -72,6 +90,6 @@
   input.search + button {
     font-size: 1em;
   }
-  ol {
+  ol.results {
     list-style-type: none;
   }
