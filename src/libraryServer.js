@@ -3,10 +3,12 @@ import express from 'express';
 
 import args from './args.js';
 import {
+  MAX_REAL_URL_LENGTH,
   MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, DEBUG, 
-  say, sleep, APP_ROOT
+  say, sleep, APP_ROOT,
+  RichError
 } from './common.js';
-import Archivist from './archivist.js';
+import {startCrawl, Archivist} from './archivist.js';
 import {trilight, /*highlight*/} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, '..', 'public');
@@ -132,6 +134,43 @@ function addHandlers() {
       //res.end(`Base path did not change.`);
       res.redirect('/');
     }
+  });
+
+  app.post('/crawl', async (req, res) => {
+    const {links, timeout, depth} = req.body;
+    const urls = links.split(/[\n\s\r]+/g).map(u => u.trim()).filter(u => {
+      const tooShort = u.length === 0;
+      if ( tooShort ) return false;
+
+      const tooLong = u.length > MAX_REAL_URL_LENGTH;
+      if ( tooLong ) return false;
+
+      let invalid = false;
+      try {
+        new URL(u);
+      } catch { 
+        invalid = true;
+      };
+      if ( invalid ) return false;
+
+      return true;
+    });
+    console.log(`Starting crawl from ${urls.length} URLs, waiting ${timeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
+    try {
+      await startCrawl({urls, timeout, depth});
+    } catch(e) {
+      if ( e instanceof RichError ) { 
+        console.warn(e);
+        const {status, message} = JSON.parse(e.message);
+        res.status(status);
+        res.end(message);
+      } else {
+        console.warn(e);
+        res.sendStatus(500);
+      }
+      return;
+    }
+    res.end('OK');
   });
 }
 

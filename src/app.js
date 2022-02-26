@@ -1,6 +1,6 @@
 import {DEBUG, sleep, NO_SANDBOX} from './common.js';
 
-import Archivist from './archivist.js';
+import {Archivist} from './archivist.js';
 import LibraryServer from './libraryServer.js';
 import args from './args.js';
 

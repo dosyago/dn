@@ -35,7 +35,8 @@
     MAX_TITLE_LENGTH,
     MAX_URL_LENGTH,
     clone,
-    CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
+    CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT,
+    RichError
   } from './common.js';
   import {connect} from './protocol.js';
   import {BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
@@ -139,7 +140,7 @@
     ftsSaveInProgress: false
   };
   const State = Object.assign({}, BLANK_STATE);
-  const Archivist = { 
+  export const Archivist = { 
     NDX_OLD,
     USE_FLEX,
     collect, getMode, changeMode, shutdown, 
@@ -187,8 +188,6 @@
         process.kill(process.pid, 'SIGUSR2');
       });
     });
-
-export default Archivist;
 
 // main
   async function collect({chrome_port:port, mode} = {}) {
@@ -1487,4 +1486,9 @@ export default Archivist;
       frameNode = frameNode.parent;
     }
     return frameNode.url;
+  }
+
+// crawling
+  export async function startCrawl({urls, timeout, depth} = {}) {
+    throw new RichError({status:500, message: 'Not implemented yet!'});
   }
