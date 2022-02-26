@@ -60,6 +60,7 @@ export async function connect({port:port = 9222} = {}) {
       if ( showError ) {
         console.warn(message);
       }
+      console.warn(message);
     }
     const {sessionId} = message;
     const {method} = message;

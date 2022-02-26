@@ -31,8 +31,11 @@
 
   import args from './args.js';
   import {
+    untilTrue,
     sleep, DEBUG as debug, 
     BATCH_SIZE,
+    MIN_TIME_PER_PAGE,
+    MAX_TIME_PER_PAGE,
     MAX_TITLE_LENGTH,
     MAX_URL_LENGTH,
     clone,
@@ -115,6 +118,7 @@
   const Cache = new Map();
   const Index = new Map();
   const Indexing = new Set();
+  const CrawlIndexing = new Set();
   const Sessions = new Map();
   const Installations = new Set();
   const ConfirmedInstalls = new Set();
@@ -126,6 +130,7 @@
     FrameNodes,
     Docs,
     Indexing,
+    CrawlIndexing,
     Cache, 
     Index,
     NDX_FTSIndex,
@@ -489,6 +494,7 @@
       DEBUG && console.log({id: doc.id, title, url, indexed: true});
 
       State.Indexing.delete(info.targetId);
+      State.CrawlIndexing.delete(info.targetId);
     }
 
     function processDoc({documents, strings}) {
@@ -726,7 +732,7 @@
   }
 
   async function archiveAndIndexURL(url, 
-      {createIfMissing:createIfMissing = false, timeout, depth} = {}
+      {crawl, createIfMissing:createIfMissing = false, timeout, depth} = {}
     ) {
       const links = [];
       if ( Mode == 'serve' ) {
@@ -744,9 +750,14 @@
         const {send, on, close} = State.connection;
         const {targetInfos:targs} = await send("Target.getTargets", {});
         const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
+        let targetId;
         if ( targets.has(url) ) {
           const targetInfo = targets.get(url);
-          const sessionId = State.Sessions.get(targetInfo.targetId);
+          ({targetId} = targetInfo);
+          if ( crawl ) {
+            State.CrawlIndexing.add(targetId);
+          }
+          const sessionId = State.Sessions.get(targetId);
           DEBUG && console.log(
             "Reloading to archive and index in select (Bookmark) mode", 
             url
@@ -754,10 +765,23 @@
           send("Page.stopLoading", {}, sessionId);
           await send("Page.reload", {}, sessionId);
         } else if ( createIfMissing ) {
-          await send("Target.createTarget", {url}); 
+          ({targetId} = await send("Target.createTarget", {url})); 
+          if ( crawl ) {
+            State.CrawlIndexing.add(targetId);
+          }
           await archiveAndIndexURL(url, {
-            timeout, depth, createIfMissing: false /* prevent redirect loops */
+            crawl, timeout, depth, createIfMissing: false /* prevent redirect loops */
           });
+        }
+        if ( crawl ) {
+          await Promise.race([
+            await Promise.all([
+              untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/3, timeout),
+              sleep(MIN_TIME_PER_PAGE)
+            ]),
+            sleep(MAX_TIME_PER_PAGE)
+          ]);
+          await send("Target.closeTarget", {targetId});
         }
       } else {
         DEBUG && console.warn(
@@ -1524,35 +1548,41 @@
     State.crawling = true;
     State.crawlTimeout = timeout;
     State.visited = new Set();
-    try {
-      while(urls.length > BATCH_SIZE) {
-        const jobs = [];
-        for( let i = 0; i < BATCH_SIZE; i++ ) {
+    setTimeout(async () => {
+      try {
+        while(urls.length > BATCH_SIZE) {
+          const jobs = [];
+          for( let i = 0; i < BATCH_SIZE; i++ ) {
+            const url = urls.shift();
+            const pr = archiveAndIndexURL(
+              url, 
+              {crawl: true, timeout, createIfMissing:true, getLinks: depth > 1}
+            );
+            jobs.push(pr);
+          }
+          const links = (await Promise.all(jobs)).flat();
+          if ( links.length ) {
+            urls.push(...links);
+          }
+        }
+        while(urls.length) {
           const url = urls.shift();
-          const pr = archiveAndIndexURL(url, {timeout, createIfMissing:true, getLinks: depth > 1});
-          jobs.push(pr);
+          const links = await archiveAndIndexURL(
+            url, 
+            {crawl: true, timeout, createIfMissing:true, getLinks: depth > 1}
+          );
+          if ( links.length ) {
+            urls.push(...links);
+          }
         }
-        const links = (await Promise.all(jobs)).flat();
-        if ( links.length ) {
-          urls.push(...links);
-        }
+      } catch(e) {
+        console.warn(e);
+        throw new RichError({status:500, message: e.message});
+      } finally {
+        State.crawling = false;
+        State.crawlTimeout = false;
+        State.visited = false;
+        console.log(`Crawl finished.`);
       }
-      while(urls.length) {
-        const url = urls.shift();
-        const links = await archiveAndIndexURL(
-          url, 
-          {timeout, createIfMissing:true, getLinks: depth > 1}
-        );
-        if ( links.length ) {
-          urls.push(...links);
-        }
-      }
-    } catch(e) {
-      console.warn(e);
-      throw new RichError({status:500, message: e.message});
-    } finally {
-      State.crawling = false;
-      State.crawlTimeout = false;
-      State.visited = false;
-    }
+    }, 0);
   }

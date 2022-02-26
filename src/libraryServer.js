@@ -137,27 +137,38 @@ function addHandlers() {
   });
 
   app.post('/crawl', async (req, res) => {
-    const {links, timeout, depth} = req.body;
-    const urls = links.split(/[\n\s\r]+/g).map(u => u.trim()).filter(u => {
-      const tooShort = u.length === 0;
-      if ( tooShort ) return false;
-
-      const tooLong = u.length > MAX_REAL_URL_LENGTH;
-      if ( tooLong ) return false;
-
-      let invalid = false;
-      try {
-        new URL(u);
-      } catch { 
-        invalid = true;
-      };
-      if ( invalid ) return false;
-
-      return true;
-    });
-    console.log(`Starting crawl from ${urls.length} URLs, waiting ${timeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
     try {
+      let {links, timeout, depth} = req.body;
+      const oTimeout = timeout;
+      timeout = Math.round(parseInt(timeout)*1000);
+      depth = Math.round(parseInt(depth));
+      if ( Number.isNaN(timeout) || Number.isNaN(depth) || typeof links != 'string' ) {
+        console.warn({invalid:{timeout,depth,links}});
+        throw new RichError({
+          status: 400, 
+          message: 'Invalid parameters: timeout, depth or links'
+        });
+      }
+      const urls = links.split(/[\n\s\r]+/g).map(u => u.trim()).filter(u => {
+        const tooShort = u.length === 0;
+        if ( tooShort ) return false;
+
+        const tooLong = u.length > MAX_REAL_URL_LENGTH;
+        if ( tooLong ) return false;
+
+        let invalid = false;
+        try {
+          new URL(u);
+        } catch { 
+          invalid = true;
+        };
+        if ( invalid ) return false;
+
+        return true;
+      });
+      console.log(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
       await startCrawl({urls, timeout, depth});
+      res.end(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`);
     } catch(e) {
       if ( e instanceof RichError ) { 
         console.warn(e);
@@ -170,7 +181,6 @@ function addHandlers() {
       }
       return;
     }
-    res.end('OK');
   });
 }
 
