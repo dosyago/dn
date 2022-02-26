@@ -75,7 +75,6 @@ export function clone(o) {
 }
 
 export async function untilTrue(pred, waitOverride = MIN_WAIT, maxWaits = MAX_WAITS) {
-  console.log(waitOverride, maxWaits);
   let waitCount = 0;
   let resolve;
   const pr = new Promise(res => resolve = res);
@@ -83,7 +82,7 @@ export async function untilTrue(pred, waitOverride = MIN_WAIT, maxWaits = MAX_WA
   return pr;
 
   function checkPred() {
-    console.log('Checking', pred);
+    DEBUG && console.log('Checking', pred.toString());
     if ( pred() ) {
       return resolve(true);
     } else {

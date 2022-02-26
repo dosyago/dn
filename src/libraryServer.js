@@ -140,7 +140,7 @@ function addHandlers() {
     try {
       let {links, timeout, depth} = req.body;
       const oTimeout = timeout;
-      timeout = Math.round(parseInt(timeout)*1000);
+      timeout = Math.round(parseFloat(timeout)*1000);
       depth = Math.round(parseInt(depth));
       if ( Number.isNaN(timeout) || Number.isNaN(depth) || typeof links != 'string' ) {
         console.warn({invalid:{timeout,depth,links}});
@@ -165,7 +165,7 @@ function addHandlers() {
         if ( invalid ) return false;
 
         return true;
-      });
+      }).map(url => ({url,depth:1}));
       console.log(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
       await startCrawl({urls, timeout, depth});
       res.end(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`);
