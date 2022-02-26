@@ -11,6 +11,7 @@ export const MAX_TITLE_LENGTH = 140;
 export const MAX_URL_LENGTH = 140;
 export const MAX_REAL_URL_LENGTH = 2**15 - 1;
 export const MAX_HEAD = 140;
+export const BATCH_SIZE = 1; // crawl batch size (how many concurrent tabs for crawling)
 
 export class RichError extends Error {
   constructor(msg) {

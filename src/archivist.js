@@ -32,6 +32,7 @@
   import args from './args.js';
   import {
     sleep, DEBUG as debug, 
+    BATCH_SIZE,
     MAX_TITLE_LENGTH,
     MAX_URL_LENGTH,
     clone,
@@ -153,6 +154,7 @@
     getDetails,
     isReady,
     findOffsets,
+    archiveAndIndexURL
   }
   const BODYLESS = new Set([
     301,
@@ -354,10 +356,6 @@
       }
     }
 
-    function neverCache(url) {
-      return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
-    }
-
     async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
       if ( waitingForDebugger ) {
         console.warn(targetInfo);
@@ -425,11 +423,17 @@
       State.Indexing.add(info.targetId);
 
       if ( ! sessionId ) {
-        sessionId = await untilHas(State.Sessions, info.targetId);
+        sessionId = await untilHas(
+          State.Sessions, info.targetId, 
+          {timeout: State.crawling && State.crawlTimeout}
+        );
       }
 
       if ( !State.Installations.has(sessionId) ) {
-        await untilHas(State.Installations, sessionId);
+        await untilHas(
+          State.Installations, sessionId, 
+          {timeout: State.crawling && State.crawlTimeout}
+        );
       }
 
       send("DOMSnapshot.enable", {}, sessionId);
@@ -644,14 +648,6 @@
       return targetInfo.type !== 'page';
     }
 
-    function dontCache(request) {
-      if ( ! request.url ) return true;
-      if ( neverCache(request.url) ) return true;
-      if ( Mode == 'select' && ! hasBookmark(request.url) ) return true;
-      const url = new URL(request.url);
-      return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
-    }
-
     async function getResponseData(path) {
       try {
         return JSON.parse(await Fs.promises.readFile(path));
@@ -715,12 +711,37 @@
         }
       }
     }
+  }
 
-    async function archiveAndIndexURL(url) {
-      if ( Mode !== 'select' ) {
-        throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
+  function neverCache(url) {
+    return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
+  }
+
+  function dontCache(request) {
+    if ( ! request.url ) return true;
+    if ( neverCache(request.url) ) return true;
+    if ( Mode == 'select' && ! hasBookmark(request.url) ) return true;
+    const url = new URL(request.url);
+    return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
+  }
+
+  async function archiveAndIndexURL(url, 
+      {createIfMissing:createIfMissing = false, timeout, depth} = {}
+    ) {
+      const links = [];
+      if ( Mode == 'serve' ) {
+        throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
       }
+      if ( State.crawling ) {
+        if ( State.visited.has(url) ) {
+          return links;
+        } else {
+          State.visited.add(url);
+        }
+      }
+
       if ( ! dontCache({url}) ) {
+        const {send, on, close} = State.connection;
         const {targetInfos:targs} = await send("Target.getTargets", {});
         const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
         if ( targets.has(url) ) {
@@ -732,6 +753,11 @@
           );
           send("Page.stopLoading", {}, sessionId);
           await send("Page.reload", {}, sessionId);
+        } else if ( createIfMissing ) {
+          await send("Target.createTarget", {url}); 
+          await archiveAndIndexURL(url, {
+            timeout, depth, createIfMissing: false /* prevent redirect loops */
+          });
         }
       } else {
         DEBUG && console.warn(
@@ -742,9 +768,8 @@
            } but that URL is not in our Bookmarks list.`
         );
       }
-    }
+      return links;
   }
-
 // helpers
   async function isReady() {
     return await untilHas(Status, 'loaded');
@@ -1293,15 +1318,17 @@
     }
   }
 
-  async function untilHas(thing, key) {
+  async function untilHas(thing, key, {timeout: timeout = false} = {}) {
     if ( thing instanceof Map ) {
       if ( thing.has(key) ) {
         return thing.get(key);
       } else {
         let resolve;
         const pr = new Promise(res => resolve = res);
+        const then = Date.now();
         const checker = setInterval(() => {
-          if ( thing.has(key) ) {
+          const now = Date.now();
+          if ( thing.has(key) || (timeout && (now-then) >= timeout) ) {
             clearInterval(checker);
             resolve(thing.get(key));
           } else {
@@ -1317,8 +1344,10 @@
       } else {
         let resolve;
         const pr = new Promise(res => resolve = res);
+        const then = Date.now();
         const checker = setInterval(() => {
-          if ( thing.has(key) ) {
+          const now = Date.now();
+          if ( thing.has(key) || (timeout && (now-then) >= timeout) ) {
             clearInterval(checker);
             resolve(true);
           } else {
@@ -1334,8 +1363,10 @@
       } else {
         let resolve;
         const pr = new Promise(res => resolve = res);
+        const then = Date.now();
         const checker = setInterval(() => {
-          if ( thing[key] ) {
+          const now = Date.now();
+          if ( thing[key] || (timeout && (now-then) >= timeout) ) {
             clearInterval(checker);
             resolve(true);
           } else {
@@ -1490,5 +1521,38 @@
 
 // crawling
   export async function startCrawl({urls, timeout, depth} = {}) {
-    throw new RichError({status:500, message: 'Not implemented yet!'});
+    State.crawling = true;
+    State.crawlTimeout = timeout;
+    State.visited = new Set();
+    try {
+      while(urls.length > BATCH_SIZE) {
+        const jobs = [];
+        for( let i = 0; i < BATCH_SIZE; i++ ) {
+          const url = urls.shift();
+          const pr = archiveAndIndexURL(url, {timeout, createIfMissing:true, getLinks: depth > 1});
+          jobs.push(pr);
+        }
+        const links = (await Promise.all(jobs)).flat();
+        if ( links.length ) {
+          urls.push(...links);
+        }
+      }
+      while(urls.length) {
+        const url = urls.shift();
+        const links = await archiveAndIndexURL(
+          url, 
+          {timeout, createIfMissing:true, getLinks: depth > 1}
+        );
+        if ( links.length ) {
+          urls.push(...links);
+        }
+      }
+    } catch(e) {
+      console.warn(e);
+      throw new RichError({status:500, message: e.message});
+    } finally {
+      State.crawling = false;
+      State.crawlTimeout = false;
+      State.visited = false;
+    }
   }
