@@ -9,7 +9,21 @@ export const TEXT_NODE = 3;
 export const MAX_HIGHLIGHTABLE_LENGTH = 0;    /* 0 is no max length for highlight */
 export const MAX_TITLE_LENGTH = 140;
 export const MAX_URL_LENGTH = 140;
+export const MAX_REAL_URL_LENGTH = 2**15 - 1;
 export const MAX_HEAD = 140;
+
+export class RichError extends Error {
+  constructor(msg) {
+    let textMessage;
+    try {
+      textMessage = JSON.stringify(msg);
+    } catch(e) {
+      console.warn(`Could not create RichError from argument ${msg.toString ? msg.toString() : msg} as JSON serialization failed. RichError argument MUST be JSON serializable. Failure error was:`, e);
+      return;
+    }
+    super(textMessage);
+  }
+}
 
 /* text nodes inside these elements that are ignored */
 export const FORBIDDEN_TEXT_PARENT = new Set([
