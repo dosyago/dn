@@ -119,6 +119,8 @@
   const Index = new Map();
   const Indexing = new Set();
   const CrawlIndexing = new Set();
+  const CrawlData = new Map();
+  const Q = new Set();
   const Sessions = new Map();
   const Installations = new Set();
   const ConfirmedInstalls = new Set();
@@ -131,6 +133,7 @@
     Docs,
     Indexing,
     CrawlIndexing,
+    CrawlData,
     Cache, 
     Index,
     NDX_FTSIndex,
@@ -450,6 +453,27 @@
       }, sessionId);
       const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
 
+      if ( State.crawling ) {
+        await untilTrue(() => State.CrawlData.has(info.targetId));
+
+        const {depth,links} = State.CrawlData.get(info.targetId);
+
+        if ( (depth + 1) <= State.crawlDepth ) {
+          const {result:{value:{links:crawlLinks}}} = await send("Runtime.evaluate", {
+            expression: `(function () { 
+              return {
+                links: Array.from(
+                  document.querySelectorAll('a[href].titlelink')
+                ).map(a => a.href)
+              };
+            }())`,
+            returnByValue: true
+          }, sessionId);
+
+          links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+        }
+      }
+
       const {title, url} = Targets.get(sessionId);
       let id, ndx_id;
       if ( State.Index.has(url) ) {
@@ -734,28 +758,28 @@
   async function archiveAndIndexURL(url, 
       {crawl, createIfMissing:createIfMissing = false, timeout, depth} = {}
     ) {
-      const links = [];
       if ( Mode == 'serve' ) {
         throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
       }
       if ( State.crawling ) {
         if ( State.visited.has(url) ) {
-          return links;
+          return [];
         } else {
           State.visited.add(url);
         }
       }
 
+      let targetId;
       if ( ! dontCache({url}) ) {
         const {send, on, close} = State.connection;
         const {targetInfos:targs} = await send("Target.getTargets", {});
         const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
-        let targetId;
         if ( targets.has(url) ) {
           const targetInfo = targets.get(url);
           ({targetId} = targetInfo);
           if ( crawl ) {
-            State.CrawlIndexing.add(targetId);
+            State.CrawlIndexing.add(targetId)
+            State.CrawlData.set(targetId, {depth, links:[]});
           }
           const sessionId = State.Sessions.get(targetId);
           DEBUG && console.log(
@@ -764,10 +788,12 @@
           );
           send("Page.stopLoading", {}, sessionId);
           await send("Page.reload", {}, sessionId);
+          await untilTrue(() => State.CrawlData?.get(targetId)?.links?.length);
         } else if ( createIfMissing ) {
           ({targetId} = await send("Target.createTarget", {url})); 
           if ( crawl ) {
-            State.CrawlIndexing.add(targetId);
+            State.CrawlIndexing.add(targetId)
+            State.CrawlData.set(targetId, {depth, links:[]});
           }
           await archiveAndIndexURL(url, {
             crawl, timeout, depth, createIfMissing: false /* prevent redirect loops */
@@ -776,11 +802,12 @@
         if ( crawl ) {
           await Promise.race([
             await Promise.all([
-              untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/3, timeout),
+              untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/5, timeout),
               sleep(MIN_TIME_PER_PAGE)
             ]),
             sleep(MAX_TIME_PER_PAGE)
           ]);
+
           await send("Target.closeTarget", {targetId});
         }
       } else {
@@ -792,8 +819,15 @@
            } but that URL is not in our Bookmarks list.`
         );
       }
-      return links;
+      if ( targetId ) {
+        const {links} = State.CrawlData.get(targetId);
+        State.CrawlData.delete(targetId);
+        return links;
+      } else {
+        return [];
+      }
   }
+
 // helpers
   async function isReady() {
     return await untilHas(Status, 'loaded');
@@ -1546,6 +1580,7 @@
 // crawling
   export async function startCrawl({urls, timeout, depth} = {}) {
     State.crawling = true;
+    State.crawlDepth = depth;
     State.crawlTimeout = timeout;
     State.visited = new Set();
     setTimeout(async () => {
@@ -1553,26 +1588,28 @@
         while(urls.length > BATCH_SIZE) {
           const jobs = [];
           for( let i = 0; i < BATCH_SIZE; i++ ) {
-            const url = urls.shift();
+            const {depth,url} = urls.shift();
             const pr = archiveAndIndexURL(
               url, 
-              {crawl: true, timeout, createIfMissing:true, getLinks: depth > 1}
+              {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
             );
             jobs.push(pr);
           }
-          const links = (await Promise.all(jobs)).flat();
+          const links = (await Promise.all(jobs)).flat().filter(({url}) => !Q.has(url));
           if ( links.length ) {
             urls.push(...links);
+            links.forEach(({url}) => Q.add(url)); 
           }
         }
         while(urls.length) {
-          const url = urls.shift();
-          const links = await archiveAndIndexURL(
+          const {depth,url} = urls.shift();
+          const links = (await archiveAndIndexURL(
             url, 
-            {crawl: true, timeout, createIfMissing:true, getLinks: depth > 1}
-          );
+            {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
+          )).filter(({url}) => !Q.has(url));
           if ( links.length ) {
             urls.push(...links);
+            links.forEach(({url}) => Q.add(url)); 
           }
         }
       } catch(e) {
@@ -1580,6 +1617,7 @@
         throw new RichError({status:500, message: e.message});
       } finally {
         State.crawling = false;
+        State.crawlDepth = false;
         State.crawlTimeout = false;
         State.visited = false;
         console.log(`Crawl finished.`);
