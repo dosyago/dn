@@ -1658,7 +1658,7 @@
         while(urls.length > BATCH_SIZE) {
           const jobs = [];
           for( let i = 0; i < BATCH_SIZE; i++ ) {
-            const {depth,url} = urls.shift();
+            const {depth,url} = urls.pop();
             const pr = archiveAndIndexURL(
               url, 
               {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
@@ -1672,7 +1672,7 @@
           }
         }
         while(urls.length) {
-          const {depth,url} = urls.shift();
+          const {depth,url} = urls.pop();
           const links = (await archiveAndIndexURL(
             url, 
             {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
