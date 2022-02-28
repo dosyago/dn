@@ -458,25 +458,27 @@
       const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
 
       if ( State.crawling ) {
-        await untilTrue(() => State.CrawlData.has(info.targetId));
+        const has = await untilTrue(() => State.CrawlData.has(info.targetId));
 
-        const {depth,links} = State.CrawlData.get(info.targetId);
-        console.log(info, {depth,links});
+        if ( has ) {
+          const {depth,links} = State.CrawlData.get(info.targetId);
+          DEBUG && console.log(info, {depth,links});
 
-        if ( (depth + 1) <= State.crawlDepth ) {
-          const {result:{value:{links:crawlLinks}}} = await send("Runtime.evaluate", {
-            expression: `(function () { 
-              return {
-                links: Array.from(
-                  document.querySelectorAll('a[href].titlelink')
-                ).map(a => a.href)
-              };
-            }())`,
-            returnByValue: true
-          }, sessionId);
+          if ( (depth + 1) <= State.crawlDepth ) {
+            const {result:{value:{links:crawlLinks}}} = await send("Runtime.evaluate", {
+              expression: `(function () { 
+                return {
+                  links: Array.from(
+                    document.querySelectorAll('a[href].titlelink')
+                  ).map(a => a.href)
+                };
+              }())`,
+              returnByValue: true
+            }, sessionId);
 
-          links.length = 0;
-          links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+            links.length = 0;
+            links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+          }
         }
       }
 
@@ -1657,8 +1659,12 @@
       try {
         while(urls.length > BATCH_SIZE) {
           const jobs = [];
+          const batch = urls.splice(urls.length-BATCH_SIZE,BATCH_SIZE);
           for( let i = 0; i < BATCH_SIZE; i++ ) {
-            const {depth,url} = urls.pop();
+            const {depth,url} = batch.pop();
+            if ( url.startsWith('https://news.ycombinator') ) {
+              await sleep(1618);
+            }
             const pr = archiveAndIndexURL(
               url, 
               {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
@@ -1673,6 +1679,9 @@
         }
         while(urls.length) {
           const {depth,url} = urls.pop();
+          if ( url.startsWith('https://news.ycombinator') ) {
+            await sleep(1618);
+          }
           const links = (await archiveAndIndexURL(
             url, 
             {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}

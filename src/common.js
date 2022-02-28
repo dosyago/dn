@@ -9,7 +9,7 @@ export const MIN_TIME_PER_PAGE = 10000;
 export const MAX_TIME_PER_PAGE = 32000;
 export const MIN_WAIT = 1000;
 export const MAX_WAITS = 60;
-export const BATCH_SIZE = 1; // crawl batch size (how many concurrent tabs for crawling)
+export const BATCH_SIZE = 5; // crawl batch size (how many concurrent tabs for crawling)
 export const MAX_REAL_URL_LENGTH = 2**15 - 1;
 
 export const CHECK_INTERVAL = 400;
