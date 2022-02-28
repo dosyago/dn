@@ -5,7 +5,7 @@ export const DEBUG = process.env.DEBUG_22120 || false;
 export const SHOW_FETCH = false;
 
 // crawl related
-export const MIN_TIME_PER_PAGE = 7000;
+export const MIN_TIME_PER_PAGE = 10000;
 export const MAX_TIME_PER_PAGE = 32000;
 export const MIN_WAIT = 1000;
 export const MAX_WAITS = 60;
@@ -75,6 +75,10 @@ export function clone(o) {
 }
 
 export async function untilTrue(pred, waitOverride = MIN_WAIT, maxWaits = MAX_WAITS) {
+  if ( waitOverride < 0 ) {
+    maxWaits = -1;
+    waitOverride = MIN_WAIT;
+  }
   let waitCount = 0;
   let resolve;
   const pr = new Promise(res => resolve = res);
@@ -87,7 +91,7 @@ export async function untilTrue(pred, waitOverride = MIN_WAIT, maxWaits = MAX_WA
       return resolve(true);
     } else {
       waitCount++;
-      if ( waitCount < maxWaits ) {
+      if ( waitCount < maxWaits || maxWaits < 0 ) {
         setTimeout(checkPred, waitOverride);
       } else {
         resolve(false);

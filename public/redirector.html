@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<h1>About to index archive and index <code id=url-text></code></h1>
+<script type=module>
+  const url = new URLSearchParams(location.search).get('url');
+  const text = document.querySelector('#url-text');
+  let valid = false;
+  try {
+    new URL(url);
+    valid = true;
+  } catch(e) {
+    console.warn(`URL ${url} is not a valid URL`);
+  }
+
+  if ( valid ) {
+    text.innerText = url;
+    setTimeout(() => {
+      window.location.href = url;
+    }, 1000);
+  }
+</script>

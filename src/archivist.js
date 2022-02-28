@@ -119,6 +119,7 @@
   const Index = new Map();
   const Indexing = new Set();
   const CrawlIndexing = new Set();
+  const CrawlTargets = new Set();
   const CrawlData = new Map();
   const Q = new Set();
   const Sessions = new Map();
@@ -134,6 +135,7 @@
     Indexing,
     CrawlIndexing,
     CrawlData,
+    CrawlTargets,
     Cache, 
     Index,
     NDX_FTSIndex,
@@ -425,6 +427,8 @@
       if ( info.url.startsWith('chrome') ) return;
       if ( dontCache(info) ) return;
 
+      console.log('Index URL', info);
+
       DEBUG && console.log('Index URL called', info);
 
       if ( State.Indexing.has(info.targetId) ) return;
@@ -457,6 +461,7 @@
         await untilTrue(() => State.CrawlData.has(info.targetId));
 
         const {depth,links} = State.CrawlData.get(info.targetId);
+        console.log(info, {depth,links});
 
         if ( (depth + 1) <= State.crawlDepth ) {
           const {result:{value:{links:crawlLinks}}} = await send("Runtime.evaluate", {
@@ -470,6 +475,7 @@
             returnByValue: true
           }, sessionId);
 
+          links.length = 0;
           links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
         }
       }
@@ -519,50 +525,6 @@
 
       State.Indexing.delete(info.targetId);
       State.CrawlIndexing.delete(info.targetId);
-    }
-
-    function processDoc({documents, strings}) {
-      /* 
-        Info
-        Implementation Notes 
-
-        1. Code uses spec at: 
-          https://chromedevtools.github.io/devtools-protocol/tot/DOMSnapshot/#type-NodeTreeSnapshot
-
-        2. Note that so far the below will NOT produce text for and therefore we will NOT
-        index textarea or input elements. We can access those by using the textValue and
-        inputValue array properties of the doc, if we want to implement that.
-      */
-         
-      const texts = [];
-      for( const doc of documents) {
-        const textIndices = doc.nodes.nodeType.reduce((Indices, type, index) => {
-          if ( type === TEXT_NODE ) {
-            const parentIndex = doc.nodes.parentIndex[index];
-            const forbiddenParent = parentIndex >= 0 && 
-              FORBIDDEN_TEXT_PARENT.has(strings[
-                doc.nodes.nodeName[
-                  parentIndex
-                ]
-              ])
-            if ( ! forbiddenParent ) {
-              Indices.push(index);
-            }
-          }
-          return Indices;
-        }, []);
-        textIndices.forEach(index => {
-          const stringsIndex = doc.nodes.nodeValue[index];
-          if ( stringsIndex >= 0 ) {
-            const text = strings[stringsIndex];
-            texts.push(text);
-          }
-        });
-      }
-
-      const pageText = texts.filter(t => t.trim()).join(' ');
-      DEBUG && console.log('Page text>>>', pageText);
-      return pageText;
     }
 
     async function attachToTarget({targetInfo}) {
@@ -743,6 +705,7 @@
     }
   }
 
+// helpers
   function neverCache(url) {
     return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
   }
@@ -755,80 +718,50 @@
     return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
   }
 
-  async function archiveAndIndexURL(url, 
-      {crawl, createIfMissing:createIfMissing = false, timeout, depth} = {}
-    ) {
-      if ( Mode == 'serve' ) {
-        throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
-      }
-      if ( State.crawling ) {
-        if ( State.visited.has(url) ) {
-          return [];
-        } else {
-          State.visited.add(url);
-        }
-      }
+  function processDoc({documents, strings}) {
+    /* 
+      Info
+      Implementation Notes 
 
-      let targetId;
-      if ( ! dontCache({url}) ) {
-        const {send, on, close} = State.connection;
-        const {targetInfos:targs} = await send("Target.getTargets", {});
-        const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
-        if ( targets.has(url) ) {
-          const targetInfo = targets.get(url);
-          ({targetId} = targetInfo);
-          if ( crawl ) {
-            State.CrawlIndexing.add(targetId)
-            State.CrawlData.set(targetId, {depth, links:[]});
-          }
-          const sessionId = State.Sessions.get(targetId);
-          DEBUG && console.log(
-            "Reloading to archive and index in select (Bookmark) mode", 
-            url
-          );
-          send("Page.stopLoading", {}, sessionId);
-          await send("Page.reload", {}, sessionId);
-          await untilTrue(() => State.CrawlData?.get(targetId)?.links?.length);
-        } else if ( createIfMissing ) {
-          ({targetId} = await send("Target.createTarget", {url})); 
-          if ( crawl ) {
-            State.CrawlIndexing.add(targetId)
-            State.CrawlData.set(targetId, {depth, links:[]});
-          }
-          await archiveAndIndexURL(url, {
-            crawl, timeout, depth, createIfMissing: false /* prevent redirect loops */
-          });
-        }
-        if ( crawl ) {
-          await Promise.race([
-            await Promise.all([
-              untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/5, timeout),
-              sleep(MIN_TIME_PER_PAGE)
-            ]),
-            sleep(MAX_TIME_PER_PAGE)
-          ]);
+      1. Code uses spec at: 
+        https://chromedevtools.github.io/devtools-protocol/tot/DOMSnapshot/#type-NodeTreeSnapshot
 
-          await send("Target.closeTarget", {targetId});
+      2. Note that so far the below will NOT produce text for and therefore we will NOT
+      index textarea or input elements. We can access those by using the textValue and
+      inputValue array properties of the doc, if we want to implement that.
+    */
+       
+    const texts = [];
+    for( const doc of documents) {
+      const textIndices = doc.nodes.nodeType.reduce((Indices, type, index) => {
+        if ( type === TEXT_NODE ) {
+          const parentIndex = doc.nodes.parentIndex[index];
+          const forbiddenParent = parentIndex >= 0 && 
+            FORBIDDEN_TEXT_PARENT.has(strings[
+              doc.nodes.nodeName[
+                parentIndex
+              ]
+            ])
+          if ( ! forbiddenParent ) {
+            Indices.push(index);
+          }
         }
-      } else {
-        DEBUG && console.warn(
-          `archiveAndIndexURL called in mode ${
-            Mode
-           } for URL ${
-            url
-           } but that URL is not in our Bookmarks list.`
-        );
-      }
-      if ( targetId ) {
-        const {links} = State.CrawlData.get(targetId);
-        State.CrawlData.delete(targetId);
-        return links;
-      } else {
-        return [];
-      }
+        return Indices;
+      }, []);
+      textIndices.forEach(index => {
+        const stringsIndex = doc.nodes.nodeValue[index];
+        if ( stringsIndex >= 0 ) {
+          const text = strings[stringsIndex];
+          texts.push(text);
+        }
+      });
+    }
+
+    const pageText = texts.filter(t => t.trim()).join(' ');
+    DEBUG && console.log('Page text>>>', pageText);
+    return pageText;
   }
 
-// helpers
   async function isReady() {
     return await untilHas(Status, 'loaded');
   }
@@ -1578,7 +1511,144 @@
   }
 
 // crawling
+  async function archiveAndIndexURL(url, 
+      {crawl, createIfMissing:createIfMissing = false, timeout, depth, TargetId} = {}
+    ) {
+      console.log('ArchiveAndIndex', url, {crawl, createIfMissing, timeout, depth, TargetId});
+      if ( Mode == 'serve' ) {
+        throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
+      }
+      let targetId = TargetId;
+      let sessionId;
+      if ( ! dontCache({url}) ) {
+        const {send, on, close} = State.connection;
+        const {targetInfos:targs} = await send("Target.getTargets", {});
+        const targets = targs.reduce((M,T) => {
+          M.set(T.url, T);
+          M.set(T.targetId, T);
+          return M;
+        }, new Map);
+        console.log('Targets', targets);
+        if ( targets.has(url) || targets.has(targetId) ) {
+          console.log('We have target', url, targetId);
+          const targetInfo = targets.get(url) || targets.get(targetId);
+          ({targetId} = targetInfo);
+          if ( crawl && ! State.CrawlData.has(targetId) ) {
+            State.CrawlIndexing.add(targetId)
+            State.CrawlData.set(targetId, {depth, links:[]});
+            if ( State.visited.has(url) ) {
+              return [];
+            } else {
+              State.visited.add(url);
+            }
+          }
+          sessionId = State.Sessions.get(targetId);
+          DEBUG && console.log(
+            "Reloading to archive and index in select (Bookmark) mode", 
+            url
+          );
+          send("Page.stopLoading", {}, sessionId);
+          send("Page.reload", {}, sessionId);
+          if ( crawl ) {
+            let resolve;
+            const pageLoaded = new Promise(res => resolve = res).then(() => sleep(1000));
+            {
+              on("Page.loadEventFired", resolve);
+              //console.log(targets, targetId, targets.get(targetId));
+              const {result:{value:loaded}} = await send("Runtime.evaluate", {
+                expression: `(function () {
+                  return document.readyState === 'complete'; 
+                }())`,
+                returnByValue: true
+              }, sessionId);
+              if ( loaded ) {
+                resolve(true);
+              }
+            }
+            let notifyStable;
+            const pageHTMLStabilized = new Promise(res => notifyStable = res);
+            setTimeout(async () => {
+              const timeout = MAX_TIME_PER_PAGE / 4;
+              const checkDurationMsecs = 1618;
+              const maxChecks = timeout / checkDurationMsecs;
+              let lastSize = 0;
+              let checkCounts = 1;
+              let countStableSizeIterations = 0;
+              const minStableSizeIterations = 3;
+
+              while(checkCounts++ <= maxChecks) {
+                const flatDoc = await send("DOMSnapshot.captureSnapshot", {
+                  computedStyles: [],
+                }, sessionId);
+                const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
+                const currentSize = pageText.length;
+
+                if(lastSize != 0 && currentSize == lastSize) 
+                  countStableSizeIterations++;
+                else 
+                  countStableSizeIterations = 0; //reset the counter
+
+                if(countStableSizeIterations >= minStableSizeIterations) {
+                  notifyStable(true);
+                }
+
+                lastSize = currentSize;
+                await sleep(checkDurationMsecs);
+              }
+
+              notifyStable(false);
+            }, 0);
+
+            await Promise.race([
+              await Promise.all([
+                pageLoaded,
+                pageHTMLStabilized,
+                untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/5, timeout),
+                sleep(MIN_TIME_PER_PAGE)
+              ]),
+              sleep(MAX_TIME_PER_PAGE)
+            ]);
+
+            await send("Target.closeTarget", {targetId});
+            State.CrawlTargets.delete(targetId);
+          }
+        } else if ( createIfMissing ) {
+          console.log('We create target', url);
+          ({targetId} = await send("Target.createTarget", {
+            url: `http://localhost:${args.server_port}/redirector.html?url=${
+              encodeURIComponent(url)
+            }`
+          }));
+          if ( crawl && ! State.CrawlData.has(targetId) ) {
+            State.CrawlTargets.add(targetId);
+            State.CrawlIndexing.add(targetId);
+            State.CrawlData.set(targetId, {depth, links:[]});
+          }
+          return archiveAndIndexURL(url, {
+            crawl, timeout, depth, createIfMissing: false, /* prevent redirect loops */
+            TargetId: targetId
+          });
+        }
+      } else {
+        DEBUG && console.warn(
+          `archiveAndIndexURL called in mode ${
+            Mode
+           } for URL ${
+            url
+           } but that URL is not in our Bookmarks list.`
+        );
+      }
+      if ( crawl && State.CrawlData.has(targetId) ) {
+        const {links} = State.CrawlData.get(targetId);
+        console.log({targetId,links});
+        State.CrawlData.delete(targetId);
+        return links;
+      } else {
+        return [];
+      }
+  }
   export async function startCrawl({urls, timeout, depth} = {}) {
+    console.log('StartCrawl', urls, timeout, depth);
     State.crawling = true;
     State.crawlDepth = depth;
     State.crawlTimeout = timeout;
@@ -1607,6 +1677,7 @@
             url, 
             {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
           )).filter(({url}) => !Q.has(url));
+          console.log(links, Q);
           if ( links.length ) {
             urls.push(...links);
             links.forEach(({url}) => Q.add(url)); 
@@ -1616,6 +1687,7 @@
         console.warn(e);
         throw new RichError({status:500, message: e.message});
       } finally {
+        await untilTrue(() => State.CrawlData.size === 0 && State.CrawlTargets.size === 0, -1)
         State.crawling = false;
         State.crawlDepth = false;
         State.crawlTimeout = false;
