@@ -13,6 +13,8 @@ import {trilight, /*highlight*/} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, '..', 'public');
 
+const SearchCache = new Map();
+
 const app = express();
 
 let running = false;
@@ -57,8 +59,29 @@ function addHandlers() {
 
   app.get('/search(.json)?', async (req, res) => {
     await Archivist.isReady();
-    const {query, results:resultIds, HL} = await Archivist.search(req.query.query);
-    const results = resultIds.map(docId => Archivist.getDetails(docId));
+    let {query:oquery} = req.query;
+    if ( ! oquery ) {
+      return res.end(SearchResultView({results:[], query:'', HL:new Map, page:1}));
+    }
+    oquery = oquery.trim();
+    if ( ! oquery ) {
+      return res.end(SearchResultView({results:[], query:'', HL:new Map, page:1}));
+    }
+    let {page} = req.query;
+    if ( ! page || ! Number.isInteger(parseInt(page)) ) {
+      page = 1;
+    } else {
+      page = parseInt(page);
+    }
+    let resultIds, query, HL;
+    if ( SearchCache.has(req.query.query) ) {
+      ({query, resultIds, HL} = SearchCache.get(oquery));
+    } else {
+      ({query, results:resultIds, HL} = await Archivist.search(oquery));
+      SearchCache.set(req.query.query, {query, resultIds, HL});
+    }
+    const start = (page-1)*args.results_per_page;
+    const results = resultIds.slice(start,start+args.results_per_page).map(docId => Archivist.getDetails(docId))
     if ( req.path.endsWith('.json') ) {
       res.end(JSON.stringify({
         results, query
@@ -75,7 +98,7 @@ function addHandlers() {
           .map(segment => Archivist.findOffsets(query, segment))
           .join(' ... ');
       });
-      res.end(SearchResultView({results, query, HL}));
+      res.end(SearchResultView({results, query, HL, page}));
     }
   });
 
@@ -300,7 +323,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
   `
 }
 
-function SearchResultView({results, query, HL}) {
+function SearchResultView({results, query, HL, page}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
@@ -338,6 +361,19 @@ function SearchResultView({results, query, HL}) {
       `).join('\n')
     }
     </ol>
+    <p class=cent>
+      ${page > 1 ? `
+      <a href=/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page-1)}>
+        &lt; Page ${page-1}
+      </a> |` : ''}
+      <span class=grey>
+        Page ${page}
+      </span>
+      |
+      <a href=/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page+1)}>
+        Page ${page+1} &gt;
+      </a>
+    </p>
   `
 }
 

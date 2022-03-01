@@ -107,16 +107,17 @@ export function trilight(query, doc, {
 
   const trigrams = doc.reduce(getFragmenter(ngramSize, {overlap:true}), []);
   const index = trigrams.reduce((idx, frag) => {
-    let counts = idx[frag.text];
+    let counts = idx.get(frag.text);
     if ( ! counts ) {
-      counts = idx[frag.text] = [];
+      counts = [];
+      idx.set(frag.text, counts);
     }
     counts.push(frag.offset);
     return idx;
-  }, {});
+  }, new Map);
   const qtris = query.reduce(getFragmenter(ngramSize, {overlap:true}), []);
   const entries = qtris.reduce((E, {text}, qi) => {
-    const counts = index[text];
+    const counts = index.get(text);
     if ( counts ) {
       counts.forEach(di => {
         const entry = {text, qi, di};

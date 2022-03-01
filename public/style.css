@@ -93,3 +93,9 @@
   ol.results {
     list-style-type: none;
   }
+  .cent {
+    text-align: center;
+  }
+  .grey {
+    color: grey;
+  }
