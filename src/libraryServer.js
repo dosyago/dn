@@ -345,7 +345,7 @@ function SearchResultView({results, query, HL, page}) {
     <p>
       Showing results for <b>${query}</b>
     </p>
-    <ol class=results>
+    <ol class=results start="${(page-1)*args.results_per_page+1}">
     ${
       results.map(({snippet, url,title,id}) => `
         <li>
