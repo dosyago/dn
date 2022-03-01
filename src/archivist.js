@@ -1111,12 +1111,12 @@
         return obj;
       } catch(e) {
         console.log({obj, index:State.Index, e, ndx, flex, fuzz});
-        throw e;
+        return obj;
       }
     });
     results.sort(({score:scoreA}, {score:scoreB}) => scoreB-scoreA);
     DEBUG && console.log(results);
-    const resultIds = results.map(({id}) => id);
+    const resultIds = results.map(({id}) => id).filter(v => !!v);
     return resultIds;
   }
 

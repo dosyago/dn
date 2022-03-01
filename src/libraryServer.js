@@ -9,7 +9,7 @@ import {
   RichError
 } from './common.js';
 import {startCrawl, Archivist} from './archivist.js';
-import {trilight, /*highlight*/} from './highlighter.js';
+import {trilight, highlight} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, '..', 'public');
 
