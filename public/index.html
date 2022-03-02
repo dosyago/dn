@@ -36,22 +36,59 @@
           <small>Seconds to wait for each page to load before indexing.</small>
         </label>
       <p>
-        <label>
-          Depth
-          <br>
-          <input required name=depth 
-            type=number min=1 max=20 value=2 step=1> <span class=units>clicks</span>
-        </label>
+      <label>
+        Depth
         <br>
-       <section class=small>
-          <strong>Value guide</strong>
-          <ol>
-            <li>Only each link.
-            <li>Plus anything 1 click from the link.
-            <li>Plus anything 2 clicks from the link.
-          </ol>
-          <em>And so on&hellip;</em>
-       </section>
+        <input required name=depth 
+          type=number min=1 max=20 value=2 step=1> <span class=units>clicks</span>
+      </label>
+      <br>
+      <section class=small>
+        <strong>Value guide</strong>
+        <ol>
+          <li>Only each link.
+          <li>Plus anything 1 click from the link.
+          <li>Plus anything 2 clicks from the link.
+        </ol>
+        <em>And so on&hellip;</em>
+      </section>
+      <p>
+        <label>
+          Min Page Crawl Time
+          <br>
+          <input name=minPageCrawlTime
+            type=number min=1 max=60> <span class=units>seconds</span>
+          <br>
+          <small>Seconds to wait for each page to load before indexing.</small>
+        </label>
+      <p>
+      <p>
+        <label>
+          Max Page Crawl Time
+          <br>
+          <input name=maxPageCrawlTime
+            type=number min=3 max=120> <span class=units>seconds</span>
+          <br>
+          <small>Max time to allow for each page.</small>
+        </label>
+      <p>
+      <p>
+        <label>
+          Batch size
+          <br>
+          <input name=batchSize
+            type=number min=1 max=32> <span class=units>tabs</span>
+          <br>
+          <small>Number of concurrent tabs.</small>
+        </label>
+      <p>
+      <p>
+        <label>
+          <input name=saveToFile
+            type=checkbox>
+            Save the harvested URLs to a file
+        </label>
+      <p>
     </details>
     <p>
       <button>Crawl</button>

@@ -1606,9 +1606,9 @@
                 pageLoaded,
                 pageHTMLStabilized,
                 untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/5, timeout),
-                sleep(MIN_TIME_PER_PAGE)
+                sleep(State.minPageCrawlTime || MIN_TIME_PER_PAGE)
               ]),
-              sleep(MAX_TIME_PER_PAGE)
+              sleep(State.maxPageCrawlTime || MAX_TIME_PER_PAGE)
             ]);
 
             await send("Target.closeTarget", {targetId});
@@ -1649,18 +1649,33 @@
         return [];
       }
   }
-  export async function startCrawl({urls, timeout, depth} = {}) {
-    console.log('StartCrawl', urls, timeout, depth);
+  export async function startCrawl({
+    urls, timeout, depth, saveToFile: saveToFile = false,
+    batchSize,
+    minPageCrawlTime, 
+    maxPageCrawlTime,
+  } = {}) {
+    console.log('StartCrawl', urls, timeout, depth, {batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime});
     State.crawling = true;
     State.crawlDepth = depth;
     State.crawlTimeout = timeout;
     State.visited = new Set();
+    Object.assign(State,{
+      batchSize,
+      minPageCrawlTime,
+      maxPageCrawlTime
+    });
+    const batch_sz = State.batchSize || BATCH_SIZE;
+    let logStream;
+    if ( saveToFile ) {
+      logStream = Fs.createWriteStream(`crawl-${(new Date).toISOString()}.urls.txt`, {flags:'a'});
+    }
     setTimeout(async () => {
       try {
-        while(urls.length > BATCH_SIZE) {
+        while(urls.length > batch_sz) {
           const jobs = [];
-          const batch = urls.splice(urls.length-BATCH_SIZE,BATCH_SIZE);
-          for( let i = 0; i < BATCH_SIZE; i++ ) {
+          const batch = urls.splice(urls.length-batch_sz,batch_sz);
+          for( let i = 0; i < batch_sz; i++ ) {
             const {depth,url} = batch.pop();
             if ( url.startsWith('https://news.ycombinator') ) {
               await sleep(1618);
@@ -1673,7 +1688,11 @@
           }
           const links = (await Promise.all(jobs)).flat().filter(({url}) => !Q.has(url));
           if ( links.length ) {
-            urls.push(...links);
+            if ( saveToFile ) {
+              urls.forEach(url => logStream.write(url+`\n`));
+            } else {
+              urls.push(...links);
+            }
             links.forEach(({url}) => Q.add(url)); 
           }
         }
@@ -1688,7 +1707,11 @@
           )).filter(({url}) => !Q.has(url));
           console.log(links, Q);
           if ( links.length ) {
-            urls.push(...links);
+            if ( saveToFile ) {
+              urls.forEach(url => logStream.write(url+`\n`));
+            } else {
+              urls.push(...links);
+            }
             links.forEach(({url}) => Q.add(url)); 
           }
         }
@@ -1701,6 +1724,9 @@
         State.crawlDepth = false;
         State.crawlTimeout = false;
         State.visited = false;
+        if ( saveToFile ) {
+          logStream.end();
+        }
         console.log(`Crawl finished.`);
       }
     }, 0);
