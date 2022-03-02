@@ -57,7 +57,7 @@
           Min Page Crawl Time
           <br>
           <input name=minPageCrawlTime
-            type=number min=1 max=60> <span class=units>seconds</span>
+            type=number min=1 max=60 value=20> <span class=units>seconds</span>
           <br>
           <small>Seconds to wait for each page to load before indexing.</small>
         </label>
@@ -67,7 +67,7 @@
           Max Page Crawl Time
           <br>
           <input name=maxPageCrawlTime
-            type=number min=3 max=120> <span class=units>seconds</span>
+            type=number min=3 max=120 value=30> <span class=units>seconds</span>
           <br>
           <small>Max time to allow for each page.</small>
         </label>
@@ -77,7 +77,7 @@
           Batch size
           <br>
           <input name=batchSize
-            type=number min=1 max=32> <span class=units>tabs</span>
+            type=number min=1 max=32 value=1> <span class=units>tabs</span>
           <br>
           <small>Number of concurrent tabs.</small>
         </label>
@@ -85,13 +85,24 @@
       <p>
         <label>
           <input name=saveToFile
-            type=checkbox>
+            type=checkbox checked>
             Save the harvested URLs to a file
         </label>
       <p>
     </details>
     <p>
       <button>Crawl</button>
+      <script>
+        {
+          const button = document.currentScript.previousElementSibling;
+          let disabled = false;
+          button.addEventListener('click', click => {
+            if ( disabled ) return click.preventDefault(); 
+            disabled = true;
+            setTimeout(() => button.disabled = true, 0));
+          });
+        }
+      </script>
   </fieldset>
 </form>
 <form method=GET action=/search>

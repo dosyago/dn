@@ -1655,6 +1655,10 @@
     minPageCrawlTime, 
     maxPageCrawlTime,
   } = {}) {
+    if ( State.crawling ) {
+      console.log('Already crawling...');
+      return;
+    }
     console.log('StartCrawl', urls, timeout, depth, {batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime});
     State.crawling = true;
     State.crawlDepth = depth;
@@ -1666,9 +1670,12 @@
       maxPageCrawlTime
     });
     const batch_sz = State.batchSize || BATCH_SIZE;
+    let totalBytes = 0;
+    let logName;
     let logStream;
     if ( saveToFile ) {
-      logStream = Fs.createWriteStream(`crawl-${(new Date).toISOString()}.urls.txt`, {flags:'a'});
+      logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
+      logStream = Fs.createWriteStream(logName, {flags:'as+'});
     }
     setTimeout(async () => {
       try {
@@ -1689,7 +1696,10 @@
           const links = (await Promise.all(jobs)).flat().filter(({url}) => !Q.has(url));
           if ( links.length ) {
             if ( saveToFile ) {
-              urls.forEach(url => logStream.write(url+`\n`));
+              links.forEach(({url}) => {
+                logStream.write(url+`\n`);
+                totalBytes += logStream.bytesWritten;
+              });
             } else {
               urls.push(...links);
             }
@@ -1708,7 +1718,10 @@
           console.log(links, Q);
           if ( links.length ) {
             if ( saveToFile ) {
-              urls.forEach(url => logStream.write(url+`\n`));
+              links.forEach(({url}) => {
+                logStream.write(url+`\n`);
+                totalBytes += logStream.bytesWritten;
+              });
             } else {
               urls.push(...links);
             }
@@ -1725,7 +1738,8 @@
         State.crawlTimeout = false;
         State.visited = false;
         if ( saveToFile ) {
-          logStream.end();
+          console.log(`Wrote ${totalBytes} bytes of URLs to ${logName}`);
+          logStream.close();
         }
         console.log(`Crawl finished.`);
       }

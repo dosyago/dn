@@ -170,8 +170,8 @@ function addHandlers() {
       depth = Math.round(parseInt(depth));
       batchSize = Math.round(parseInt(batchSize));
       saveToFile = !!saveToFile;
-      minPageCrawlTime = Math.round(parseInt(minPageCrawlTime));
-      maxPageCrawlTime = Math.round(parseInt(maxPageCrawlTime));
+      minPageCrawlTime = Math.round(parseInt(minPageCrawlTime)*1000);
+      maxPageCrawlTime = Math.round(parseInt(maxPageCrawlTime)*1000);
       if ( Number.isNaN(timeout) || Number.isNaN(depth) || typeof links != 'string' ) {
         console.warn({invalid:{timeout,depth,links}});
         throw new RichError({
