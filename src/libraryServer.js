@@ -161,10 +161,17 @@ function addHandlers() {
 
   app.post('/crawl', async (req, res) => {
     try {
-      let {links, timeout, depth} = req.body;
+      let {
+        links, timeout, depth, saveToFile, 
+        maxPageCrawlTime, minPageCrawlTime, batchSize
+      } = req.body;
       const oTimeout = timeout;
       timeout = Math.round(parseFloat(timeout)*1000);
       depth = Math.round(parseInt(depth));
+      batchSize = Math.round(parseInt(batchSize));
+      saveToFile = !!saveToFile;
+      minPageCrawlTime = Math.round(parseInt(minPageCrawlTime));
+      maxPageCrawlTime = Math.round(parseInt(maxPageCrawlTime));
       if ( Number.isNaN(timeout) || Number.isNaN(depth) || typeof links != 'string' ) {
         console.warn({invalid:{timeout,depth,links}});
         throw new RichError({
@@ -190,7 +197,9 @@ function addHandlers() {
         return true;
       }).map(url => ({url,depth:1}));
       console.log(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
-      await startCrawl({urls, timeout, depth});
+      await startCrawl({
+        urls, timeout, depth, saveToFile, batchSize, minPageCrawlTime, maxPageCrawlTime
+      });
       res.end(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`);
     } catch(e) {
       if ( e instanceof RichError ) { 
