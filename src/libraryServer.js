@@ -50,7 +50,7 @@ async function start({server_port}) {
 }
 
 function addHandlers() {
-  app.use(express.urlencoded({extended:true}));
+  app.use(express.urlencoded({extended:true, limit: '50mb'}));
   app.use(express.static(SITE_PATH));
 
   if ( args.library_path() ) {
