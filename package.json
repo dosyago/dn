@@ -10,7 +10,7 @@
   },
   "scripts": {
     "bundle": "npx rollup --config",
-    "start": "node src/app.js",
+    "start": "bash ./run.sh",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
     "clean": "rm -rf build/* bin/*",
