@@ -1698,7 +1698,6 @@
             if ( saveToFile ) {
               links.forEach(({url}) => {
                 logStream.write(url+`\n`);
-                totalBytes += logStream.bytesWritten;
               });
             } else {
               urls.push(...links);
@@ -1720,7 +1719,6 @@
             if ( saveToFile ) {
               links.forEach(({url}) => {
                 logStream.write(url+`\n`);
-                totalBytes += logStream.bytesWritten;
               });
             } else {
               urls.push(...links);
@@ -1738,8 +1736,9 @@
         State.crawlTimeout = false;
         State.visited = false;
         if ( saveToFile ) {
-          console.log(`Wrote ${totalBytes} bytes of URLs to ${logName}`);
           logStream.close();
+          totalBytes = logStream.bytesWritten;
+          console.log(`Wrote ${totalBytes} bytes of URLs to ${logName}`);
         }
         console.log(`Crawl finished.`);
       }
