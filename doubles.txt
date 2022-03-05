@@ -1,1667 +1,1667 @@
-      4 http://www.amazon.com/
-      3 http://ycombinator.com/apply.html
-      3 http://www.willamette.edu/~fruehr/haskell/evolution.html
-      3 http://www.snopes.com/music/artists/vanhalen.asp
-      3 http://www.scottaaronson.com/democritus/lec9.html
-      3 http://www.reddit.com/
-      3 http://www.princeton.edu/main/news/archive/S26/91/22K07/
-      3 http://www.openstenoproject.org/
-      3 http://www.oftenpaper.net/sierpinski.htm
-      3 http://www.noulakaz.net/weblog/2007/03/18/a-regular-expression-to-check-for-prime-numbers/
-      3 http://www.norvig.com/spell-correct.html
-      3 http://www.nhplace.com/kent/Papers/cl-untold-story.html
-      3 http://www.michaelnielsen.org/ddi/lisp-as-the-maxwells-equations-of-software/
-      3 http://www.lurklurk.org/linkers/linkers.html
-      3 http://www.linusakesson.net/programming/tty/index.php
-      3 http://www.linusakesson.net/programming/tty/
-      3 http://www.lighterra.com/papers/modernmicroprocessors/
-      3 http://www.jsfuck.com/
-      3 http://www.gnu.org/gnu/rms-lisp.html
-      3 http://www.georgehart.com/bagel/bagel.html
-      3 http://www.garlikov.com/Soc_Meth.html
-      3 http://www.dspguide.com/pdfbook.htm
-      3 http://www.4p8.com/eric.brasseur/gamma.html
-      3 http://websocketd.com/
-      3 http://websdr.ewi.utwente.nl:8901/
-      3 http://vim-adventures.com/
-      3 http://trillian.mit.edu/~jc/humor/ATT_Copyright_true.html
-      3 http://terrytao.wordpress.com/career-advice/does-one-have-to-be-a-genius-to-do-maths/
-      3 https://www.zotero.org/
-      3 https://www.darlinghq.org/
-      3 http://st.suckless.org/
-      3 https://training.kalzumeus.com/newsletters/archive/enterprise_sales
-      3 http://steve-yegge.blogspot.com/2006/09/good-agile-bad-agile_27.html
-      3 http://status.aws.amazon.com/
-      3 https://seashells.io/
-      3 https://projecteuler.net/
-      3 https://jaycarlson.net/microcontrollers/
-      3 https://github.com/susam/texme
-      3 https://github.com/robertdavidgraham/masscan
-      3 https://github.com/munificent/vigil
-      3 https://github.com/minimaxir/big-list-of-naughty-strings
-      3 https://github.com/google/lisp-koans
-      3 https://github.com/alevchuk/vim-clutch
-      3 http://people.csail.mit.edu/gregs/ll1-discuss-archive-html/msg03277.html
-      3 http://ocamlunix.forge.ocamlcore.org/
-      3 http://norvig.com/experiment-design.html
-      3 http://neuralnetworksanddeeplearning.com/chap4.html
-      3 http://matt.might.net/articles/best-programming-languages/
-      3 http://madebyevan.com/webgl-water/
-      3 http://lists.squeakfoundation.org/pipermail/squeak-dev/1998-October/017019.html
-      3 http://lists.busybox.net/pipermail/busybox/2010-December/074114.html
-      3 http://libcello.org/
-      3 http://learnyouahaskell.com/
-      3 http://landoflisp.com/
-      3 http://kivy.org/
-      3 http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/
-      3 http://johnsalvatier.org/blog/2017/reality-has-a-surprising-amount-of-detail
-      3 http://idlewords.com/2010/03/scott_and_scurvy.htm
-      3 http://haxe.org/
-      3 http://habitatchronicles.com/2004/04/you-cant-tell-people-anything/
-      3 http://graphics.stanford.edu/~seander/bithacks.html
-      3 http://gameprogrammingpatterns.com/
-      3 http://factorcode.org/
-      3 http://evhead.com/2005/11/ten-rules-for-web-startups.asp
-      3 http://diydrones.com/
-      3 http://dec64.com/
-      3 http://cslibrary.stanford.edu/101/EssentialC.pdf
-      3 http://blog.notdot.net/2010/07/Damn-Cool-Algorithms-Levenshtein-Automata
-      2 http://zsync.moria.org.uk/
-      2 http://zotonic.com/
-      2 http://yuiblog.com/crockford/
-      2 http://yro.slashdot.org/story/11/10/11/1322202/German-State-Confesses-To-Downplays-Government-Spyware?utm_source=slashdot&utm_medium=twitter
-      2 http://youtube.com/watch?v=D1R-jKKp3NA
-      2 http://yoshinorimatsunobu.blogspot.com/2010/10/using-mysql-as-nosql-story-for.html
-      2 http://ycombinator.com/tredennick.html
-      2 http://ycombinator.com/newsguidelines.html?
-      2 http://ycombinator.com/munger.html
-      2 http://y2combinator.com/
-      2 http://xuanji.appspot.com/isicp/1-1-elements.html
-      2 http://xn--hgi.ws/
-      2 http://xip.io/
-      2 http://www.zpub.com/notes/idle.html
-      2 http://www.zompist.com/yingzi/yingzi.htm
-      2 http://www.zerovm.org/
-      2 http://www.zachtronics.com/tis-100/
-      2 http://www.youtube.com/watch?v=z6hoPw5hItY
-      2 http://www.youtube.com/watch?v=4XpnKHJAok8
-      2 http://www.yosefk.com/blog/my-history-with-forth-stack-machines.html
-      2 http://www.yacoset.com/Home/signs-that-you-re-a-bad-programmer
-      2 http://www.xs4all.nl/~weegen/eelis/analogliterals.xhtml
-      2 http://www.wordplace.com/ap/index.shtml
-      2 http://www.wjh.harvard.edu/~dtg/DUNN%20GILBERT%20&%20WILSON%20(2011).pdf
-      2 http://www.wirfs-brock.com/allen/posts/914
-      2 http://www.wired.com/techbiz/people/magazine/16-09/pl_brown
-      2 http://www.wired.com/
-      2 http://www.winestockwebdesign.com/Essays/Lisp_Curse.html
-      2 http://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html
-      2 http://www.windows93.net/
-      2 http://www.wilfred.me.uk/blog/2012/07/30/why-markdown-is-not-my-favourite-language/
-      2 http://www.washingtonpost.com/wp-dyn/content/article/2007/04/04/AR2007040401721.html
-      2 http://www.washingtonpost.com/sf/business/2015/05/31/net-of-insecurity-part-2/
-      2 http://www.visual6502.org/JSSim/index.html
-      2 http://www.vatican.va/various/cappelle/sistina_vr/index.html
-      2 http://www.vanadac.com/~dajhorn/novelties/ESR%20-%20Curse%20Of%20The%20Gifted.html
-      2 http://www.utf8everywhere.org/
-      2 http://www.userscape.com/blog/index.php/site/comments/what_they_never_told_you_about_handling_b2b_transactions/
-      2 http://www.useit.com/papers/anti-mac.html
-      2 http://www.usbtypewriter.com/
-      2 http://www.ultratechnology.com/1xforth.htm
-      2 http://www.ulisp.com/
-      2 http://www.trnicely.net/pentbug/bugmail1.html
-      2 http://www.tinmith.net/wayne/blog/2017/06/immersive-flight-sim-4.htm
-      2 http://www.thumbtack.com/engineering/googlebot-makes-post-requests-via-ajax/
-      2 http://www.thesixtyone.com/
-      2 http://www.theregister.co.uk/2001/05/15/could_bill_gates_write_code/
-      2 http://www.theherald.com.au/story/1848433/the-ocean-is-broken/
-      2 http://www.theguardian.com/media/2013/apr/12/news-is-bad-rolf-dobelli
-      2 http://www.theatlantic.com/past/docs/unbound/langew/turn.htm
-      2 http://www.theatlantic.com/magazine/archive/2014/01/the-dark-lord-of-the-internet/355726/?single_page=true
-      2 http://www.theatlantic.com/magazine/archive/2010/06/the-enemy-within/8098/
-      2 http://www.theatlantic.com/international/archive/2011/02/the-myth-of-japans-lost-decades/71741/
-      2 http://www.theamericanscholar.org/the-disadvantages-of-an-elite-education/
-      2 http://www.terrybisson.com/page6/page6.html
-      2 http://www.templetons.com/brad/copymyths.html
-      2 http://www.telescopictext.com/
-      2 http://www.ted.com/talks/evan_williams_on_listening_to_twitter_users.html
-      2 http://www.techoozie.com/10-books-that-will-substitute-a-computer-science-degree/
-      2 http://www.technoblogy.com/show?2AEE
-      2 http://www.techcrunch.com/2009/02/27/y-combinators-fathomdb-takes-the-hassle-out-of-managing-your-database/
-      2 http://www.techcrunch.com/2009/02/27/toysrus-buys-toyscom-at-auction-for-51-million/
-      2 http://www.syntax-k.de/projekte/go-review
-      2 http://www.supermemo.com/articles/sleep.htm
-      2 http://www.submarinecablemap.com/
-      2 http://www.structuredprocrastination.com/
-      2 http://www.stephendiehl.com/posts/monads_machine_code.html
-      2 http://www.startupwhisperer.com/2009/02/do-not-demo-naked.html
-      2 http://www.staff.science.uu.nl/~gadda001/goodtheorist/
-      2 http://www.squeezedbooks.com/
-      2 http://www.squeakland.org/resources/books/readingList.jsp
-      2 http://www.sqlite.org/testing.html
-      2 http://www.spacex.com/webcast.php
-      2 http://www.spacex.com/webcast/
-      2 http://www.sorting-algorithms.com/
-      2 http://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
-      2 http://www.softwarebyrob.com/2010/12/09/how-to-detect-a-toxic-customer/
-      2 http://www.slideshare.net/missrogue/the-10-mistakes-ive-madeso-you-dont-have-to
-      2 http://www.slideshare.net/mingyeow/discovery-is-the-new-cocaine-going-beyond-engagement
-      2 http://www.slideshare.net/gueste94e4c/dropbox-startup-lessons-learned-3836587
-      2 http://www.slate.com/id/2132576/
-      2 http://www.slate.com/articles/business/branded/2012/04/ykk_zippers_why_so_many_designers_use_them_.html
-      2 http://www.skeptictank.org/hs/vanish.htm
-      2 http://www.sizecoding.org/wiki/Main_Page
-      2 http://www.sixmonthmba.com/2009/02/999ideas.html
-      2 http://www.sikuli.org/
-      2 http://www.semicomplete.com/articles/ssh-security/
-      2 http://www.scottberkun.com/blog/2007/asshole-driven-development/
-      2 http://www.scottaaronson.com/writings/bignumbers.html
-      2 http://www.scottaaronson.com/papers/philos.pdf
-      2 http://www.scottaaronson.com/blog/?p=304
-      2 http://www.sagemath.org/
-      2 http://www.safetyresearch.net/blog/articles/toyota-unintended-acceleration-and-big-bowl-%E2%80%9Cspaghetti%E2%80%9D-code
-      2 http://www.rosshudgens.com/thoughts-from-paul-graham/
-      2 http://www.rose-hulman.edu/~bryan/googleFinalVersionFixed.pdf
-      2 http://www.rlslog.net/12-million-people-in-usa-still-use-dial-up/
-      2 http://www.ritsumei.ac.jp/~akitaoka/index-e.html
-      2 http://www.righto.com/2020/09/inside-hp-nanoprocessor-high-speed.html
-      2 http://www.righto.com/2020/06/a-look-at-die-of-8086-processor.html
-      2 http://www.righto.com/2019/11/tros-how-ibm-mainframes-stored.html
-      2 http://www.righto.com/2016/12/die-photos-and-analysis-of_24.html
-      2 http://www.righto.com/2015/12/reverse-engineering-arm1-ancestor-of.html
-      2 http://www.righto.com/2014/09/mining-bitcoin-with-pencil-and-paper.html
-      2 http://www.righto.com/2014/05/reverse-engineering-tl431-most-common.html
-      2 http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html
-      2 http://www.righto.com/2012/02/apple-didnt-revolutionize-power.html
-      2 http://www.righto.com/2011/07/cells-are-very-fast-and-crowded-places.html
-      2 http://www.rifters.com/crawl/?p=6116
-      2 http://www.ribbonfarm.com/2013/04/03/the-locust-economy/
-      2 http://www.returninfinity.com/baremetal.html
-      2 http://www.research.ibm.com/people/l/lloydt/color/color.HTM
-      2 http://www.renaebair.com/2010/08/11/my-husband-is-a-programmer-i-have-no-idea-what-that-means/
-      2 http://www.redbook.io/
-      2 http://www.recombinantrecords.net/docs/2009-05-Amusing-Ourselves-to-Death.html
-      2 http://www.readwriteweb.com/archives/google_hands_wikileaks_volunteers_gmail_data_to_us.php
-      2 http://www.ranum.com/security/computer_security/editorials/dumb/index.html
-      2 http://www.ranum.com/security/computer_security/editorials/dumb/
-      2 http://www.randsinrepose.com/archives/2011/10/11/the_rands_test.html
-      2 http://www.randsinrepose.com/archives/2007/11/11/the_nerd_handbook.html
-      2 http://www.randomhacks.net/articles/2007/02/22/bayes-rule-and-drug-tests
-      2 http://www.ragic.com/
-      2 http://www.rafekettler.com/magicmethods.html
-      2 http://www.python.org/doc/essays/list2str.html
-      2 http://www.pyret.org/
-      2 http://www.purl.org/stefan_ram/pub/doc_kay_oop_en
-      2 http://www.psy.fsu.edu/~baumeistertice/goodaboutmen.htm
-      2 http://www.projectoberon.com/
-      2 http://www.prettyloaded.com/
-      2 http://www.portfolio.com/culture-lifestyle/culture-inc/arts/2007/10/15/YouPorn-Vivid-Entertainment-Profile
-      2 http://www.pointerpointer.com/
-      2 http://www.playfuljs.com/a-first-person-engine-in-265-lines/
-      2 http://www.pinktentacle.com/2008/12/scientists-extract-images-directly-from-brain/
-      2 http://www.petridish.org/
-      2 http://www.pdl.cmu.edu/mailinglists/ips/mail/msg00133.html
-      2 http://www.payne.org/index.php/Startup_Equity_For_Employees
-      2 http://www.pawfal.org/fluxus/
-      2 http://www.paulgraham.com/wealth.html
-      2 http://www.paulgraham.com/vanlfsp.html
-      2 http://www.paulgraham.com/top.html
-      2 http://www.paulgraham.com/thist.html
-      2 http://www.paulgraham.com/stuff.html
-      2 http://www.paulgraham.com/say.html
-      2 http://www.paulgraham.com/rootsoflisp.html
-      2 http://www.paulgraham.com/microsoft.html
-      2 http://www.paulgraham.com/maybe.html
-      2 http://www.paulgraham.com/makersschedule.html
-      2 http://www.paulgraham.com/knuth.html
-      2 http://www.paulgraham.com/identity.html
-      2 http://www.paulgraham.com/hamming.html
-      2 http://www.paulgraham.com/cornpone.html
-      2 http://www.paulgraham.com/boss.html
-      2 http://www.paulgraham.com/badeconomy.html
-      2 http://www.paulgraham.com/addiction.html
-      2 http://www.paulgraham.com/13sentences.html
-      2 http://www.panic.com/extras/audionstory/
-      2 http://www.pacifict.com/Story/
-      2 http://www.over-yonder.net/~fullermd/rants/bsd4linux/01
-      2 http://www.oreilly.com/openbook/freedom/ch06.html
-      2 http://www.openvim.com/tutorial.html
-      2 http://www.openssd-project.org/wiki/The_OpenSSD_Project
-      2 http://www.opensourcerails.com/
-      2 http://www.openmoko.com/
-      2 http://www.openculture.com/freeonlinecourses
-      2 http://www.openculture.com/2016/03/3900-pages-of-paul-klees-personal-notebooks-are-now-online.html
-      2 http://www-old.oberon.ethz.ch/WirthPubl/CBEAll.pdf
-      2 http://www.nytimes.com/2009/03/01/movies/01films.html
-      2 http://www.nytimes.com/2007/03/17/business/17online.html?ex=1331784000&en=8c67e3ff3a190b78&ei=5090&partner=rssuserland&emc=rss
-      2 http://www.numberspiral.com/index.html
-      2 http://www.nucalc.com/Story/
-      2 http://www.npr.org/sections/health-shots/2013/10/18/236211811/brains-sweep-themselves-clean-of-toxins-during-sleep
-      2 http://www.npr.org/blogs/money/2012/07/13/156737801/the-cost-of-free-doughnuts-70-years-of-regret
-      2 http://www.nowykurier.com/toys/gravity/gravity.html
-      2 http://www.northwestern.edu/newscenter/stories/2015/03/creative-genius-driven-by-distraction.html
-      2 http://www.nodebeginner.org/
-      2 http://www.nicolasbize.com/blog/30-years-later-qbasic-is-still-the-best/
-      2 http://www.newyorker.com/tech/elements/walking-helps-us-think
-      2 http://www.newscientist.com/article/mg21228440.700-dotdashdiss-the-gentleman-hackers-1903-lulz.html
-      2 http://www.newsblur.com/
-      2 http://www.nature.com/news/quantum-gas-goes-below-absolute-zero-1.12146
-      2 http://www.nand2tetris.org/
-      2 http://www.myscriptfont.com/
-      2 http://www.muppetlabs.com/~breadbox/txt/al.html
-      2 http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
-      2 http://www.moserware.com/2009/09/stick-figure-guide-to-advanced.html
-      2 http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html
-      2 http://www.moreintelligentlife.com/content/edward-carr/last-days-polymath
-      2 http://www.mnot.net/cache_docs/
-      2 http://www.minimallyminimal.com/blog/apple-pro-mouse
-      2 http://www.microsoft.com/en-us/news/ceo/index.html
-      2 http://www.michaelv.org/
-      2 http://www.michaelnielsen.org/ddi/why-bloom-filters-work-the-way-they-do/
-      2 http://www.michaeleisen.org/blog/?p=358
-      2 http://www.math.umass.edu/~lavine/Book/book.html
-      2 http://www.math.tamu.edu/~cyan/Rota/mitless.html
-      2 http://www.masswerk.at/google60/
-      2 http://www.makelinux.net/kernel_map/
-      2 http://www.mail-archive.com/dri-devel@lists.sourceforge.net/msg39091.html
-      2 http://www.madinamerica.com/2012/02/why-anti-authoritarians-are-diagnosed-as-mentally-ill/
-      2 http://www.lyx.org/
-      2 http://www.lowtechmagazine.com/2011/12/the-chinese-wheelbarrow.html
-      2 http://www.lowtechmagazine.com/2010/03/history-of-human-powered-cranes.html
-      2 http://www.loper-os.org/?p=861
-      2 http://www.loper-os.org/?p=401
-      2 http://www.linuxjournal.com/article/3882
-      2 http://www.linusakesson.net/programming/pipelogic/index.php
-      2 http://www.levchin.com/paypal-slideshow/1.html
-      2 http://www.lettersofnote.com/2012/10/people-simply-empty-out.html
-      2 http://www.lessonsoffailure.com/developers/pervasive-myths-older-software-developers/
-      2 http://www.lessig.org/blog/2009/02/caving_into_bullies_aka_here_w.html
-      2 http://www.learnprolognow.org/lpnpage.php?pageid=online
-      2 http://www.learndatalogtoday.org/
-      2 http://www.latimes.com/news/printedition/front/la-na-tapwater25-2009feb25,0,6720560,full.story
-      2 http://www.lamdu.org/
-      2 http://www.lambdassociates.org/blog/decline.htm
-      2 http://www.lambdassociates.org/blog/bipolar.htm
-      2 http://www.lambdanative.org/
-      2 http://www.labnol.org/internet/search/marissa-mayer-keynote-on-how-google-works/3554/
-      2 http://www.kuro5hin.org/story/2004/2/25/124713/784
-      2 http://www.kleinbottle.com/
-      2 http://www.kk.org/thetechnium/archives/2009/02/amish_hackers_a.php
-      2 http://www.kevinbeason.com/smallpt/
-      2 http://www.kegel.com/c10k.html
-      2 http://www.keacher.com/1216/how-i-introduced-a-27-year-old-computer-to-the-web/
-      2 http://www.kagenschaefer.com/pipeorgandesk.html
-      2 http://www.jwz.org/gruntle/nscpdorm.html
-      2 http://www.jwz.org/gruntle/nomo.html
-      2 http://www.jwz.org/doc/worse-is-better.html
-      2 http://www.justin.tv/
-      2 http://www.judegomila.com/2009/05/mapping-out-your-web-startup.html
-      2 http://www.jsoftware.com/papers/tot.htm
-      2 http://www.johndcook.com/blog/2010/01/20/ten-surprises-from-numerical-linear-algebra/
-      2 http://www.johndcook.com/blog/2010/01/19/dont-invert-that-matrix/
-      2 http://www.joelonsoftware.com/items/2009/09/23.html
-      2 http://www.joelonsoftware.com/items/2007/03/02.html
-      2 http://www.joelonsoftware.com/items/2006/08/01.html
-      2 http://www.joelonsoftware.com/articles/Wrong.html
-      2 http://www.joelonsoftware.com/articles/Unicode.html
-      2 http://www.joelonsoftware.com/articles/fog0000000069.html
-      2 http://www.jjj.de/fxt/#fxtbook
-      2 http://www.jesshamrick.com/2012/09/10/absolute-beginners-guide-to-emacs/
-      2 http://www.jasondavies.com/primos/
-      2 http://www.janestreetcapital.com/minsky_weeks-jfp_18.pdf
-      2 http://www.jamesmolloy.co.uk/tutorial_html/index.html
-      2 http://www.ithkuil.net/
-      2 http://www.interdb.jp/pg/index.html
-      2 http://www.informit.com/articles/article.aspx?p=2213858&WT.mc_id=Author_Knuth_20Questions
-      2 http://www.infoq.com/presentations/katz-couchdb-and-me
-      2 http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy
-      2 http://www.indiangeek.net/wp-content/uploads/Programmer%20competency%20matrix.htm
-      2 http://www.idlewords.com/2005/04/dabblers_and_blowhards.htm
-      2 http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html
-      2 http://www.ibiblio.org/harris/500milemail.html
-      2 http://www.humblebundle.com/
-      2 http://www.howmanypeopleareinspacerightnow.com/
-      2 http://www.hostmeinca.com/
-      2 http://www.homebrewcpu.com/
-      2 http://www.hemingwayapp.com/
-      2 http://www.haskellforall.com/2012/08/the-category-design-pattern.html
-      2 http://www.halfbakery.com/
-      2 http://www.hackrtrackr.com/
-      2 http://www.hackerfactor.com/blog/index.php?/archives/322-Body-By-Victoria.html
-      2 http://www.h3rald.com/articles/10-programming-languages/
-      2 http://www.gusmueller.com/blog/archives/2005/12/25.html
-      2 http://www.grokdotcom.com/2008/02/26/amazon-shopping-cart/
-      2 http://www.greghendershott.com/fear-of-macros/
-      2 http://www.greenharbor.com/fffolder/carkeet.html
-      2 http://www.gotw.ca/publications/c_family_interview.htm
-      2 http://www.goosh.org/
-      2 http://www.google.com/trends
-      2 http://www.google.com/search?q=hacker+news+Unknown+or+expired+link.&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:en-US:official&client=firefox-a
-      2 http://www.google.com/robots.txt
-      2 http://www.google.com/ads/answers/numbers.html
-      2 http://www.google.com/
-      2 http://www.golang-book.com/
-      2 http://www.gog.com/
-      2 http://www.gigamonkeys.com/book/
-      2 http://www.gianlucagimini.it/prototypes/velocipedia.html
-      2 http://www.getskeleton.com/
-      2 http://www.getjustlanded.com/
-      2 http://www.gamasutra.com/view/feature/4111/dirty_coding_tricks.php?print=1
-      2 http://www.gabrielweinberg.com/startupswiki/Ask_YC_Archive
-      2 http://www.gabrielweinberg.com/blog/2010/06/paths-to-5m-for-a-startup-founder.html
-      2 http://www.funtoo.org/wiki/Linux_Fundamentals,_Part_1
-      2 http://www.fourmilab.ch/hackdiet/
-      2 http://www.fourmilab.ch/documents/golden_glow/
-      2 http://www.forteantimes.com/features/articles/1302/lost_in_space.html
-      2 http://www-formal.stanford.edu/jmc/robotandbaby/robotandbaby.html
-      2 http://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html
-      2 http://www.forbes.com/sites/andygreenberg/2010/08/24/full-body-scan-technology-deployed-in-street-roving-vans/
-      2 http://www.folklore.org/StoryView.py?story=Negative_2000_Lines_Of_Code.txt
-      2 http://www.fmwconcepts.com/imagemagick/index.php
-      2 http://www.flightradar24.com/
-      2 http://www.flexboxdefense.com/
-      2 http://www.fieggen.com/shoelace/ianknot.htm
-      2 http://www.feynmanlectures.caltech.edu/
-      2 http://www.fastcompany.com/magazine/122/is-the-tipping-point-toast.html
-      2 http://www.fastcompany.com/1785445/crypto-currency-mystery
-      2 http://www.extentofthejam.com/pseudo/
-      2 http://www.evanmiller.org/why-im-betting-on-julia.html
-      2 http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
-      2 http://www.etalabs.net/compare_libcs.html
-      2 http://www.essentialmath.com/tutorial.htm
-      2 http://www.esquire.com/features/honesty0707
-      2 http://www.erlang-factory.com/upload/presentations/395/ErlangandFirst-PersonShooters.pdf
-      2 http://www.ericsink.com/entries/No_Great_Hackers.html
-      2 http://www.enigmacurry.com/2008/05/09/emacs-as-a-powerful-python-ide/
-      2 http://www.edn.com/design/automotive/4423428/Toyota-s-killer-firmware--Bad-design-and-its-consequences
-      2 http://www.e-booksdirectory.com/mathematics.php
-      2 http://www.duetdisplay.com/
-      2 http://www.dspdimension.com/admin/dft-a-pied/
-      2 http://www.dreamsongs.com/ArtOfLisp.html
-      2 http://www.drdobbs.com/architecture-and-design/so-you-want-to-write-your-own-language/240165488
-      2 http://www.drdobbs.com/architecture-and-design/how-i-came-to-write-d/240165322
-      2 http://www.downes.ca/post/38526
-      2 http://www.dontclick.it/
-      2 http://www.dinofarmgames.com/a-pixel-artist-renounces-pixel-art/
-      2 http://www.diku.dk/hjemmesider/ansatte/torbenm/Basics/
-      2 http://www.digitaljournal.com/science/40-000-year-old-bracelet-from-extinct-human-species-discovered/article/432798
-      2 http://www.digibarn.com/stories/bill-pentz-story/index.html
-      2 http://www.defmacro.org/ramblings/rethinkdb-tech-founder.html
-      2 http://www.defmacro.org/ramblings/lisp.html
-      2 http://www.defmacro.org/ramblings/fp.html
-      2 http://www.defmacro.org/2015/02/25/startup-ideas.html
-      2 http://www.defmacro.org/2014/10/03/engman.html
-      2 http://www.davidbrin.com/idiotplot.html
-      2 http://www.danshapiro.com/blog/2011/07/why-i-sold-my-startup-sparkbuy-to-google/
-      2 http://www.danshapiro.com/blog/2010/08/vc-insanity-economics/
-      2 http://www.dabeaz.com/generators/
-      2 http://www.cypherspace.org/adam/hacks/lotus-nsa-key.html
-      2 http://www.cube20.org/
-      2 http://www.cs.yale.edu/homes/perlis-alan/quotes.html
-      2 http://www.cs.virginia.edu/~robins/YouAndYourResearch.html
-      2 http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk.html
-      2 http://www.cs.virginia.edu/~cs415/reading/bacon-garbage.pdf
-      2 http://www.cs.utexas.edu/users/EWD/transcriptions/EWD06xx/EWD667.html
-      2 http://www.cs.utexas.edu/users/EWD/ewd08xx/EWD831.PDF
-      2 http://www.cs.usfca.edu/~galles/visualization/Algorithms.html
-      2 http://www.cs.unm.edu/~dlchao/flake/doom/
-      2 http://www-cs-students.stanford.edu/~blynn/gitmagic/
-      2 http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/
-      2 http://www-cs-students.stanford.edu/~amitp/gameprog.html
-      2 http://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
-      2 http://www.cs.cmu.edu/~mihaib/kernighan-interview/index.html
-      2 http://www.cs.cmu.edu/~chuck/lennapg/
-      2 http://www.cs.berkeley.edu/~bh/hacker.html
-      2 http://www.cryptomuseum.com/covert/bugs/selectric/index.htm
-      2 http://www.crazyblinddate.com/
-      2 http://www.cookingforengineers.com/
-      2 http://www.contextfreeart.org/
-      2 http://www.colorforth.com/HOPL.html
-      2 http://www.color.com/
-      2 http://www.codinghorror.com/blog/archives/001230.html
-      2 http://www.codinghorror.com/blog/2006/05/the-ten-commandments-of-egoless-programming.html
-      2 http://www.coding2learn.org/blog/2013/07/29/kids-cant-use-computers/
-      2 http://www.codethinked.com/post/2007/12/The-Programmer-Dress-Code.aspx
-      2 http://www.codersatwork.com/
-      2 http://www.coderholic.com/invaluable-command-line-tools-for-web-developers/
-      2 http://www.codecommit.com/blog/scala/what-is-hindley-milner-and-why-is-it-cool
-      2 http://www.coboloncogs.org/INDEX.HTM
-      2 http://www.cleveralgorithms.com/nature-inspired/index.html
-      2 http://www.citylab.com/design/2014/10/why-12-foot-traffic-lanes-are-disastrous-for-safety-and-must-be-replaced-now/381117/
-      2 http://www.chartjs.org/
-      2 http://www.ccs.neu.edu/home/matthias/HtDP2e/
-      2 http://www.cbc.ca/news/health/barbecue-brushes-dangers-swallow-throat-wire-bristle-dempsey-1.3741578
-      2 http://www.catonmat.net/blog/set-operations-in-unix-shell/
-      2 http://www.catonmat.net/blog/javascript-the-good-parts/
-      2 http://www.catb.org/~esr/writings/taoup/
-      2 http://www.catb.org/esr/structure-packing/
-      2 http://www.catb.org/~esr/faqs/hacker-howto.html
-      2 http://www.cantrip.org/gatto.html
-      2 http://www.call-cc.org/
-      2 http://www.businessweek.com/magazine/content/10_44/b4201043146825.htm
-      2 http://www.businessinsider.com/max-levchins-favorite-startups-are-all-japanese-2009-2
-      2 http://www.bunniestudios.com/blog/?p=918
-      2 http://www.bunniestudios.com/blog/?p=353
-      2 http://www.buildyourownlisp.com/
-      2 http://www.brokenthorn.com/Resources/OSDevIndex.html
-      2 http://www.bricklin.com/200yearsoftware.htm
-      2 http://www.brianshin.com/defining-the-5-classes-of-entr
-      2 http://www.brendangregg.com/linuxperf.html
-      2 http://www.breaknenter.org/projects/inception/
-      2 http://www.bowdoin.edu/~ltoma/teaching/cs340/spring05/coursestuff/Bentley_BumperSticker.pdf
-      2 http://www.bothsidesofthetable.com/2009/11/04/is-it-time-for-you-to-earn-or-to-learn/
-      2 http://www.bostonglobe.com/ideas/2014/06/07/the-vanished-grandeur-accounting/3zcbRBoPDNIryWyNYNMvbO/story.html
-      2 http://www.boston.com/bostonglobe/ideas/naps/
-      2 http://www.boston.com/bostonglobe/ideas/articles/2011/03/06/the_power_of_lonely/?page=full
-      2 http://www.blinkenlights.com/classiccmp/javaorigin.html
-      2 http://www.billthelizard.com/2008/12/books-programmers-dont-really-read.html
-      2 http://www.berkshirehathaway.com/letters/2008ltr.pdf
-      2 http://www.benkuhn.net/squared
-      2 http://www.benjoffe.com/holdem
-      2 http://www.behind-the-enemy-lines.com/2012/04/google-attack-how-i-self-attacked.html
-      2 http://www.bbc.co.uk/news/science-environment-25356603
-      2 http://www.bbc.co.uk/news/magazine-20578627
-      2 http://www.bbc.co.uk/news/magazine-12043294
-      2 http://www.bbc.com/future/story/20160229-the-sea-nomad-children-who-see-like-dolphins
-      2 http://www.bbc.com/future/story/20150209-the-network-that-runs-the-world
-      2 http://www.bastwood.com/?page_id=10
-      2 http://www.autonlab.org/tutorials/
-      2 http://www.asktog.com/columns/022DesignedToGiveFitts.html
-      2 http://www.asciiflow.com/
-      2 http://www.apple.com/privacy/
-      2 http://www.apple.com/iphone/softwareupdate/
-      2 http://www.apostate.com/how-say-nothing-500-words
-      2 http://www.aosabook.org/en/index.html
-      2 http://www.antipope.org/charlie/blog-static/2009/06/how_i_got_here_in_the_end_part_3.html
-      2 http://www.animatedengines.com/
-      2 http://www.andromeda.com/people/ddyer/lisp/
-      2 http://www.android-x86.org/
-      2 http://www.amazon.com/review/R403HR4VL71K8/ref=cm_cr_rdp_perm
-      2 http://www.amazon.com/gp/browse.html?node=377634011
-      2 http://www.allstar.fiu.edu/aero/airflylvl3.htm
-      2 http://www.allaboutcircuits.com/
-      2 http://www.algomation.com/
-      2 http://www.aiai.ed.ac.uk/~jeff/clos-guide.html
-      2 http://www.advogato.org/person/apenwarr/diary/371.html
-      2 http://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/
-      2 http://www.addedbytes.com/blog/if-php-were-british/
-      2 http://www.adampetersen.se/articles/lispweb.htm
-      2 http://www.aaronsw.com/weblog/rewritingreddit
-      2 http://www.aaronsw.com/weblog/productivity
-      2 http://www.aaronsw.com/weblog/djb
-      2 http://www.a1k0n.net/2011/07/20/donut-math.html
-      2 http://www3.imperial.ac.uk/newsandeventspggrp/imperialcollege/newssummary/news_16-5-2014-15-32-44
-      2 http://www.37signals.com/svn/posts/753-ask-37signals-how-do-you-process-credit-cards
-      2 http://www.2uo.de/myths-about-urandom/
-      2 http://wuphys.wustl.edu/~katz/scientist.html
-      2 http://wrtnode.com/
-      2 http://worrydream.com/Tangle/
-      2 http://worrydream.com/MediaForThinkingTheUnthinkable/
-      2 http://worrydream.com/MagicInk/
-      2 http://worrydream.com/LadderOfAbstraction/
-      2 http://worrydream.com/EarlyHistoryOfSmalltalk/
-      2 http://worrydream.com/dbx/
-      2 http://worrydream.com/#!/Apple
-      2 http://worldwidetelescope.org/webclient/
-      2 http://wordtsar.ca/
-      2 http://wordoid.com/
-      2 http://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations
-      2 http://wiki.luajit.org/New-Garbage-Collector
-      2 http://whoownsfacebook.com/
-      2 http://whohastimeforthis.blogspot.com/2005/11/how-to-not-write-business-plan.html
-      2 http://wheels.org/spacewar/stone/rolling_stone.html
-      2 http://webodf.org/
-      2 http://web.mit.edu/~simsong/www/ugh.pdf
-      2 http://web.mit.edu/jemorris/humor/500-miles
-      2 http://web.media.mit.edu/~minsky/papers/Why%20programming%20is--.html
-      2 http://weblog.raganwald.com/2008/01/no-disrespect.html
-      2 http://webaim.org/blog/user-agent-string-history/
-      2 http://weavesilk.com/
-      2 http://waywardmonkeys.org/2014/10/10/rich-command-shells/
-      2 http://watchesbysjx.com/2017/05/portrait-masahiro-kikuno-japanese-watchmaker.html
-      2 http://voodoo-slide.blogspot.com/2010/01/amplifying-c.html
-      2 http://vim.runpaint.org/
-      2 http://viewsourcecode.org/snaptoken/kilo/
-      2 http://videolectures.net/
-      2 http://video-js.com/
-      2 http://valerieaurora.org/hash.html
-      2 http://users.ece.utexas.edu/~adnan/pike.html
-      2 http://userscripts.org/scripts/show/9108
-      2 http://uselessd.darknedgy.net/
-      2 http://underhanded.xcott.com/
-      2 http://twister.net.co/
-      2 http://traintimes.org.uk/map/tube/
-      2 http://tractionbook.com/
-      2 http://tos-dr.info/
-      2 http://torrentfreak.com/how-to-turn-customers-into-pirates-090228/
-      2 http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
-      2 http://tomayko.com/writings/rest-to-my-wife
-      2 http://tmsu.org/
-      2 http://tkipf.github.io/graph-convolutional-networks/
-      2 http://timelessname.com/elfbin/
-      2 http://thinkvitamin.com/features/atlas-under-the-hood/
-      2 http://thinking-forth.sourceforge.net/
-      2 http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
-      2 http://thenextweb.com/facebook/2011/05/02/wikileaks-founder-facebook-is-the-most-appalling-spy-machine-that-has-ever-been-invented/
-      2 http://thejh.net/misc/website-terminal-copy-paste
-      2 http://thedailywtf.com/Articles/Up-or-Out-Solving-the-IT-Turnover-Crisis.aspx
-      2 http://theabyssgazes.blogspot.com/2010/03/teal-and-orange-hollywood-please-stop.html
-      2 http://terralang.org/index.html
-      2 http://techreport.com/review/27909/the-ssd-endurance-experiment-theyre-all-dead
-      2 http://tech.puredanger.com/2011/10/20/real-world-clojure/
-      2 http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html
-      2 http://teavm.org/
-      2 http://tatiyants.com/postgres-query-plan-visualization/
-      2 http://tantek.com/log/2007/02.html#d19t1813
-      2 http://talentdevelop.com/articles/WIIA.html
-      2 http://sydneypadua.com/2dgoggles/lovelace-the-origin-2/
-      2 https://www.zephyrproject.org/
-      2 https://www.youtube.com/watch?v=Z4oYSByyRak
-      2 https://www.youtube.com/watch?v=tc4ROCJYbm0
-      2 https://www.youtube.com/watch?v=JBmIQIZPaHY
-      2 https://www.youtube.com/watch?v=_ahvzDzKdB0
-      2 https://www.xfive.co/blog/snowboarding-ultimate-guide/
-      2 https://wwwwwwwwwwwwwwwwwwwwww.bitnik.org/r/
-      2 https://www.w3.org/Provider/Style/URI.html
-      2 https://www.vitavonni.de/blog/201503/2015031201-the-sad-state-of-sysadmin-in-the-age-of-containers.html
-      2 https://www.varnish-cache.org/trac/wiki/ArchitectNotes
-      2 https://www.unisonweb.org/
-      2 https://www.theverge.com/2018/2/8/16985666/alexandra-elbakyan-sci-hub-open-access-science-papers-lawsuit
-      2 https://www.thestar.com/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages.html
-      2 https://www.theparisreview.org/blog/2019/02/08/reading-in-the-age-of-constant-distraction/
-      2 https://www.thelightphone.com/
-      2 https://www.theguardian.com/cities/2019/apr/29/are-the-hyper-specialist-shops-of-berlin-the-future-of-retail
-      2 https://www.theatlantic.com/science/archive/2020/09/coffee-rust/616358/
-      2 https://www.theatlantic.com/science/archive/2018/11/operation-argus-how-cold-war-secret-new-york-times/575983/
-      2 https://www.susanjfowler.com/blog/2016/8/13/so-you-want-to-learn-physics
-      2 https://www.startupschool.org/
-      2 https://www.starlink.com/
-      2 https://www.ssh.com/ssh/port
-      2 https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
-      2 https://www.sixdegreesofwikipedia.com/
-      2 https://www.shortcutfoo.com/
-      2 https://www.sharelatex.com/
-      2 https://www.scientificamerican.com/article/stronger-than-steel-able-to-stop-a-speeding-bullet-mdash-it-rsquo-s-super-wood/
-      2 https://www.scientificamerican.com/article/bad-news-for-the-highly-intelligent/
-      2 https://www.sciencemag.org/news/2020/09/these-120000-year-old-footprints-offer-early-evidence-humans-arabia
-      2 https://www.sciencemag.org/news/2020/07/scientists-pull-living-microbes-100-million-years-beneath-sea
-      2 https://www.sandimetz.com/blog/2016/1/20/the-wrong-abstraction
-      2 https://www.sagemath.org/
-      2 https://www.rferl.org/a/the-mammoth-pirates/27939865.html
-      2 https://www.redblobgames.com/grids/hexagons/
-      2 https://www.quantamagazine.org/mathematician-solves-computer-science-conjecture-in-two-pages-20190725/
-      2 https://www.protondb.com/
-      2 https://www.propublica.org/article/how-the-maker-of-turbotax-fought-free-simple-tax-filing
-      2 https://www.peterkrautzberger.org/0186/
-      2 https://www.orbuch.com/carbon-removal/
-      2 https://www.npr.org/sections/thetwo-way/2016/09/13/493739074/50-years-ago-sugar-industry-quietly-paid-scientists-to-point-blame-at-fat
-      2 https://www.newyorker.com/magazine/2019/10/14/how-to-read-gilgamesh
-      2 https://www.newyorker.com/culture/cultural-comment/the-woman-who-gave-the-macintosh-a-smile
-      2 https://www.ncsc.gov.uk/blog-post/let-them-paste-passwords
-      2 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6163803/
-      2 https://www.nayuki.io/page/designing-better-file-organization-around-tags-not-hierarchies
-      2 https://www.nayuki.io/page/creating-a-qr-code-step-by-step
-      2 https://www.nature.com/news/the-myopia-boom-1.17120
-      2 https://www.migadu.com/
-      2 https://www.math.uci.edu/~isik/posts/Eigentechno.html
-      2 https://www.masswerk.at/nowgobang/2019/dec-crt-typography
-      2 https://www.maa.org/external_archive/devlin/LockhartsLament.pdf
-      2 https://www.logodesignlove.com/next-logo-paul-rand
-      2 https://www.ldeming.com/longevityfaq
-      2 https://www.justice.gov/usao-wdwa/pr/six-indicted-connection-multi-million-dollar-scheme-bribe-amazon-employees-and
-      2 https://www.judyrecords.com/
-      2 https://www.inklestudios.com/ink/
-      2 https://www.inkandswitch.com/local-first.html
-      2 https://www.info.ucl.ac.be/~pvr/paradigms.html
-      2 https://www.inboxsdk.com/
-      2 https://www.idontplaydarts.com/2016/04/detecting-curl-pipe-bash-server-side/
-      2 https://www.humblebundle.com/
-      2 https://www.home-assistant.io/
-      2 https://www.holistics.io/blog/the-rise-and-fall-of-the-olap-cube/
-      2 https://www.heritageconcorde.com/concorde-b
-      2 https://www.happyassassin.net/2014/01/25/uefi-boot-how-does-that-actually-work-then/
-      2 https://www.hammerspoon.org/
-      2 https://www.haiku-os.org/
-      2 https://www.gwern.net/Search
-      2 https://www.gwern.net/Improvements
-      2 https://www.gwern.net/Complement
-      2 https://www.gnu.org/philosophy/open-source-misses-the-point.html
-      2 https://www.gbstudio.dev/
-      2 https://www.gamasutra.com/blogs/DoctorLudos/20171207/311143/Making_a_Game_Boy_game_in_2017_A_quotSheep_It_Upquot_PostMortem_part_12.php
-      2 https://www.fuze.co.uk/nintendo-switch.html
-      2 https://www.fossjobs.net/
-      2 https://www.forbes.com/sites/kristinakillgrove/2018/05/11/meet-the-worst-businessman-of-the-18th-century/
-      2 https://www.fieggen.com/shoelace/ianknot.htm
-      2 https://www.extremetech.com/computing/315186-apple-books-tsmcs-entire-5nm-production-capability
-      2 https://www.expeditedssl.com/aws-in-plain-english
-      2 https://www.esquire.com/news-politics/a12149389/robert-noyce-tom-wolfe/
-      2 https://www.edge.org/conversation/nassim_nicholas_taleb-understanding-is-a-poor-substitute-for-convexity-antifragility
-      2 https://www.ecosia.org/
-      2 https://www.dwitter.net/
-      2 https://www.dreamsongs.com/Files/WhyOfY.pdf
-      2 https://www.downtowndougbrown.com/2019/04/adventures-of-putting-16-gb-of-ram-in-a-motherboard-that-doesnt-support-it/
-      2 https://www.destroyallsoftware.com/talks/the-birth-and-death-of-javascript
-      2 https://www.destroyallsoftware.com/blog/2017/the-biggest-and-weirdest-commits-in-linux-kernel-git-history
-      2 https://www.depauw.edu/sfs/backissues/5/lem5art.htm
-      2 https://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt
-      2 https://www.dampfkraft.com/ghost-characters.html
-      2 https://www.cs.bu.edu/~jappavoo/Resources/Papers/unikernel-hotos19.pdf
-      2 https://www.crypto101.io/
-      2 https://www.coinbase.com/card
-      2 https://www.cisa.gov/blog/2020/09/18/windows-server-vulnerability-requires-immediate-attention
-      2 https://www.bunniestudios.com/blog/?p=5921
-      2 https://www.bottomupcs.com/
-      2 https://www.borgbackup.org/
-      2 https://www.boredpanda.com/spy-camera-secret-street-photography-carl-stormer-norway/
-      2 https://www.bookforum.com/print/2703/a-psychoanalytic-reading-of-social-media-and-the-death-drive-24171
-      2 https://www.bigmessowires.com/2019/05/19/explaining-4k-60hz-video-through-usb-c-hub/
-      2 https://www.bicycling.com/culture/a33995147/tom-pritchard-bike-mystery/
-      2 https://www.bbc.com/worklife/article/20200910-the-benefits-of-note-taking-by-hand
-      2 https://www.battleforthenet.com/
-      2 https://www.avweb.com/aviation-news/pipistrel-velis-electro-completes-record-flights/
-      2 https://www.atlasobscura.com/articles/history-of-milk
-      2 https://www.arduboy.com/
-      2 https://www.apple.com/support/systemstatus/
-      2 https://www.apple.com/legal/transparency/
-      2 https://www.annashipman.co.uk/jfdi/meeting-everyone.html
-      2 https://www.agner.org/optimize/microarchitecture.pdf
-      2 https://www.action.io/
-      2 https://www.20papercups.net/programming/sending-receiving-sms-on-linux/
-      2 http://swtch.com/~rsc/regexp/regexp1.html
-      2 https://writing.kemitchell.com/2016/09/21/MIT-License-Line-by-Line.html
-      2 https://writefreely.org/
-      2 https://wiki.mozilla.org/Firefox/Roadmap
-      2 https://wiki.debian.org/WhyTheName
-      2 https://wekan.github.io/
-      2 https://webtransparency.cs.princeton.edu/dark-patterns/
-      2 https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf
-      2 https://watsi.org/universal-fund
-      2 https://vez.mrsk.me/freebsd-defaults.txt
-      2 https://vanemden.wordpress.com/2014/06/18/how-recursion-got-into-programming-a-comedy-of-errors-3/
-      2 https://vaibhavsagar.com/blog/2019/09/08/popcount/
-      2 https://userinyerface.com/
-      2 https://urbit.org/
-      2 http://support.microsoft.com/kb/168702
-      2 http://superherojs.com/
-      2 http://sugru.com/story
-      2 http://subtlepatterns.com/
-      2 https://typesetinthefuture.com/2014/12/01/alien/
-      2 https://twobithistory.org/2020/06/28/rest.html
-      2 https://twitter.com/shit_hn_says
-      2 https://twisteros.com/index.html
-      2 http://stuffin.space/
-      2 http://strlen.com/treesheets/
-      2 http://strlen.com/lobster
-      2 https://triplebyte.com/software-engineer-salary
-      2 http://stratechery.com/2013/clayton-christensen-got-wrong/
-      2 https://transfer.sh/
-      2 https://training.kalzumeus.com/newsletters/archive/do-not-end-the-week-with-nothing
-      2 https://trafficserver.apache.org/
-      2 https://tosdr.org/
-      2 https://toc.cryptobook.us/
-      2 https://tldroptions.io/
-      2 https://thewalrus.ca/older-wiser-better-aging-artists-are-at-their-peak/
-      2 https://thereader.mitpress.mit.edu/habits-of-expert-software-designers/
-      2 https://thehustle.co/hot-cheetos-inventor/
-      2 https://the.exa.website/
-      2 https://thedaywefightback.org/
-      2 https://theconversation.com/mayflower-400-the-science-of-sailing-across-the-ocean-in-1620-144233
-      2 http://steve.yegge.googlepages.com/five-essential-phone-screen-questions
-      2 http://steve-yegge.blogspot.com/2006/03/math-for-programmers.html
-      2 http://stevelosh.com/blog/2013/09/teach-dont-tell/
-      2 http://steveblank.com/2009/05/15/supermac-war-story-11-the-curse-of-a-new-building/
-      2 http://stereopsis.com/flux/
-      2 https://teachyourselfcs.com/
-      2 http://startupschool.org/
-      2 http://startupnotes.org/
-      2 http://startuplawyer.com/startup-issues/if-i-launched-a-startup
-      2 http://startupclass.samaltman.com/
-      2 http://startingdotneprogramming.blogspot.com/2013/04/i-knew-programmer-that-went-completely.html
-      2 http://sta.li/
-      2 http://stackoverflow.com/questions/448613/whats-happening-with-arc
-      2 http://stackoverflow.com/questions/194812/list-of-freely-available-programming-books
-      2 http://stackoverflow.com/questions/184618/what-is-the-best-comment-in-source-code-you-have-ever-encountered
-      2 http://stackoverflow.com/questions/101268/hidden-features-of-python
-      2 https://system76.com/laptops/pangolin
-      2 https://swtch.com/~rsc/regexp/regexp1.html
-      2 https://stribika.github.io/2015/01/04/secure-secure-shell.html
-      2 https://status.github.com/
-      2 https://startyourownisp.com/
-      2 https://standardnotes.org/
-      2 https://standardebooks.org/
-      2 https://staltz.com/the-web-began-dying-in-2014-heres-how.html
-      2 https://staltz.com/a-plan-to-rescue-the-web-from-the-internet.html
-      2 https://spreadprivacy.com/privacy-simplified/
-      2 https://sourceforge.net/p/joe-editor/mercurial/ci/default/tree/NEWS.md
-      2 https://sonic-pi.net/
-      2 https://solar.lowtechmagazine.com/power.html
-      2 https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/
-      2 https://slehar.wordpress.com/2014/03/18/clifford-algebra-a-visual-introduction/
-      2 https://sites.google.com/site/steveyegge2/ten-predictions
-      2 https://sites.google.com/site/steveyegge2/practicing-programming
-      2 https://sites.google.com/site/forgottenemployee/
-      2 https://sidbala.com/h-264-is-magic/
-      2 https://shoelace.style/
-      2 https://sfconservancy.org/blog/2016/feb/25/zfs-and-linux/
-      2 https://sethrobertson.github.io/GitFixUm/fixup.html
-      2 https://segment.com/blog/a-brief-history-of-the-uuid/
-      2 https://seeing-theory.brown.edu/index.html
-      2 https://securitytxt.org/
-      2 https://securedrop.org/
-      2 https://secretgeek.github.io/html_wysiwyg/html.html
-      2 https://seaglass.cs.washington.edu/
-      2 https://scottlocklin.wordpress.com/2012/09/18/a-look-at-the-j-language-the-fine-line-between-genius-and-insanity/
-      2 https://scirate.com/
-      2 https://sback.it/publications/icse2018seip.pdf
-      2 https://sanctum.geek.nz/arabesque/series/unix-as-ide/
-      2 https://runyourown.social/
-      2 https://rumorsontheinternets.org/2010/10/14/magnasanti-the-largest-and-most-terrifying-simcity/
-      2 https://root.cern.ch/cling
-      2 https://robertheaton.com/2020/02/05/wacom-drawing-tablets-track-name-of-every-application-you-open/
-      2 https://rg3.github.io/youtube-dl/
-      2 https://regexr.com/
-      2 https://rawgraphs.io/
-      2 https://raphlinus.github.io/rust/graphics/gpu/2019/05/08/modern-2d.html
-      2 https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/
-      2 https://qz.com/694340/the-richest-families-in-florence-in-1427-are-still-the-richest-families-in-florence/
-      2 https://qz.com/1788828/how-will-midi-2-0-change-music/
-      2 https://quickdraw.withgoogle.com/
-      2 https://queue.acm.org/detail.cfm?id=3212479
-      2 https://queue.acm.org/detail.cfm?id=1814327
-      2 http://sqlmap.org/
-      2 http://sqlfiddle.com/
-      2 https://publicdomainreview.org/essay/more-lively-counterfaits
-      2 https://ptsjs.org/
-      2 https://probmods.org/
-      2 https://primitive.lol/
-      2 https://press.stripe.com/
-      2 http://spottedsun.com/face-detection-in-images-using-opencv-and-python/
-      2 https://pomax.github.io/bezierinfo/
-      2 https://polyhedra.tessera.li/
-      2 https://plus.maths.org/content/ramanujan
-      2 https://plfa.github.io/
-      2 https://please.build/
-      2 https://plato.stanford.edu/entries/computer-science/
-      2 https://pippinbarr.github.io/itisasifyouweredoingwork/
-      2 http://spiffingcss.com/
-      2 https://phiresky.github.io/blog/2019/rga--ripgrep-for-zip-targz-docx-odt-epub-jpg/
-      2 https://peteris.rocks/blog/htop/
-      2 https://perkeep.org/
-      2 https://peermaps.org/
-      2 https://paveldogreat.github.io/WebGL-Fluid-Simulation/
-      2 https://patrickcollison.com/questions
-      2 https://paperswithcode.com/
-      2 https://panopticlick.eff.org/
-      2 https://pandoc.org/
-      2 http://spacecraft.ssl.umd.edu/akins_laws.html
-      2 https://overreacted.io/things-i-dont-know-as-of-2018/
-      2 https://otter-browser.org/
-      2 http://sonic-pi.net/
-      2 https://oeis.org/
-      2 http://socialcam.com/
-      2 https://objective-see.com/products/lulu.html
-      2 https://numenta.com/blog/2019/01/16/the-thousand-brains-theory-of-intelligence/
-      2 https://nplusonemag.com/issue-19/essays/chat-wars/
-      2 https://nova.app/
-      2 https://norvig.com/21-days.html
-      2 https://noidea.dog/glue
-      2 https://nodered.org/
-      2 https://nikic.github.io/2012/06/15/The-true-power-of-regular-expressions.html
-      2 https://nicoleorchard.com/blog/compilers
-      2 https://ngrok.com/
-      2 https://news.ycombinator.com/item?id=498417
-      2 https://news.ycombinator.com/item?id=13108404
-      2 https://news.mit.edu/2020/flat-fisheye-lens-0918
-      2 https://newsinteractives.cbc.ca/longform/glybera
-      2 https://neal.fun/deep-sea/
-      2 https://ncase.me/loopy/
-      2 https://nationalparktypeface.com/
-      2 https://mzucker.github.io/2016/09/20/noteshrink.html
-      2 https://mosaicscience.com/story/staying-awake-surprisingly-effective-way-treat-depression/
-      2 http://smoothiecharts.org/
-      2 https://monster6502.com/
-      2 https://mollyrocket.com/meowhash
-      2 https://mitpress.mit.edu/books/street-fighting-mathematics
-      2 https://microg.org/
-      2 https://mgba.io/2020/01/25/infinite-loop-holy-grail/
-      2 https://meta.wikimedia.org/wiki/Cunningham%27s_Law
-      2 http://smerity.com/articles/2013/where_did_all_the_http_referrers_go.html
-      2 https://meet.jit.si/
-      2 https://medium.com/@kentbeck_7670/inefficient-efficiency-5b3ab5294791
-      2 https://medium.com/@blakeross/don-t-outsource-your-thinking-ad825a9b4653
-      2 https://mediapreservation.wordpress.com/2012/06/20/extracting-audio-from-pictures/
-      2 https://math.vanderbilt.edu/schectex/commerrs/
-      2 https://matduggan.com/mistakes/
-      2 https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
-      2 https://makingartstudios.itch.io/dls
-      2 https://magoo.github.io/Blockchain-Graveyard/
-      2 https://magcius.github.io/xplain/article/
-      2 https://machinelearning.apple.com/
-      2 https://lwn.net/Articles/766374/
-      2 https://localghost.dev/2019/09/everything-i-googled-in-a-week-as-a-professional-software-engineer/
-      2 https://lobe.ai/
-      2 http://sloan.stanford.edu/mousesite/1968Demo.html
-      2 https://littlemaninmyhead.wordpress.com/2015/09/28/so-you-want-to-learn-to-break-ciphers/
-      2 https://lithub.com/color-or-fruit-on-the-unlikely-etymology-of-orange/
-      2 https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html
-      2 https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html
-      2 https://libreboot.org/
-      2 https://libcom.org/blog/xulizhi-foxconn-suicide-poetry
-      2 https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/
-      2 https://lemonspawn.com/turbo-rascal-syntax-error-expected-but-begin/
-      2 https://lemire.me/blog/2019/02/08/faster-remainders-when-the-divisor-is-a-constant-beating-compilers-and-libdivide/
-      2 https://learningmusic.ableton.com/
-      2 https://laverna.cc/
-      2 https://landgreen.github.io/physics/index.html
-      2 https://kunststube.net/encoding/
-      2 https://kore.io/
-      2 https://knightcolumbia.org/content/protocols-not-platforms-a-technological-approach-to-free-speech
-      2 http://skiplang.com/
-      2 https://kallithea-scm.org/
-      2 https://justinmeiners.github.io/lc3-vm/
-      2 https://julialang.org/blog/2018/12/ml-language-compiler
-      2 https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0239252
-      2 https://joshworth.com/dev/pixelspace/pixelspace_solarsystem.html
-      2 https://jochen-hoenicke.de/trezor-power-analysis/
-      2 https://jimshaver.net/2015/02/11/decrypting-tls-browser-traffic-with-wireshark-the-easy-way/
-      2 https://jepsen.io/consistency
-      2 https://jellyfin.org/
-      2 https://jeffhuang.com/designed_to_last/
-      2 https://jaycarlson.net/embedded-linux/
-      2 https://janet-lang.org/
-      2 https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
-      2 http://sivers.org/kimo
-      2 http://sivers.org/itunes
-      2 https://ish.app/
-      2 https://intelxed.github.io/
-      2 http://singlepageappbook.com/
-      2 https://increment.com/teams/the-team-that-powers-vlc/
-      2 http://simplexify.net/blog/2012/5/6/i-am-a-statistician-and-i-buy-lottery-tickets.html
-      2 http://silverspaceship.com/hovalaag/
-      2 http://sigmajs.org/
-      2 http://sicpinclojure.com/
-      2 https://ianstormtaylor.com/design-tip-never-use-black/
-      2 https://hpbn.co/
-      2 http://shirky.com/writings/group_enemy.html
-      2 http://shenlanguage.org/
-      2 https://hbr.org/2016/12/if-your-boss-could-do-your-job-youre-more-likely-to-be-happy-at-work
-      2 http://shapecatcher.com/
-      2 https://hacks.mozilla.org/2020/07/testing-firefox-more-efficiently-with-machine-learning/
-      2 https://hackpad.com/
-      2 https://gtfobins.github.io/
-      2 https://godbolt.org/
-      2 https://goaccess.io/
-      2 https://glyph.twistedmatrix.com/2016/08/attrs.html
-      2 https://gitlab.com/edouardklein/falsisign
-      2 https://gitlab.brokenpipe.de/stettberger/avremu/tree/master
-      2 https://github.com/Zulko/moviepy
-      2 https://github.com/zsaleeba/picoc
-      2 https://github.com/zadam/trilium
-      2 https://github.com/Z3Prover/z3
-      2 https://github.com/you-dont-need/You-Dont-Need-Momentjs
-      2 https://github.com/YingtongDou/Nash-Detect
-      2 https://github.com/yandex/odyssey
-      2 https://github.com/xoreaxeaxeax/movfuscator
-      2 https://github.com/vygr/ChrysaLisp
-      2 https://github.com/vurtun/nuklear
-      2 https://github.com/veltman/clmystery
-      2 https://github.com/TrustInSoft/tis-interpreter
-      2 https://github.com/tomprimozic/type-systems
-      2 https://github.com/tiimgreen/github-cheat-sheet
-      2 https://github.com/tidwall/tile38
-      2 https://github.com/sunainapai/makesite
-      2 https://github.com/ssloy/tinyrenderer/wiki
-      2 https://github.com/s-macke/VoxelSpace
-      2 https://github.com/SFTtech/openage
-      2 https://github.com/seL4/seL4
-      2 https://github.com/seemoo-lab/opendrop
-      2 https://github.com/sctb/lumen
-      2 https://github.com/schollz/howmanypeoplearearound
-      2 https://github.com/schollz/find3
-      2 https://github.com/schani/clojurec
-      2 https://github.com/SamyPesse/How-to-Make-a-Computer-Operating-System
-      2 https://github.com/robinhouston/image-unshredding
-      2 https://github.com/robert-strandh/SICL
-      2 https://github.com/rclone/rclone
-      2 https://github.com/rastapasta/mapscii
-      2 https://github.com/quiet/org.quietmodem.Quiet
-      2 https://github.com/quchen/stgi
-      2 https://github.com/pytoolz/toolz
-      2 https://github.com/PyO3/pyo3
-      2 https://github.com/ossu/computer-science
-      2 https://github.com/orbitdb/orbit-db
-      2 https://github.com/okTurtles/dnschain
-      2 https://github.com/NVIDIA/libcudacxx
-      2 https://github.com/nothings/single_file_libs
-      2 https://github.com/nim-lang/nimforum
-      2 https://github.com/nemasu/asmttpd
-      2 https://github.com/mxgmn/WaveFunctionCollapse
-      2 https://github.com/mozilla/mentat
-      2 https://github.com/MiSTer-devel/Main_MiSTer/wiki
-      2 https://github.com/microsoft/playwright-cli
-      2 https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md
-      2 https://github.com/martanne/vis
-      2 https://github.com/louthy/language-ext
-      2 https://github.com/levskaya/jslinux-deobfuscated
-      2 https://github.com/lettier/3d-game-shaders-for-beginners
-      2 https://github.com/karthick18/inception
-      2 https://github.com/karan/Projects
-      2 https://github.com/kanaka/mal
-      2 https://github.com/jopohl/urh
-      2 https://github.com/JohnEarnest/ok
-      2 https://github.com/jmdugan/blocklists/blob/master/corporations/facebook/all
-      2 https://github.com/jesseduffield/lazygit
-      2 https://github.com/JeffBezanson/femtolisp
-      2 https://github.com/jarun/nnn
-      2 https://github.com/janet-lang/janet
-      2 https://github.com/jamesob/desk
-      2 https://github.com/Jam3/math-as-code
-      2 https://github.com/jagregory/abrash-black-book
-      2 https://github.com/ivanceras/svgbob
-      2 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
-      2 https://github.com/iogf/vy
-      2 https://github.com/igrigorik/hackernews-button
-      2 https://github.com/id-Software
-      2 https://github.com/hylang/hy
-      2 https://github.com/hemanth/functional-programming-jargon
-      2 https://github.com/harthur/brain
-      2 https://github.com/google/jax
-      2 https://github.com/googlei18n/libphonenumber/blob/master/FALSEHOODS.md
-      2 https://github.com/git/git/blob/master/banned.h
-      2 https://github.com/gibiansky/IHaskell
-      2 https://github.com/getify/You-Dont-Know-JS
-      2 https://github.com/genuinetools/binctr
-      2 https://github.com/fulldecent/system-bus-radio
-      2 https://github.com/froggey/Mezzano
-      2 https://github.com/fogleman/Craft
-      2 https://github.com/floooh/oryol
-      2 https://github.com/evilsocket/opensnitch
-      2 https://github.com/endrazine/wcc
-      2 https://github.com/Eloston/ungoogled-chromium
-      2 https://github.com/electronicarts/EASTL
-      2 https://github.com/eduard-permyakov/permafrost-engine
-      2 https://github.com/edu
-      2 https://github.com/dylanaraps/pure-bash-bible
-      2 https://github.com/donnemartin/system-design-primer
-      2 https://github.com/djrobstep/migra
-      2 https://github.com/dirkschumacher/llr
-      2 https://github.com/dinedal/textql
-      2 https://github.com/danluu/post-mortems
-      2 https://github.com/commaai/openpilot
-      2 https://github.com/cjbarber/ToolsOfTheTrade
-      2 https://github.com/chrislusf/seaweedfs
-      2 https://github.com/cbaggers/cepl
-      2 https://github.com/cantino/huginn/
-      2 https://github.com/CadQuery/cadquery
-      2 https://github.com/billziss-gh/winfsp
-      2 https://github.com/begriffs/postgrest
-      2 https://github.com/automerge/automerge
-      2 https://github.com/atlassian/localstack
-      2 https://github.com/AsamK/signal-cli
-      2 https://github.com/artichoke/artichoke
-      2 https://github.com/artagnon/clayoven
-      2 https://github.com/anvaka/atree
-      2 https://github.com/antontarasenko/smq/blob/master/reports/hackernews-links-in-comments.md
-      2 https://github.com/antirez/sds
-      2 https://github.com/andlabs/libui
-      2 https://github.com/alexdelorenzo/chromecast_mpris
-      2 https://github.com/akavel/up
-      2 https://github.com/3b1b/manim
-      2 https://github.com/0x4447/0x4447_product_s3_email
-      2 https://gist.github.com/willurd/5720255
-      2 https://gist.github.com/staltz/868e7e9bc2a7b8c1f754
-      2 https://gist.github.com/kachayev/21e7fe149bc5ae0bd878
-      2 https://gist.github.com/1277224
-      2 https://getkerf.wordpress.com/2016/03/30/the-best-algorithm-no-one-knows-about/
-      2 https://garbagecollected.org/2017/01/31/four-column-ascii/
-      2 https://funcall.blogspot.com/2009/03/not-lisp-again.html
-      2 https://frinklang.org/
-      2 https://freedom-to-tinker.com/2015/10/14/how-is-nsa-breaking-so-much-crypto/
-      2 https://freedom-to-tinker.com/2013/10/09/the-linux-backdoor-attempt-of-2003/
-      2 https://fortran.io/
-      2 https://fermatslibrary.com/s/electronic-lottery-tickets-as-micropayments
-      2 https://ferd.ca/the-zen-of-erlang.html
-      2 https://fennel-lang.org/
-      2 https://fengari.io/
-      2 https://fangpenlin.com/posts/2019/10/07/elliptic-curve-cryptography-explained/
-      2 http://sev-notes.blogspot.com/2009/06/gpl-scummvm-and-violations.html
-      2 http://setosa.io/ev/principal-component-analysis/
-      2 http://setosa.io/ev/image-kernels/
-      2 http://setosa.io/bus/
-      2 https://etacts.com/
-      2 http://seriouspony.com/blog/2013/7/24/your-app-makes-me-fat
-      2 http://seriot.ch/parsing_json.php
-      2 https://en.wikipedia.org/wiki/Ulam_spiral
-      2 https://en.wikipedia.org/wiki/Soundex
-      2 https://en.wikipedia.org/wiki/Solar_storm_of_1859
-      2 https://en.wikipedia.org/wiki/Reply_of_the_Zaporozhian_Cossacks
-      2 https://en.wikipedia.org/wiki/Preferred_number
-      2 https://en.wikipedia.org/wiki/Poka-yoke
-      2 https://en.wikipedia.org/wiki/Phoebus_cartel
-      2 https://en.wikipedia.org/wiki/Moravec%27s_paradox
-      2 https://en.wikipedia.org/wiki/Molyneux%27s_problem
-      2 https://en.wikipedia.org/wiki/Great_Vowel_Shift
-      2 https://en.wikipedia.org/wiki/Gombe_Chimpanzee_War
-      2 https://en.wikipedia.org/wiki/FE-Schrift
-      2 https://en.wikipedia.org/wiki/Diolkos
-      2 https://en.wikipedia.org/wiki/Burned_house_horizon
-      2 https://en.wikipedia.org/wiki/Braess%27_paradox
-      2 https://en.wikipedia.org/wiki/Beverly_Clock
-      2 https://en.wikipedia.org/wiki/Baumol%27s_cost_disease
-      2 https://en.wikipedia.org/wiki/Bastion_fort
-      2 https://en.wikipedia.org/wiki/Atlantropa
-      2 https://en.wikipedia.org/wiki/Alu_(runic)
-      2 https://en.wikipedia.org/wiki/52-hertz_whale
-      2 http://selfie.cs.uni-salzburg.at/
-      2 http://seenaburns.com/2018/04/04/writing-to-the-framebuffer/
-      2 http://seeingnetworks.in/nyc/
-      2 http://seedmagazine.com/content/article/why_we_havent_met_any_aliens/
-      2 http://sebastianraschka.com/Articles/2014_python_2_3_key_diff.html
-      2 http://seat.massey.ac.nz/personal/s.r.marsland/MLBook.html
-      2 http://sealedabstract.com/rants/hey-programmers-we-need-to-talk/
-      2 https://eager.io/blog/the-languages-which-almost-were-css/
-      2 https://dynamicland.org/
-      2 https://dvc.org/
-      2 https://duo.com/decipher/an-oral-history-of-the-l0pht
-      2 https://duckduckgo.com/tty/
-      2 https://duckduckgo.com/traffic
-      2 https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
-      2 https://digiconomist.net/bitcoin-energy-consumption
-      2 https://developers.google.com/web/fundamentals/
-      2 https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript
-      2 https://developer.apple.com/swift/
-      2 https://developer.apple.com/app-store/review/guidelines/
-      2 https://datatransferproject.dev/
-      2 https://danluu.com/term-latency/
-      2 https://danluu.com/p95-skill/
-      2 https://danluu.com/input-lag/
-      2 https://danluu.com/discontinuities/
-      2 https://danluu.com/branch-prediction/
-      2 https://culdesac.com/
-      2 https://cuelang.org/
-      2 https://csunplugged.org/en/
-      2 https://crontab.guru/
-      2 https://crate.io/
-      2 https://courses.csail.mit.edu/6.042/spring17/mcs.pdf
-      2 https://commoncog.com/blog/tacit-knowledge-is-a-real-thing/
-      2 https://codewords.recurse.com/issues/two/git-from-the-inside-out
-      2 https://codewords.recurse.com/issues/six/immutability-is-not-enough
-      2 https://codewords.recurse.com/issues/four/the-language-of-choice
-      2 https://code.google.com/codejam/
-      2 https://code.facebook.com/posts/218678814984400/scaling-mercurial-at-facebook/
-      2 https://clickclickclick.click/
-      2 https://christophm.github.io/interpretable-ml-book/
-      2 https://chriskiehl.com/article/event-sourcing-is-hard
-      2 http://scheme2006.cs.uchicago.edu/11-ghuloum.pdf
-      2 https://cheats.rs/
-      2 https://castel.dev/post/lecture-notes-1/
-      2 https://carbon.now.sh/
-      2 https://calmtech.com/
-      2 https://caddyserver.com/
-      2 https://byorgey.wordpress.com/2018/05/06/conversations-with-a-six-year-old-on-functional-programming/
-      2 https://bugs.launchpad.net/ubuntu/+source/cupsys/+bug/255161/comments/28
-      2 https://browsix.org/
-      2 https://brandur.org/interfaces
-      2 https://boingboing.net/2012/01/10/lockdown.html
-      2 https://bofh.org.uk/2019/02/25/baking-with-emacs/
-      2 https://blog.twitter.com/en_us/topics/company/2020/an-update-on-our-security-incident.html
-      2 https://blog.reverberate.org/2020/05/29/hoares-rebuttal-bubble-sorts-comeback.html
-      2 https://blog.mozilla.org/blog/2018/07/11/royalty-free-web-video-codecs/
-      2 https://blog.lukaszolejnik.com/stealing-sensitive-browser-data-with-the-w3c-ambient-light-sensor-api/
-      2 https://blog.lizzie.io/linux-containers-in-500-loc.html
-      2 https://blog.jessfraz.com/post/thoughts-on-conways-law-and-the-software-stack/
-      2 https://blog.jessfraz.com/post/containers-zones-jails-vms/
-      2 https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
-      2 https://blog.innerht.ml/google-yolo/
-      2 https://blog.haschek.at/2016/how-a-scammer-stole-500-dollars-from-me
-      2 https://blog.discordapp.com/scaling-elixir-f9b8e1e7c29b
-      2 https://blog.danslimmon.com/2019/07/15/do-nothing-scripting-the-key-to-gradual-automation/
-      2 https://blog.cryptographyengineering.com/2018/10/19/lets-talk-about-pake/
-      2 https://blog.cloudflare.com/how-to-receive-a-million-packets/
-      2 https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
-      2 https://blog.abevoelker.com/2019-03-06/on-the-death-of-my-familys-dairy-farm/
-      2 https://bitwarden.com/
-      2 https://binarydebt.wordpress.com/2018/10/14/intel-virtualisation-how-vt-x-kvm-and-qemu-work-together/
-      2 https://bevyengine.org/news/bevy-0-2/
-      2 https://bellard.org/quickjs/
-      2 https://bellard.org/otcc/
-      2 https://bellard.org/jslinux/
-      2 https://begriffs.com/posts/2018-03-20-user-defined-order.html
-      2 https://beakerbrowser.com/
-      2 https://bdupras.github.io/filter-tutorial/
-      2 https://bartoszmilewski.com/2021/02/16/functorio/
-      2 https://azgaar.github.io/Fantasy-Map-Generator/
-      2 https://asciinema.org/
-      2 https://arxiv.org/abs/math/0411418
-      2 https://arxiv.org/abs/1809.10756
-      2 https://arxiv.org/abs/1809.02942
-      2 https://arxiv.org/abs/1801.03534
-      2 https://arxiv.org/abs/1801.00631
-      2 https://arxiv.org/abs/1701.06538
-      2 https://arstechnica.com/science/2019/01/addictive-interactive-murder-map-lets-you-explore-medieval-london-crime/
-      2 https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/
-      2 https://archive.org/details/OTRR_X_Minus_One_Singles
-      2 https://aphyr.com/posts/341-hexing-the-technical-interview
-      2 https://andrewkelley.me/post/zig-stack-traces-kernel-panic-bare-bones-os.html
-      2 https://andrewkelley.me/post/zig-cc-powerful-drop-in-replacement-gcc-clang.html
-      2 http://sandlab.cs.uchicago.edu/jammer/
-      2 https://analytics.usa.gov/
-      2 https://amzn.github.io/ion-docs/
-      2 http://samizdat.mines.edu/howto/HowToBeAProgrammer.html
-      2 https://allthatsinteresting.com/fugate-family-blue-people-of-kentucky
-      2 https://alexcabal.com/creating-the-perfect-gpg-keypair/
-      2 https://aeon.co/essays/the-human-story-of-how-ventilators-came-to-breathe-for-us
-      2 https://aeon.co/essays/busy-and-distracted-everybody-has-been-since-at-least-1710
-      2 https://adventofcode.com/
-      2 https://addons.mozilla.org/en-US/firefox/addon/self-destructing-cookies/
-      2 https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html
-      2 https://about.gitlab.com/2017/11/09/gitlab-vue-one-year-later/
-      2 https://a16z.com/2014/02/06/why-i-did-not-go-to-jail/
-      2 https://00f.net/2019/11/03/stop-using-low-dns-ttls/
-      2 http://rush.heroku.com/
-      2 http://runpee.com/
-      2 http://rubymonk.com/
-      2 http://roscidus.com/blog/blog/2014/06/06/python-to-ocaml-retrospective/
-      2 http://roguetemple.com/z/hyper/
-      2 http://robotgame.org/
-      2 http://rigsomelight.com/2013/09/09/frameless-geodesic-dome.html
-      2 http://ridiculousfish.com/blog/posts/will-it-optimize.html
-      2 http://rhizome.org/editorial/2013/sep/23/impossible-music-black-midi/
-      2 http://revealapp.com/
-      2 http://retinart.net/graphic-design/secret-law-of-page-harmony/
-      2 http://resume.github.com/
-      2 http://restcookbook.com/
-      2 http://rein.pk/gravitational-lensing-to-observe-ancient-earth/
-      2 http://regexr.com/
-      2 http://regex.info/blog/2006-09-15/247
-      2 http://refactormycode.com/
-      2 http://redsymbol.net/articles/unofficial-bash-strict-mode/
-      2 http://rednuht.org/genetic_cars_2/
-      2 http://redeye.firstround.com/2007/10/this-year-i-mea.html
-      2 http://reddit.com/
-      2 http://recursivedrawing.com/
-      2 http://rdegges.com/heroku-isnt-for-idiots
-      2 http://rayninfo.co.uk/vimtips.html
-      2 http://raphaeljs.com/
-      2 http://ramtin-amin.fr/#tristar
-      2 http://railscasts.com/episodes/288-billing-with-stripe
-      2 http://radio.garden/
-      2 http://racket-lang.org/
-      2 http://queue.acm.org/detail.cfm?id=2566628
-      2 http://qiao.github.io/PathFinding.js/visual/
-      2 http://pzemtsov.github.io/2016/11/06/bug-story-alignment-on-x86.html
-      2 http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
-      2 http://python3wos.appspot.com/
-      2 http://pyos.github.io/dg/
-      2 http://pyjs.org/
-      2 http://put.io/
-      2 http://purecss.io/
-      2 http://pud.com/post/10103947044/fucking-sue-me
-      2 http://projecteuler.net/
-      2 http://programmersatwork.wordpress.com/bill-gates-1986/
-      2 http://programmer.97things.oreilly.com/wiki/index.php/Contributions_Appearing_in_the_Book
-      2 http://prog21.dadgum.com/30.html
-      2 http://prog21.dadgum.com/23.html
-      2 http://prog21.dadgum.com/143.html
-      2 http://prog21.dadgum.com/13.html
-      2 http://probcomp.csail.mit.edu/bayesdb/
-      2 http://priceonomics.com/the-independent-discovery-of-tcpip-by-ants/
-      2 http://priceonomics.com/the-correlation-between-arts-and-crafts-and-a/
-      2 http://previous.alternative-system.com/
-      2 http://practicaltypography.com/why-racket-why-lisp.html
-      2 http://postary.com/twitter/mileslennon/why-are-95-of-blogs-abandoned
-      2 http://porg.es/blog/functional-programming-apl-and-unix-pipes
-      2 http://politics.salon.com/2011/10/08/steve_jobs_and_drug_policy/singleton/
-      2 http://plaintextoffenders.com/
-      2 http://phrack.org/issues/69/1.html
-      2 http://phonegap.com/
-      2 http://philosecurity.org/2009/01/12/interview-with-an-adware-author
-      2 http://phil.nullable.eu/
-      2 http://philip.greenspun.com/humor/eecs-difference-explained
-      2 http://philip.greenspun.com/bg/
-      2 http://philip.greenspun.com/ancient-history/managing-software-engineers
-      2 http://phaser.io/
-      2 http://petdance.com/ack/
-      2 http://people.xiph.org/~xiphmont/demo/neil-young.html
-      2 http://pelulamu.net/unscii/
-      2 http://pdp11.aiju.de/
-      2 http://pbpython.com/pandas-pivot-table-explained.html
-      2 http://paultyma.blogspot.com/2007/03/howto-pass-silicon-valley-software.html
-      2 http://paulgraham.com/vb.html
-      2 http://paulgraham.com/makersschedule.html
-      2 http://paulgraham.com/ideas.html
-      2 http://paulgraham.com/hs.html
-      2 http://paulgraham.com/head.html
-      2 http://paulgraham.com/ds.html
-      2 http://patriciopalladino.com/blog/2012/08/09/non-alphanumeric-javascript.html
-      2 http://patoline.org/
-      2 http://particletree.com/features/visualizing-fittss-law/
-      2 http://pages.cs.wisc.edu/~remzi/OSTEP/
-      2 http://oreilly.com/social-media/excerpts/9780596802004/why-speakers-earn-30k-an-hour.html
-      2 http://opensource.plurk.com/LightCloud/
-      2 http://opengarages.org/handbook/
-      2 http://opendatastructures.org/
-      2 http://onstartups.com/home/tabid/3339/bid/1506/Startup-Hiring-6-Subtle-Signs-You-Might-Have-A-Winner.aspx
-      2 http://online.wsj.com/article/SB125875892887958111.html
-      2 http://online.wsj.com/article/SB124648494429082661.html
-      2 http://online.wsj.com/article/SB121124460502305693.html
-      2 http://omnipotent.net/jquery.sparkline/
-      2 http://olduse.net/
-      2 http://okbjgm.weebly.com/uploads/3/1/5/0/31506003/11_laws_of_showrunning_nice_version.pdf
-      2 http://nxxcxx.github.io/Neural-Network/
-      2 http://nvie.com/posts/a-successful-git-branching-model/
-      2 http://nullprogram.com/blog/2015/05/15/
-      2 http://nsa.unaligned.org/
-      2 http://noticing.co/on-size-and-metabolism/
-      2 http://nothings.org/gamedev/ssao/
-      2 http://norvig.com/sudoku.html
-      2 http://norvig.com/spell-correct.html
-      2 http://norvig.com/python-iaq.html
-      2 http://norvig.com/lispy.html
-      2 http://norvig.com/chomsky.html
-      2 http://nodebox.net/code/index.php/Home
-      2 http://nlpwp.org/book/
-      2 http://nginx.org/
-      2 http://nginx.net/nginx-venture-funding.html
-      2 http://news.ycombinator.com/
-      2 http://news.bbc.co.uk/2/hi/health/7909464.stm
-      2 http://nethack4.org/blog/memory.html
-      2 http://nedbatchelder.com/blog/200811/print_this_file_your_printer_will_jam.html
-      2 http://ncombinator.com/
-      2 http://nautil.us/issue/29/scaling/why-virtual-classes-can-be-better-than-real-ones
-      2 http://nautil.us/issue/28/2050/the-book-no-one-read
-      2 http://nathanmarz.com/blog/you-should-blog-even-if-you-have-no-readers.html
-      2 http://nathanmarz.com/blog/clojures-missing-piece.html
-      2 http://naleid.com/blog/2010/10/04/vim-movement-shortcuts-wallpaper/
-      2 http://mywiki.wooledge.org/BashPitfalls
-      2 http://my.opera.com/haavard/blog/2013/02/13/webkit
-      2 http://mycpu.thtec.org/www-mycpu-eu/index1.htm
-      2 http://musicforprogramming.net/
-      2 http://muharem.wordpress.com/2007/07/31/erlang-vs-stackless-python-a-first-benchmark/
-      2 http://mrcoles.com/piano/
-      2 http://mrcoles.com/demo/markdown-css/
-      2 http://moonscript.org/
-      2 http://money.cnn.com/2006/06/21/technology/10dontmatter.biz2/index.htm
-      2 http://moebio.com/research/sevensets/
-      2 http://mixergy.com/live/
-      2 http://mitpress.mit.edu/books/full_pdfs/Street-Fighting_Mathematics.pdf
-      2 http://mislav.uniqpath.com/2010/07/git-tips/
-      2 http://mishadoff.com/blog/clojure-design-patterns/
-      2 http://minnie.tuhs.org/cgi-bin/utree.pl
-      2 http://mindyourdecisions.com/blog/2008/06/10/how-game-theory-solved-a-religious-mystery/
-      2 http://metamodern.com/2009/05/27/how-to-learn-about-everything/
-      2 http://media3.washingtonpost.com/wp-dyn/content/graphic/2006/03/16/GR2006031600213.gif
-      2 http://matt-welsh.blogspot.com/2009/02/how-i-almost-killed-facebook.html
-      2 http://matt.might.net/articles/what-cs-majors-should-know/
-      2 http://matt.might.net/articles/shell-scripts-for-passive-voice-weasel-words-duplicates/
-      2 http://matt.might.net/articles/phd-school-in-pictures/
-      2 http://matt.might.net/articles/implementing-a-programming-language/
-      2 http://matt.might.net/articles/discrete-math-and-code/
-      2 http://matt.might.net/articles/cps-conversion
-      2 http://matt.might.net/articles/compiling-up-to-lambda-calculus/
-      2 http://mattmaroon.com/2010/11/23/i-quit-hacker-news/
-      2 http://matrixmultiplication.xyz/
-      2 http://mathworld.wolfram.com/TuppersSelf-ReferentialFormula.html
-      2 http://math.ucr.edu/home/baez/physics/Quantum/see_a_photon.html
-      2 http://mathoverflow.net/questions/8846/proofs-without-words
-      2 http://math.andrej.com/2007/09/28/seemingly-impossible-functional-programs/
-      2 http://martin.zinkevich.org/rules_of_ml/rules_of_ml.pdf
-      2 http://martinfowler.com/articles/serverless.html
-      2 http://marc.info/?l=git&m=124111702609723&w=2
-      2 http://makerbot.com/
-      2 http://magicscalingsprinkles.wordpress.com/2010/02/08/why-i-love-everything-you-hate-about-java/
-      2 http://lwn.net/Articles/250967/
-      2 http://lwn.net/2000/0824/a/esr-sharing.php3
-      2 http://luvit.io/
-      2 http://lua-users.org/lists/lua-l/2009-11/msg00089.html
-      2 http://loveconquersallgam.es/post/2350461718/fuck-the-super-game-boy-introduction
-      2 http://longnow.org/essays/richard-feynman-connection-machine/
-      2 http://longnow.org/essays/richard-feynman-and-connection-machine/
-      2 http://llvm.org/docs/ReleaseNotes.html
-      2 http://lists.warhead.org.uk/pipermail/iwe/2005-July/000130.html
-      2 http://lists.ethernal.org/oldarchives/cantlug-0211/msg00174.html
-      2 http://lispwebtales.ppenev.com/
-      2 http://lispm.de/symbolics-lisp-machine-ergonomics
-      2 http://lisperati.com/haskell/
-      2 http://lincolnloop.com/django-best-practices/
-      2 http://library.sciencemadness.org/library/books/ignition.pdf
-      2 http://libmill.org/index.html
-      2 http://lesswrong.com/lw/c1/wellkept_gardens_die_by_pacifism/
-      2 http://learnpythonthehardway.org/book/advice.html
-      2 http://leapsecond.com/pages/atomic-bill/
-      2 http://lcamtuf.coredump.cx/prep/
-      2 http://lcamtuf.coredump.cx/electronics/
-      2 http://laughtonelectronics.com/Arcana/One-bit%20computer/One-bit%20computer.html
-      2 http://kylecordes.com/2010/the-prolog-story
-      2 http://kushagragour.in/lab/hint/
-      2 http://kurtmunger.com/dirty_lens_articleid35.html
-      2 http://ksat.me/map-reduce-a-really-simple-introduction-kloudo/
-      2 http://kotlin.jetbrains.org/
-      2 http://kmike.ru/python-data-structures/
-      2 http://kittenlang.org/
-      2 http://keepachangelog.com/
-      2 http://kbrower.posterous.com/banned-from-adwords-and-google-search-in-less
-      2 http://karpathy.github.io/neuralnets/
-      2 http://karpathy.github.io/2015/05/21/rnn-effectiveness/
-      2 http://julesjacobs.github.io/2015/08/17/bayesian-scoring-of-ratings.html
-      2 http://jsonapi.org/
-      2 http://jscheiny.github.io/Streams/
-      2 http://jqapi.com/
-      2 http://joxa.org/
-      2 http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
-      2 http://joshduck.com/periodic-table.html
-      2 http://jonathan.tang.name/files/scheme_in_48/tutorial/overview.html
-      2 http://jonathanischwartz.wordpress.com/2010/03/09/good-artists-copy-great-artists-steal/
-      2 http://joelgrus.com/2012/02/16/hacking-hacker-news/
-      2 http://joekraus.com/were-creating-a-culture-of-distraction
-      2 http://joeduffyblog.com/2016/02/07/the-error-model/
-      2 http://jesusphreak.infogami.com/blog/why_django
-      2 http://jeremykun.com/2013/02/08/why-there-is-no-hitchhikers-guide-to-mathematics-for-programmers/
-      2 http://jekor.com/article/is-haskell-a-good-choice-for-web-applications
-      2 http://jeffhuang.com/best_paper_awards.html
-      2 http://jcalcote.wordpress.com/2008/10/16/put-or-post-the-rest-of-the-story/
-      2 http://javascript.infogami.com/Javascript_in_Ten_Minutes
-      2 http://javascript.crockford.com/little.html
-      2 http://jangosteve.com/post/380926251/no-one-knows-what-theyre-doing
-      2 http://james-iry.blogspot.com/2009/05/brief-incomplete-and-mostly-wrong.html
-      2 http://jacobian.org/writing/rest-worst-practices/
-      2 http://ixoth.com/
-      2 http://ipfs.io/
-      2 http://iolanguage.org/
-      2 http://ioccc.org/2013/cable3/hint.html
-      2 http://internetdefenseleague.org/
-      2 http://interactivepython.org/runestone/static/pythonds/index.html
-      2 http://instagram-engineering.tumblr.com/post/13649370142/what-powers-instagram-hundreds-of-instances-dozens-of
-      2 http://infolab.stanford.edu/~sergey/
-      2 http://inertiawar.com/microcode/
-      2 http://improvingsoftware.com/2009/05/19/programmers-before-you-turn-40-get-a-plan-b/
-      2 http://immersivemath.com/ila/index.html
-      2 http://igoro.com/archive/gallery-of-processor-cache-effects/
-      2 http://ignorethecode.net/blog/2009/04/22/oberon/
-      2 http://icube-icps.unistra.fr/img_auth.php/d/db/ModernC.pdf
-      2 http://iampaddy.com/lifebelow600/
-      2 http://html5test.com/
-      2 http://html5boilerplate.com/
-      2 http://hpmor.com/
-      2 http://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat
-      2 http://howtosplitanatom.com/news/32-sci-fi-novels-you-should-read/
-      2 http://hood.ie/
-      2 http://home.pipeline.com/~hbaker1/LinearLisp.html
-      2 http://hnpoints.com/
-      2 http://hivelogic.com/articles/top-10-programming-fonts
-      2 http://hint.fm/wind/
-      2 http://highscalability.com/latency-everywhere-and-it-costs-you-sales-how-crush-it
-      2 http://highscalability.com/how-google-taught-me-cache-and-cash
-      2 http://highscalability.com/blog/2016/1/11/a-beginners-guide-to-scaling-to-11-million-users-on-amazons.html
-      2 http://highscalability.com/blog/2010/3/16/justintvs-live-video-broadcasting-architecture.html
-      2 http://heydave.org/post/24286720323/gtd-sucks-for-creative-work-heres-an-alternative
-      2 http://hbswk.hbs.edu/item/3348.html
-      2 http://hbswk.hbs.edu/archive/5289.html
-      2 http://hbswk.hbs.edu/archive/3533.html
-      2 http://hastebin.com/
-      2 http://haskellformac.com/
-      2 http://hashify.me/IyBIYXNoaWZ5CgpIYXNoaWZ5IGRvZXMgbm90IHNvbHZlIGEgcHJvYmxlbSwgaXQgcG9zZXMgYSBxdWVzdGlvbjogX3doYXQgYmVjb21lcyBwb3NzaWJsZSB3aGVuIG9uZSBpcyBhYmxlIHRvIHN0b3JlICoqZW50aXJlIGRvY3VtZW50cyoqIGluIFVSTHM/XwoKIyMgRG9jdW1lbnQg4oaUIFVSTAoKSGFzaGlmeSBpcyBkaWZmZXJlbnQgZnJvbSB2aXJ0dWFsbHkgZXZlcnkgb3RoZXIgc2l0ZSBvbiB0aGUgV2ViIGluIHRoYXQgKipldmVyeSBVUkwgY29udGFpbnMgdGhlIGNvbXBsZXRlIGNvbnRlbnRzIG9mIHRoZSBwYWdlKiouCgpUaGUgYWRkcmVzcyBiYXIgdXBkYXRlcyB3aXRoIGVhY2gga2V5c3Ryb2tlIGFzIG9uZSB0eXBlcyBpbnRvIHRoZSBlZGl0b3IuCgojIyMgQmFzZTY0IGVuY29kaW5nCgpPbmx5IGEgdGlueSBmcmFjdGlvbiBvZiBhbGwgVW5pY29kZSBjaGFyYWN0ZXJzIGFyZSBhbGxvd2VkIHVuZXNjYXBlZCBpbiBhIFVSTC4gSGFzaGlmeSB1c2VzIFtCYXNlNjRdWzFdIGVuY29kaW5nIHRvIGNvbnZlcnQgVW5pY29kZSBpbnB1dCB0byBBU0NJSSBvdXRwdXQgc2FmZSBmb3IgaW5jbHVzaW9uIGluIFVSTHMuCgpUaGlzIHRyYW5zbGF0aW9uIGlzIGEgdHdvLXN0ZXAgcHJvY2VzczogW1VuaWNvZGUgdG8gVVRGLTggY29udmVyc2lvbl1bMl0gYXMgb3V0bGluZWQgYnkgSm9oYW4gU3VuZHN0csO2bSwgZm9sbG93ZWQgYnkgYmluYXJ5IHRvIEFTQ0lJIGNvbnZlcnNpb24gdmlhIFtgd2luZG93LmJ0b2FgXVszXS4KCiMjIyMgRW5jb2RpbmcKCiAgICA+IHVuZXNjYXBlKGVuY29kZVVSSUNvbXBvbmVudCgnw6dhIHZhPycpKQogICAgIsODwqdhIHZhPyIKICAgID4gYnRvYSh1bmVzY2FwZShlbmNvZGVVUklDb21wb25lbnQoJ8OnYSB2YT8nKSkpCiAgICAidzZkaElIWmhQdz09IgoKIyMjIyBEZWNvZGluZwoKICAgID4gYXRvYigndzZkaElIWmhQdz09JykKICAgICLDg8KnYSB2YT8iCiAgICA+IGRlY29kZVVSSUNvbXBvbmVudChlc2NhcGUoYXRvYigndzZkaElIWmhQdz09JykpKQogICAgIsOnYSB2YT8iCgojIyBVUkwgc2hvcnRlbmluZwoKU3RvcmluZyBhIGRvY3VtZW50IGluIGEgVVJMIGlzIG5pZnR5LCBidXQgbm90IHRlcnJpYmx5IHByYWN0aWNhbC4gSGFzaGlmeSB1c2VzIHRoZSBbYml0Lmx5IEFQSV1bNF0gdG8gc2hvcnRlbiBVUkxzIGZyb20gYXMgbWFueSBhcyAzMCwwMDAgY2hhcmFjdGVycyB0byBqdXN0IDIwIG9yIHNvLiBJbiBlc3NlbmNlLCBiaXQubHkgYWN0cyBhcyBhIGRvY3VtZW50IHN0b3JlIQoKIyMjIFVSTCBsZW5ndGggbGltaXQKCldoaWxlIHRoZSBIVFRQIHNwZWNpZmljYXRpb24gZG9lcyBub3QgZGVmaW5lIGFuIHVwcGVyIGxpbWl0IG9uIHRoZSBsZW5ndGggb2YgYSBVUkwgdGhhdCBhIHVzZXIgYWdlbnQgc2hvdWxkIGFjY2VwdCwgYml0Lmx5IGltcG9zZXMgYSAyMDQ4LWNoYXJhY3RlciBsaW1pdC4gVGhpcyBpcyBzdWZmaWNpZW50IGluIHRoZSBtYWpvcml0eSBvZiBjYXNlcy4KCkZvciBsb2
-      2 http://haldean.org/docstore/?vim-problems
-      2 http://hackertyper.net/
-      2 http://hackerspaces.org/wiki/List_of_Hacker_Spaces
-      2 http://hackermonthly.com/
-      2 http://graph.tk/
-      2 http://grantland.com/features/diplomacy-the-board-game-of-the-alpha-nerds/
-      2 http://gource.io/
-      2 http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
-      2 http://googleresearch.blogspot.com/2006/06/extra-extra-read-all-about-it-nearly.html
-      2 http://google-engtools.blogspot.com/2011/12/bug-prediction-at-google.html
-      2 http://google.com/
-      2 http://gobot.io/
-      2 http://goanna.cs.rmit.edu.au/~jz/fulltext/alenex03.pdf
-      2 http://glyph.twistedmatrix.com/2008/12/emacs-test.html
-      2 http://glench.com/LegibleMathematics/
-      2 http://gitref.org/
-      2 http://gitimmersion.com/
-      2 http://gamelab.mit.edu/games/a-slower-speed-of-light/
-      2 http://gallium.inria.fr/blog/intel-skylake-bug/
-      2 http://gagne.homedns.org/~tgagne/contrib/EarlyHistoryST.html
-      2 http://ftp.squeak.org/docs/OOPSLA.Squeak.html
-      2 http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
-      2 http://freakonomics.blogs.nytimes.com/2009/10/06/do-we-need-a-37-cent-coin/
-      2 http://framethink.wordpress.com/2011/01/17/how-facebook-ships-code/
-      2 http://fortune.com/2015/09/09/the-siege-of-herbalife/
-      2 http://fnord1.blog.ca/2008/06/30/bad-security-at-evite-4382575/
-      2 http://flownet.com/gat/jpl-lisp.html
-      2 http://flint.cs.yale.edu/cs421/case-for-ml.html
-      2 http://flexcoin.com/
-      2 http://flexboxin5.com/
-      2 http://flatuicolors.com/
-      2 http://fishshell.com/
-      2 http://firequery.binaryage.com/
-      2 http://filer.case.edu/dts8/thelastq.htm
-      2 http://fileformats.archiveteam.org/
-      2 http://features.jsomers.net/how-i-reverse-engineered-google-docs/
-      2 http://facebook.github.io/origami/
-      2 http://fabiensanglard.net/Compile_Like_Its_1992/
-      2 http://fabiensanglard.net/anotherWorld_code_review/index.php
-      2 http://explainshell.com/
-      2 http://everytimezone.com/
-      2 http://etudeapp.com/
-      2 http://essenmitsosse.de/pixel/
-      2 http://ergoemacs.org/emacs/elisp.html
-      2 http://en.wikipedia.org/wiki/Yi_(editor)
-      2 http://en.wikipedia.org/wiki/XOR_linked_list
-      2 http://en.wikipedia.org/wiki/Sprouts_(game)
-      2 http://en.wikipedia.org/wiki/Skip_list
-      2 http://en.wikipedia.org/wiki/One_instruction_set_computer
-      2 http://en.wikipedia.org/wiki/One-electron_universe
-      2 http://en.wikipedia.org/wiki/Norman_Borlaug
-      2 http://en.wikipedia.org/wiki/Non-English-based_programming_languages
-      2 http://en.wikipedia.org/wiki/Nomic
-      2 http://en.wikipedia.org/wiki/Black_Perl
-      2 http://en.wikipedia.org/wiki/Anatoli_Bugorski
-      2 http://en.wikipedia.org/wiki/Alan_Turing
-      2 http://eloquentjavascript.net/
-      2 http://elixir-lang.org/blog/2013/08/08/elixir-design-goals/
-      2 http://elixir-lang.org/
-      2 http://eli.thegreenplace.net/2010/06/30/python-internals-adding-a-new-statement-to-python/
-      2 http://ejohn.org/blog/ocr-and-neural-nets-in-javascript/
-      2 http://ejohn.org/blog/how-javascript-timers-work/
-      2 http://ejohn.org/apps/learn/
-      2 http://ei.cs.vt.edu/~history/Daemon.html
-      2 http://ehneilsen.net/notebook/orgExamples/org-examples.html
-      2 http://editorconfig.org/
-      2 http://ebiquity.umbc.edu/blogger/2008/01/19/how-dr-suess-would-prove-the-halting-problem-undecidable/
-      2 http://eagain.net/articles/git-for-computer-scientists/
-      2 http://e7l3.org/classics.html
-      2 http://dukope.tumblr.com/post/83177288060/localizing-papers-please-papers-please-was
-      2 http://ducklang.org/designing-a-programming-language-i
-      2 http://duartes.org/gustavo/blog/post/anatomy-of-a-program-in-memory
-      2 http://drakon-editor.sourceforge.net/
-      2 http://dougseven.com/2014/04/17/knightmare-a-devops-cautionary-tale/
-      2 http://dotnet.github.io/orleans/
-      2 http://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/
-      2 http://docker.io/
-      2 http://dmitry.gr/?r=05.Projects&proj=07.%20Linux%20on%208bit
-      2 http://dmauro.github.io/Keypress/
-      2 http://dkeenan.com/Lambda/index.htm
-      2 http://discovermagazine.com/2010/jun/03-the-insanity-virus
-      2 http://dippl.org/
-      2 http://dilbertblog.typepad.com/the_dilbert_blog/2007/07/career-advice.html
-      2 http://dheera.net/projects/blur.php
-      2 http://dev.stephendiehl.com/numpile/
-      2 http://dev.stephendiehl.com/hask/
-      2 http://dev.stephendiehl.com/fun/
-      2 http://developer.yahoo.com/performance/rules.html
-      2 http://developer.android.com/about/versions/jelly-bean.html
-      2 http://demomyapp.com/
-      2 http://dcurt.is/the-fight
-      2 http://dbmsmusings.blogspot.com/2010/04/problems-with-cap-and-yahoos-little.html
-      2 http://davidsimon.com/the-wire-hd-with-videos/
-      2 http://dave.fayr.am/posts/2012-10-4-finding-fizzbuzz.html
-      2 http://databrewery.org/
-      2 http://darling.dolezel.info/en/Darling
-      2 http://darkpatterns.org/
-      2 http://daringfireball.net/2004/04/spray_on_usability
-      2 http://danshipper.com/nothing-happens-until-the-sale-is-made
-      2 http://danluu.com/programmer-moneyball/
-      2 http://danluu.com/new-cpu-features/
-      2 http://danluu.com/3c-conflict/
-      2 http://damienkatz.net/2008/03/what_sucks_abou.html
-      2 http://css-tricks.com/examples/ShapesOfCSS/
-      2 http://cslibrary.stanford.edu/
-      2 http://cs.gmu.edu/~sean/lisp/LispTutorial.html
-      2 http://crypto.stanford.edu/sjcl/
-      2 http://cryptome.org/dirty-work/spot-spook.htm
-      2 http://cryptome.org/2012/07/gent-forum-spies.htm
-      2 http://crypto.junod.info/2013/09/09/an-aspiring-scientists-frustration-with-modern-day-academia-a-resignation/
-      2 http://cr.yp.to/critbit.html
-      2 http://courses.csail.mit.edu/6.042/fall10/mcs-ftl.pdf
-      2 http://corte.si/posts/code/devsurvey/index.html
-      2 http://corkboard.me/
-      2 http://contrastrebellion.com/
-      2 http://computers-are-fast.github.io/
-      2 http://compgeom.cs.uiuc.edu/~jeffe/teaching/algorithms/
-      2 http://commfaculty.fullerton.edu/woverbeck/dtr5.htm
-      2 http://colourco.de/
-      2 http://colinm.org/language_checklist.html
-      2 http://colah.github.io/posts/2015-09-NN-Types-FP/
-      2 http://colah.github.io/posts/2014-03-NN-Manifolds-Topology/
-      2 http://coffeescript.org/#changelog
-      2 http://coffeekup.org/
-      2 http://codex99.com/design/the-hp35.html
-      2 http://code.nasa.gov/
-      2 http://code.mixpanel.com/2011/08/05/how-and-why-we-switched-from-erlang-to-python/
-      2 http://code.google.com/p/unix-jun72/
-      2 http://code.google.com/p/ocropus/
-      2 http://code.google.com/p/ie7-js/
-      2 http://code.google.com/edu/courses.html
-      2 http://code.google.com/appengine/docs/python/python27/newin27.html
-      2 http://codegangsta.io/blog/2013/07/21/creating-cli-applications-in-go/
-      2 http://coconut-lang.org/
-      2 http://clrs.cc/
-      2 http://cleverdeck.com/
-      2 http://classics.mit.edu/Antoninus/meditations.html
-      2 http://ciml.info/
-      2 http://chuck.cs.princeton.edu/
-      2 http://chris-lamb.co.uk/2008/01/24/can-you-get-cp-to-give-a-progress-bar-like-wget/
-      2 http://chargen.matasano.com/chargen/2009/7/22/if-youre-typing-the-letters-a-e-s-into-your-code-youre-doing.html
-      2 http://chadfowler.com/blog/2014/01/19/empathy/
-      2 http://c-faq.com/decl/spiral.anderson.html
-      2 http://cb.vu/unixtoolbox.xhtml
-      2 http://catb.org/jargon/html/magic-story.html
-      2 http://casual-effects.com/markdeep/
-      2 http://carl.flax.ie/dothingstellpeople.html
-      2 http://cantada.ca/
-      2 http://canonical.org/~kragen/memory-models/
-      2 http://calteches.library.caltech.edu/51/2/CargoCult.htm
-      2 http://calnewport.com/blog/2011/11/11/if-youre-busy-youre-doing-something-wrong-the-surprisingly-relaxed-lives-of-elite-achievers/
-      2 http://cacr.uwaterloo.ca/hac/
-      2 http://cacm.acm.org/magazines/2009/9/38904-the-status-of-the-p-versus-np-problem/fulltext
-      2 http://burakkanber.com/blog/machine-learning-full-text-search-in-javascript-relevance-scoring/
-      2 http://browserver.org/
-      2 http://brokenpianoforpresident.com/2012/07/19/jack-daniels-lawsuit-the-full-scoop/
-      2 http://bramcohen.com/2011/12/04/never-make-counter-offers
-      2 http://bradfitz.com/social-graph-problem/
-      2 http://boston.conman.org/2015/06/16.1
-      2 http://bost.ocks.org/mike/algorithms/
-      2 http://book.mixu.net/distsys/single-page.html
-      2 http://bob.cs.sonoma.edu/IntroCompOrg-RPi/intro-co-rpi.html
-      2 http://blog.wilshipley.com/2013/12/my-doom-20th-anniversary-stories.html
-      2 http://blog.webmynd.com/2009/02/28/databases-as-a-service-fathomdb/
-      2 http://blog.weatherby.net/2009/02/could-atlanta-buy-a-silicon-valley-the-answers.html
-      2 http://blog.testdouble.com/posts/2014-01-25-the-failures-of-intro-to-tdd.html
-      2 http://blogs.wsj.com/accelerators/2014/06/03/jessica-livingston-why-startups-need-to-focus-on-sales-not-marketing/
-      2 http://blogs.valvesoftware.com/economics/arbitrage-and-equilibrium-in-the-team-fortress-2-economy/
-      2 http://blogs.uw.edu/ajko/2012/08/22/john-carmack-discusses-the-art-and-science-of-software-engineering/
-      2 http://blog.sumall.com/journal/optimizely-got-me-fired.html
-      2 http://blogs.sun.com/jrose/entry/bloom_filters_in_a_nutshell
-      2 http://blogs.perl.org/users/rafael_garcia-suarez/2011/10/why-dart-is-not-the-language-of-the-future.html
-      2 http://blogs.nuxeo.com/dev/2011/10/speeding-up-the-android-emulator.html
-      2 http://blogs.msdn.com/b/oldnewthing/archive/2012/12/18/10378851.aspx
-      2 http://blogs.msdn.com/b/ntdebugging/archive/2013/11/22/understanding-arm-assembly-part-1.aspx
-      2 http://blogs.msdn.com/b/jw_on_tech/archive/2012/03/13/why-i-left-google.aspx
-      2 http://blogs.msdn.com/b/ericlippert/archive/2011/02/14/what-would-feynman-do.aspx
-      2 http://blogs.law.harvard.edu/sj/2011/07/24/aaron-swartz-v-united-states/
-      2 http://blog.samaltman.com/board-members
-      2 http://blog.rongarret.info/2015/05/why-lisp.html
-      2 http://blog.parsely.com/post/1691/lucene/
-      2 http://blog.objectmentor.com/articles/2009/02/26/10-papers-every-programmer-should-read-at-least-twice
-      2 http://blog.n01se.net/?p=41
-      2 http://blog.moertel.com/posts/2013-12-14-great-old-timey-game-programming-hack.html
-      2 http://blog.moertel.com/pages/coders-guide-to-coffee
-      2 http://blog.modernmechanix.com/2008/03/24/what-will-life-be-like-in-the-year-2008/
-      2 http://blog.mailchimp.com/social-login-buttons-arent-worth-it/
-      2 http://blog.llvm.org/2011/05/what-every-c-programmer-should-know_14.html
-      2 http://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/
-      2 http://blog.jgc.org/2011/11/beware-alan-turing-fetish.html
-      2 http://blog.fogus.me/2011/09/08/10-technical-papers-every-programmer-should-read-at-least-twice/
-      2 http://blog.dustinkirkland.com/2013/10/fingerprints-are-user-names-not.html
-      2 http://blog.docker.com/2014/06/its-here-docker-1-0/
-      2 http://blog.chriszacharias.com/page-weight-matters
-      2 http://blog.burtonthird.com/?p=81
-      2 http://blog.bjrn.se/2008/10/lets-build-mp3-decoder.html
-      2 http://blog.asmartbear.com/self-doubt-fraud.html
-      2 http://blog.asmartbear.com/rich-vs-king-sold-company.html
-      2 http://blog.adamnash.com/2011/10/10/steve-jobs-bmw-ebay/
-      2 http://bjoern.brembs.net/2016/02/sci-hub-as-necessary-effective-civil-disobedience/
-      2 http://bitcore.io/
-      2 http://bioteam.net/2011/08/why-you-should-never-build-a-backblaze-pod/
-      2 http://billhails.net/Book/front.html
-      2 http://betterexplained.com/articles/a-visual-intuitive-guide-to-imaginary-numbers/
-      2 http://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/
-      2 http://bentilly.blogspot.com/2009/09/teaching-linear-algebra.html
-      2 http://beginners.re/
-      2 http://beej.us/guide/bgipc/output/html/multipage/index.html
-      2 http://bbcsfx.acropolis.org.uk/
-      2 http://bastiat.org/en/petition.html
-      2 http://bar.com/
-      2 http://aws.amazon.com/importexport/
-      2 http://aviationweek.com/technology/skunk-works-reveals-compact-fusion-reactor-details
-      2 http://audenneedham.com/game/
-      2 http://atastypixel.com/blog/four-common-mistakes-in-audio-development/
-      2 http://astronaut.io/
-      2 http://a.singlediv.com/
-      2 http://asciiflow.com/
-      2 http://arxiv.org/abs/1412.5567
-      2 http://arxiv.org/abs/1110.1556
-      2 http://arxiv.org/abs/0903.0340
-      2 http://articles.latimes.com/2012/may/05/business/la-fi-0506-golden-ticket-20120506
-      2 http://arstechnica.com/open-source/news/2010/06/the-beos-filesystem.ars
-      2 http://archive.wired.com/wired/archive/5.06/apple_pr.html
-      2 http://archive.vector.org.uk/art10010830
-      2 http://archive.ncsa.illinois.edu/prajlich/forster.html
-      2 http://archive.boston.com/bigpicture/2010/08/comments_russia_in_color_a_century_ago.html
-      2 http://apirocks.com/html5/html5.html
-      2 http://apenwarr.ca/log/?m=201407#01
-      2 http://aosabook.org/en/index.html
-      2 http://antirez.com/news/61
-      2 http://antirez.com/articoli/tclmisunderstood.html
-      2 http://ankisrs.net/
-      2 http://animatron.com/
-      2 http://andrewkelley.me/post/jamulator.html
-      2 http://amasci.com/weird/unusual/e-wall.html
-      2 http://amasci.com/miscon/whyhard2.html
-      2 http://amasci.com/amateur/whygnd.html
-      2 http://alumni.stanford.edu/get/page/magazine/article/?article_id=41260
-      2 http://alumni.media.mit.edu/~jorkin/aibooks.html
-      2 http://alexmaccaw.com/posts/how_to_travel_around_the_world
-      2 http://alexkrupp.typepad.com/sensemaking/2007/04/double_your_use.html
-      2 http://alex-charlton.com/posts/Prototype_to_polish_Making_games_in_CHICKEN_Scheme_with_Hypergiant/
-      2 http://alan.blog-city.com/has_amazon_ec2_become_over_subscribed.htm
-      2 http://ajaxian.com/archives/nicole-sullivans-object-oriented-css
-      2 http://aging.nautil.us/feature/218/why-you-cant-help-but-act-your-age
-      2 http://adv-r.had.co.nz/
-      2 http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
-      2 http://addyosmani.com/largescalejavascript/
-      2 http://acko.net/blog/how-to-fold-a-julia-fractal/
-      2 http://academictorrents.com/
-      2 http://abhishek.geek.nz/docs/features-of-common-lisp
-      2 http://aaugh.com/imageabuse.html
-      2 http://aaroniba.net/articles/tmp/how-i-cured-my-rsi-pain.html
-      2 http://aadrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html
-      2 http://9to5mac.com/2011/10/11/steve-jobs-book-excerpt-why-he-wore-the-black-mock-turtleneck-uniform/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+9To5Mac-MacAllDay+%289+to+5+Mac+-+Apple+Intelligence%29
-      2 http://9to5mac.com/2011/10/10/photoshop-unblur-leaves-max-audience-gasping-for-air/
-      2 http://9-eyes.com/
-      2 http://507movements.com/
-      2 http://37signals.com/svn/posts/3024-questions-i-ask-when-reviewing-a-design
-      2 http://37signals.com/svn/archives2/dont_scale_99999_uptime_is_for_walmart.php
-      2 http://37signals.com/
-      2 http://250bpm.com/blog:50
-      2 http://250bpm.com/blog:4
-      2 http://0pointer.net/blog/revisiting-how-we-put-together-linux-systems.html
+4 http://www.amazon.com/
+3 http://ycombinator.com/apply.html
+3 http://www.willamette.edu/~fruehr/haskell/evolution.html
+3 http://www.snopes.com/music/artists/vanhalen.asp
+3 http://www.scottaaronson.com/democritus/lec9.html
+3 http://www.reddit.com/
+3 http://www.princeton.edu/main/news/archive/S26/91/22K07/
+3 http://www.openstenoproject.org/
+3 http://www.oftenpaper.net/sierpinski.htm
+3 http://www.noulakaz.net/weblog/2007/03/18/a-regular-expression-to-check-for-prime-numbers/
+3 http://www.norvig.com/spell-correct.html
+3 http://www.nhplace.com/kent/Papers/cl-untold-story.html
+3 http://www.michaelnielsen.org/ddi/lisp-as-the-maxwells-equations-of-software/
+3 http://www.lurklurk.org/linkers/linkers.html
+3 http://www.linusakesson.net/programming/tty/index.php
+3 http://www.linusakesson.net/programming/tty/
+3 http://www.lighterra.com/papers/modernmicroprocessors/
+3 http://www.jsfuck.com/
+3 http://www.gnu.org/gnu/rms-lisp.html
+3 http://www.georgehart.com/bagel/bagel.html
+3 http://www.garlikov.com/Soc_Meth.html
+3 http://www.dspguide.com/pdfbook.htm
+3 http://www.4p8.com/eric.brasseur/gamma.html
+3 http://websocketd.com/
+3 http://websdr.ewi.utwente.nl:8901/
+3 http://vim-adventures.com/
+3 http://trillian.mit.edu/~jc/humor/ATT_Copyright_true.html
+3 http://terrytao.wordpress.com/career-advice/does-one-have-to-be-a-genius-to-do-maths/
+3 https://www.zotero.org/
+3 https://www.darlinghq.org/
+3 http://st.suckless.org/
+3 https://training.kalzumeus.com/newsletters/archive/enterprise_sales
+3 http://steve-yegge.blogspot.com/2006/09/good-agile-bad-agile_27.html
+3 http://status.aws.amazon.com/
+3 https://seashells.io/
+3 https://projecteuler.net/
+3 https://jaycarlson.net/microcontrollers/
+3 https://github.com/susam/texme
+3 https://github.com/robertdavidgraham/masscan
+3 https://github.com/munificent/vigil
+3 https://github.com/minimaxir/big-list-of-naughty-strings
+3 https://github.com/google/lisp-koans
+3 https://github.com/alevchuk/vim-clutch
+3 http://people.csail.mit.edu/gregs/ll1-discuss-archive-html/msg03277.html
+3 http://ocamlunix.forge.ocamlcore.org/
+3 http://norvig.com/experiment-design.html
+3 http://neuralnetworksanddeeplearning.com/chap4.html
+3 http://matt.might.net/articles/best-programming-languages/
+3 http://madebyevan.com/webgl-water/
+3 http://lists.squeakfoundation.org/pipermail/squeak-dev/1998-October/017019.html
+3 http://lists.busybox.net/pipermail/busybox/2010-December/074114.html
+3 http://libcello.org/
+3 http://learnyouahaskell.com/
+3 http://landoflisp.com/
+3 http://kivy.org/
+3 http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/
+3 http://johnsalvatier.org/blog/2017/reality-has-a-surprising-amount-of-detail
+3 http://idlewords.com/2010/03/scott_and_scurvy.htm
+3 http://haxe.org/
+3 http://habitatchronicles.com/2004/04/you-cant-tell-people-anything/
+3 http://graphics.stanford.edu/~seander/bithacks.html
+3 http://gameprogrammingpatterns.com/
+3 http://factorcode.org/
+3 http://evhead.com/2005/11/ten-rules-for-web-startups.asp
+3 http://diydrones.com/
+3 http://dec64.com/
+3 http://cslibrary.stanford.edu/101/EssentialC.pdf
+3 http://blog.notdot.net/2010/07/Damn-Cool-Algorithms-Levenshtein-Automata
+2 http://zsync.moria.org.uk/
+2 http://zotonic.com/
+2 http://yuiblog.com/crockford/
+2 http://yro.slashdot.org/story/11/10/11/1322202/German-State-Confesses-To-Downplays-Government-Spyware?utm_source=slashdot&utm_medium=twitter
+2 http://youtube.com/watch?v=D1R-jKKp3NA
+2 http://yoshinorimatsunobu.blogspot.com/2010/10/using-mysql-as-nosql-story-for.html
+2 http://ycombinator.com/tredennick.html
+2 http://ycombinator.com/newsguidelines.html?
+2 http://ycombinator.com/munger.html
+2 http://y2combinator.com/
+2 http://xuanji.appspot.com/isicp/1-1-elements.html
+2 http://xn--hgi.ws/
+2 http://xip.io/
+2 http://www.zpub.com/notes/idle.html
+2 http://www.zompist.com/yingzi/yingzi.htm
+2 http://www.zerovm.org/
+2 http://www.zachtronics.com/tis-100/
+2 http://www.youtube.com/watch?v=z6hoPw5hItY
+2 http://www.youtube.com/watch?v=4XpnKHJAok8
+2 http://www.yosefk.com/blog/my-history-with-forth-stack-machines.html
+2 http://www.yacoset.com/Home/signs-that-you-re-a-bad-programmer
+2 http://www.xs4all.nl/~weegen/eelis/analogliterals.xhtml
+2 http://www.wordplace.com/ap/index.shtml
+2 http://www.wjh.harvard.edu/~dtg/DUNN%20GILBERT%20&%20WILSON%20(2011).pdf
+2 http://www.wirfs-brock.com/allen/posts/914
+2 http://www.wired.com/techbiz/people/magazine/16-09/pl_brown
+2 http://www.wired.com/
+2 http://www.winestockwebdesign.com/Essays/Lisp_Curse.html
+2 http://www.windytan.com/2012/11/the-sound-of-dialup-pictured.html
+2 http://www.windows93.net/
+2 http://www.wilfred.me.uk/blog/2012/07/30/why-markdown-is-not-my-favourite-language/
+2 http://www.washingtonpost.com/wp-dyn/content/article/2007/04/04/AR2007040401721.html
+2 http://www.washingtonpost.com/sf/business/2015/05/31/net-of-insecurity-part-2/
+2 http://www.visual6502.org/JSSim/index.html
+2 http://www.vatican.va/various/cappelle/sistina_vr/index.html
+2 http://www.vanadac.com/~dajhorn/novelties/ESR%20-%20Curse%20Of%20The%20Gifted.html
+2 http://www.utf8everywhere.org/
+2 http://www.userscape.com/blog/index.php/site/comments/what_they_never_told_you_about_handling_b2b_transactions/
+2 http://www.useit.com/papers/anti-mac.html
+2 http://www.usbtypewriter.com/
+2 http://www.ultratechnology.com/1xforth.htm
+2 http://www.ulisp.com/
+2 http://www.trnicely.net/pentbug/bugmail1.html
+2 http://www.tinmith.net/wayne/blog/2017/06/immersive-flight-sim-4.htm
+2 http://www.thumbtack.com/engineering/googlebot-makes-post-requests-via-ajax/
+2 http://www.thesixtyone.com/
+2 http://www.theregister.co.uk/2001/05/15/could_bill_gates_write_code/
+2 http://www.theherald.com.au/story/1848433/the-ocean-is-broken/
+2 http://www.theguardian.com/media/2013/apr/12/news-is-bad-rolf-dobelli
+2 http://www.theatlantic.com/past/docs/unbound/langew/turn.htm
+2 http://www.theatlantic.com/magazine/archive/2014/01/the-dark-lord-of-the-internet/355726/?single_page=true
+2 http://www.theatlantic.com/magazine/archive/2010/06/the-enemy-within/8098/
+2 http://www.theatlantic.com/international/archive/2011/02/the-myth-of-japans-lost-decades/71741/
+2 http://www.theamericanscholar.org/the-disadvantages-of-an-elite-education/
+2 http://www.terrybisson.com/page6/page6.html
+2 http://www.templetons.com/brad/copymyths.html
+2 http://www.telescopictext.com/
+2 http://www.ted.com/talks/evan_williams_on_listening_to_twitter_users.html
+2 http://www.techoozie.com/10-books-that-will-substitute-a-computer-science-degree/
+2 http://www.technoblogy.com/show?2AEE
+2 http://www.techcrunch.com/2009/02/27/y-combinators-fathomdb-takes-the-hassle-out-of-managing-your-database/
+2 http://www.techcrunch.com/2009/02/27/toysrus-buys-toyscom-at-auction-for-51-million/
+2 http://www.syntax-k.de/projekte/go-review
+2 http://www.supermemo.com/articles/sleep.htm
+2 http://www.submarinecablemap.com/
+2 http://www.structuredprocrastination.com/
+2 http://www.stephendiehl.com/posts/monads_machine_code.html
+2 http://www.startupwhisperer.com/2009/02/do-not-demo-naked.html
+2 http://www.staff.science.uu.nl/~gadda001/goodtheorist/
+2 http://www.squeezedbooks.com/
+2 http://www.squeakland.org/resources/books/readingList.jsp
+2 http://www.sqlite.org/testing.html
+2 http://www.spacex.com/webcast.php
+2 http://www.spacex.com/webcast/
+2 http://www.sorting-algorithms.com/
+2 http://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
+2 http://www.softwarebyrob.com/2010/12/09/how-to-detect-a-toxic-customer/
+2 http://www.slideshare.net/missrogue/the-10-mistakes-ive-madeso-you-dont-have-to
+2 http://www.slideshare.net/mingyeow/discovery-is-the-new-cocaine-going-beyond-engagement
+2 http://www.slideshare.net/gueste94e4c/dropbox-startup-lessons-learned-3836587
+2 http://www.slate.com/id/2132576/
+2 http://www.slate.com/articles/business/branded/2012/04/ykk_zippers_why_so_many_designers_use_them_.html
+2 http://www.skeptictank.org/hs/vanish.htm
+2 http://www.sizecoding.org/wiki/Main_Page
+2 http://www.sixmonthmba.com/2009/02/999ideas.html
+2 http://www.sikuli.org/
+2 http://www.semicomplete.com/articles/ssh-security/
+2 http://www.scottberkun.com/blog/2007/asshole-driven-development/
+2 http://www.scottaaronson.com/writings/bignumbers.html
+2 http://www.scottaaronson.com/papers/philos.pdf
+2 http://www.scottaaronson.com/blog/?p=304
+2 http://www.sagemath.org/
+2 http://www.safetyresearch.net/blog/articles/toyota-unintended-acceleration-and-big-bowl-%E2%80%9Cspaghetti%E2%80%9D-code
+2 http://www.rosshudgens.com/thoughts-from-paul-graham/
+2 http://www.rose-hulman.edu/~bryan/googleFinalVersionFixed.pdf
+2 http://www.rlslog.net/12-million-people-in-usa-still-use-dial-up/
+2 http://www.ritsumei.ac.jp/~akitaoka/index-e.html
+2 http://www.righto.com/2020/09/inside-hp-nanoprocessor-high-speed.html
+2 http://www.righto.com/2020/06/a-look-at-die-of-8086-processor.html
+2 http://www.righto.com/2019/11/tros-how-ibm-mainframes-stored.html
+2 http://www.righto.com/2016/12/die-photos-and-analysis-of_24.html
+2 http://www.righto.com/2015/12/reverse-engineering-arm1-ancestor-of.html
+2 http://www.righto.com/2014/09/mining-bitcoin-with-pencil-and-paper.html
+2 http://www.righto.com/2014/05/reverse-engineering-tl431-most-common.html
+2 http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html
+2 http://www.righto.com/2012/02/apple-didnt-revolutionize-power.html
+2 http://www.righto.com/2011/07/cells-are-very-fast-and-crowded-places.html
+2 http://www.rifters.com/crawl/?p=6116
+2 http://www.ribbonfarm.com/2013/04/03/the-locust-economy/
+2 http://www.returninfinity.com/baremetal.html
+2 http://www.research.ibm.com/people/l/lloydt/color/color.HTM
+2 http://www.renaebair.com/2010/08/11/my-husband-is-a-programmer-i-have-no-idea-what-that-means/
+2 http://www.redbook.io/
+2 http://www.recombinantrecords.net/docs/2009-05-Amusing-Ourselves-to-Death.html
+2 http://www.readwriteweb.com/archives/google_hands_wikileaks_volunteers_gmail_data_to_us.php
+2 http://www.ranum.com/security/computer_security/editorials/dumb/index.html
+2 http://www.ranum.com/security/computer_security/editorials/dumb/
+2 http://www.randsinrepose.com/archives/2011/10/11/the_rands_test.html
+2 http://www.randsinrepose.com/archives/2007/11/11/the_nerd_handbook.html
+2 http://www.randomhacks.net/articles/2007/02/22/bayes-rule-and-drug-tests
+2 http://www.ragic.com/
+2 http://www.rafekettler.com/magicmethods.html
+2 http://www.python.org/doc/essays/list2str.html
+2 http://www.pyret.org/
+2 http://www.purl.org/stefan_ram/pub/doc_kay_oop_en
+2 http://www.psy.fsu.edu/~baumeistertice/goodaboutmen.htm
+2 http://www.projectoberon.com/
+2 http://www.prettyloaded.com/
+2 http://www.portfolio.com/culture-lifestyle/culture-inc/arts/2007/10/15/YouPorn-Vivid-Entertainment-Profile
+2 http://www.pointerpointer.com/
+2 http://www.playfuljs.com/a-first-person-engine-in-265-lines/
+2 http://www.pinktentacle.com/2008/12/scientists-extract-images-directly-from-brain/
+2 http://www.petridish.org/
+2 http://www.pdl.cmu.edu/mailinglists/ips/mail/msg00133.html
+2 http://www.payne.org/index.php/Startup_Equity_For_Employees
+2 http://www.pawfal.org/fluxus/
+2 http://www.paulgraham.com/wealth.html
+2 http://www.paulgraham.com/vanlfsp.html
+2 http://www.paulgraham.com/top.html
+2 http://www.paulgraham.com/thist.html
+2 http://www.paulgraham.com/stuff.html
+2 http://www.paulgraham.com/say.html
+2 http://www.paulgraham.com/rootsoflisp.html
+2 http://www.paulgraham.com/microsoft.html
+2 http://www.paulgraham.com/maybe.html
+2 http://www.paulgraham.com/makersschedule.html
+2 http://www.paulgraham.com/knuth.html
+2 http://www.paulgraham.com/identity.html
+2 http://www.paulgraham.com/hamming.html
+2 http://www.paulgraham.com/cornpone.html
+2 http://www.paulgraham.com/boss.html
+2 http://www.paulgraham.com/badeconomy.html
+2 http://www.paulgraham.com/addiction.html
+2 http://www.paulgraham.com/13sentences.html
+2 http://www.panic.com/extras/audionstory/
+2 http://www.pacifict.com/Story/
+2 http://www.over-yonder.net/~fullermd/rants/bsd4linux/01
+2 http://www.oreilly.com/openbook/freedom/ch06.html
+2 http://www.openvim.com/tutorial.html
+2 http://www.openssd-project.org/wiki/The_OpenSSD_Project
+2 http://www.opensourcerails.com/
+2 http://www.openmoko.com/
+2 http://www.openculture.com/freeonlinecourses
+2 http://www.openculture.com/2016/03/3900-pages-of-paul-klees-personal-notebooks-are-now-online.html
+2 http://www-old.oberon.ethz.ch/WirthPubl/CBEAll.pdf
+2 http://www.nytimes.com/2009/03/01/movies/01films.html
+2 http://www.nytimes.com/2007/03/17/business/17online.html?ex=1331784000&en=8c67e3ff3a190b78&ei=5090&partner=rssuserland&emc=rss
+2 http://www.numberspiral.com/index.html
+2 http://www.nucalc.com/Story/
+2 http://www.npr.org/sections/health-shots/2013/10/18/236211811/brains-sweep-themselves-clean-of-toxins-during-sleep
+2 http://www.npr.org/blogs/money/2012/07/13/156737801/the-cost-of-free-doughnuts-70-years-of-regret
+2 http://www.nowykurier.com/toys/gravity/gravity.html
+2 http://www.northwestern.edu/newscenter/stories/2015/03/creative-genius-driven-by-distraction.html
+2 http://www.nodebeginner.org/
+2 http://www.nicolasbize.com/blog/30-years-later-qbasic-is-still-the-best/
+2 http://www.newyorker.com/tech/elements/walking-helps-us-think
+2 http://www.newscientist.com/article/mg21228440.700-dotdashdiss-the-gentleman-hackers-1903-lulz.html
+2 http://www.newsblur.com/
+2 http://www.nature.com/news/quantum-gas-goes-below-absolute-zero-1.12146
+2 http://www.nand2tetris.org/
+2 http://www.myscriptfont.com/
+2 http://www.muppetlabs.com/~breadbox/txt/al.html
+2 http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
+2 http://www.moserware.com/2009/09/stick-figure-guide-to-advanced.html
+2 http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html
+2 http://www.moreintelligentlife.com/content/edward-carr/last-days-polymath
+2 http://www.mnot.net/cache_docs/
+2 http://www.minimallyminimal.com/blog/apple-pro-mouse
+2 http://www.microsoft.com/en-us/news/ceo/index.html
+2 http://www.michaelv.org/
+2 http://www.michaelnielsen.org/ddi/why-bloom-filters-work-the-way-they-do/
+2 http://www.michaeleisen.org/blog/?p=358
+2 http://www.math.umass.edu/~lavine/Book/book.html
+2 http://www.math.tamu.edu/~cyan/Rota/mitless.html
+2 http://www.masswerk.at/google60/
+2 http://www.makelinux.net/kernel_map/
+2 http://www.mail-archive.com/dri-devel@lists.sourceforge.net/msg39091.html
+2 http://www.madinamerica.com/2012/02/why-anti-authoritarians-are-diagnosed-as-mentally-ill/
+2 http://www.lyx.org/
+2 http://www.lowtechmagazine.com/2011/12/the-chinese-wheelbarrow.html
+2 http://www.lowtechmagazine.com/2010/03/history-of-human-powered-cranes.html
+2 http://www.loper-os.org/?p=861
+2 http://www.loper-os.org/?p=401
+2 http://www.linuxjournal.com/article/3882
+2 http://www.linusakesson.net/programming/pipelogic/index.php
+2 http://www.levchin.com/paypal-slideshow/1.html
+2 http://www.lettersofnote.com/2012/10/people-simply-empty-out.html
+2 http://www.lessonsoffailure.com/developers/pervasive-myths-older-software-developers/
+2 http://www.lessig.org/blog/2009/02/caving_into_bullies_aka_here_w.html
+2 http://www.learnprolognow.org/lpnpage.php?pageid=online
+2 http://www.learndatalogtoday.org/
+2 http://www.latimes.com/news/printedition/front/la-na-tapwater25-2009feb25,0,6720560,full.story
+2 http://www.lamdu.org/
+2 http://www.lambdassociates.org/blog/decline.htm
+2 http://www.lambdassociates.org/blog/bipolar.htm
+2 http://www.lambdanative.org/
+2 http://www.labnol.org/internet/search/marissa-mayer-keynote-on-how-google-works/3554/
+2 http://www.kuro5hin.org/story/2004/2/25/124713/784
+2 http://www.kleinbottle.com/
+2 http://www.kk.org/thetechnium/archives/2009/02/amish_hackers_a.php
+2 http://www.kevinbeason.com/smallpt/
+2 http://www.kegel.com/c10k.html
+2 http://www.keacher.com/1216/how-i-introduced-a-27-year-old-computer-to-the-web/
+2 http://www.kagenschaefer.com/pipeorgandesk.html
+2 http://www.jwz.org/gruntle/nscpdorm.html
+2 http://www.jwz.org/gruntle/nomo.html
+2 http://www.jwz.org/doc/worse-is-better.html
+2 http://www.justin.tv/
+2 http://www.judegomila.com/2009/05/mapping-out-your-web-startup.html
+2 http://www.jsoftware.com/papers/tot.htm
+2 http://www.johndcook.com/blog/2010/01/20/ten-surprises-from-numerical-linear-algebra/
+2 http://www.johndcook.com/blog/2010/01/19/dont-invert-that-matrix/
+2 http://www.joelonsoftware.com/items/2009/09/23.html
+2 http://www.joelonsoftware.com/items/2007/03/02.html
+2 http://www.joelonsoftware.com/items/2006/08/01.html
+2 http://www.joelonsoftware.com/articles/Wrong.html
+2 http://www.joelonsoftware.com/articles/Unicode.html
+2 http://www.joelonsoftware.com/articles/fog0000000069.html
+2 http://www.jjj.de/fxt/#fxtbook
+2 http://www.jesshamrick.com/2012/09/10/absolute-beginners-guide-to-emacs/
+2 http://www.jasondavies.com/primos/
+2 http://www.janestreetcapital.com/minsky_weeks-jfp_18.pdf
+2 http://www.jamesmolloy.co.uk/tutorial_html/index.html
+2 http://www.ithkuil.net/
+2 http://www.interdb.jp/pg/index.html
+2 http://www.informit.com/articles/article.aspx?p=2213858&WT.mc_id=Author_Knuth_20Questions
+2 http://www.infoq.com/presentations/katz-couchdb-and-me
+2 http://www.infoq.com/interviews/Steele-Interviews-John-McCarthy
+2 http://www.indiangeek.net/wp-content/uploads/Programmer%20competency%20matrix.htm
+2 http://www.idlewords.com/2005/04/dabblers_and_blowhards.htm
+2 http://www.ic.unicamp.br/~meidanis/courses/mc336/2006s2/funcional/L-99_Ninety-Nine_Lisp_Problems.html
+2 http://www.ibiblio.org/harris/500milemail.html
+2 http://www.humblebundle.com/
+2 http://www.howmanypeopleareinspacerightnow.com/
+2 http://www.hostmeinca.com/
+2 http://www.homebrewcpu.com/
+2 http://www.hemingwayapp.com/
+2 http://www.haskellforall.com/2012/08/the-category-design-pattern.html
+2 http://www.halfbakery.com/
+2 http://www.hackrtrackr.com/
+2 http://www.hackerfactor.com/blog/index.php?/archives/322-Body-By-Victoria.html
+2 http://www.h3rald.com/articles/10-programming-languages/
+2 http://www.gusmueller.com/blog/archives/2005/12/25.html
+2 http://www.grokdotcom.com/2008/02/26/amazon-shopping-cart/
+2 http://www.greghendershott.com/fear-of-macros/
+2 http://www.greenharbor.com/fffolder/carkeet.html
+2 http://www.gotw.ca/publications/c_family_interview.htm
+2 http://www.goosh.org/
+2 http://www.google.com/trends
+2 http://www.google.com/search?q=hacker+news+Unknown+or+expired+link.&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:en-US:official&client=firefox-a
+2 http://www.google.com/robots.txt
+2 http://www.google.com/ads/answers/numbers.html
+2 http://www.google.com/
+2 http://www.golang-book.com/
+2 http://www.gog.com/
+2 http://www.gigamonkeys.com/book/
+2 http://www.gianlucagimini.it/prototypes/velocipedia.html
+2 http://www.getskeleton.com/
+2 http://www.getjustlanded.com/
+2 http://www.gamasutra.com/view/feature/4111/dirty_coding_tricks.php?print=1
+2 http://www.gabrielweinberg.com/startupswiki/Ask_YC_Archive
+2 http://www.gabrielweinberg.com/blog/2010/06/paths-to-5m-for-a-startup-founder.html
+2 http://www.funtoo.org/wiki/Linux_Fundamentals,_Part_1
+2 http://www.fourmilab.ch/hackdiet/
+2 http://www.fourmilab.ch/documents/golden_glow/
+2 http://www.forteantimes.com/features/articles/1302/lost_in_space.html
+2 http://www-formal.stanford.edu/jmc/robotandbaby/robotandbaby.html
+2 http://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html
+2 http://www.forbes.com/sites/andygreenberg/2010/08/24/full-body-scan-technology-deployed-in-street-roving-vans/
+2 http://www.folklore.org/StoryView.py?story=Negative_2000_Lines_Of_Code.txt
+2 http://www.fmwconcepts.com/imagemagick/index.php
+2 http://www.flightradar24.com/
+2 http://www.flexboxdefense.com/
+2 http://www.fieggen.com/shoelace/ianknot.htm
+2 http://www.feynmanlectures.caltech.edu/
+2 http://www.fastcompany.com/magazine/122/is-the-tipping-point-toast.html
+2 http://www.fastcompany.com/1785445/crypto-currency-mystery
+2 http://www.extentofthejam.com/pseudo/
+2 http://www.evanmiller.org/why-im-betting-on-julia.html
+2 http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
+2 http://www.etalabs.net/compare_libcs.html
+2 http://www.essentialmath.com/tutorial.htm
+2 http://www.esquire.com/features/honesty0707
+2 http://www.erlang-factory.com/upload/presentations/395/ErlangandFirst-PersonShooters.pdf
+2 http://www.ericsink.com/entries/No_Great_Hackers.html
+2 http://www.enigmacurry.com/2008/05/09/emacs-as-a-powerful-python-ide/
+2 http://www.edn.com/design/automotive/4423428/Toyota-s-killer-firmware--Bad-design-and-its-consequences
+2 http://www.e-booksdirectory.com/mathematics.php
+2 http://www.duetdisplay.com/
+2 http://www.dspdimension.com/admin/dft-a-pied/
+2 http://www.dreamsongs.com/ArtOfLisp.html
+2 http://www.drdobbs.com/architecture-and-design/so-you-want-to-write-your-own-language/240165488
+2 http://www.drdobbs.com/architecture-and-design/how-i-came-to-write-d/240165322
+2 http://www.downes.ca/post/38526
+2 http://www.dontclick.it/
+2 http://www.dinofarmgames.com/a-pixel-artist-renounces-pixel-art/
+2 http://www.diku.dk/hjemmesider/ansatte/torbenm/Basics/
+2 http://www.digitaljournal.com/science/40-000-year-old-bracelet-from-extinct-human-species-discovered/article/432798
+2 http://www.digibarn.com/stories/bill-pentz-story/index.html
+2 http://www.defmacro.org/ramblings/rethinkdb-tech-founder.html
+2 http://www.defmacro.org/ramblings/lisp.html
+2 http://www.defmacro.org/ramblings/fp.html
+2 http://www.defmacro.org/2015/02/25/startup-ideas.html
+2 http://www.defmacro.org/2014/10/03/engman.html
+2 http://www.davidbrin.com/idiotplot.html
+2 http://www.danshapiro.com/blog/2011/07/why-i-sold-my-startup-sparkbuy-to-google/
+2 http://www.danshapiro.com/blog/2010/08/vc-insanity-economics/
+2 http://www.dabeaz.com/generators/
+2 http://www.cypherspace.org/adam/hacks/lotus-nsa-key.html
+2 http://www.cube20.org/
+2 http://www.cs.yale.edu/homes/perlis-alan/quotes.html
+2 http://www.cs.virginia.edu/~robins/YouAndYourResearch.html
+2 http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk.html
+2 http://www.cs.virginia.edu/~cs415/reading/bacon-garbage.pdf
+2 http://www.cs.utexas.edu/users/EWD/transcriptions/EWD06xx/EWD667.html
+2 http://www.cs.utexas.edu/users/EWD/ewd08xx/EWD831.PDF
+2 http://www.cs.usfca.edu/~galles/visualization/Algorithms.html
+2 http://www.cs.unm.edu/~dlchao/flake/doom/
+2 http://www-cs-students.stanford.edu/~blynn/gitmagic/
+2 http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/
+2 http://www-cs-students.stanford.edu/~amitp/gameprog.html
+2 http://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html
+2 http://www.cs.cmu.edu/~mihaib/kernighan-interview/index.html
+2 http://www.cs.cmu.edu/~chuck/lennapg/
+2 http://www.cs.berkeley.edu/~bh/hacker.html
+2 http://www.cryptomuseum.com/covert/bugs/selectric/index.htm
+2 http://www.crazyblinddate.com/
+2 http://www.cookingforengineers.com/
+2 http://www.contextfreeart.org/
+2 http://www.colorforth.com/HOPL.html
+2 http://www.color.com/
+2 http://www.codinghorror.com/blog/archives/001230.html
+2 http://www.codinghorror.com/blog/2006/05/the-ten-commandments-of-egoless-programming.html
+2 http://www.coding2learn.org/blog/2013/07/29/kids-cant-use-computers/
+2 http://www.codethinked.com/post/2007/12/The-Programmer-Dress-Code.aspx
+2 http://www.codersatwork.com/
+2 http://www.coderholic.com/invaluable-command-line-tools-for-web-developers/
+2 http://www.codecommit.com/blog/scala/what-is-hindley-milner-and-why-is-it-cool
+2 http://www.coboloncogs.org/INDEX.HTM
+2 http://www.cleveralgorithms.com/nature-inspired/index.html
+2 http://www.citylab.com/design/2014/10/why-12-foot-traffic-lanes-are-disastrous-for-safety-and-must-be-replaced-now/381117/
+2 http://www.chartjs.org/
+2 http://www.ccs.neu.edu/home/matthias/HtDP2e/
+2 http://www.cbc.ca/news/health/barbecue-brushes-dangers-swallow-throat-wire-bristle-dempsey-1.3741578
+2 http://www.catonmat.net/blog/set-operations-in-unix-shell/
+2 http://www.catonmat.net/blog/javascript-the-good-parts/
+2 http://www.catb.org/~esr/writings/taoup/
+2 http://www.catb.org/esr/structure-packing/
+2 http://www.catb.org/~esr/faqs/hacker-howto.html
+2 http://www.cantrip.org/gatto.html
+2 http://www.call-cc.org/
+2 http://www.businessweek.com/magazine/content/10_44/b4201043146825.htm
+2 http://www.businessinsider.com/max-levchins-favorite-startups-are-all-japanese-2009-2
+2 http://www.bunniestudios.com/blog/?p=918
+2 http://www.bunniestudios.com/blog/?p=353
+2 http://www.buildyourownlisp.com/
+2 http://www.brokenthorn.com/Resources/OSDevIndex.html
+2 http://www.bricklin.com/200yearsoftware.htm
+2 http://www.brianshin.com/defining-the-5-classes-of-entr
+2 http://www.brendangregg.com/linuxperf.html
+2 http://www.breaknenter.org/projects/inception/
+2 http://www.bowdoin.edu/~ltoma/teaching/cs340/spring05/coursestuff/Bentley_BumperSticker.pdf
+2 http://www.bothsidesofthetable.com/2009/11/04/is-it-time-for-you-to-earn-or-to-learn/
+2 http://www.bostonglobe.com/ideas/2014/06/07/the-vanished-grandeur-accounting/3zcbRBoPDNIryWyNYNMvbO/story.html
+2 http://www.boston.com/bostonglobe/ideas/naps/
+2 http://www.boston.com/bostonglobe/ideas/articles/2011/03/06/the_power_of_lonely/?page=full
+2 http://www.blinkenlights.com/classiccmp/javaorigin.html
+2 http://www.billthelizard.com/2008/12/books-programmers-dont-really-read.html
+2 http://www.berkshirehathaway.com/letters/2008ltr.pdf
+2 http://www.benkuhn.net/squared
+2 http://www.benjoffe.com/holdem
+2 http://www.behind-the-enemy-lines.com/2012/04/google-attack-how-i-self-attacked.html
+2 http://www.bbc.co.uk/news/science-environment-25356603
+2 http://www.bbc.co.uk/news/magazine-20578627
+2 http://www.bbc.co.uk/news/magazine-12043294
+2 http://www.bbc.com/future/story/20160229-the-sea-nomad-children-who-see-like-dolphins
+2 http://www.bbc.com/future/story/20150209-the-network-that-runs-the-world
+2 http://www.bastwood.com/?page_id=10
+2 http://www.autonlab.org/tutorials/
+2 http://www.asktog.com/columns/022DesignedToGiveFitts.html
+2 http://www.asciiflow.com/
+2 http://www.apple.com/privacy/
+2 http://www.apple.com/iphone/softwareupdate/
+2 http://www.apostate.com/how-say-nothing-500-words
+2 http://www.aosabook.org/en/index.html
+2 http://www.antipope.org/charlie/blog-static/2009/06/how_i_got_here_in_the_end_part_3.html
+2 http://www.animatedengines.com/
+2 http://www.andromeda.com/people/ddyer/lisp/
+2 http://www.android-x86.org/
+2 http://www.amazon.com/review/R403HR4VL71K8/ref=cm_cr_rdp_perm
+2 http://www.amazon.com/gp/browse.html?node=377634011
+2 http://www.allstar.fiu.edu/aero/airflylvl3.htm
+2 http://www.allaboutcircuits.com/
+2 http://www.algomation.com/
+2 http://www.aiai.ed.ac.uk/~jeff/clos-guide.html
+2 http://www.advogato.org/person/apenwarr/diary/371.html
+2 http://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/
+2 http://www.addedbytes.com/blog/if-php-were-british/
+2 http://www.adampetersen.se/articles/lispweb.htm
+2 http://www.aaronsw.com/weblog/rewritingreddit
+2 http://www.aaronsw.com/weblog/productivity
+2 http://www.aaronsw.com/weblog/djb
+2 http://www.a1k0n.net/2011/07/20/donut-math.html
+2 http://www3.imperial.ac.uk/newsandeventspggrp/imperialcollege/newssummary/news_16-5-2014-15-32-44
+2 http://www.37signals.com/svn/posts/753-ask-37signals-how-do-you-process-credit-cards
+2 http://www.2uo.de/myths-about-urandom/
+2 http://wuphys.wustl.edu/~katz/scientist.html
+2 http://wrtnode.com/
+2 http://worrydream.com/Tangle/
+2 http://worrydream.com/MediaForThinkingTheUnthinkable/
+2 http://worrydream.com/MagicInk/
+2 http://worrydream.com/LadderOfAbstraction/
+2 http://worrydream.com/EarlyHistoryOfSmalltalk/
+2 http://worrydream.com/dbx/
+2 http://worrydream.com/#!/Apple
+2 http://worldwidetelescope.org/webclient/
+2 http://wordtsar.ca/
+2 http://wordoid.com/
+2 http://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations
+2 http://wiki.luajit.org/New-Garbage-Collector
+2 http://whoownsfacebook.com/
+2 http://whohastimeforthis.blogspot.com/2005/11/how-to-not-write-business-plan.html
+2 http://wheels.org/spacewar/stone/rolling_stone.html
+2 http://webodf.org/
+2 http://web.mit.edu/~simsong/www/ugh.pdf
+2 http://web.mit.edu/jemorris/humor/500-miles
+2 http://web.media.mit.edu/~minsky/papers/Why%20programming%20is--.html
+2 http://weblog.raganwald.com/2008/01/no-disrespect.html
+2 http://webaim.org/blog/user-agent-string-history/
+2 http://weavesilk.com/
+2 http://waywardmonkeys.org/2014/10/10/rich-command-shells/
+2 http://watchesbysjx.com/2017/05/portrait-masahiro-kikuno-japanese-watchmaker.html
+2 http://voodoo-slide.blogspot.com/2010/01/amplifying-c.html
+2 http://vim.runpaint.org/
+2 http://viewsourcecode.org/snaptoken/kilo/
+2 http://videolectures.net/
+2 http://video-js.com/
+2 http://valerieaurora.org/hash.html
+2 http://users.ece.utexas.edu/~adnan/pike.html
+2 http://userscripts.org/scripts/show/9108
+2 http://uselessd.darknedgy.net/
+2 http://underhanded.xcott.com/
+2 http://twister.net.co/
+2 http://traintimes.org.uk/map/tube/
+2 http://tractionbook.com/
+2 http://tos-dr.info/
+2 http://torrentfreak.com/how-to-turn-customers-into-pirates-090228/
+2 http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
+2 http://tomayko.com/writings/rest-to-my-wife
+2 http://tmsu.org/
+2 http://tkipf.github.io/graph-convolutional-networks/
+2 http://timelessname.com/elfbin/
+2 http://thinkvitamin.com/features/atlas-under-the-hood/
+2 http://thinking-forth.sourceforge.net/
+2 http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+2 http://thenextweb.com/facebook/2011/05/02/wikileaks-founder-facebook-is-the-most-appalling-spy-machine-that-has-ever-been-invented/
+2 http://thejh.net/misc/website-terminal-copy-paste
+2 http://thedailywtf.com/Articles/Up-or-Out-Solving-the-IT-Turnover-Crisis.aspx
+2 http://theabyssgazes.blogspot.com/2010/03/teal-and-orange-hollywood-please-stop.html
+2 http://terralang.org/index.html
+2 http://techreport.com/review/27909/the-ssd-endurance-experiment-theyre-all-dead
+2 http://tech.puredanger.com/2011/10/20/real-world-clojure/
+2 http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html
+2 http://teavm.org/
+2 http://tatiyants.com/postgres-query-plan-visualization/
+2 http://tantek.com/log/2007/02.html#d19t1813
+2 http://talentdevelop.com/articles/WIIA.html
+2 http://sydneypadua.com/2dgoggles/lovelace-the-origin-2/
+2 https://www.zephyrproject.org/
+2 https://www.youtube.com/watch?v=Z4oYSByyRak
+2 https://www.youtube.com/watch?v=tc4ROCJYbm0
+2 https://www.youtube.com/watch?v=JBmIQIZPaHY
+2 https://www.youtube.com/watch?v=_ahvzDzKdB0
+2 https://www.xfive.co/blog/snowboarding-ultimate-guide/
+2 https://wwwwwwwwwwwwwwwwwwwwww.bitnik.org/r/
+2 https://www.w3.org/Provider/Style/URI.html
+2 https://www.vitavonni.de/blog/201503/2015031201-the-sad-state-of-sysadmin-in-the-age-of-containers.html
+2 https://www.varnish-cache.org/trac/wiki/ArchitectNotes
+2 https://www.unisonweb.org/
+2 https://www.theverge.com/2018/2/8/16985666/alexandra-elbakyan-sci-hub-open-access-science-papers-lawsuit
+2 https://www.thestar.com/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages.html
+2 https://www.theparisreview.org/blog/2019/02/08/reading-in-the-age-of-constant-distraction/
+2 https://www.thelightphone.com/
+2 https://www.theguardian.com/cities/2019/apr/29/are-the-hyper-specialist-shops-of-berlin-the-future-of-retail
+2 https://www.theatlantic.com/science/archive/2020/09/coffee-rust/616358/
+2 https://www.theatlantic.com/science/archive/2018/11/operation-argus-how-cold-war-secret-new-york-times/575983/
+2 https://www.susanjfowler.com/blog/2016/8/13/so-you-want-to-learn-physics
+2 https://www.startupschool.org/
+2 https://www.starlink.com/
+2 https://www.ssh.com/ssh/port
+2 https://www.somethingsimilar.com/2013/01/14/notes-on-distributed-systems-for-young-bloods/
+2 https://www.sixdegreesofwikipedia.com/
+2 https://www.shortcutfoo.com/
+2 https://www.sharelatex.com/
+2 https://www.scientificamerican.com/article/stronger-than-steel-able-to-stop-a-speeding-bullet-mdash-it-rsquo-s-super-wood/
+2 https://www.scientificamerican.com/article/bad-news-for-the-highly-intelligent/
+2 https://www.sciencemag.org/news/2020/09/these-120000-year-old-footprints-offer-early-evidence-humans-arabia
+2 https://www.sciencemag.org/news/2020/07/scientists-pull-living-microbes-100-million-years-beneath-sea
+2 https://www.sandimetz.com/blog/2016/1/20/the-wrong-abstraction
+2 https://www.sagemath.org/
+2 https://www.rferl.org/a/the-mammoth-pirates/27939865.html
+2 https://www.redblobgames.com/grids/hexagons/
+2 https://www.quantamagazine.org/mathematician-solves-computer-science-conjecture-in-two-pages-20190725/
+2 https://www.protondb.com/
+2 https://www.propublica.org/article/how-the-maker-of-turbotax-fought-free-simple-tax-filing
+2 https://www.peterkrautzberger.org/0186/
+2 https://www.orbuch.com/carbon-removal/
+2 https://www.npr.org/sections/thetwo-way/2016/09/13/493739074/50-years-ago-sugar-industry-quietly-paid-scientists-to-point-blame-at-fat
+2 https://www.newyorker.com/magazine/2019/10/14/how-to-read-gilgamesh
+2 https://www.newyorker.com/culture/cultural-comment/the-woman-who-gave-the-macintosh-a-smile
+2 https://www.ncsc.gov.uk/blog-post/let-them-paste-passwords
+2 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6163803/
+2 https://www.nayuki.io/page/designing-better-file-organization-around-tags-not-hierarchies
+2 https://www.nayuki.io/page/creating-a-qr-code-step-by-step
+2 https://www.nature.com/news/the-myopia-boom-1.17120
+2 https://www.migadu.com/
+2 https://www.math.uci.edu/~isik/posts/Eigentechno.html
+2 https://www.masswerk.at/nowgobang/2019/dec-crt-typography
+2 https://www.maa.org/external_archive/devlin/LockhartsLament.pdf
+2 https://www.logodesignlove.com/next-logo-paul-rand
+2 https://www.ldeming.com/longevityfaq
+2 https://www.justice.gov/usao-wdwa/pr/six-indicted-connection-multi-million-dollar-scheme-bribe-amazon-employees-and
+2 https://www.judyrecords.com/
+2 https://www.inklestudios.com/ink/
+2 https://www.inkandswitch.com/local-first.html
+2 https://www.info.ucl.ac.be/~pvr/paradigms.html
+2 https://www.inboxsdk.com/
+2 https://www.idontplaydarts.com/2016/04/detecting-curl-pipe-bash-server-side/
+2 https://www.humblebundle.com/
+2 https://www.home-assistant.io/
+2 https://www.holistics.io/blog/the-rise-and-fall-of-the-olap-cube/
+2 https://www.heritageconcorde.com/concorde-b
+2 https://www.happyassassin.net/2014/01/25/uefi-boot-how-does-that-actually-work-then/
+2 https://www.hammerspoon.org/
+2 https://www.haiku-os.org/
+2 https://www.gwern.net/Search
+2 https://www.gwern.net/Improvements
+2 https://www.gwern.net/Complement
+2 https://www.gnu.org/philosophy/open-source-misses-the-point.html
+2 https://www.gbstudio.dev/
+2 https://www.gamasutra.com/blogs/DoctorLudos/20171207/311143/Making_a_Game_Boy_game_in_2017_A_quotSheep_It_Upquot_PostMortem_part_12.php
+2 https://www.fuze.co.uk/nintendo-switch.html
+2 https://www.fossjobs.net/
+2 https://www.forbes.com/sites/kristinakillgrove/2018/05/11/meet-the-worst-businessman-of-the-18th-century/
+2 https://www.fieggen.com/shoelace/ianknot.htm
+2 https://www.extremetech.com/computing/315186-apple-books-tsmcs-entire-5nm-production-capability
+2 https://www.expeditedssl.com/aws-in-plain-english
+2 https://www.esquire.com/news-politics/a12149389/robert-noyce-tom-wolfe/
+2 https://www.edge.org/conversation/nassim_nicholas_taleb-understanding-is-a-poor-substitute-for-convexity-antifragility
+2 https://www.ecosia.org/
+2 https://www.dwitter.net/
+2 https://www.dreamsongs.com/Files/WhyOfY.pdf
+2 https://www.downtowndougbrown.com/2019/04/adventures-of-putting-16-gb-of-ram-in-a-motherboard-that-doesnt-support-it/
+2 https://www.destroyallsoftware.com/talks/the-birth-and-death-of-javascript
+2 https://www.destroyallsoftware.com/blog/2017/the-biggest-and-weirdest-commits-in-linux-kernel-git-history
+2 https://www.depauw.edu/sfs/backissues/5/lem5art.htm
+2 https://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt
+2 https://www.dampfkraft.com/ghost-characters.html
+2 https://www.cs.bu.edu/~jappavoo/Resources/Papers/unikernel-hotos19.pdf
+2 https://www.crypto101.io/
+2 https://www.coinbase.com/card
+2 https://www.cisa.gov/blog/2020/09/18/windows-server-vulnerability-requires-immediate-attention
+2 https://www.bunniestudios.com/blog/?p=5921
+2 https://www.bottomupcs.com/
+2 https://www.borgbackup.org/
+2 https://www.boredpanda.com/spy-camera-secret-street-photography-carl-stormer-norway/
+2 https://www.bookforum.com/print/2703/a-psychoanalytic-reading-of-social-media-and-the-death-drive-24171
+2 https://www.bigmessowires.com/2019/05/19/explaining-4k-60hz-video-through-usb-c-hub/
+2 https://www.bicycling.com/culture/a33995147/tom-pritchard-bike-mystery/
+2 https://www.bbc.com/worklife/article/20200910-the-benefits-of-note-taking-by-hand
+2 https://www.battleforthenet.com/
+2 https://www.avweb.com/aviation-news/pipistrel-velis-electro-completes-record-flights/
+2 https://www.atlasobscura.com/articles/history-of-milk
+2 https://www.arduboy.com/
+2 https://www.apple.com/support/systemstatus/
+2 https://www.apple.com/legal/transparency/
+2 https://www.annashipman.co.uk/jfdi/meeting-everyone.html
+2 https://www.agner.org/optimize/microarchitecture.pdf
+2 https://www.action.io/
+2 https://www.20papercups.net/programming/sending-receiving-sms-on-linux/
+2 http://swtch.com/~rsc/regexp/regexp1.html
+2 https://writing.kemitchell.com/2016/09/21/MIT-License-Line-by-Line.html
+2 https://writefreely.org/
+2 https://wiki.mozilla.org/Firefox/Roadmap
+2 https://wiki.debian.org/WhyTheName
+2 https://wekan.github.io/
+2 https://webtransparency.cs.princeton.edu/dark-patterns/
+2 https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf
+2 https://watsi.org/universal-fund
+2 https://vez.mrsk.me/freebsd-defaults.txt
+2 https://vanemden.wordpress.com/2014/06/18/how-recursion-got-into-programming-a-comedy-of-errors-3/
+2 https://vaibhavsagar.com/blog/2019/09/08/popcount/
+2 https://userinyerface.com/
+2 https://urbit.org/
+2 http://support.microsoft.com/kb/168702
+2 http://superherojs.com/
+2 http://sugru.com/story
+2 http://subtlepatterns.com/
+2 https://typesetinthefuture.com/2014/12/01/alien/
+2 https://twobithistory.org/2020/06/28/rest.html
+2 https://twitter.com/shit_hn_says
+2 https://twisteros.com/index.html
+2 http://stuffin.space/
+2 http://strlen.com/treesheets/
+2 http://strlen.com/lobster
+2 https://triplebyte.com/software-engineer-salary
+2 http://stratechery.com/2013/clayton-christensen-got-wrong/
+2 https://transfer.sh/
+2 https://training.kalzumeus.com/newsletters/archive/do-not-end-the-week-with-nothing
+2 https://trafficserver.apache.org/
+2 https://tosdr.org/
+2 https://toc.cryptobook.us/
+2 https://tldroptions.io/
+2 https://thewalrus.ca/older-wiser-better-aging-artists-are-at-their-peak/
+2 https://thereader.mitpress.mit.edu/habits-of-expert-software-designers/
+2 https://thehustle.co/hot-cheetos-inventor/
+2 https://the.exa.website/
+2 https://thedaywefightback.org/
+2 https://theconversation.com/mayflower-400-the-science-of-sailing-across-the-ocean-in-1620-144233
+2 http://steve.yegge.googlepages.com/five-essential-phone-screen-questions
+2 http://steve-yegge.blogspot.com/2006/03/math-for-programmers.html
+2 http://stevelosh.com/blog/2013/09/teach-dont-tell/
+2 http://steveblank.com/2009/05/15/supermac-war-story-11-the-curse-of-a-new-building/
+2 http://stereopsis.com/flux/
+2 https://teachyourselfcs.com/
+2 http://startupschool.org/
+2 http://startupnotes.org/
+2 http://startuplawyer.com/startup-issues/if-i-launched-a-startup
+2 http://startupclass.samaltman.com/
+2 http://startingdotneprogramming.blogspot.com/2013/04/i-knew-programmer-that-went-completely.html
+2 http://sta.li/
+2 http://stackoverflow.com/questions/448613/whats-happening-with-arc
+2 http://stackoverflow.com/questions/194812/list-of-freely-available-programming-books
+2 http://stackoverflow.com/questions/184618/what-is-the-best-comment-in-source-code-you-have-ever-encountered
+2 http://stackoverflow.com/questions/101268/hidden-features-of-python
+2 https://system76.com/laptops/pangolin
+2 https://swtch.com/~rsc/regexp/regexp1.html
+2 https://stribika.github.io/2015/01/04/secure-secure-shell.html
+2 https://status.github.com/
+2 https://startyourownisp.com/
+2 https://standardnotes.org/
+2 https://standardebooks.org/
+2 https://staltz.com/the-web-began-dying-in-2014-heres-how.html
+2 https://staltz.com/a-plan-to-rescue-the-web-from-the-internet.html
+2 https://spreadprivacy.com/privacy-simplified/
+2 https://sourceforge.net/p/joe-editor/mercurial/ci/default/tree/NEWS.md
+2 https://sonic-pi.net/
+2 https://solar.lowtechmagazine.com/power.html
+2 https://socket3.wordpress.com/2018/02/03/designing-windows-95s-user-interface/
+2 https://slehar.wordpress.com/2014/03/18/clifford-algebra-a-visual-introduction/
+2 https://sites.google.com/site/steveyegge2/ten-predictions
+2 https://sites.google.com/site/steveyegge2/practicing-programming
+2 https://sites.google.com/site/forgottenemployee/
+2 https://sidbala.com/h-264-is-magic/
+2 https://shoelace.style/
+2 https://sfconservancy.org/blog/2016/feb/25/zfs-and-linux/
+2 https://sethrobertson.github.io/GitFixUm/fixup.html
+2 https://segment.com/blog/a-brief-history-of-the-uuid/
+2 https://seeing-theory.brown.edu/index.html
+2 https://securitytxt.org/
+2 https://securedrop.org/
+2 https://secretgeek.github.io/html_wysiwyg/html.html
+2 https://seaglass.cs.washington.edu/
+2 https://scottlocklin.wordpress.com/2012/09/18/a-look-at-the-j-language-the-fine-line-between-genius-and-insanity/
+2 https://scirate.com/
+2 https://sback.it/publications/icse2018seip.pdf
+2 https://sanctum.geek.nz/arabesque/series/unix-as-ide/
+2 https://runyourown.social/
+2 https://rumorsontheinternets.org/2010/10/14/magnasanti-the-largest-and-most-terrifying-simcity/
+2 https://root.cern.ch/cling
+2 https://robertheaton.com/2020/02/05/wacom-drawing-tablets-track-name-of-every-application-you-open/
+2 https://rg3.github.io/youtube-dl/
+2 https://regexr.com/
+2 https://rawgraphs.io/
+2 https://raphlinus.github.io/rust/graphics/gpu/2019/05/08/modern-2d.html
+2 https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/
+2 https://qz.com/694340/the-richest-families-in-florence-in-1427-are-still-the-richest-families-in-florence/
+2 https://qz.com/1788828/how-will-midi-2-0-change-music/
+2 https://quickdraw.withgoogle.com/
+2 https://queue.acm.org/detail.cfm?id=3212479
+2 https://queue.acm.org/detail.cfm?id=1814327
+2 http://sqlmap.org/
+2 http://sqlfiddle.com/
+2 https://publicdomainreview.org/essay/more-lively-counterfaits
+2 https://ptsjs.org/
+2 https://probmods.org/
+2 https://primitive.lol/
+2 https://press.stripe.com/
+2 http://spottedsun.com/face-detection-in-images-using-opencv-and-python/
+2 https://pomax.github.io/bezierinfo/
+2 https://polyhedra.tessera.li/
+2 https://plus.maths.org/content/ramanujan
+2 https://plfa.github.io/
+2 https://please.build/
+2 https://plato.stanford.edu/entries/computer-science/
+2 https://pippinbarr.github.io/itisasifyouweredoingwork/
+2 http://spiffingcss.com/
+2 https://phiresky.github.io/blog/2019/rga--ripgrep-for-zip-targz-docx-odt-epub-jpg/
+2 https://peteris.rocks/blog/htop/
+2 https://perkeep.org/
+2 https://peermaps.org/
+2 https://paveldogreat.github.io/WebGL-Fluid-Simulation/
+2 https://patrickcollison.com/questions
+2 https://paperswithcode.com/
+2 https://panopticlick.eff.org/
+2 https://pandoc.org/
+2 http://spacecraft.ssl.umd.edu/akins_laws.html
+2 https://overreacted.io/things-i-dont-know-as-of-2018/
+2 https://otter-browser.org/
+2 http://sonic-pi.net/
+2 https://oeis.org/
+2 http://socialcam.com/
+2 https://objective-see.com/products/lulu.html
+2 https://numenta.com/blog/2019/01/16/the-thousand-brains-theory-of-intelligence/
+2 https://nplusonemag.com/issue-19/essays/chat-wars/
+2 https://nova.app/
+2 https://norvig.com/21-days.html
+2 https://noidea.dog/glue
+2 https://nodered.org/
+2 https://nikic.github.io/2012/06/15/The-true-power-of-regular-expressions.html
+2 https://nicoleorchard.com/blog/compilers
+2 https://ngrok.com/
+2 https://news.ycombinator.com/item?id=498417
+2 https://news.ycombinator.com/item?id=13108404
+2 https://news.mit.edu/2020/flat-fisheye-lens-0918
+2 https://newsinteractives.cbc.ca/longform/glybera
+2 https://neal.fun/deep-sea/
+2 https://ncase.me/loopy/
+2 https://nationalparktypeface.com/
+2 https://mzucker.github.io/2016/09/20/noteshrink.html
+2 https://mosaicscience.com/story/staying-awake-surprisingly-effective-way-treat-depression/
+2 http://smoothiecharts.org/
+2 https://monster6502.com/
+2 https://mollyrocket.com/meowhash
+2 https://mitpress.mit.edu/books/street-fighting-mathematics
+2 https://microg.org/
+2 https://mgba.io/2020/01/25/infinite-loop-holy-grail/
+2 https://meta.wikimedia.org/wiki/Cunningham%27s_Law
+2 http://smerity.com/articles/2013/where_did_all_the_http_referrers_go.html
+2 https://meet.jit.si/
+2 https://medium.com/@kentbeck_7670/inefficient-efficiency-5b3ab5294791
+2 https://medium.com/@blakeross/don-t-outsource-your-thinking-ad825a9b4653
+2 https://mediapreservation.wordpress.com/2012/06/20/extracting-audio-from-pictures/
+2 https://math.vanderbilt.edu/schectex/commerrs/
+2 https://matduggan.com/mistakes/
+2 https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
+2 https://makingartstudios.itch.io/dls
+2 https://magoo.github.io/Blockchain-Graveyard/
+2 https://magcius.github.io/xplain/article/
+2 https://machinelearning.apple.com/
+2 https://lwn.net/Articles/766374/
+2 https://localghost.dev/2019/09/everything-i-googled-in-a-week-as-a-professional-software-engineer/
+2 https://lobe.ai/
+2 http://sloan.stanford.edu/mousesite/1968Demo.html
+2 https://littlemaninmyhead.wordpress.com/2015/09/28/so-you-want-to-learn-to-break-ciphers/
+2 https://lithub.com/color-or-fruit-on-the-unlikely-etymology-of-orange/
+2 https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html
+2 https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html
+2 https://libreboot.org/
+2 https://libcom.org/blog/xulizhi-foxconn-suicide-poetry
+2 https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/
+2 https://lemonspawn.com/turbo-rascal-syntax-error-expected-but-begin/
+2 https://lemire.me/blog/2019/02/08/faster-remainders-when-the-divisor-is-a-constant-beating-compilers-and-libdivide/
+2 https://learningmusic.ableton.com/
+2 https://laverna.cc/
+2 https://landgreen.github.io/physics/index.html
+2 https://kunststube.net/encoding/
+2 https://kore.io/
+2 https://knightcolumbia.org/content/protocols-not-platforms-a-technological-approach-to-free-speech
+2 http://skiplang.com/
+2 https://kallithea-scm.org/
+2 https://justinmeiners.github.io/lc3-vm/
+2 https://julialang.org/blog/2018/12/ml-language-compiler
+2 https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0239252
+2 https://joshworth.com/dev/pixelspace/pixelspace_solarsystem.html
+2 https://jochen-hoenicke.de/trezor-power-analysis/
+2 https://jimshaver.net/2015/02/11/decrypting-tls-browser-traffic-with-wireshark-the-easy-way/
+2 https://jepsen.io/consistency
+2 https://jellyfin.org/
+2 https://jeffhuang.com/designed_to_last/
+2 https://jaycarlson.net/embedded-linux/
+2 https://janet-lang.org/
+2 https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
+2 http://sivers.org/kimo
+2 http://sivers.org/itunes
+2 https://ish.app/
+2 https://intelxed.github.io/
+2 http://singlepageappbook.com/
+2 https://increment.com/teams/the-team-that-powers-vlc/
+2 http://simplexify.net/blog/2012/5/6/i-am-a-statistician-and-i-buy-lottery-tickets.html
+2 http://silverspaceship.com/hovalaag/
+2 http://sigmajs.org/
+2 http://sicpinclojure.com/
+2 https://ianstormtaylor.com/design-tip-never-use-black/
+2 https://hpbn.co/
+2 http://shirky.com/writings/group_enemy.html
+2 http://shenlanguage.org/
+2 https://hbr.org/2016/12/if-your-boss-could-do-your-job-youre-more-likely-to-be-happy-at-work
+2 http://shapecatcher.com/
+2 https://hacks.mozilla.org/2020/07/testing-firefox-more-efficiently-with-machine-learning/
+2 https://hackpad.com/
+2 https://gtfobins.github.io/
+2 https://godbolt.org/
+2 https://goaccess.io/
+2 https://glyph.twistedmatrix.com/2016/08/attrs.html
+2 https://gitlab.com/edouardklein/falsisign
+2 https://gitlab.brokenpipe.de/stettberger/avremu/tree/master
+2 https://github.com/Zulko/moviepy
+2 https://github.com/zsaleeba/picoc
+2 https://github.com/zadam/trilium
+2 https://github.com/Z3Prover/z3
+2 https://github.com/you-dont-need/You-Dont-Need-Momentjs
+2 https://github.com/YingtongDou/Nash-Detect
+2 https://github.com/yandex/odyssey
+2 https://github.com/xoreaxeaxeax/movfuscator
+2 https://github.com/vygr/ChrysaLisp
+2 https://github.com/vurtun/nuklear
+2 https://github.com/veltman/clmystery
+2 https://github.com/TrustInSoft/tis-interpreter
+2 https://github.com/tomprimozic/type-systems
+2 https://github.com/tiimgreen/github-cheat-sheet
+2 https://github.com/tidwall/tile38
+2 https://github.com/sunainapai/makesite
+2 https://github.com/ssloy/tinyrenderer/wiki
+2 https://github.com/s-macke/VoxelSpace
+2 https://github.com/SFTtech/openage
+2 https://github.com/seL4/seL4
+2 https://github.com/seemoo-lab/opendrop
+2 https://github.com/sctb/lumen
+2 https://github.com/schollz/howmanypeoplearearound
+2 https://github.com/schollz/find3
+2 https://github.com/schani/clojurec
+2 https://github.com/SamyPesse/How-to-Make-a-Computer-Operating-System
+2 https://github.com/robinhouston/image-unshredding
+2 https://github.com/robert-strandh/SICL
+2 https://github.com/rclone/rclone
+2 https://github.com/rastapasta/mapscii
+2 https://github.com/quiet/org.quietmodem.Quiet
+2 https://github.com/quchen/stgi
+2 https://github.com/pytoolz/toolz
+2 https://github.com/PyO3/pyo3
+2 https://github.com/ossu/computer-science
+2 https://github.com/orbitdb/orbit-db
+2 https://github.com/okTurtles/dnschain
+2 https://github.com/NVIDIA/libcudacxx
+2 https://github.com/nothings/single_file_libs
+2 https://github.com/nim-lang/nimforum
+2 https://github.com/nemasu/asmttpd
+2 https://github.com/mxgmn/WaveFunctionCollapse
+2 https://github.com/mozilla/mentat
+2 https://github.com/MiSTer-devel/Main_MiSTer/wiki
+2 https://github.com/microsoft/playwright-cli
+2 https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md
+2 https://github.com/martanne/vis
+2 https://github.com/louthy/language-ext
+2 https://github.com/levskaya/jslinux-deobfuscated
+2 https://github.com/lettier/3d-game-shaders-for-beginners
+2 https://github.com/karthick18/inception
+2 https://github.com/karan/Projects
+2 https://github.com/kanaka/mal
+2 https://github.com/jopohl/urh
+2 https://github.com/JohnEarnest/ok
+2 https://github.com/jmdugan/blocklists/blob/master/corporations/facebook/all
+2 https://github.com/jesseduffield/lazygit
+2 https://github.com/JeffBezanson/femtolisp
+2 https://github.com/jarun/nnn
+2 https://github.com/janet-lang/janet
+2 https://github.com/jamesob/desk
+2 https://github.com/Jam3/math-as-code
+2 https://github.com/jagregory/abrash-black-book
+2 https://github.com/ivanceras/svgbob
+2 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
+2 https://github.com/iogf/vy
+2 https://github.com/igrigorik/hackernews-button
+2 https://github.com/id-Software
+2 https://github.com/hylang/hy
+2 https://github.com/hemanth/functional-programming-jargon
+2 https://github.com/harthur/brain
+2 https://github.com/google/jax
+2 https://github.com/googlei18n/libphonenumber/blob/master/FALSEHOODS.md
+2 https://github.com/git/git/blob/master/banned.h
+2 https://github.com/gibiansky/IHaskell
+2 https://github.com/getify/You-Dont-Know-JS
+2 https://github.com/genuinetools/binctr
+2 https://github.com/fulldecent/system-bus-radio
+2 https://github.com/froggey/Mezzano
+2 https://github.com/fogleman/Craft
+2 https://github.com/floooh/oryol
+2 https://github.com/evilsocket/opensnitch
+2 https://github.com/endrazine/wcc
+2 https://github.com/Eloston/ungoogled-chromium
+2 https://github.com/electronicarts/EASTL
+2 https://github.com/eduard-permyakov/permafrost-engine
+2 https://github.com/edu
+2 https://github.com/dylanaraps/pure-bash-bible
+2 https://github.com/donnemartin/system-design-primer
+2 https://github.com/djrobstep/migra
+2 https://github.com/dirkschumacher/llr
+2 https://github.com/dinedal/textql
+2 https://github.com/danluu/post-mortems
+2 https://github.com/commaai/openpilot
+2 https://github.com/cjbarber/ToolsOfTheTrade
+2 https://github.com/chrislusf/seaweedfs
+2 https://github.com/cbaggers/cepl
+2 https://github.com/cantino/huginn/
+2 https://github.com/CadQuery/cadquery
+2 https://github.com/billziss-gh/winfsp
+2 https://github.com/begriffs/postgrest
+2 https://github.com/automerge/automerge
+2 https://github.com/atlassian/localstack
+2 https://github.com/AsamK/signal-cli
+2 https://github.com/artichoke/artichoke
+2 https://github.com/artagnon/clayoven
+2 https://github.com/anvaka/atree
+2 https://github.com/antontarasenko/smq/blob/master/reports/hackernews-links-in-comments.md
+2 https://github.com/antirez/sds
+2 https://github.com/andlabs/libui
+2 https://github.com/alexdelorenzo/chromecast_mpris
+2 https://github.com/akavel/up
+2 https://github.com/3b1b/manim
+2 https://github.com/0x4447/0x4447_product_s3_email
+2 https://gist.github.com/willurd/5720255
+2 https://gist.github.com/staltz/868e7e9bc2a7b8c1f754
+2 https://gist.github.com/kachayev/21e7fe149bc5ae0bd878
+2 https://gist.github.com/1277224
+2 https://getkerf.wordpress.com/2016/03/30/the-best-algorithm-no-one-knows-about/
+2 https://garbagecollected.org/2017/01/31/four-column-ascii/
+2 https://funcall.blogspot.com/2009/03/not-lisp-again.html
+2 https://frinklang.org/
+2 https://freedom-to-tinker.com/2015/10/14/how-is-nsa-breaking-so-much-crypto/
+2 https://freedom-to-tinker.com/2013/10/09/the-linux-backdoor-attempt-of-2003/
+2 https://fortran.io/
+2 https://fermatslibrary.com/s/electronic-lottery-tickets-as-micropayments
+2 https://ferd.ca/the-zen-of-erlang.html
+2 https://fennel-lang.org/
+2 https://fengari.io/
+2 https://fangpenlin.com/posts/2019/10/07/elliptic-curve-cryptography-explained/
+2 http://sev-notes.blogspot.com/2009/06/gpl-scummvm-and-violations.html
+2 http://setosa.io/ev/principal-component-analysis/
+2 http://setosa.io/ev/image-kernels/
+2 http://setosa.io/bus/
+2 https://etacts.com/
+2 http://seriouspony.com/blog/2013/7/24/your-app-makes-me-fat
+2 http://seriot.ch/parsing_json.php
+2 https://en.wikipedia.org/wiki/Ulam_spiral
+2 https://en.wikipedia.org/wiki/Soundex
+2 https://en.wikipedia.org/wiki/Solar_storm_of_1859
+2 https://en.wikipedia.org/wiki/Reply_of_the_Zaporozhian_Cossacks
+2 https://en.wikipedia.org/wiki/Preferred_number
+2 https://en.wikipedia.org/wiki/Poka-yoke
+2 https://en.wikipedia.org/wiki/Phoebus_cartel
+2 https://en.wikipedia.org/wiki/Moravec%27s_paradox
+2 https://en.wikipedia.org/wiki/Molyneux%27s_problem
+2 https://en.wikipedia.org/wiki/Great_Vowel_Shift
+2 https://en.wikipedia.org/wiki/Gombe_Chimpanzee_War
+2 https://en.wikipedia.org/wiki/FE-Schrift
+2 https://en.wikipedia.org/wiki/Diolkos
+2 https://en.wikipedia.org/wiki/Burned_house_horizon
+2 https://en.wikipedia.org/wiki/Braess%27_paradox
+2 https://en.wikipedia.org/wiki/Beverly_Clock
+2 https://en.wikipedia.org/wiki/Baumol%27s_cost_disease
+2 https://en.wikipedia.org/wiki/Bastion_fort
+2 https://en.wikipedia.org/wiki/Atlantropa
+2 https://en.wikipedia.org/wiki/Alu_(runic)
+2 https://en.wikipedia.org/wiki/52-hertz_whale
+2 http://selfie.cs.uni-salzburg.at/
+2 http://seenaburns.com/2018/04/04/writing-to-the-framebuffer/
+2 http://seeingnetworks.in/nyc/
+2 http://seedmagazine.com/content/article/why_we_havent_met_any_aliens/
+2 http://sebastianraschka.com/Articles/2014_python_2_3_key_diff.html
+2 http://seat.massey.ac.nz/personal/s.r.marsland/MLBook.html
+2 http://sealedabstract.com/rants/hey-programmers-we-need-to-talk/
+2 https://eager.io/blog/the-languages-which-almost-were-css/
+2 https://dynamicland.org/
+2 https://dvc.org/
+2 https://duo.com/decipher/an-oral-history-of-the-l0pht
+2 https://duckduckgo.com/tty/
+2 https://duckduckgo.com/traffic
+2 https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub
+2 https://digiconomist.net/bitcoin-energy-consumption
+2 https://developers.google.com/web/fundamentals/
+2 https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript
+2 https://developer.apple.com/swift/
+2 https://developer.apple.com/app-store/review/guidelines/
+2 https://datatransferproject.dev/
+2 https://danluu.com/term-latency/
+2 https://danluu.com/p95-skill/
+2 https://danluu.com/input-lag/
+2 https://danluu.com/discontinuities/
+2 https://danluu.com/branch-prediction/
+2 https://culdesac.com/
+2 https://cuelang.org/
+2 https://csunplugged.org/en/
+2 https://crontab.guru/
+2 https://crate.io/
+2 https://courses.csail.mit.edu/6.042/spring17/mcs.pdf
+2 https://commoncog.com/blog/tacit-knowledge-is-a-real-thing/
+2 https://codewords.recurse.com/issues/two/git-from-the-inside-out
+2 https://codewords.recurse.com/issues/six/immutability-is-not-enough
+2 https://codewords.recurse.com/issues/four/the-language-of-choice
+2 https://code.google.com/codejam/
+2 https://code.facebook.com/posts/218678814984400/scaling-mercurial-at-facebook/
+2 https://clickclickclick.click/
+2 https://christophm.github.io/interpretable-ml-book/
+2 https://chriskiehl.com/article/event-sourcing-is-hard
+2 http://scheme2006.cs.uchicago.edu/11-ghuloum.pdf
+2 https://cheats.rs/
+2 https://castel.dev/post/lecture-notes-1/
+2 https://carbon.now.sh/
+2 https://calmtech.com/
+2 https://caddyserver.com/
+2 https://byorgey.wordpress.com/2018/05/06/conversations-with-a-six-year-old-on-functional-programming/
+2 https://bugs.launchpad.net/ubuntu/+source/cupsys/+bug/255161/comments/28
+2 https://browsix.org/
+2 https://brandur.org/interfaces
+2 https://boingboing.net/2012/01/10/lockdown.html
+2 https://bofh.org.uk/2019/02/25/baking-with-emacs/
+2 https://blog.twitter.com/en_us/topics/company/2020/an-update-on-our-security-incident.html
+2 https://blog.reverberate.org/2020/05/29/hoares-rebuttal-bubble-sorts-comeback.html
+2 https://blog.mozilla.org/blog/2018/07/11/royalty-free-web-video-codecs/
+2 https://blog.lukaszolejnik.com/stealing-sensitive-browser-data-with-the-w3c-ambient-light-sensor-api/
+2 https://blog.lizzie.io/linux-containers-in-500-loc.html
+2 https://blog.jessfraz.com/post/thoughts-on-conways-law-and-the-software-stack/
+2 https://blog.jessfraz.com/post/containers-zones-jails-vms/
+2 https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
+2 https://blog.innerht.ml/google-yolo/
+2 https://blog.haschek.at/2016/how-a-scammer-stole-500-dollars-from-me
+2 https://blog.discordapp.com/scaling-elixir-f9b8e1e7c29b
+2 https://blog.danslimmon.com/2019/07/15/do-nothing-scripting-the-key-to-gradual-automation/
+2 https://blog.cryptographyengineering.com/2018/10/19/lets-talk-about-pake/
+2 https://blog.cloudflare.com/how-to-receive-a-million-packets/
+2 https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
+2 https://blog.abevoelker.com/2019-03-06/on-the-death-of-my-familys-dairy-farm/
+2 https://bitwarden.com/
+2 https://binarydebt.wordpress.com/2018/10/14/intel-virtualisation-how-vt-x-kvm-and-qemu-work-together/
+2 https://bevyengine.org/news/bevy-0-2/
+2 https://bellard.org/quickjs/
+2 https://bellard.org/otcc/
+2 https://bellard.org/jslinux/
+2 https://begriffs.com/posts/2018-03-20-user-defined-order.html
+2 https://beakerbrowser.com/
+2 https://bdupras.github.io/filter-tutorial/
+2 https://bartoszmilewski.com/2021/02/16/functorio/
+2 https://azgaar.github.io/Fantasy-Map-Generator/
+2 https://asciinema.org/
+2 https://arxiv.org/abs/math/0411418
+2 https://arxiv.org/abs/1809.10756
+2 https://arxiv.org/abs/1809.02942
+2 https://arxiv.org/abs/1801.03534
+2 https://arxiv.org/abs/1801.00631
+2 https://arxiv.org/abs/1701.06538
+2 https://arstechnica.com/science/2019/01/addictive-interactive-murder-map-lets-you-explore-medieval-london-crime/
+2 https://arslan.io/2019/07/03/how-to-write-idempotent-bash-scripts/
+2 https://archive.org/details/OTRR_X_Minus_One_Singles
+2 https://aphyr.com/posts/341-hexing-the-technical-interview
+2 https://andrewkelley.me/post/zig-stack-traces-kernel-panic-bare-bones-os.html
+2 https://andrewkelley.me/post/zig-cc-powerful-drop-in-replacement-gcc-clang.html
+2 http://sandlab.cs.uchicago.edu/jammer/
+2 https://analytics.usa.gov/
+2 https://amzn.github.io/ion-docs/
+2 http://samizdat.mines.edu/howto/HowToBeAProgrammer.html
+2 https://allthatsinteresting.com/fugate-family-blue-people-of-kentucky
+2 https://alexcabal.com/creating-the-perfect-gpg-keypair/
+2 https://aeon.co/essays/the-human-story-of-how-ventilators-came-to-breathe-for-us
+2 https://aeon.co/essays/busy-and-distracted-everybody-has-been-since-at-least-1710
+2 https://adventofcode.com/
+2 https://addons.mozilla.org/en-US/firefox/addon/self-destructing-cookies/
+2 https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html
+2 https://about.gitlab.com/2017/11/09/gitlab-vue-one-year-later/
+2 https://a16z.com/2014/02/06/why-i-did-not-go-to-jail/
+2 https://00f.net/2019/11/03/stop-using-low-dns-ttls/
+2 http://rush.heroku.com/
+2 http://runpee.com/
+2 http://rubymonk.com/
+2 http://roscidus.com/blog/blog/2014/06/06/python-to-ocaml-retrospective/
+2 http://roguetemple.com/z/hyper/
+2 http://robotgame.org/
+2 http://rigsomelight.com/2013/09/09/frameless-geodesic-dome.html
+2 http://ridiculousfish.com/blog/posts/will-it-optimize.html
+2 http://rhizome.org/editorial/2013/sep/23/impossible-music-black-midi/
+2 http://revealapp.com/
+2 http://retinart.net/graphic-design/secret-law-of-page-harmony/
+2 http://resume.github.com/
+2 http://restcookbook.com/
+2 http://rein.pk/gravitational-lensing-to-observe-ancient-earth/
+2 http://regexr.com/
+2 http://regex.info/blog/2006-09-15/247
+2 http://refactormycode.com/
+2 http://redsymbol.net/articles/unofficial-bash-strict-mode/
+2 http://rednuht.org/genetic_cars_2/
+2 http://redeye.firstround.com/2007/10/this-year-i-mea.html
+2 http://reddit.com/
+2 http://recursivedrawing.com/
+2 http://rdegges.com/heroku-isnt-for-idiots
+2 http://rayninfo.co.uk/vimtips.html
+2 http://raphaeljs.com/
+2 http://ramtin-amin.fr/#tristar
+2 http://railscasts.com/episodes/288-billing-with-stripe
+2 http://radio.garden/
+2 http://racket-lang.org/
+2 http://queue.acm.org/detail.cfm?id=2566628
+2 http://qiao.github.io/PathFinding.js/visual/
+2 http://pzemtsov.github.io/2016/11/06/bug-story-alignment-on-x86.html
+2 http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
+2 http://python3wos.appspot.com/
+2 http://pyos.github.io/dg/
+2 http://pyjs.org/
+2 http://put.io/
+2 http://purecss.io/
+2 http://pud.com/post/10103947044/fucking-sue-me
+2 http://projecteuler.net/
+2 http://programmersatwork.wordpress.com/bill-gates-1986/
+2 http://programmer.97things.oreilly.com/wiki/index.php/Contributions_Appearing_in_the_Book
+2 http://prog21.dadgum.com/30.html
+2 http://prog21.dadgum.com/23.html
+2 http://prog21.dadgum.com/143.html
+2 http://prog21.dadgum.com/13.html
+2 http://probcomp.csail.mit.edu/bayesdb/
+2 http://priceonomics.com/the-independent-discovery-of-tcpip-by-ants/
+2 http://priceonomics.com/the-correlation-between-arts-and-crafts-and-a/
+2 http://previous.alternative-system.com/
+2 http://practicaltypography.com/why-racket-why-lisp.html
+2 http://postary.com/twitter/mileslennon/why-are-95-of-blogs-abandoned
+2 http://porg.es/blog/functional-programming-apl-and-unix-pipes
+2 http://politics.salon.com/2011/10/08/steve_jobs_and_drug_policy/singleton/
+2 http://plaintextoffenders.com/
+2 http://phrack.org/issues/69/1.html
+2 http://phonegap.com/
+2 http://philosecurity.org/2009/01/12/interview-with-an-adware-author
+2 http://phil.nullable.eu/
+2 http://philip.greenspun.com/humor/eecs-difference-explained
+2 http://philip.greenspun.com/bg/
+2 http://philip.greenspun.com/ancient-history/managing-software-engineers
+2 http://phaser.io/
+2 http://petdance.com/ack/
+2 http://people.xiph.org/~xiphmont/demo/neil-young.html
+2 http://pelulamu.net/unscii/
+2 http://pdp11.aiju.de/
+2 http://pbpython.com/pandas-pivot-table-explained.html
+2 http://paultyma.blogspot.com/2007/03/howto-pass-silicon-valley-software.html
+2 http://paulgraham.com/vb.html
+2 http://paulgraham.com/makersschedule.html
+2 http://paulgraham.com/ideas.html
+2 http://paulgraham.com/hs.html
+2 http://paulgraham.com/head.html
+2 http://paulgraham.com/ds.html
+2 http://patriciopalladino.com/blog/2012/08/09/non-alphanumeric-javascript.html
+2 http://patoline.org/
+2 http://particletree.com/features/visualizing-fittss-law/
+2 http://pages.cs.wisc.edu/~remzi/OSTEP/
+2 http://oreilly.com/social-media/excerpts/9780596802004/why-speakers-earn-30k-an-hour.html
+2 http://opensource.plurk.com/LightCloud/
+2 http://opengarages.org/handbook/
+2 http://opendatastructures.org/
+2 http://onstartups.com/home/tabid/3339/bid/1506/Startup-Hiring-6-Subtle-Signs-You-Might-Have-A-Winner.aspx
+2 http://online.wsj.com/article/SB125875892887958111.html
+2 http://online.wsj.com/article/SB124648494429082661.html
+2 http://online.wsj.com/article/SB121124460502305693.html
+2 http://omnipotent.net/jquery.sparkline/
+2 http://olduse.net/
+2 http://okbjgm.weebly.com/uploads/3/1/5/0/31506003/11_laws_of_showrunning_nice_version.pdf
+2 http://nxxcxx.github.io/Neural-Network/
+2 http://nvie.com/posts/a-successful-git-branching-model/
+2 http://nullprogram.com/blog/2015/05/15/
+2 http://nsa.unaligned.org/
+2 http://noticing.co/on-size-and-metabolism/
+2 http://nothings.org/gamedev/ssao/
+2 http://norvig.com/sudoku.html
+2 http://norvig.com/spell-correct.html
+2 http://norvig.com/python-iaq.html
+2 http://norvig.com/lispy.html
+2 http://norvig.com/chomsky.html
+2 http://nodebox.net/code/index.php/Home
+2 http://nlpwp.org/book/
+2 http://nginx.org/
+2 http://nginx.net/nginx-venture-funding.html
+2 http://news.ycombinator.com/
+2 http://news.bbc.co.uk/2/hi/health/7909464.stm
+2 http://nethack4.org/blog/memory.html
+2 http://nedbatchelder.com/blog/200811/print_this_file_your_printer_will_jam.html
+2 http://ncombinator.com/
+2 http://nautil.us/issue/29/scaling/why-virtual-classes-can-be-better-than-real-ones
+2 http://nautil.us/issue/28/2050/the-book-no-one-read
+2 http://nathanmarz.com/blog/you-should-blog-even-if-you-have-no-readers.html
+2 http://nathanmarz.com/blog/clojures-missing-piece.html
+2 http://naleid.com/blog/2010/10/04/vim-movement-shortcuts-wallpaper/
+2 http://mywiki.wooledge.org/BashPitfalls
+2 http://my.opera.com/haavard/blog/2013/02/13/webkit
+2 http://mycpu.thtec.org/www-mycpu-eu/index1.htm
+2 http://musicforprogramming.net/
+2 http://muharem.wordpress.com/2007/07/31/erlang-vs-stackless-python-a-first-benchmark/
+2 http://mrcoles.com/piano/
+2 http://mrcoles.com/demo/markdown-css/
+2 http://moonscript.org/
+2 http://money.cnn.com/2006/06/21/technology/10dontmatter.biz2/index.htm
+2 http://moebio.com/research/sevensets/
+2 http://mixergy.com/live/
+2 http://mitpress.mit.edu/books/full_pdfs/Street-Fighting_Mathematics.pdf
+2 http://mislav.uniqpath.com/2010/07/git-tips/
+2 http://mishadoff.com/blog/clojure-design-patterns/
+2 http://minnie.tuhs.org/cgi-bin/utree.pl
+2 http://mindyourdecisions.com/blog/2008/06/10/how-game-theory-solved-a-religious-mystery/
+2 http://metamodern.com/2009/05/27/how-to-learn-about-everything/
+2 http://media3.washingtonpost.com/wp-dyn/content/graphic/2006/03/16/GR2006031600213.gif
+2 http://matt-welsh.blogspot.com/2009/02/how-i-almost-killed-facebook.html
+2 http://matt.might.net/articles/what-cs-majors-should-know/
+2 http://matt.might.net/articles/shell-scripts-for-passive-voice-weasel-words-duplicates/
+2 http://matt.might.net/articles/phd-school-in-pictures/
+2 http://matt.might.net/articles/implementing-a-programming-language/
+2 http://matt.might.net/articles/discrete-math-and-code/
+2 http://matt.might.net/articles/cps-conversion
+2 http://matt.might.net/articles/compiling-up-to-lambda-calculus/
+2 http://mattmaroon.com/2010/11/23/i-quit-hacker-news/
+2 http://matrixmultiplication.xyz/
+2 http://mathworld.wolfram.com/TuppersSelf-ReferentialFormula.html
+2 http://math.ucr.edu/home/baez/physics/Quantum/see_a_photon.html
+2 http://mathoverflow.net/questions/8846/proofs-without-words
+2 http://math.andrej.com/2007/09/28/seemingly-impossible-functional-programs/
+2 http://martin.zinkevich.org/rules_of_ml/rules_of_ml.pdf
+2 http://martinfowler.com/articles/serverless.html
+2 http://marc.info/?l=git&m=124111702609723&w=2
+2 http://makerbot.com/
+2 http://magicscalingsprinkles.wordpress.com/2010/02/08/why-i-love-everything-you-hate-about-java/
+2 http://lwn.net/Articles/250967/
+2 http://lwn.net/2000/0824/a/esr-sharing.php3
+2 http://luvit.io/
+2 http://lua-users.org/lists/lua-l/2009-11/msg00089.html
+2 http://loveconquersallgam.es/post/2350461718/fuck-the-super-game-boy-introduction
+2 http://longnow.org/essays/richard-feynman-connection-machine/
+2 http://longnow.org/essays/richard-feynman-and-connection-machine/
+2 http://llvm.org/docs/ReleaseNotes.html
+2 http://lists.warhead.org.uk/pipermail/iwe/2005-July/000130.html
+2 http://lists.ethernal.org/oldarchives/cantlug-0211/msg00174.html
+2 http://lispwebtales.ppenev.com/
+2 http://lispm.de/symbolics-lisp-machine-ergonomics
+2 http://lisperati.com/haskell/
+2 http://lincolnloop.com/django-best-practices/
+2 http://library.sciencemadness.org/library/books/ignition.pdf
+2 http://libmill.org/index.html
+2 http://lesswrong.com/lw/c1/wellkept_gardens_die_by_pacifism/
+2 http://learnpythonthehardway.org/book/advice.html
+2 http://leapsecond.com/pages/atomic-bill/
+2 http://lcamtuf.coredump.cx/prep/
+2 http://lcamtuf.coredump.cx/electronics/
+2 http://laughtonelectronics.com/Arcana/One-bit%20computer/One-bit%20computer.html
+2 http://kylecordes.com/2010/the-prolog-story
+2 http://kushagragour.in/lab/hint/
+2 http://kurtmunger.com/dirty_lens_articleid35.html
+2 http://ksat.me/map-reduce-a-really-simple-introduction-kloudo/
+2 http://kotlin.jetbrains.org/
+2 http://kmike.ru/python-data-structures/
+2 http://kittenlang.org/
+2 http://keepachangelog.com/
+2 http://kbrower.posterous.com/banned-from-adwords-and-google-search-in-less
+2 http://karpathy.github.io/neuralnets/
+2 http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+2 http://julesjacobs.github.io/2015/08/17/bayesian-scoring-of-ratings.html
+2 http://jsonapi.org/
+2 http://jscheiny.github.io/Streams/
+2 http://jqapi.com/
+2 http://joxa.org/
+2 http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
+2 http://joshduck.com/periodic-table.html
+2 http://jonathan.tang.name/files/scheme_in_48/tutorial/overview.html
+2 http://jonathanischwartz.wordpress.com/2010/03/09/good-artists-copy-great-artists-steal/
+2 http://joelgrus.com/2012/02/16/hacking-hacker-news/
+2 http://joekraus.com/were-creating-a-culture-of-distraction
+2 http://joeduffyblog.com/2016/02/07/the-error-model/
+2 http://jesusphreak.infogami.com/blog/why_django
+2 http://jeremykun.com/2013/02/08/why-there-is-no-hitchhikers-guide-to-mathematics-for-programmers/
+2 http://jekor.com/article/is-haskell-a-good-choice-for-web-applications
+2 http://jeffhuang.com/best_paper_awards.html
+2 http://jcalcote.wordpress.com/2008/10/16/put-or-post-the-rest-of-the-story/
+2 http://javascript.infogami.com/Javascript_in_Ten_Minutes
+2 http://javascript.crockford.com/little.html
+2 http://jangosteve.com/post/380926251/no-one-knows-what-theyre-doing
+2 http://james-iry.blogspot.com/2009/05/brief-incomplete-and-mostly-wrong.html
+2 http://jacobian.org/writing/rest-worst-practices/
+2 http://ixoth.com/
+2 http://ipfs.io/
+2 http://iolanguage.org/
+2 http://ioccc.org/2013/cable3/hint.html
+2 http://internetdefenseleague.org/
+2 http://interactivepython.org/runestone/static/pythonds/index.html
+2 http://instagram-engineering.tumblr.com/post/13649370142/what-powers-instagram-hundreds-of-instances-dozens-of
+2 http://infolab.stanford.edu/~sergey/
+2 http://inertiawar.com/microcode/
+2 http://improvingsoftware.com/2009/05/19/programmers-before-you-turn-40-get-a-plan-b/
+2 http://immersivemath.com/ila/index.html
+2 http://igoro.com/archive/gallery-of-processor-cache-effects/
+2 http://ignorethecode.net/blog/2009/04/22/oberon/
+2 http://icube-icps.unistra.fr/img_auth.php/d/db/ModernC.pdf
+2 http://iampaddy.com/lifebelow600/
+2 http://html5test.com/
+2 http://html5boilerplate.com/
+2 http://hpmor.com/
+2 http://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat
+2 http://howtosplitanatom.com/news/32-sci-fi-novels-you-should-read/
+2 http://hood.ie/
+2 http://home.pipeline.com/~hbaker1/LinearLisp.html
+2 http://hnpoints.com/
+2 http://hivelogic.com/articles/top-10-programming-fonts
+2 http://hint.fm/wind/
+2 http://highscalability.com/latency-everywhere-and-it-costs-you-sales-how-crush-it
+2 http://highscalability.com/how-google-taught-me-cache-and-cash
+2 http://highscalability.com/blog/2016/1/11/a-beginners-guide-to-scaling-to-11-million-users-on-amazons.html
+2 http://highscalability.com/blog/2010/3/16/justintvs-live-video-broadcasting-architecture.html
+2 http://heydave.org/post/24286720323/gtd-sucks-for-creative-work-heres-an-alternative
+2 http://hbswk.hbs.edu/item/3348.html
+2 http://hbswk.hbs.edu/archive/5289.html
+2 http://hbswk.hbs.edu/archive/3533.html
+2 http://hastebin.com/
+2 http://haskellformac.com/
+2 http://hashify.me/IyBIYXNoaWZ5CgpIYXNoaWZ5IGRvZXMgbm90IHNvbHZlIGEgcHJvYmxlbSwgaXQgcG9zZXMgYSBxdWVzdGlvbjogX3doYXQgYmVjb21lcyBwb3NzaWJsZSB3aGVuIG9uZSBpcyBhYmxlIHRvIHN0b3JlICoqZW50aXJlIGRvY3VtZW50cyoqIGluIFVSTHM/XwoKIyMgRG9jdW1lbnQg4oaUIFVSTAoKSGFzaGlmeSBpcyBkaWZmZXJlbnQgZnJvbSB2aXJ0dWFsbHkgZXZlcnkgb3RoZXIgc2l0ZSBvbiB0aGUgV2ViIGluIHRoYXQgKipldmVyeSBVUkwgY29udGFpbnMgdGhlIGNvbXBsZXRlIGNvbnRlbnRzIG9mIHRoZSBwYWdlKiouCgpUaGUgYWRkcmVzcyBiYXIgdXBkYXRlcyB3aXRoIGVhY2gga2V5c3Ryb2tlIGFzIG9uZSB0eXBlcyBpbnRvIHRoZSBlZGl0b3IuCgojIyMgQmFzZTY0IGVuY29kaW5nCgpPbmx5IGEgdGlueSBmcmFjdGlvbiBvZiBhbGwgVW5pY29kZSBjaGFyYWN0ZXJzIGFyZSBhbGxvd2VkIHVuZXNjYXBlZCBpbiBhIFVSTC4gSGFzaGlmeSB1c2VzIFtCYXNlNjRdWzFdIGVuY29kaW5nIHRvIGNvbnZlcnQgVW5pY29kZSBpbnB1dCB0byBBU0NJSSBvdXRwdXQgc2FmZSBmb3IgaW5jbHVzaW9uIGluIFVSTHMuCgpUaGlzIHRyYW5zbGF0aW9uIGlzIGEgdHdvLXN0ZXAgcHJvY2VzczogW1VuaWNvZGUgdG8gVVRGLTggY29udmVyc2lvbl1bMl0gYXMgb3V0bGluZWQgYnkgSm9oYW4gU3VuZHN0csO2bSwgZm9sbG93ZWQgYnkgYmluYXJ5IHRvIEFTQ0lJIGNvbnZlcnNpb24gdmlhIFtgd2luZG93LmJ0b2FgXVszXS4KCiMjIyMgRW5jb2RpbmcKCiAgICA+IHVuZXNjYXBlKGVuY29kZVVSSUNvbXBvbmVudCgnw6dhIHZhPycpKQogICAgIsODwqdhIHZhPyIKICAgID4gYnRvYSh1bmVzY2FwZShlbmNvZGVVUklDb21wb25lbnQoJ8OnYSB2YT8nKSkpCiAgICAidzZkaElIWmhQdz09IgoKIyMjIyBEZWNvZGluZwoKICAgID4gYXRvYigndzZkaElIWmhQdz09JykKICAgICLDg8KnYSB2YT8iCiAgICA+IGRlY29kZVVSSUNvbXBvbmVudChlc2NhcGUoYXRvYigndzZkaElIWmhQdz09JykpKQogICAgIsOnYSB2YT8iCgojIyBVUkwgc2hvcnRlbmluZwoKU3RvcmluZyBhIGRvY3VtZW50IGluIGEgVVJMIGlzIG5pZnR5LCBidXQgbm90IHRlcnJpYmx5IHByYWN0aWNhbC4gSGFzaGlmeSB1c2VzIHRoZSBbYml0Lmx5IEFQSV1bNF0gdG8gc2hvcnRlbiBVUkxzIGZyb20gYXMgbWFueSBhcyAzMCwwMDAgY2hhcmFjdGVycyB0byBqdXN0IDIwIG9yIHNvLiBJbiBlc3NlbmNlLCBiaXQubHkgYWN0cyBhcyBhIGRvY3VtZW50IHN0b3JlIQoKIyMjIFVSTCBsZW5ndGggbGltaXQKCldoaWxlIHRoZSBIVFRQIHNwZWNpZmljYXRpb24gZG9lcyBub3QgZGVmaW5lIGFuIHVwcGVyIGxpbWl0IG9uIHRoZSBsZW5ndGggb2YgYSBVUkwgdGhhdCBhIHVzZXIgYWdlbnQgc2hvdWxkIGFjY2VwdCwgYml0Lmx5IGltcG9zZXMgYSAyMDQ4LWNoYXJhY3RlciBsaW1pdC4gVGhpcyBpcyBzdWZmaWNpZW50IGluIHRoZSBtYWpvcml0eSBvZiBjYXNlcy4KCkZvciBsb2
+2 http://haldean.org/docstore/?vim-problems
+2 http://hackertyper.net/
+2 http://hackerspaces.org/wiki/List_of_Hacker_Spaces
+2 http://hackermonthly.com/
+2 http://graph.tk/
+2 http://grantland.com/features/diplomacy-the-board-game-of-the-alpha-nerds/
+2 http://gource.io/
+2 http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
+2 http://googleresearch.blogspot.com/2006/06/extra-extra-read-all-about-it-nearly.html
+2 http://google-engtools.blogspot.com/2011/12/bug-prediction-at-google.html
+2 http://google.com/
+2 http://gobot.io/
+2 http://goanna.cs.rmit.edu.au/~jz/fulltext/alenex03.pdf
+2 http://glyph.twistedmatrix.com/2008/12/emacs-test.html
+2 http://glench.com/LegibleMathematics/
+2 http://gitref.org/
+2 http://gitimmersion.com/
+2 http://gamelab.mit.edu/games/a-slower-speed-of-light/
+2 http://gallium.inria.fr/blog/intel-skylake-bug/
+2 http://gagne.homedns.org/~tgagne/contrib/EarlyHistoryST.html
+2 http://ftp.squeak.org/docs/OOPSLA.Squeak.html
+2 http://ftp.newartisans.com/pub/git.from.bottom.up.pdf
+2 http://freakonomics.blogs.nytimes.com/2009/10/06/do-we-need-a-37-cent-coin/
+2 http://framethink.wordpress.com/2011/01/17/how-facebook-ships-code/
+2 http://fortune.com/2015/09/09/the-siege-of-herbalife/
+2 http://fnord1.blog.ca/2008/06/30/bad-security-at-evite-4382575/
+2 http://flownet.com/gat/jpl-lisp.html
+2 http://flint.cs.yale.edu/cs421/case-for-ml.html
+2 http://flexcoin.com/
+2 http://flexboxin5.com/
+2 http://flatuicolors.com/
+2 http://fishshell.com/
+2 http://firequery.binaryage.com/
+2 http://filer.case.edu/dts8/thelastq.htm
+2 http://fileformats.archiveteam.org/
+2 http://features.jsomers.net/how-i-reverse-engineered-google-docs/
+2 http://facebook.github.io/origami/
+2 http://fabiensanglard.net/Compile_Like_Its_1992/
+2 http://fabiensanglard.net/anotherWorld_code_review/index.php
+2 http://explainshell.com/
+2 http://everytimezone.com/
+2 http://etudeapp.com/
+2 http://essenmitsosse.de/pixel/
+2 http://ergoemacs.org/emacs/elisp.html
+2 http://en.wikipedia.org/wiki/Yi_(editor)
+2 http://en.wikipedia.org/wiki/XOR_linked_list
+2 http://en.wikipedia.org/wiki/Sprouts_(game)
+2 http://en.wikipedia.org/wiki/Skip_list
+2 http://en.wikipedia.org/wiki/One_instruction_set_computer
+2 http://en.wikipedia.org/wiki/One-electron_universe
+2 http://en.wikipedia.org/wiki/Norman_Borlaug
+2 http://en.wikipedia.org/wiki/Non-English-based_programming_languages
+2 http://en.wikipedia.org/wiki/Nomic
+2 http://en.wikipedia.org/wiki/Black_Perl
+2 http://en.wikipedia.org/wiki/Anatoli_Bugorski
+2 http://en.wikipedia.org/wiki/Alan_Turing
+2 http://eloquentjavascript.net/
+2 http://elixir-lang.org/blog/2013/08/08/elixir-design-goals/
+2 http://elixir-lang.org/
+2 http://eli.thegreenplace.net/2010/06/30/python-internals-adding-a-new-statement-to-python/
+2 http://ejohn.org/blog/ocr-and-neural-nets-in-javascript/
+2 http://ejohn.org/blog/how-javascript-timers-work/
+2 http://ejohn.org/apps/learn/
+2 http://ei.cs.vt.edu/~history/Daemon.html
+2 http://ehneilsen.net/notebook/orgExamples/org-examples.html
+2 http://editorconfig.org/
+2 http://ebiquity.umbc.edu/blogger/2008/01/19/how-dr-suess-would-prove-the-halting-problem-undecidable/
+2 http://eagain.net/articles/git-for-computer-scientists/
+2 http://e7l3.org/classics.html
+2 http://dukope.tumblr.com/post/83177288060/localizing-papers-please-papers-please-was
+2 http://ducklang.org/designing-a-programming-language-i
+2 http://duartes.org/gustavo/blog/post/anatomy-of-a-program-in-memory
+2 http://drakon-editor.sourceforge.net/
+2 http://dougseven.com/2014/04/17/knightmare-a-devops-cautionary-tale/
+2 http://dotnet.github.io/orleans/
+2 http://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/
+2 http://docker.io/
+2 http://dmitry.gr/?r=05.Projects&proj=07.%20Linux%20on%208bit
+2 http://dmauro.github.io/Keypress/
+2 http://dkeenan.com/Lambda/index.htm
+2 http://discovermagazine.com/2010/jun/03-the-insanity-virus
+2 http://dippl.org/
+2 http://dilbertblog.typepad.com/the_dilbert_blog/2007/07/career-advice.html
+2 http://dheera.net/projects/blur.php
+2 http://dev.stephendiehl.com/numpile/
+2 http://dev.stephendiehl.com/hask/
+2 http://dev.stephendiehl.com/fun/
+2 http://developer.yahoo.com/performance/rules.html
+2 http://developer.android.com/about/versions/jelly-bean.html
+2 http://demomyapp.com/
+2 http://dcurt.is/the-fight
+2 http://dbmsmusings.blogspot.com/2010/04/problems-with-cap-and-yahoos-little.html
+2 http://davidsimon.com/the-wire-hd-with-videos/
+2 http://dave.fayr.am/posts/2012-10-4-finding-fizzbuzz.html
+2 http://databrewery.org/
+2 http://darling.dolezel.info/en/Darling
+2 http://darkpatterns.org/
+2 http://daringfireball.net/2004/04/spray_on_usability
+2 http://danshipper.com/nothing-happens-until-the-sale-is-made
+2 http://danluu.com/programmer-moneyball/
+2 http://danluu.com/new-cpu-features/
+2 http://danluu.com/3c-conflict/
+2 http://damienkatz.net/2008/03/what_sucks_abou.html
+2 http://css-tricks.com/examples/ShapesOfCSS/
+2 http://cslibrary.stanford.edu/
+2 http://cs.gmu.edu/~sean/lisp/LispTutorial.html
+2 http://crypto.stanford.edu/sjcl/
+2 http://cryptome.org/dirty-work/spot-spook.htm
+2 http://cryptome.org/2012/07/gent-forum-spies.htm
+2 http://crypto.junod.info/2013/09/09/an-aspiring-scientists-frustration-with-modern-day-academia-a-resignation/
+2 http://cr.yp.to/critbit.html
+2 http://courses.csail.mit.edu/6.042/fall10/mcs-ftl.pdf
+2 http://corte.si/posts/code/devsurvey/index.html
+2 http://corkboard.me/
+2 http://contrastrebellion.com/
+2 http://computers-are-fast.github.io/
+2 http://compgeom.cs.uiuc.edu/~jeffe/teaching/algorithms/
+2 http://commfaculty.fullerton.edu/woverbeck/dtr5.htm
+2 http://colourco.de/
+2 http://colinm.org/language_checklist.html
+2 http://colah.github.io/posts/2015-09-NN-Types-FP/
+2 http://colah.github.io/posts/2014-03-NN-Manifolds-Topology/
+2 http://coffeescript.org/#changelog
+2 http://coffeekup.org/
+2 http://codex99.com/design/the-hp35.html
+2 http://code.nasa.gov/
+2 http://code.mixpanel.com/2011/08/05/how-and-why-we-switched-from-erlang-to-python/
+2 http://code.google.com/p/unix-jun72/
+2 http://code.google.com/p/ocropus/
+2 http://code.google.com/p/ie7-js/
+2 http://code.google.com/edu/courses.html
+2 http://code.google.com/appengine/docs/python/python27/newin27.html
+2 http://codegangsta.io/blog/2013/07/21/creating-cli-applications-in-go/
+2 http://coconut-lang.org/
+2 http://clrs.cc/
+2 http://cleverdeck.com/
+2 http://classics.mit.edu/Antoninus/meditations.html
+2 http://ciml.info/
+2 http://chuck.cs.princeton.edu/
+2 http://chris-lamb.co.uk/2008/01/24/can-you-get-cp-to-give-a-progress-bar-like-wget/
+2 http://chargen.matasano.com/chargen/2009/7/22/if-youre-typing-the-letters-a-e-s-into-your-code-youre-doing.html
+2 http://chadfowler.com/blog/2014/01/19/empathy/
+2 http://c-faq.com/decl/spiral.anderson.html
+2 http://cb.vu/unixtoolbox.xhtml
+2 http://catb.org/jargon/html/magic-story.html
+2 http://casual-effects.com/markdeep/
+2 http://carl.flax.ie/dothingstellpeople.html
+2 http://cantada.ca/
+2 http://canonical.org/~kragen/memory-models/
+2 http://calteches.library.caltech.edu/51/2/CargoCult.htm
+2 http://calnewport.com/blog/2011/11/11/if-youre-busy-youre-doing-something-wrong-the-surprisingly-relaxed-lives-of-elite-achievers/
+2 http://cacr.uwaterloo.ca/hac/
+2 http://cacm.acm.org/magazines/2009/9/38904-the-status-of-the-p-versus-np-problem/fulltext
+2 http://burakkanber.com/blog/machine-learning-full-text-search-in-javascript-relevance-scoring/
+2 http://browserver.org/
+2 http://brokenpianoforpresident.com/2012/07/19/jack-daniels-lawsuit-the-full-scoop/
+2 http://bramcohen.com/2011/12/04/never-make-counter-offers
+2 http://bradfitz.com/social-graph-problem/
+2 http://boston.conman.org/2015/06/16.1
+2 http://bost.ocks.org/mike/algorithms/
+2 http://book.mixu.net/distsys/single-page.html
+2 http://bob.cs.sonoma.edu/IntroCompOrg-RPi/intro-co-rpi.html
+2 http://blog.wilshipley.com/2013/12/my-doom-20th-anniversary-stories.html
+2 http://blog.webmynd.com/2009/02/28/databases-as-a-service-fathomdb/
+2 http://blog.weatherby.net/2009/02/could-atlanta-buy-a-silicon-valley-the-answers.html
+2 http://blog.testdouble.com/posts/2014-01-25-the-failures-of-intro-to-tdd.html
+2 http://blogs.wsj.com/accelerators/2014/06/03/jessica-livingston-why-startups-need-to-focus-on-sales-not-marketing/
+2 http://blogs.valvesoftware.com/economics/arbitrage-and-equilibrium-in-the-team-fortress-2-economy/
+2 http://blogs.uw.edu/ajko/2012/08/22/john-carmack-discusses-the-art-and-science-of-software-engineering/
+2 http://blog.sumall.com/journal/optimizely-got-me-fired.html
+2 http://blogs.sun.com/jrose/entry/bloom_filters_in_a_nutshell
+2 http://blogs.perl.org/users/rafael_garcia-suarez/2011/10/why-dart-is-not-the-language-of-the-future.html
+2 http://blogs.nuxeo.com/dev/2011/10/speeding-up-the-android-emulator.html
+2 http://blogs.msdn.com/b/oldnewthing/archive/2012/12/18/10378851.aspx
+2 http://blogs.msdn.com/b/ntdebugging/archive/2013/11/22/understanding-arm-assembly-part-1.aspx
+2 http://blogs.msdn.com/b/jw_on_tech/archive/2012/03/13/why-i-left-google.aspx
+2 http://blogs.msdn.com/b/ericlippert/archive/2011/02/14/what-would-feynman-do.aspx
+2 http://blogs.law.harvard.edu/sj/2011/07/24/aaron-swartz-v-united-states/
+2 http://blog.samaltman.com/board-members
+2 http://blog.rongarret.info/2015/05/why-lisp.html
+2 http://blog.parsely.com/post/1691/lucene/
+2 http://blog.objectmentor.com/articles/2009/02/26/10-papers-every-programmer-should-read-at-least-twice
+2 http://blog.n01se.net/?p=41
+2 http://blog.moertel.com/posts/2013-12-14-great-old-timey-game-programming-hack.html
+2 http://blog.moertel.com/pages/coders-guide-to-coffee
+2 http://blog.modernmechanix.com/2008/03/24/what-will-life-be-like-in-the-year-2008/
+2 http://blog.mailchimp.com/social-login-buttons-arent-worth-it/
+2 http://blog.llvm.org/2011/05/what-every-c-programmer-should-know_14.html
+2 http://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/
+2 http://blog.jgc.org/2011/11/beware-alan-turing-fetish.html
+2 http://blog.fogus.me/2011/09/08/10-technical-papers-every-programmer-should-read-at-least-twice/
+2 http://blog.dustinkirkland.com/2013/10/fingerprints-are-user-names-not.html
+2 http://blog.docker.com/2014/06/its-here-docker-1-0/
+2 http://blog.chriszacharias.com/page-weight-matters
+2 http://blog.burtonthird.com/?p=81
+2 http://blog.bjrn.se/2008/10/lets-build-mp3-decoder.html
+2 http://blog.asmartbear.com/self-doubt-fraud.html
+2 http://blog.asmartbear.com/rich-vs-king-sold-company.html
+2 http://blog.adamnash.com/2011/10/10/steve-jobs-bmw-ebay/
+2 http://bjoern.brembs.net/2016/02/sci-hub-as-necessary-effective-civil-disobedience/
+2 http://bitcore.io/
+2 http://bioteam.net/2011/08/why-you-should-never-build-a-backblaze-pod/
+2 http://billhails.net/Book/front.html
+2 http://betterexplained.com/articles/a-visual-intuitive-guide-to-imaginary-numbers/
+2 http://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/
+2 http://bentilly.blogspot.com/2009/09/teaching-linear-algebra.html
+2 http://beginners.re/
+2 http://beej.us/guide/bgipc/output/html/multipage/index.html
+2 http://bbcsfx.acropolis.org.uk/
+2 http://bastiat.org/en/petition.html
+2 http://bar.com/
+2 http://aws.amazon.com/importexport/
+2 http://aviationweek.com/technology/skunk-works-reveals-compact-fusion-reactor-details
+2 http://audenneedham.com/game/
+2 http://atastypixel.com/blog/four-common-mistakes-in-audio-development/
+2 http://astronaut.io/
+2 http://a.singlediv.com/
+2 http://asciiflow.com/
+2 http://arxiv.org/abs/1412.5567
+2 http://arxiv.org/abs/1110.1556
+2 http://arxiv.org/abs/0903.0340
+2 http://articles.latimes.com/2012/may/05/business/la-fi-0506-golden-ticket-20120506
+2 http://arstechnica.com/open-source/news/2010/06/the-beos-filesystem.ars
+2 http://archive.wired.com/wired/archive/5.06/apple_pr.html
+2 http://archive.vector.org.uk/art10010830
+2 http://archive.ncsa.illinois.edu/prajlich/forster.html
+2 http://archive.boston.com/bigpicture/2010/08/comments_russia_in_color_a_century_ago.html
+2 http://apirocks.com/html5/html5.html
+2 http://apenwarr.ca/log/?m=201407#01
+2 http://aosabook.org/en/index.html
+2 http://antirez.com/news/61
+2 http://antirez.com/articoli/tclmisunderstood.html
+2 http://ankisrs.net/
+2 http://animatron.com/
+2 http://andrewkelley.me/post/jamulator.html
+2 http://amasci.com/weird/unusual/e-wall.html
+2 http://amasci.com/miscon/whyhard2.html
+2 http://amasci.com/amateur/whygnd.html
+2 http://alumni.stanford.edu/get/page/magazine/article/?article_id=41260
+2 http://alumni.media.mit.edu/~jorkin/aibooks.html
+2 http://alexmaccaw.com/posts/how_to_travel_around_the_world
+2 http://alexkrupp.typepad.com/sensemaking/2007/04/double_your_use.html
+2 http://alex-charlton.com/posts/Prototype_to_polish_Making_games_in_CHICKEN_Scheme_with_Hypergiant/
+2 http://alan.blog-city.com/has_amazon_ec2_become_over_subscribed.htm
+2 http://ajaxian.com/archives/nicole-sullivans-object-oriented-css
+2 http://aging.nautil.us/feature/218/why-you-cant-help-but-act-your-age
+2 http://adv-r.had.co.nz/
+2 http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
+2 http://addyosmani.com/largescalejavascript/
+2 http://acko.net/blog/how-to-fold-a-julia-fractal/
+2 http://academictorrents.com/
+2 http://abhishek.geek.nz/docs/features-of-common-lisp
+2 http://aaugh.com/imageabuse.html
+2 http://aaroniba.net/articles/tmp/how-i-cured-my-rsi-pain.html
+2 http://aadrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html
+2 http://9to5mac.com/2011/10/11/steve-jobs-book-excerpt-why-he-wore-the-black-mock-turtleneck-uniform/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+9To5Mac-MacAllDay+%289+to+5+Mac+-+Apple+Intelligence%29
+2 http://9to5mac.com/2011/10/10/photoshop-unblur-leaves-max-audience-gasping-for-air/
+2 http://9-eyes.com/
+2 http://507movements.com/
+2 http://37signals.com/svn/posts/3024-questions-i-ask-when-reviewing-a-design
+2 http://37signals.com/svn/archives2/dont_scale_99999_uptime_is_for_walmart.php
+2 http://37signals.com/
+2 http://250bpm.com/blog:50
+2 http://250bpm.com/blog:4
+2 http://0pointer.net/blog/revisiting-how-we-put-together-linux-systems.html
