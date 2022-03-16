@@ -134,7 +134,7 @@ Inside the JSON file, is a JSON object with headers, response code, key and a ba
 
 **The case for the 22120 format.**
 
-Other formats (like MHTML and SingleFile) save translations of the resources you archive. They create modifications, such as altering the internal structure of the HTML, changing hyperlinks and URLs into "flat" embedded data URIs, or local references, and require other "hacks* in order to save a "perceptually similar" copy of the archived resource.
+Other formats (like MHTML and SingleFile) save translations of the resources you archive. They create modifications, such as altering the internal structure of the HTML, changing hyperlinks and URLs into "flat" embedded data URIs, or local references, and require other "hacks" in order to save a "perceptually similar" copy of the archived resource.
 
 22120 throws all that out, and calls rubbish on it. 22120 saves a *verbatim* **high-fidelity** copy of the resources your archive. It does not alter their internal structure in any way. Instead it records each resource in its own metadata file. In that way it is more similar to HAR and WARC, but still radically different. Compared to WARC and HAR, our format is radically simplified, throwing out most of the metadata information and unnecessary fields these formats collect.
 
