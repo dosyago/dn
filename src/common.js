@@ -58,7 +58,7 @@ export const ERROR_CODE_SAFE_TO_IGNORE = new Set([
 
 export const SNIP_CONTEXT = 31;
 
-export const NO_SANDBOX = process.env.DEBUG_22120 || false;
+export const NO_SANDBOX = (process.env.DEBUG_22120 && process.env.SET_22120_NO_SANDBOX) || false;
 
 //export const APP_ROOT = '.';
 //export const APP_ROOT = __dirname;
@@ -85,9 +85,9 @@ export async function untilTrue(pred, waitOverride = MIN_WAIT, maxWaits = MAX_WA
   setTimeout(checkPred, 0);
   return pr;
 
-  function checkPred() {
+  async function checkPred() {
     DEBUG && console.log('Checking', pred.toString());
-    if ( pred() ) {
+    if ( await pred() ) {
       return resolve(true);
     } else {
       waitCount++;
