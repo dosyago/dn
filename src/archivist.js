@@ -201,6 +201,10 @@
       });
     });
 
+// logging
+    let logName;
+    let logStream;
+
 // main
   async function collect({chrome_port:port, mode} = {}) {
     const {library_path} = args;
@@ -479,6 +483,15 @@
           if ( (depth + 1) <= State.crawlDepth ) {
             links.length = 0;
             links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+          }
+          links.push({url: info.url, title});
+          if ( logStream ) {
+            console.log(`Writing ${links.length} entries to ${logName}`);
+            logStream.cork();
+            links.forEach(({url, title}) => {
+              logStream.write(`${url} ${title}\n`);
+            });
+            logStream.uncork();
           }
           console.log(`Just crawled: ${title} (${info.url})`);
         }
@@ -1551,7 +1564,17 @@
             "Reloading to archive and index in select (Bookmark) mode", 
             url
           );
-          send("Page.stopLoading", {}, sessionId);
+          await untilTrue(async () => {
+            const {result:{value:loaded}} = await send("Runtime.evaluate", {
+              expression: `(function () {
+                return document.readyState === 'complete'; 
+              }())`,
+              returnByValue: true
+            }, sessionId);
+            DEBUG && console.log({loaded, targetInfo});
+            return loaded;
+          });
+          //send("Page.stopLoading", {}, sessionId);
           send("Page.reload", {}, sessionId);
           if ( crawl ) {
             let resolve;
@@ -1618,11 +1641,17 @@
           }
         } else if ( createIfMissing ) {
           console.log('We create target', url);
-          ({targetId} = await send("Target.createTarget", {
-            url: `http://localhost:${args.server_port}/redirector.html?url=${
-              encodeURIComponent(url)
-            }`
-          }));
+          try {
+            targetId = null;
+            ({targetId} = await send("Target.createTarget", {
+              url: `http://localhost:${args.server_port}/redirector.html?url=${
+                encodeURIComponent(url)
+              }`
+            }));
+          } catch(e) {
+            console.warn("Error creating new tab for url", url, e);
+            return;
+          }
           if ( crawl && ! State.CrawlData.has(targetId) ) {
             State.CrawlTargets.add(targetId);
             State.CrawlIndexing.add(targetId);
@@ -1651,6 +1680,7 @@
         return [];
       }
   }
+
   export async function startCrawl({
     urls, timeout, depth, saveToFile: saveToFile = false,
     batchSize,
@@ -1660,6 +1690,10 @@
     if ( State.crawling ) {
       console.log('Already crawling...');
       return;
+    }
+    if ( saveToFile ) {
+      logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
+      logStream = Fs.createWriteStream(logName, {flags:'as+'});
     }
     console.log('StartCrawl', urls, timeout, depth, {batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime});
     State.crawling = true;
@@ -1673,12 +1707,6 @@
     });
     const batch_sz = State.batchSize || BATCH_SIZE;
     let totalBytes = 0;
-    let logName;
-    let logStream;
-    if ( saveToFile ) {
-      logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
-      logStream = Fs.createWriteStream(logName, {flags:'as+'});
-    }
     setTimeout(async () => {
       try {
         while(urls.length > batch_sz) {
@@ -1691,19 +1719,14 @@
             }
             const pr = archiveAndIndexURL(
               url, 
-              {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
+              {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1}
             );
             jobs.push(pr);
           }
           const links = (await Promise.all(jobs)).flat().filter(({url}) => !Q.has(url));
+          console.log({links});
           if ( links.length ) {
-            if ( saveToFile ) {
-              links.forEach(({url}) => {
-                logStream.write(url+`\n`);
-              });
-            } else {
-              urls.push(...links);
-            }
+            urls.push(...links);
             links.forEach(({url}) => Q.add(url)); 
           }
         }
@@ -1714,17 +1737,11 @@
           }
           const links = (await archiveAndIndexURL(
             url, 
-            {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth > 1}
+            {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1}
           )).filter(({url}) => !Q.has(url));
           console.log(links, Q);
           if ( links.length ) {
-            if ( saveToFile ) {
-              links.forEach(({url}) => {
-                logStream.write(url+`\n`);
-              });
-            } else {
-              urls.push(...links);
-            }
+            urls.push(...links);
             links.forEach(({url}) => Q.add(url)); 
           }
         }
