@@ -465,12 +465,13 @@
           DEBUG && console.log(info, {depth,links});
 
           if ( (depth + 1) <= State.crawlDepth ) {
-            const {result:{value:{links:crawlLinks}}} = await send("Runtime.evaluate", {
+            const {result:{value:{title,links:crawlLinks}}} = await send("Runtime.evaluate", {
               expression: `(function () { 
                 return {
                   links: Array.from(
                     document.querySelectorAll('a[href].titlelink')
-                  ).map(a => a.href)
+                  ).map(a => a.href),
+                  title: document.title
                 };
               }())`,
               returnByValue: true
@@ -478,6 +479,7 @@
 
             links.length = 0;
             links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+            console.log(`Just crawled: ${title} (${info.url})`);
           }
         }
       }
