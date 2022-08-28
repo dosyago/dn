@@ -105,7 +105,7 @@
               State.onExit.addHandler(() => {
                 fs.writeFileSync(
                   path.resolve('.', `titles-${(new Date).toISOString()}.txt`), 
-                  JSON.stringify([...State.titles.entries()], null, 2)
+                  JSON.stringify([...State.titles.entries()], null, 2) + '\n'
                 );
               });
             }

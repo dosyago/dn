@@ -1,0 +1,18 @@
+[
+  [
+    "https://dosyago.com/",
+    "Dosyago - BrowserBox Pro"
+  ],
+  [
+    "https://www.intel.com/content/www/us/en/homepage.html",
+    "Intel | Data Center Solutions, IoT, and PC Innovation"
+  ],
+  [
+    "https://nodejs.org/api/process.html#signal-events",
+    "Process | Node.js v18.8.0 Documentation"
+  ],
+  [
+    "https://www.microsoft.com/zh-tw/",
+    "Microsoft – 雲端、電腦、應用程式和遊戲"
+  ]
+]
