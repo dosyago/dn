@@ -1,4 +1,4 @@
-import {DEBUG, sleep, NO_SANDBOX} from './common.js';
+import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';
 
 import {Archivist} from './archivist.js';
 import LibraryServer from './libraryServer.js';
@@ -20,12 +20,12 @@ const LAUNCH_OPTS = {
   port: chrome_port, 
   chromeFlags:CHROME_OPTS, 
   userDataDir:false, 
-  startingUrl: `http://localhost:${args.server_port}`,
+  startingUrl: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
   ignoreDefaultFlags: true
 }
 const KILL_ON = {
   win32: 'taskkill /IM chrome.exe /F',
-  darwin: 'pkill -15 chrome',
+  darwin: 'kill $(pgrep Chrome)',
   freebsd: 'pkill -15 chrome',
   linux: 'pkill -15 chrome',
 };
@@ -92,7 +92,7 @@ async function killChrome(wait = true) {
       ));
       if ( err ) {
         console.log(`There was no running chrome.`);
-        //DEBUG && console.warn("Error closing existing chrome", err);
+        DEBUG && console.warn("Error closing existing chrome", err);
       } else {
         console.log(`Running chrome shut down.`);
         if ( wait ) {

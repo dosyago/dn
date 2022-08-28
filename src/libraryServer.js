@@ -1,8 +1,14 @@
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
+
 import express from 'express';
 
 import args from './args.js';
 import {
+  GO_SECURE,
   MAX_REAL_URL_LENGTH,
   MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, DEBUG, 
   say, sleep, APP_ROOT,
@@ -24,6 +30,9 @@ const LibraryServer = {
   start, stop
 }
 
+const secure_options = {};
+const protocol = GO_SECURE ? https : http;
+
 export default LibraryServer;
 
 async function start({server_port}) {
@@ -32,10 +41,27 @@ async function start({server_port}) {
     return;
   }
   running = true;
+  
+  try {
+    const sec = {
+      key: fs.readFileSync(path.resolve(os.homedir(), 'sslcerts', 'privkey.pem')),
+      cert: fs.readFileSync(path.resolve(os.homedir(), 'sslcerts', 'fullchain.pem')),
+      ca: fs.existsSync(path.resolve(os.homedir(), 'sslcerts', 'chain.pem')) ?
+          fs.readFileSync(path.resolve(os.homedir(), 'sslcerts', 'chain.pem'))
+        :
+          undefined
+    };
+    Object.assign(secure_options, sec);
+  } catch(e) {
+    console.warn(`No certs found so will use insecure no SSL.`);
+  }
+
   try {
     port = server_port;
     addHandlers();
-    Server = app.listen(Number(port), err => {
+    const secure = secure_options.cert && secure_options.key;
+    const server = protocol.createServer.apply(protocol, GO_SECURE && secure ? [secure_options, app] : [app]);
+    Server = server.listen(Number(port), err => {
       if ( err ) { 
         running = false;
         throw err;
@@ -46,6 +72,7 @@ async function start({server_port}) {
   } catch(e) {
     running = false;
     DEBUG && console.error(`Error starting server`, e);
+    process.exit(1);
   }
 }
 
