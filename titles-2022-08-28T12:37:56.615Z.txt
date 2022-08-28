@@ -1,0 +1,22 @@
+[
+  [
+    "https://localhost:22120/redirector.html?url=https%3A%2F%2Fcnn.com",
+    ""
+  ],
+  [
+    "https://localhost:22120/redirector.html?url=https%3A%2F%2Fbloomberg.com",
+    ""
+  ],
+  [
+    "https://edition.cnn.com/",
+    "CNN International - Breaking News, US News, World News and Video"
+  ],
+  [
+    "https://www.bloomberg.com/asia",
+    "Bloomberg.com"
+  ],
+  [
+    "https://localhost:22120/redirector.html?url=https%3A%2F%2Fedition.cnn.com%2F",
+    ""
+  ]
+]
