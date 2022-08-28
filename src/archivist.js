@@ -520,11 +520,10 @@
             console.log(`Just crawled: ${title} (${info.url})`);
           }
 
-          if ( State.program ) {
+          if ( State.program && ! dontCache(info) ) {
             const targetInfo = info;
             const fs = Fs;
             const path = Path;
-            console.log('Will run 1', {program: State.program});
             try {
               await sleep(500);
               await eval(`(async () => {
@@ -777,7 +776,7 @@
     if ( neverCache(request.url) ) return true;
     if ( Mode == 'select' && ! hasBookmark(request.url) ) return true;
     const url = new URL(request.url);
-    return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
+    return NEVER_CACHE.has(url.origin) || !!(State.No && State.No.test(url.host));
   }
 
   function processDoc({documents, strings}) {
@@ -1617,8 +1616,7 @@
             "Reloading to archive and index in select (Bookmark) mode", 
             url
           );
-          if ( State.program ) {
-            console.log('Will run 2', {program: State.program});
+          if ( State.program && ! dontCache(targetInfo) ) {
             const fs = Fs;
             const path = Path;
             try {
@@ -1701,8 +1699,7 @@
 
             await pageLoaded;
             
-            if ( State.program ) {
-              console.log('Will run 3', {program: State.program});
+            if ( State.program && ! dontCache(targetInfo) ) {
               const fs = Fs;
               const path = Path;
               try {
@@ -1739,7 +1736,7 @@
           try {
             targetId = null;
             ({targetId} = await send("Target.createTarget", {
-              url: `http://localhost:${args.server_port}/redirector.html?url=${
+              url: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}/redirector.html?url=${
                 encodeURIComponent(url)
               }`
             }));
