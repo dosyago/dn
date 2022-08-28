@@ -19,12 +19,15 @@
       <label>
         Links
         <br>
-        <textarea class=long name=links>https://news.ycombinator.com</textarea>
+        <textarea class=long name=links>
+          https://cnn.com
+          https://bloomberg.com
+        </textarea>
         <br>
         <small>List format is 1 link per line.</small>
       </label>
     </p>
-    <details>
+    <details open>
       <summary>Advanced settings</summary>
       <p>
         <label>
@@ -89,6 +92,24 @@
             Save the harvested URLs to a file
         </label>
       <p>
+      <p>
+        <label>
+          <span class=text>Program to run on every page</span>
+          <br>
+          <textarea class=long rows=9 name=program>
+            const {result:{value:data}} = await send("Runtime.evaluate", {
+              expression: `(function () {
+                return {
+                  url: document.location.href,
+                  title: document.title,
+                };
+              }())`,
+              returnByValue: true
+            }, sessionId);
+            DEBUG && console.log('DATA', {data, targetInfo});
+          </textarea>
+        </label>
+      </p>
     </details>
     <p>
       <button>Crawl</button>

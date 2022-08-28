@@ -190,7 +190,8 @@ function addHandlers() {
     try {
       let {
         links, timeout, depth, saveToFile, 
-        maxPageCrawlTime, minPageCrawlTime, batchSize
+        maxPageCrawlTime, minPageCrawlTime, batchSize,
+        program,
       } = req.body;
       const oTimeout = timeout;
       timeout = Math.round(parseFloat(timeout)*1000);
@@ -225,7 +226,7 @@ function addHandlers() {
       }).map(url => ({url,depth:1}));
       console.log(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
       await startCrawl({
-        urls, timeout, depth, saveToFile, batchSize, minPageCrawlTime, maxPageCrawlTime
+        urls, timeout, depth, saveToFile, batchSize, minPageCrawlTime, maxPageCrawlTime, program,
       });
       res.end(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`);
     } catch(e) {

@@ -1528,10 +1528,15 @@
   }
 
 // crawling
-  async function archiveAndIndexURL(url, 
-      {crawl, createIfMissing:createIfMissing = false, timeout, depth, TargetId} = {}
-    ) {
-      console.log('ArchiveAndIndex', url, {crawl, createIfMissing, timeout, depth, TargetId});
+  async function archiveAndIndexURL(url, {
+      crawl, 
+      createIfMissing:createIfMissing = false, 
+      timeout, 
+      depth, 
+      TargetId,
+      program,
+    } = {}) {
+      DEBUG && console.log('ArchiveAndIndex', url, {crawl, createIfMissing, timeout, depth, TargetId, program});
       if ( Mode == 'serve' ) {
         throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
       }
@@ -1636,6 +1641,10 @@
               sleep(State.maxPageCrawlTime || MAX_TIME_PER_PAGE)
             ]);
 
+            if ( program ) {
+              eval(program);
+            }
+
             await send("Target.closeTarget", {targetId});
             State.CrawlTargets.delete(targetId);
           }
@@ -1686,6 +1695,7 @@
     batchSize,
     minPageCrawlTime, 
     maxPageCrawlTime,
+    program,
   } = {}) {
     if ( State.crawling ) {
       console.log('Already crawling...');
@@ -1695,7 +1705,7 @@
       logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
       logStream = Fs.createWriteStream(logName, {flags:'as+'});
     }
-    console.log('StartCrawl', urls, timeout, depth, {batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime});
+    DEBUG && console.log('StartCrawl', {urls, timeout, depth, batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime, program});
     State.crawling = true;
     State.crawlDepth = depth;
     State.crawlTimeout = timeout;
@@ -1719,12 +1729,11 @@
             }
             const pr = archiveAndIndexURL(
               url, 
-              {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1}
+              {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1, program}
             );
             jobs.push(pr);
           }
           const links = (await Promise.all(jobs)).flat().filter(({url}) => !Q.has(url));
-          console.log({links});
           if ( links.length ) {
             urls.push(...links);
             links.forEach(({url}) => Q.add(url)); 
@@ -1737,7 +1746,7 @@
           }
           const links = (await archiveAndIndexURL(
             url, 
-            {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1}
+            {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1, program}
           )).filter(({url}) => !Q.has(url));
           console.log(links, Q);
           if ( links.length ) {
