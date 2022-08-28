@@ -97,16 +97,29 @@
           <span class=text>Program to run on every page</span>
           <br>
           <textarea class=long rows=9 name=program>
-            const {result:{value:data}} = await send("Runtime.evaluate", {
-              expression: `(function () {
-                return {
-                  url: document.location.href,
-                  title: document.title,
-                };
-              }())`,
-              returnByValue: true
-            }, sessionId);
-            console.log('DATA', {data, targetInfo});
+            if ( ! State.titles ) {
+              State.titles = new Map();
+              State.onExit.addHandler(() => {
+                fs.writeFileSync(
+                  path.resolve('.', `titles-${(new Date).toISOString()}.txt`), 
+                  JSON.stringify([...State.titles.entries()], null, 2)
+                );
+              });
+            }
+            const {result:{value:data}} = await send("Runtime.evaluate", 
+              {
+                expression: `(function () {
+                  return {
+                    url: document.location.href,
+                    title: document.title,
+                  };
+                }())`,
+                returnByValue: true
+              }, 
+              sessionId
+            );
+            State.titles.set(data.url, data.title);
+            console.log(`Saved ${State.titles.size} titles`);
           </textarea>
         </label>
       </p>

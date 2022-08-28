@@ -31,6 +31,7 @@
 
   import args from './args.js';
   import {
+    GO_SECURE,
     untilTrue,
     sleep, DEBUG as debug, 
     BATCH_SIZE,
@@ -173,7 +174,7 @@
     307
   ]);
   const NEVER_CACHE = new Set([
-    `http://localhost:${args.server_port}`,
+    `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
     `http://localhost:${args.chrome_port}`
   ]);
   const SORT_URLS = ([urlA],[urlB]) => urlA < urlB ? -1 : 1;
@@ -208,7 +209,15 @@
 // main
   async function collect({chrome_port:port, mode} = {}) {
     const {library_path} = args;
+    const exitHandlers = [];
+    process.on('beforeExit', runHandlers);
+    process.on('SIGUSR2', runHandlers);
     State.connection = State.connection || await connect({port});
+    State.onExit = {
+      addHandler(h) {
+        exitHandlers.push(h);
+      }
+    };
     const {send, on, close} = State.connection;
     //const DELAY = 100; // 500 ?
     Close = close;
@@ -267,6 +276,19 @@
     Status.loaded = true;
 
     return Status.loaded;
+
+    function runHandlers() {
+      console.log('before exit running', exitHandlers);
+      while(exitHandlers.length) {
+        const h = exitHandlers.shift();
+        try {
+          h();
+        } catch(e) {
+          console.warn(`Error in exit handler`, h, e);
+        }
+      }
+      process.exit(0);
+    }
 
     function handleMessage(args) {
       const {type, args:[{value:strVal}]} = args;
@@ -464,53 +486,58 @@
       if ( State.crawling ) {
         const has = await untilTrue(() => State.CrawlData.has(info.targetId));
 
-        if ( has ) {
-          const {depth,links} = State.CrawlData.get(info.targetId);
-          DEBUG && console.log(info, {depth,links});
+        const {url} = Targets.get(sessionId);
+        if ( ! dontCache({url}) ) {
+          if ( has ) {
+            const {depth,links} = State.CrawlData.get(info.targetId);
+            DEBUG && console.log(info, {depth,links});
 
-          const {result:{value:{title,links:crawlLinks}}} = await send("Runtime.evaluate", {
-            expression: `(function () { 
-              return {
-                links: Array.from(
-                  document.querySelectorAll('a[href].titlelink')
-                ).map(a => a.href),
-                title: document.title
-              };
-            }())`,
-            returnByValue: true
-          }, sessionId);
+            const {result:{value:{title,links:crawlLinks}}} = await send("Runtime.evaluate", {
+              expression: `(function () { 
+                return {
+                  links: Array.from(
+                    document.querySelectorAll('a[href].titlelink')
+                  ).map(a => a.href),
+                  title: document.title
+                };
+              }())`,
+              returnByValue: true
+            }, sessionId);
 
-          if ( (depth + 1) <= State.crawlDepth ) {
-            links.length = 0;
-            links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+            if ( (depth + 1) <= State.crawlDepth ) {
+              links.length = 0;
+              links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+            }
+            links.push({url: info.url, title});
+            if ( logStream ) {
+              console.log(`Writing ${links.length} entries to ${logName}`);
+              logStream.cork();
+              links.forEach(({url, title}) => {
+                logStream.write(`${url} ${title}\n`);
+              });
+              logStream.uncork();
+            }
+            console.log(`Just crawled: ${title} (${info.url})`);
           }
-          links.push({url: info.url, title});
-          if ( logStream ) {
-            console.log(`Writing ${links.length} entries to ${logName}`);
-            logStream.cork();
-            links.forEach(({url, title}) => {
-              logStream.write(`${url} ${title}\n`);
-            });
-            logStream.uncork();
-          }
-          console.log(`Just crawled: ${title} (${info.url})`);
-        }
 
-        if ( State.program ) {
-          const targetInfo = info;
-          console.log('Will run 1', {program: State.program});
-          try {
-            await sleep(500);
-            await eval(`(async () => {
-              try {
-                ${State.program}
-              } catch(e) {
-                console.warn('Error in program', e, State.program);
-              }
-            })();`);
-            await sleep(500);
-          } catch(e) {
-            console.warn(`Error evaluate program`, e);
+          if ( State.program ) {
+            const targetInfo = info;
+            const fs = Fs;
+            const path = Path;
+            console.log('Will run 1', {program: State.program});
+            try {
+              await sleep(500);
+              await eval(`(async () => {
+                try {
+                  ${State.program}
+                } catch(e) {
+                  console.warn('Error in program', e, State.program);
+                }
+              })();`);
+              await sleep(500);
+            } catch(e) {
+              console.warn(`Error evaluate program`, e);
+            }
           }
         }
       }
@@ -1592,6 +1619,8 @@
           );
           if ( State.program ) {
             console.log('Will run 2', {program: State.program});
+            const fs = Fs;
+            const path = Path;
             try {
               await sleep(500);
               await eval(`(async () => {
@@ -1674,6 +1703,8 @@
             
             if ( State.program ) {
               console.log('Will run 3', {program: State.program});
+              const fs = Fs;
+              const path = Path;
               try {
                 await sleep(500);
                 await eval(`(async () => {
@@ -1761,7 +1792,7 @@
       logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
       logStream = Fs.createWriteStream(logName, {flags:'as+'});
     }
-    DEBUG && console.log('StartCrawl', {urls, timeout, depth, batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime, program});
+    console.log('StartCrawl', {urls, timeout, depth, batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime, program});
     State.crawling = true;
     State.crawlDepth = depth;
     State.crawlTimeout = timeout;
@@ -1775,7 +1806,7 @@
     let totalBytes = 0;
     setTimeout(async () => {
       try {
-        while(urls.length > batch_sz) {
+        while(urls.length >= batch_sz) {
           const jobs = [];
           const batch = urls.splice(urls.length-batch_sz,batch_sz);
           for( let i = 0; i < batch_sz; i++ ) {
