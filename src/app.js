@@ -13,7 +13,7 @@ const CHROME_OPTS = !NO_SANDBOX ? [
   '--restore-last-session',
   `--disk-cache-dir=${args.temp_browser_cache()}`,
   `--aggressive-cache-discard`,
-  '--no-sandbox'
+  '--no-sandbox',
 ];
 const LAUNCH_OPTS = {
   logLevel: DEBUG ? 'verbose' : 'silent',
