@@ -6,11 +6,11 @@ import args from './args.js';
 
 const {server_port, mode, chrome_port} = args;
 const CHROME_OPTS = !NO_SANDBOX ? [
-  '--restore-last-session',
+  /*'--restore-last-session',*/
   `--disk-cache-dir=${args.temp_browser_cache()}`,
   `--aggressive-cache-discard`
 ] : [
-  '--restore-last-session',
+  /*'--restore-last-session',*/
   `--disk-cache-dir=${args.temp_browser_cache()}`,
   `--aggressive-cache-discard`,
   '--no-sandbox',
