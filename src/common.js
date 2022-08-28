@@ -1,5 +1,7 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
+import fs from 'fs';
+import os from 'os';
 
 export const DEBUG = process.env.DEBUG_22120 || false;
 export const SHOW_FETCH = false;
@@ -18,6 +20,8 @@ export const MAX_HIGHLIGHTABLE_LENGTH = 0;    /* 0 is no max length for highligh
 export const MAX_TITLE_LENGTH = 140;
 export const MAX_URL_LENGTH = 140;
 export const MAX_HEAD = 140;
+
+export const GO_SECURE = fs.existsSync(path.resolve(os.homedir(), 'sslcerts', 'privkey.pem'));
 
 export class RichError extends Error {
   constructor(msg) {
