@@ -431,7 +431,7 @@
       if ( info.url.startsWith('chrome') ) return;
       if ( dontCache(info) ) return;
 
-      console.log('Index URL', info);
+      DEBUG && console.log('Index URL', info);
 
       DEBUG && console.log('Index URL called', info);
 
@@ -494,6 +494,24 @@
             logStream.uncork();
           }
           console.log(`Just crawled: ${title} (${info.url})`);
+        }
+
+        if ( State.program ) {
+          const targetInfo = info;
+          console.log('Will run 1', {program: State.program});
+          try {
+            await sleep(500);
+            await eval(`(async () => {
+              try {
+                ${State.program}
+              } catch(e) {
+                console.warn('Error in program', e, State.program);
+              }
+            })();`);
+            await sleep(500);
+          } catch(e) {
+            console.warn(`Error evaluate program`, e);
+          }
         }
       }
 
@@ -1540,6 +1558,9 @@
       if ( Mode == 'serve' ) {
         throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
       }
+      if ( program ) {
+        State.program = program;
+      }
       let targetId = TargetId;
       let sessionId;
       if ( ! dontCache({url}) ) {
@@ -1550,9 +1571,9 @@
           M.set(T.targetId, T);
           return M;
         }, new Map);
-        console.log('Targets', targets);
+        DEBUG && console.log('Targets', targets);
         if ( targets.has(url) || targets.has(targetId) ) {
-          console.log('We have target', url, targetId);
+          DEBUG && console.log('We have target', url, targetId);
           const targetInfo = targets.get(url) || targets.get(targetId);
           ({targetId} = targetInfo);
           if ( crawl && ! State.CrawlData.has(targetId) ) {
@@ -1569,6 +1590,23 @@
             "Reloading to archive and index in select (Bookmark) mode", 
             url
           );
+          if ( State.program ) {
+            console.log('Will run 2', {program: State.program});
+            try {
+              await sleep(500);
+              await eval(`(async () => {
+                try {
+                  ${State.program}
+                } catch(e) {
+                  console.warn('Error in program', e, State.program);
+                }
+              })();`);
+              await sleep(500);
+            } catch(e) {
+              console.warn(`Error evaluate program`, e);
+            }
+          }
+
           await untilTrue(async () => {
             const {result:{value:loaded}} = await send("Runtime.evaluate", {
               expression: `(function () {
@@ -1581,6 +1619,7 @@
           });
           //send("Page.stopLoading", {}, sessionId);
           send("Page.reload", {}, sessionId);
+          console.log('Have crawl?', crawl, program);
           if ( crawl ) {
             let resolve;
             const pageLoaded = new Promise(res => resolve = res).then(() => sleep(1000));
@@ -1631,9 +1670,27 @@
               notifyStable(false);
             }, 0);
 
+            await pageLoaded;
+            
+            if ( State.program ) {
+              console.log('Will run 3', {program: State.program});
+              try {
+                await sleep(500);
+                await eval(`(async () => {
+                  try {
+                    ${State.program}
+                  } catch(e) {
+                    console.warn('Error in program', e, State.program);
+                  }
+                })();`);
+                await sleep(500);
+              } catch(e) {
+                console.warn(`Error evaluate program`, e);
+              }
+            }
+
             await Promise.race([
               await Promise.all([
-                pageLoaded,
                 pageHTMLStabilized,
                 untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/5, timeout),
                 sleep(State.minPageCrawlTime || MIN_TIME_PER_PAGE)
@@ -1641,15 +1698,13 @@
               sleep(State.maxPageCrawlTime || MAX_TIME_PER_PAGE)
             ]);
 
-            if ( program ) {
-              eval(program);
-            }
+            console.log(`Closing page ${url}, at target ${targetId}`);
 
             await send("Target.closeTarget", {targetId});
             State.CrawlTargets.delete(targetId);
           }
         } else if ( createIfMissing ) {
-          console.log('We create target', url);
+          DEBUG && console.log('We create target', url);
           try {
             targetId = null;
             ({targetId} = await send("Target.createTarget", {
@@ -1668,7 +1723,8 @@
           }
           return archiveAndIndexURL(url, {
             crawl, timeout, depth, createIfMissing: false, /* prevent redirect loops */
-            TargetId: targetId
+            TargetId: targetId,
+            program,
           });
         }
       } else {
