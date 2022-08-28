@@ -210,7 +210,7 @@
   async function collect({chrome_port:port, mode} = {}) {
     const {library_path} = args;
     const exitHandlers = [];
-    process.on('beforeExit', runHandlers);
+    process.on('exit', runHandlers);
     process.on('SIGUSR2', runHandlers);
     State.connection = State.connection || await connect({port});
     State.onExit = {
