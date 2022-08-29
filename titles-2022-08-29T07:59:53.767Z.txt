@@ -1,0 +1,22 @@
+[
+  [
+    "https://dosyago.com/",
+    "Dosyago - BrowserBox Pro"
+  ],
+  [
+    "https://www.intel.com/content/www/us/en/homepage.html",
+    "Intel | Data Center Solutions, IoT, and PC Innovation"
+  ],
+  [
+    "https://www.microsoft.com/zh-tw/",
+    "Microsoft – 雲端、電腦、應用程式和遊戲"
+  ],
+  [
+    "https://www.bloomberg.com/asia",
+    "Bloomberg.com"
+  ],
+  [
+    "https://edition.cnn.com/",
+    "CNN International - Breaking News, US News, World News and Video"
+  ]
+]
