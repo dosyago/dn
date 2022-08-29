@@ -508,12 +508,11 @@
               links.length = 0;
               links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
             }
-            links.push({url: info.url, title});
             if ( logStream ) {
               console.log(`Writing ${links.length} entries to ${logName}`);
               logStream.cork();
-              links.forEach(({url, title}) => {
-                logStream.write(`${url} ${title}\n`);
+              links.forEach(url => {
+                logStream.write(`${url}\n`);
               });
               logStream.uncork();
             }
@@ -1646,7 +1645,6 @@
           });
           //send("Page.stopLoading", {}, sessionId);
           send("Page.reload", {}, sessionId);
-          console.log('Have crawl?', crawl, program);
           if ( crawl ) {
             let resolve;
             const pageLoaded = new Promise(res => resolve = res).then(() => sleep(1000));
@@ -1806,8 +1804,9 @@
         while(urls.length >= batch_sz) {
           const jobs = [];
           const batch = urls.splice(urls.length-batch_sz,batch_sz);
+          console.log({urls, batch});
           for( let i = 0; i < batch_sz; i++ ) {
-            const {depth,url} = batch.pop();
+            const {depth,url} = batch.shift();
             if ( url.startsWith('https://news.ycombinator') ) {
               await sleep(1618);
             }

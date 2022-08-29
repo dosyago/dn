@@ -1,0 +1,10 @@
+[
+  [
+    "https://www.intel.com/content/www/us/en/homepage.html",
+    "Intel | Data Center Solutions, IoT, and PC Innovation"
+  ],
+  [
+    "https://dosyago.com/",
+    "Dosyago - BrowserBox Pro"
+  ]
+]
