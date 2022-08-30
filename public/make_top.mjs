@@ -22,7 +22,7 @@ process.on('beforeExit', cleanup);
 
 make();
 
-async function make() {
+async function make_v2() {
   const titlesFile = fs.readFileSync(path.resolve('.', 'topTitles.json')).toString();
   const titles = new Map(JSON.parse(titlesFile).map(([url, title]) => [url, {url,title}]));
   if ( CLEAN ) {
@@ -149,7 +149,7 @@ function clean(urlString) {
   }
   url.pathname = url.pathname.replace(/\/$/, '');
   url.protocol = 'https:';
-  url.pathname = url.pathname.replace(/\.htm.?$/, '');
+  url.pathname = url.pathname.replace(/(\.htm.?|\.php)$/, '');
   if ( url.hostname.startsWith('www.') ) {
     url.hostname = url.hostname.replace(/^www./, '');
   }
