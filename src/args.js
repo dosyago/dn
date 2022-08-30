@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 
 const server_port = process.env.PORT || process.argv[2] || 22120;
-const mode = process.argv[3] || 'save';
+const mode = process.argv[3] || 'serve';
 const chrome_port = process.argv[4] || 9222;
 
 const Pref = {};
