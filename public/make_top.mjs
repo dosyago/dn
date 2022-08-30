@@ -5,6 +5,8 @@ import path from 'node:path';
 import child_process from 'node:child_process';
 
 const CLEAN = false;
+const CONCURRENT = 7;
+const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 make();
 
@@ -27,6 +29,7 @@ async function make() {
   const countsFile = fs.readFileSync(path.resolve('.', 'counts.json')).toString();
   const counts = new Map(JSON.parse(countsFile));
   const counted = new Set();
+  let current = 0;
   for ( const [url, count] of counts ) {
     let title;
     let realUrl;
@@ -42,6 +45,9 @@ async function make() {
       console.log(`Curl call for ${url} in progress...`);
       let notifyCurlComplete;
       const curlCall = new Promise(res => notifyCurlComplete = res);
+      while ( current >= CONCURRENT ) {
+        await sleep(40);
+      }
       child_process.exec(curlCommand(url), (err, stdout, stderr) => {
         if ( ! err && (!stderr || stderr.length == 0)) {
           realUrl = stdout; 
@@ -58,10 +64,11 @@ async function make() {
         } else {
           console.log(`Error on curl for ${url}`, {err, stderr});
         }
+        console.log(`Curl call for ${url} complete!`);
         notifyCurlComplete();
       });
-      await curlCall;
-      console.log(`Curl call for ${url} complete!`);
+      current += 1;
+      curlCall.then(() => current -= 1);
     }
   }
   if ( counted.size !== counts.size ) {
