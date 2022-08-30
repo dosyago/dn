@@ -1,0 +1,5822 @@
+[
+  {
+    "url": "https://projecteuler.net/",
+    "title": "About - Project Euler",
+    "count": "6"
+  },
+  {
+    "url": "https://sonic-pi.net/",
+    "title": "Sonic Pi - The Live Coding Music Synth for Everyone",
+    "count": "5"
+  },
+  {
+    "url": "https://regexr.com/",
+    "title": "RegExr: Learn, Build, & Test RegEx",
+    "count": "5"
+  },
+  {
+    "url": "http://nginx.org/",
+    "title": "nginx news",
+    "count": "5"
+  },
+  {
+    "url": "http://learnyouahaskell.com/",
+    "title": "Learn You a Haskell for Great Good!",
+    "count": "4"
+  },
+  {
+    "url": "http://landoflisp.com/",
+    "title": "",
+    "count": "4"
+  },
+  {
+    "url": "https://kivy.org/",
+    "title": "Kivy: Cross-platform Python Framework for GUI apps Development",
+    "count": "4"
+  },
+  {
+    "url": "https://graphics.stanford.edu/~seander/bithacks.html",
+    "title": "Bit Twiddling Hacks",
+    "count": "4"
+  },
+  {
+    "url": "https://factorcode.org/",
+    "title": "Factor programming language",
+    "count": "4"
+  },
+  {
+    "url": "http://www.windows93.net/",
+    "title": "WINDOWS93",
+    "count": "4"
+  },
+  {
+    "url": "https://lists.freebsd.org/pipermail/freebsd-current/2010-August/019310.html",
+    "title": "why GNU grep is fast",
+    "count": "4"
+  },
+  {
+    "url": "https://github.com/kanaka/mal",
+    "title": "GitHub - kanaka/mal: mal - Make a Lisp",
+    "count": "4"
+  },
+  {
+    "url": "https://code.google.com/codejam",
+    "title": "404 Page not found",
+    "count": "4"
+  },
+  {
+    "url": "http://dev.stephendiehl.com/hask",
+    "title": "",
+    "count": "4"
+  },
+  {
+    "url": "http://coffeescript.org/",
+    "title": "CoffeeScript",
+    "count": "4"
+  },
+  {
+    "url": "https://asciiflow.com/",
+    "title": "ASCIIFlow",
+    "count": "4"
+  },
+  {
+    "url": "https://earth.nullschool.net/",
+    "title": "earth :: a global map of wind, weather, and ocean conditions",
+    "count": "4"
+  },
+  {
+    "url": "http://slides.html5rocks.com/",
+    "title": "Error 404 (Not Found)!!1",
+    "count": "4"
+  },
+  {
+    "url": "http://www.willamette.edu/~fruehr/haskell/evolution.html",
+    "title": "The Evolution of a Haskell Programmer",
+    "count": "3"
+  },
+  {
+    "url": "http://www.openstenoproject.org/",
+    "title": "Home | Open Steno Project",
+    "count": "3"
+  },
+  {
+    "url": "http://www.oftenpaper.net/sierpinski.htm",
+    "title": "oftenpaper.net/sierpinski.htm",
+    "count": "3"
+  },
+  {
+    "url": "http://www.norvig.com/spell-correct.html",
+    "title": "How to Write a Spelling Corrector",
+    "count": "3"
+  },
+  {
+    "url": "http://www.nhplace.com/kent/Papers/cl-untold-story.html",
+    "title": "Common Lisp: The Untold Story",
+    "count": "3"
+  },
+  {
+    "url": "http://www.linusakesson.net/programming/tty/index.php",
+    "title": "The TTY demystified",
+    "count": "3"
+  },
+  {
+    "url": "http://www.jsfuck.com/",
+    "title": "JSFuck - Write any JavaScript with 6 Characters: []()!+",
+    "count": "3"
+  },
+  {
+    "url": "http://www.georgehart.com/bagel/bagel.html",
+    "title": "Mathematically Correct Breakfast -- Linked Bagel Halves",
+    "count": "3"
+  },
+  {
+    "url": "http://www.garlikov.com/Soc_Meth.html",
+    "title": "The Socratic Method",
+    "count": "3"
+  },
+  {
+    "url": "http://www.dspguide.com/pdfbook.htm",
+    "title": "The Scientist and Engineer's Guide to Digital Signal Processing's Table of Content",
+    "count": "3"
+  },
+  {
+    "url": "http://www.4p8.com/eric.brasseur/gamma.html",
+    "title": "Redirection",
+    "count": "3"
+  },
+  {
+    "url": "http://websocketd.com/",
+    "title": "websocketd",
+    "count": "3"
+  },
+  {
+    "url": "http://websdr.ewi.utwente.nl:8901/",
+    "title": "Wide-band WebSDR in Enschede, the Netherlands",
+    "count": "3"
+  },
+  {
+    "url": "http://trillian.mit.edu/~jc/humor/ATT_Copyright_true.html",
+    "title": "The /bin/true Command and Copyright",
+    "count": "3"
+  },
+  {
+    "url": "https://www.zotero.org/",
+    "title": "Zotero | Your personal research assistant",
+    "count": "3"
+  },
+  {
+    "url": "https://www.darlinghq.org/",
+    "title": "Darling |",
+    "count": "3"
+  },
+  {
+    "url": "http://st.suckless.org/",
+    "title": "st - simple terminal | suckless.org software that sucks less",
+    "count": "3"
+  },
+  {
+    "url": "https://training.kalzumeus.com/newsletters/archive/enterprise_sales",
+    "title": "Selling Software To Large Businesses",
+    "count": "3"
+  },
+  {
+    "url": "http://steve-yegge.blogspot.com/2006/09/good-agile-bad-agile_27.html",
+    "title": "Stevey's Blog Rants: Good Agile, Bad Agile",
+    "count": "3"
+  },
+  {
+    "url": "https://seashells.io/",
+    "title": "Seashells",
+    "count": "3"
+  },
+  {
+    "url": "https://jaycarlson.net/microcontrollers",
+    "title": "One moment, please...",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/susam/texme",
+    "title": "GitHub - susam/texme: Self-rendering Markdown + LaTeX documents",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/robertdavidgraham/masscan",
+    "title": "GitHub - robertdavidgraham/masscan: TCP port scanner, spews SYN packets asynchronously, scanning entire Internet in under 5 minutes.",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/munificent/vigil",
+    "title": "GitHub - munificent/vigil: Vigil, the eternal morally vigilant programming language",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/minimaxir/big-list-of-naughty-strings",
+    "title": "GitHub - minimaxir/big-list-of-naughty-strings: The Big List of Naughty Strings is a list of strings which have a high probability of causing issues when used as user-input data.",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/google/lisp-koans",
+    "title": "GitHub - google/lisp-koans: Common Lisp Koans is a language learning exercise in the same vein as the ruby koans, python koans and others. It is a port of the prior koans with some modifications to highlight lisp-specific features. Structured as ordered groups of broken unit tests, the project guides the learner progressively through many Common Lisp language features.",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/alevchuk/vim-clutch",
+    "title": "GitHub - alevchuk/vim-clutch: A hardware pedal for improved text editing in Vim",
+    "count": "3"
+  },
+  {
+    "url": "http://people.csail.mit.edu/gregs/ll1-discuss-archive-html/msg03277.html",
+    "title": "RE: What's so cool about Scheme?",
+    "count": "3"
+  },
+  {
+    "url": "http://norvig.com/experiment-design.html",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "http://neuralnetworksanddeeplearning.com/chap4.html",
+    "title": "Neural networks and deep learning",
+    "count": "3"
+  },
+  {
+    "url": "http://lists.squeakfoundation.org/pipermail/squeak-dev/1998-October/017019.html",
+    "title": "prototypes vs classes was: Re: Sun's HotSpot",
+    "count": "3"
+  },
+  {
+    "url": "http://lists.busybox.net/pipermail/busybox/2010-December/074114.html",
+    "title": "Understanding the bin, sbin, usr/bin , usr/sbin split",
+    "count": "3"
+  },
+  {
+    "url": "http://johnsalvatier.org/blog/2017/reality-has-a-surprising-amount-of-detail",
+    "title": "Reality has a surprising amount of detail",
+    "count": "3"
+  },
+  {
+    "url": "http://gameprogrammingpatterns.com/",
+    "title": "Game Programming Patterns",
+    "count": "3"
+  },
+  {
+    "url": "http://cslibrary.stanford.edu/101/EssentialC.pdf",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "http://blog.notdot.net/2010/07/Damn-Cool-Algorithms-Levenshtein-Automata",
+    "title": "Damn Cool Algorithms: Levenshtein Automata - Nick's Blog",
+    "count": "3"
+  },
+  {
+    "url": "http://www.muppetlabs.com/~breadbox/software/tiny/teensy.html",
+    "title": "A Whirlwind Tutorial on Creating Really Teensy ELF Executables for Linux",
+    "count": "3"
+  },
+  {
+    "url": "http://www.lambdassociates.org/blog/bipolar.htm",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "http://www.interdb.jp/pg/index.html",
+    "title": "The Internals of PostgreSQL : Introduction",
+    "count": "3"
+  },
+  {
+    "url": "http://www.ibiblio.org/harris/500milemail.html",
+    "title": "The case of the 500-mile email",
+    "count": "3"
+  },
+  {
+    "url": "http://www.aaronsw.com/weblog/productivity",
+    "title": "HOWTO: Be more productive (Aaron Swartz's Raw Thought)",
+    "count": "3"
+  },
+  {
+    "url": "http://tantek.com/log/2007/02.html",
+    "title": "Tantek's Thoughts — 2007 February",
+    "count": "3"
+  },
+  {
+    "url": "http://www.hammerspoon.org/",
+    "title": "Hammerspoon",
+    "count": "3"
+  },
+  {
+    "url": "https://www.gwern.net/Complement",
+    "title": "Laws of Tech: Commoditize Your Complement · Gwern.net",
+    "count": "3"
+  },
+  {
+    "url": "https://www.crypto101.io/",
+    "title": "Crypto 101",
+    "count": "3"
+  },
+  {
+    "url": "http://startupclass.samaltman.com/",
+    "title": "How to Start a Startup",
+    "count": "3"
+  },
+  {
+    "url": "https://sethrobertson.github.io/GitFixUm/fixup.html",
+    "title": "On undoing, fixing, or removing commits in git",
+    "count": "3"
+  },
+  {
+    "url": "https://queue.acm.org/detail.cfm?id=1814327",
+    "title": "You’re Doing It Wrong - ACM Queue",
+    "count": "3"
+  },
+  {
+    "url": "https://oeis.org/",
+    "title": "The On-Line Encyclopedia of Integer Sequences® (OEIS®)",
+    "count": "3"
+  },
+  {
+    "url": "https://norvig.com/21-days.html",
+    "title": "Teach Yourself Programming in Ten Years",
+    "count": "3"
+  },
+  {
+    "url": "https://monster6502.com/",
+    "title": "MOnSter 6502",
+    "count": "3"
+  },
+  {
+    "url": "https://libreboot.org/",
+    "title": "Libreboot – Libreboot project",
+    "count": "3"
+  },
+  {
+    "url": "https://laverna.cc/",
+    "title": "Laverna - keep your notes private",
+    "count": "3"
+  },
+  {
+    "url": "https://kallithea-scm.org/",
+    "title": "Kallithea",
+    "count": "3"
+  },
+  {
+    "url": "https://joshworth.com/dev/pixelspace/pixelspace_solarsystem.html",
+    "title": "If the Moon Were Only 1 Pixel - A tediously accurate map of the solar system",
+    "count": "3"
+  },
+  {
+    "url": "http://shirky.com/writings/group_enemy.html",
+    "title": "Page not found – Clay Shirky",
+    "count": "3"
+  },
+  {
+    "url": "https://godbolt.org/",
+    "title": "Compiler Explorer",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/tidwall/tile38",
+    "title": "GitHub - tidwall/tile38: Real-time Geospatial and Geofencing",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/froggey/Mezzano",
+    "title": "GitHub - froggey/Mezzano: An operating system written in Common Lisp",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/anvaka/atree",
+    "title": "GitHub - anvaka/atree: Just a simple Christmas tree, based on reddit story",
+    "count": "3"
+  },
+  {
+    "url": "https://gist.github.com/staltz/868e7e9bc2a7b8c1f754",
+    "title": "The introduction to Reactive Programming you've been missing · GitHub",
+    "count": "3"
+  },
+  {
+    "url": "https://funcall.blogspot.com/2009/03/not-lisp-again.html",
+    "title": "Abstract Heresies: Not Lisp again....",
+    "count": "3"
+  },
+  {
+    "url": "https://ferd.ca/the-zen-of-erlang.html",
+    "title": "The Zen of Erlang",
+    "count": "3"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Baumol%27s_cost_disease",
+    "title": "Baumol's cost disease - Wikipedia",
+    "count": "3"
+  },
+  {
+    "url": "https://crontab.guru/",
+    "title": "Crontab.guru - The cron schedule expression editor",
+    "count": "3"
+  },
+  {
+    "url": "https://boingboing.net/2012/01/10/lockdown.html",
+    "title": "Lockdown: The coming war on general-purpose computing | Boing Boing",
+    "count": "3"
+  },
+  {
+    "url": "https://adventofcode.com/",
+    "title": "Advent of Code 2021",
+    "count": "3"
+  },
+  {
+    "url": "https://racket-lang.org/",
+    "title": "Racket",
+    "count": "3"
+  },
+  {
+    "url": "https://python3wos.appspot.com/",
+    "title": "500 Server Error",
+    "count": "3"
+  },
+  {
+    "url": "http://pud.com/post/10103947044/fucking-sue-me",
+    "title": "** Not Found **",
+    "count": "3"
+  },
+  {
+    "url": "https://people.xiph.org/~xiphmont/demo/neil-young.html",
+    "title": "24/192 Music Downloads are Very Silly Indeed",
+    "count": "3"
+  },
+  {
+    "url": "https://norvig.com/sudoku.html",
+    "title": "Solving Every Sudoku Puzzle",
+    "count": "3"
+  },
+  {
+    "url": "https://norvig.com/lispy.html",
+    "title": "(How to Write a (Lisp) Interpreter (in Python))",
+    "count": "3"
+  },
+  {
+    "url": "https://news.ycombinator.com/",
+    "title": "Hacker News",
+    "count": "3"
+  },
+  {
+    "url": "https://nedbatchelder.com/blog/200811/print_this_file_your_printer_will_jam.html",
+    "title": "Print this file, your printer will jam | Ned Batchelder",
+    "count": "3"
+  },
+  {
+    "url": "https://mywiki.wooledge.org/BashPitfalls",
+    "title": "BashPitfalls - Greg's Wiki",
+    "count": "3"
+  },
+  {
+    "url": "https://moonscript.org/",
+    "title": "MoonScript, a language that compiles to Lua",
+    "count": "3"
+  },
+  {
+    "url": "https://marc.info/?l=git&m=124111702609723&w=2",
+    "title": "'Re: Why Git is so fast (was: Re: Eric Sink's blog - notes on git,' - MARC",
+    "count": "3"
+  },
+  {
+    "url": "http://lists.warhead.org.uk/pipermail/iwe/2005-July/000130.html",
+    "title": "[IWE] Why Lisp macros are cool, a Perl perspective",
+    "count": "3"
+  },
+  {
+    "url": "https://library.sciencemadness.org/library/books/ignition.pdf",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "https://fishshell.com/",
+    "title": "fish shell",
+    "count": "3"
+  },
+  {
+    "url": "https://explainshell.com/",
+    "title": "explainshell.com - match command-line arguments to their help text",
+    "count": "3"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/One-electron_universe",
+    "title": "One-electron universe - Wikipedia",
+    "count": "3"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Non-English-based_programming_languages",
+    "title": "Non-English-based programming languages - Wikipedia",
+    "count": "3"
+  },
+  {
+    "url": "https://eloquentjavascript.net/",
+    "title": "Eloquent JavaScript",
+    "count": "3"
+  },
+  {
+    "url": "https://editorconfig.org/",
+    "title": "EditorConfig",
+    "count": "3"
+  },
+  {
+    "url": "https://dmitry.gr/?r=05.Projects&proj=07.%20Linux%20on%208bit",
+    "title": "Linux on an 8-bit micro? - Dmitry.GR",
+    "count": "3"
+  },
+  {
+    "url": "https://code.nasa.gov/",
+    "title": "NASA Open Source Software",
+    "count": "3"
+  },
+  {
+    "url": "https://arxiv.org/abs/0903.0340",
+    "title": "[0903.0340] Physics, Topology, Logic and Computation: A Rosetta Stone",
+    "count": "3"
+  },
+  {
+    "url": "https://aosabook.org/en/index.html",
+    "title": "The Architecture of Open Source Applications",
+    "count": "3"
+  },
+  {
+    "url": "https://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html",
+    "title": "Functors, Applicatives, And Monads In Pictures - adit.io",
+    "count": "3"
+  },
+  {
+    "url": "https://37signals.com/",
+    "title": "37signals",
+    "count": "3"
+  },
+  {
+    "url": "http://ffmpeg.org/index.html",
+    "title": "FFmpeg",
+    "count": "3"
+  },
+  {
+    "url": "https://github.com/",
+    "title": "GitHub: Where the world builds software · GitHub",
+    "count": "3"
+  },
+  {
+    "url": "https://gpu.rocks/",
+    "title": "GPU.js - GPU accelerated JavaScript",
+    "count": "3"
+  },
+  {
+    "url": "https://gregable.com/2010/09/why-you-should-know-just-little-awk.html",
+    "title": "Why you should learn just a little Awk - An Awk tutorial by Example - Gregable",
+    "count": "3"
+  },
+  {
+    "url": "https://play.freeciv.org/",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "https://go-review.googlesource.com/",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "http://startup_weekend.bluwiki.com/index.php?title=Startup_Weekend/Events",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "http://yosefk.com/blog/my-history-with-forth-stack-machines.html",
+    "title": "My history with Forth & stack machines",
+    "count": "3"
+  },
+  {
+    "url": "http://weblog.raganwald.com/2007/03/why-why-functional-programming-matters.html",
+    "title": "Why Why Functional Programming Matters Matters",
+    "count": "3"
+  },
+  {
+    "url": "http://www.justin.tv/startupschool",
+    "title": "",
+    "count": "3"
+  },
+  {
+    "url": "http://zsync.moria.org.uk/",
+    "title": "zsync",
+    "count": "2"
+  },
+  {
+    "url": "http://yoshinorimatsunobu.blogspot.com/2010/10/using-mysql-as-nosql-story-for.html",
+    "title": "Yoshinori Matsunobu's blog: Using MySQL as a NoSQL - A story for exceeding 750,000 qps on a commodity server",
+    "count": "2"
+  },
+  {
+    "url": "http://y2combinator.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://xuanji.appspot.com/isicp/1-1-elements.html",
+    "title": "iSICP 1.1 - The Elements of Programming",
+    "count": "2"
+  },
+  {
+    "url": "http://www.zompist.com/yingzi/yingzi.htm",
+    "title": "Yingzi",
+    "count": "2"
+  },
+  {
+    "url": "http://www.zerovm.org/",
+    "title": "ZeroVM sponsored by Rackspace",
+    "count": "2"
+  },
+  {
+    "url": "http://www.yacoset.com/Home/signs-that-you-re-a-bad-programmer",
+    "title": "Signs that you're a bad programmer - Software Engineering Tips",
+    "count": "2"
+  },
+  {
+    "url": "http://www.wordplace.com/ap/index.shtml",
+    "title": "Almost Perfect by W. E. Pete Peterson The Rise and Fall of WordPerfect Corporation",
+    "count": "2"
+  },
+  {
+    "url": "http://www.wjh.harvard.edu/~dtg/DUNN%20GILBERT%20&%20WILSON%20(2011).pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.winestockwebdesign.com/Essays/Lisp_Curse.html",
+    "title": "The Lisp Curse",
+    "count": "2"
+  },
+  {
+    "url": "http://www.visual6502.org/JSSim/index.html",
+    "title": "Visual 6502 in JavaScript",
+    "count": "2"
+  },
+  {
+    "url": "http://www.vanadac.com/~dajhorn/novelties/ESR%20-%20Curse%20Of%20The%20Gifted.html",
+    "title": "Page not found - Vanadac Corporation",
+    "count": "2"
+  },
+  {
+    "url": "http://www.useit.com/papers/anti-mac.html",
+    "title": "** Not Found **",
+    "count": "2"
+  },
+  {
+    "url": "http://www.ultratechnology.com/1xforth.htm",
+    "title": "1x Forth by Charles Moore 4/13/99",
+    "count": "2"
+  },
+  {
+    "url": "http://www.ulisp.com/",
+    "title": "uLisp",
+    "count": "2"
+  },
+  {
+    "url": "http://www.tinmith.net/wayne/blog/2017/06/immersive-flight-sim-4.htm",
+    "title": "Wayne Piekarski | Modifying Microsoft Flight Simulator 4 to run on three immersive monitors",
+    "count": "2"
+  },
+  {
+    "url": "http://www.terrybisson.com/page6/page6.html",
+    "title": "Page not found – TERRY BISSON of the UNIVERSE",
+    "count": "2"
+  },
+  {
+    "url": "http://www.techoozie.com/10-books-that-will-substitute-a-computer-science-degree",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.technoblogy.com/show?2AEE",
+    "title": "Technoblogy - Lisp Badge [Updated]",
+    "count": "2"
+  },
+  {
+    "url": "http://www.structuredprocrastination.com/",
+    "title": "Structured Procrastination",
+    "count": "2"
+  },
+  {
+    "url": "http://www.squeezedbooks.com/",
+    "title": "Squeezed Books Business Book Summaries",
+    "count": "2"
+  },
+  {
+    "url": "http://www.squeakland.org/resources/books/readingList.jsp",
+    "title": "squeakland : resources : books : reading list",
+    "count": "2"
+  },
+  {
+    "url": "http://www.sizecoding.org/wiki/Main_Page",
+    "title": "SizeCoding",
+    "count": "2"
+  },
+  {
+    "url": "http://www.sixmonthmba.com/2009/02/999ideas.html",
+    "title": "DNS resolution error | www.sixmonthmba.com | Cloudflare",
+    "count": "2"
+  },
+  {
+    "url": "http://www.sikuli.org/",
+    "title": "** Sikuli Project **",
+    "count": "2"
+  },
+  {
+    "url": "http://www.safetyresearch.net/blog/articles/toyota-unintended-acceleration-and-big-bowl-%E2%80%9Cspaghetti%E2%80%9D-code",
+    "title": "Page not found - Safety Research & Strategies, Inc.",
+    "count": "2"
+  },
+  {
+    "url": "http://www.ritsumei.ac.jp/~akitaoka/index-e.html",
+    "title": "Akiyoshi's illusion pages",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2020/09/inside-hp-nanoprocessor-high-speed.html",
+    "title": "Inside the HP Nanoprocessor: a high-speed processor that can't even add",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2020/06/a-look-at-die-of-8086-processor.html",
+    "title": "A look at the die of the 8086 processor",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2019/11/tros-how-ibm-mainframes-stored.html",
+    "title": "TROS: How IBM mainframes stored microcode in transformers",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2016/12/die-photos-and-analysis-of_24.html",
+    "title": "Die photos and analysis of the revolutionary 8008 microprocessor, 45 years old",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2015/12/reverse-engineering-arm1-ancestor-of.html",
+    "title": "Reverse engineering the ARM1, ancestor of the iPhone's processor",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2014/09/mining-bitcoin-with-pencil-and-paper.html",
+    "title": "Mining Bitcoin with pencil and paper: 0.67 hashes per day",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2014/05/reverse-engineering-tl431-most-common.html",
+    "title": "Reverse-engineering the TL431: the most common chip you've never heard of",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2013/11/how-hacker-news-ranking-really-works.html",
+    "title": "How Hacker News ranking really works: scoring, controversy, and penalties",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2012/02/apple-didnt-revolutionize-power.html",
+    "title": "Apple didn't revolutionize power supplies; new transistors did",
+    "count": "2"
+  },
+  {
+    "url": "http://www.righto.com/2011/07/cells-are-very-fast-and-crowded-places.html",
+    "title": "Cells are very fast and crowded places",
+    "count": "2"
+  },
+  {
+    "url": "http://www.returninfinity.com/baremetal.html",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://www.redbook.io/",
+    "title": "Readings in Database Systems, 5th Edition",
+    "count": "2"
+  },
+  {
+    "url": "http://www.recombinantrecords.net/docs/2009-05-Amusing-Ourselves-to-Death.html",
+    "title": "Amusing Ourselves to Death by Stuart McMillen - cartoon Recombinant Records",
+    "count": "2"
+  },
+  {
+    "url": "http://www.readwriteweb.com/archives/google_hands_wikileaks_volunteers_gmail_data_to_us.php",
+    "title": "** Not Found **",
+    "count": "2"
+  },
+  {
+    "url": "http://www.ranum.com/security/computer_security/editorials/dumb/index.html",
+    "title": "The Six Dumbest Ideas in Computer Security",
+    "count": "2"
+  },
+  {
+    "url": "http://www.projectoberon.com/",
+    "title": "Home",
+    "count": "2"
+  },
+  {
+    "url": "http://www.prettyloaded.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.pointerpointer.com/",
+    "title": "www.pointerpointer.com | 520: Web server is returning an unknown error",
+    "count": "2"
+  },
+  {
+    "url": "http://www.petridish.org/",
+    "title": "Heroku | Application Error",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/wealth.html",
+    "title": "How to Make Wealth",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/vanlfsp.html",
+    "title": "LFM and LFSP",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/top.html",
+    "title": "The Top Idea in Your Mind",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/thist.html",
+    "title": "History of T",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/stuff.html",
+    "title": "Stuff",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/say.html",
+    "title": "What You Can't Say",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/rootsoflisp.html",
+    "title": "The Roots of Lisp",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/microsoft.html",
+    "title": "Microsoft is Dead",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/maybe.html",
+    "title": "Can You Buy a Silicon Valley? Maybe.",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/makersschedule.html",
+    "title": "Maker's Schedule, Manager's Schedule",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/knuth.html",
+    "title": "Knuth: Computer Programming as an Art",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/identity.html",
+    "title": "Keep Your Identity Small",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/hamming.html",
+    "title": "Richard Hamming: You and Your Research",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/cornpone.html",
+    "title": "Mark Twain: Corn-pone Opinions",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/boss.html",
+    "title": "You Weren't Meant to Have a Boss",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/badeconomy.html",
+    "title": "Why to Start a Startup in a Bad Economy",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/addiction.html",
+    "title": "The Acceleration of Addictiveness",
+    "count": "2"
+  },
+  {
+    "url": "http://www.paulgraham.com/13sentences.html",
+    "title": "Startups in 13 Sentences",
+    "count": "2"
+  },
+  {
+    "url": "http://www.over-yonder.net/~fullermd/rants/bsd4linux/01",
+    "title": "BSD For Linux Users :: Intro",
+    "count": "2"
+  },
+  {
+    "url": "http://www.openssd-project.org/wiki/The_OpenSSD_Project",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://www-old.oberon.ethz.ch/WirthPubl/CBEAll.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.nowykurier.com/toys/gravity/gravity.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.muppetlabs.com/~breadbox/txt/al.html",
+    "title": "Short Words to Explain Relativity",
+    "count": "2"
+  },
+  {
+    "url": "http://www.moserware.com/2009/09/stick-figure-guide-to-advanced.html",
+    "title": "A Stick Figure Guide to the Advanced Encryption Standard (AES)",
+    "count": "2"
+  },
+  {
+    "url": "http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html",
+    "title": "The First Few Milliseconds of an HTTPS Connection",
+    "count": "2"
+  },
+  {
+    "url": "http://www.minimallyminimal.com/blog/apple-pro-mouse",
+    "title": "Apple (Pro) Mouse — Minimally Minimal",
+    "count": "2"
+  },
+  {
+    "url": "http://www.michaelv.org/",
+    "title": "michaelv.org",
+    "count": "2"
+  },
+  {
+    "url": "http://www.loper-os.org/?p=861",
+    "title": "Loper OS » Engelbart's Violin",
+    "count": "2"
+  },
+  {
+    "url": "http://www.loper-os.org/?p=401",
+    "title": "Loper OS » Of Lisp Macros and Washing Machines",
+    "count": "2"
+  },
+  {
+    "url": "http://www.linusakesson.net/programming/pipelogic/index.php",
+    "title": "Pipe Logic",
+    "count": "2"
+  },
+  {
+    "url": "http://www.levchin.com/paypal-slideshow/1.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.learndatalogtoday.org/",
+    "title": "Learn Datalog Today!",
+    "count": "2"
+  },
+  {
+    "url": "http://www.lamdu.org/",
+    "title": "Lamdu",
+    "count": "2"
+  },
+  {
+    "url": "http://www.lambdassociates.org/blog/decline.htm",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.lambdanative.org/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.kuro5hin.org/story/2004/2/25/124713/784",
+    "title": "kuro5hin.org",
+    "count": "2"
+  },
+  {
+    "url": "http://www.kegel.com/c10k.html",
+    "title": "The C10K problem",
+    "count": "2"
+  },
+  {
+    "url": "http://www.kagenschaefer.com/pipeorgandesk.html",
+    "title": "Pipe Organ desk",
+    "count": "2"
+  },
+  {
+    "url": "http://www.justin.tv/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.judegomila.com/2009/05/mapping-out-your-web-startup.html",
+    "title": "Jude Gomila",
+    "count": "2"
+  },
+  {
+    "url": "http://www.jamesmolloy.co.uk/tutorial_html/index.html",
+    "title": "JamesM's kernel development tutorials",
+    "count": "2"
+  },
+  {
+    "url": "http://www.ithkuil.net/",
+    "title": "A Grammar of Ithkuil, a Constructed Philosophical Language",
+    "count": "2"
+  },
+  {
+    "url": "http://www.homebrewcpu.com/",
+    "title": "Homebrew CPU Home Page",
+    "count": "2"
+  },
+  {
+    "url": "http://www.hackrtrackr.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.gusmueller.com/blog/archives/2005/12/25.html",
+    "title": "Gus Mueller's Website",
+    "count": "2"
+  },
+  {
+    "url": "http://www.grokdotcom.com/2008/02/26/amazon-shopping-cart",
+    "title": "403 Forbidden",
+    "count": "2"
+  },
+  {
+    "url": "http://www.greenharbor.com/fffolder/carkeet.html",
+    "title": "The Free Fall Research Page: Unplanned Freefall? Some Survival Tips by David Carkeet",
+    "count": "2"
+  },
+  {
+    "url": "http://www.gotw.ca/publications/c_family_interview.htm",
+    "title": "Interview with Dennis Ritchie, Bjarne Stroustrup, James Gosling",
+    "count": "2"
+  },
+  {
+    "url": "http://www.goosh.org/",
+    "title": "goosh.org - the unofficial google shell.",
+    "count": "2"
+  },
+  {
+    "url": "http://www.getjustlanded.com/",
+    "title": "Just Landed™  ·  Making airport pickup easy",
+    "count": "2"
+  },
+  {
+    "url": "http://www-formal.stanford.edu/jmc/robotandbaby/robotandbaby.html",
+    "title": "THE ROBOT AND THE BABY",
+    "count": "2"
+  },
+  {
+    "url": "http://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html",
+    "title": "A PROPOSAL FOR THE DARTMOUTH SUMMER RESEARCH PROJECT ON ARTIFICIAL INTELLIGENCE",
+    "count": "2"
+  },
+  {
+    "url": "http://www.fmwconcepts.com/imagemagick/index.php",
+    "title": "Fred's ImageMagick Scripts",
+    "count": "2"
+  },
+  {
+    "url": "http://www.flexboxdefense.com/",
+    "title": "Flexbox Defense",
+    "count": "2"
+  },
+  {
+    "url": "http://www.etalabs.net/compare_libcs.html",
+    "title": "Comparison of C/POSIX standard library implementations for Linux",
+    "count": "2"
+  },
+  {
+    "url": "http://www.essentialmath.com/tutorial.htm",
+    "title": "Essential Math for Games Programmers",
+    "count": "2"
+  },
+  {
+    "url": "http://www.erlang-factory.com/upload/presentations/395/ErlangandFirst-PersonShooters.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.e-booksdirectory.com/mathematics.php",
+    "title": "Free Mathematics Books",
+    "count": "2"
+  },
+  {
+    "url": "http://www.dontclick.it/",
+    "title": "dontclick.it",
+    "count": "2"
+  },
+  {
+    "url": "http://www.davidbrin.com/idiotplot.html",
+    "title": "worlds of DAVID BRIN",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cypherspace.org/adam/hacks/lotus-nsa-key.html",
+    "title": "NSA Backdoor Key from Lotus-Notes",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cube20.org/",
+    "title": "God's Number is 20",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cs.yale.edu/homes/perlis-alan/quotes.html",
+    "title": "Perlisisms - \"Epigrams in Programming\" by Alan J. Perlis",
+    "count": "2"
+  },
+  {
+    "url": "http://www-cs-students.stanford.edu/~amitp/gameprog.html",
+    "title": "Amit’s Game Programming Information",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cs.cmu.edu/~mihaib/kernighan-interview/index.html",
+    "title": "An Interview with Brian Kernighan",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cookingforengineers.com/",
+    "title": "Cooking For Engineers - Step by Step Recipes and Food for the Analytically Minded",
+    "count": "2"
+  },
+  {
+    "url": "http://www.colorforth.com/HOPL.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.codecommit.com/blog/scala/what-is-hindley-milner-and-why-is-it-cool",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.coboloncogs.org/INDEX.HTM",
+    "title": "COBOL ON COGS",
+    "count": "2"
+  },
+  {
+    "url": "http://www.catb.org/~esr/faqs/hacker-howto.html",
+    "title": "How To Become A Hacker",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cantrip.org/gatto.html",
+    "title": "The Six-Lesson Schoolteacher, by John Taylor Gatto",
+    "count": "2"
+  },
+  {
+    "url": "http://www.call-cc.org/",
+    "title": "CHICKEN Scheme",
+    "count": "2"
+  },
+  {
+    "url": "http://www.brokenthorn.com/Resources/OSDevIndex.html",
+    "title": "BrokenThorn Entertainment",
+    "count": "2"
+  },
+  {
+    "url": "http://www.bricklin.com/200yearsoftware.htm",
+    "title": "Software That Lasts 200 Years",
+    "count": "2"
+  },
+  {
+    "url": "http://www.brianshin.com/defining-the-5-classes-of-entr",
+    "title": "** Not Found **",
+    "count": "2"
+  },
+  {
+    "url": "http://www.blinkenlights.com/classiccmp/javaorigin.html",
+    "title": "The Long Strange Trip to Java",
+    "count": "2"
+  },
+  {
+    "url": "http://www.bastwood.com/?page_id=10",
+    "title": "The Aphex Face | bastwood",
+    "count": "2"
+  },
+  {
+    "url": "http://www.apostate.com/how-say-nothing-500-words",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.aosabook.org/en/index.html",
+    "title": "The Architecture of Open Source Applications",
+    "count": "2"
+  },
+  {
+    "url": "http://www.antipope.org/charlie/blog-static/2009/06/how_i_got_here_in_the_end_part_3.html",
+    "title": "Charlie's Diary: How I got here in the end, part five: \"things can only get better!\"",
+    "count": "2"
+  },
+  {
+    "url": "http://www.aaronsw.com/weblog/rewritingreddit",
+    "title": "Rewriting Reddit (Aaron Swartz's Raw Thought)",
+    "count": "2"
+  },
+  {
+    "url": "http://www.aaronsw.com/weblog/djb",
+    "title": "djb (Aaron Swartz's Raw Thought)",
+    "count": "2"
+  },
+  {
+    "url": "http://wuphys.wustl.edu/~katz/scientist.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://wrtnode.com/",
+    "title": "TestPage184",
+    "count": "2"
+  },
+  {
+    "url": "http://worrydream.com/#!/Apple",
+    "title": "Bret Victor, beast of burden",
+    "count": "2"
+  },
+  {
+    "url": "http://wordtsar.ca/",
+    "title": "WordTsar – A Wordstar clone",
+    "count": "2"
+  },
+  {
+    "url": "http://wingolog.org/archives/2013/01/07/an-opinionated-guide-to-scheme-implementations",
+    "title": "an opinionated guide to scheme implementations -- wingolog",
+    "count": "2"
+  },
+  {
+    "url": "http://wiki.luajit.org/New-Garbage-Collector",
+    "title": "New Garbage Collector",
+    "count": "2"
+  },
+  {
+    "url": "http://whoownsfacebook.com/",
+    "title": "Who OWNS Facebook? The Definitive Who's Who Guide to Facebook Wealth",
+    "count": "2"
+  },
+  {
+    "url": "http://whohastimeforthis.blogspot.com/2005/11/how-to-not-write-business-plan.html",
+    "title": "Who Has Time For This?: How To NOT Write A Business Plan",
+    "count": "2"
+  },
+  {
+    "url": "http://web.mit.edu/~simsong/www/ugh.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://web.mit.edu/jemorris/humor/500-miles",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://weblog.raganwald.com/2008/01/no-disrespect.html",
+    "title": "No Disrespect",
+    "count": "2"
+  },
+  {
+    "url": "http://weavesilk.com/",
+    "title": "Silk – Interactive Generative Art",
+    "count": "2"
+  },
+  {
+    "url": "http://waywardmonkeys.org/2014/10/10/rich-command-shells",
+    "title": "Rich Command Shells - Notes from a Wayward Monkey",
+    "count": "2"
+  },
+  {
+    "url": "http://voodoo-slide.blogspot.com/2010/01/amplifying-c.html",
+    "title": "voodoo slide: Amplifying C",
+    "count": "2"
+  },
+  {
+    "url": "http://vim.runpaint.org/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://videolectures.net/",
+    "title": "VideoLectures.NET - VideoLectures.NET",
+    "count": "2"
+  },
+  {
+    "url": "http://video-js.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://valerieaurora.org/hash.html",
+    "title": "Lifetimes of cryptographic hash functions",
+    "count": "2"
+  },
+  {
+    "url": "http://users.ece.utexas.edu/~adnan/pike.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://uselessd.darknedgy.net/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://underhanded.xcott.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://twister.net.co/",
+    "title": "twister | P2P microblogging platform",
+    "count": "2"
+  },
+  {
+    "url": "http://tractionbook.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://tos-dr.info/",
+    "title": "tos-dr.info",
+    "count": "2"
+  },
+  {
+    "url": "http://thinkvitamin.com/features/atlas-under-the-hood",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://thinking-forth.sourceforge.net/",
+    "title": "Thinking Forth",
+    "count": "2"
+  },
+  {
+    "url": "http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html",
+    "title": "Introduction to A*",
+    "count": "2"
+  },
+  {
+    "url": "http://thejh.net/misc/website-terminal-copy-paste",
+    "title": "Copy-Paste from Website to Terminal",
+    "count": "2"
+  },
+  {
+    "url": "http://theabyssgazes.blogspot.com/2010/03/teal-and-orange-hollywood-please-stop.html",
+    "title": "Into The Abyss: Teal and Orange - Hollywood, Please Stop the Madness",
+    "count": "2"
+  },
+  {
+    "url": "http://teavm.org/",
+    "title": "TeaVM",
+    "count": "2"
+  },
+  {
+    "url": "http://sydneypadua.com/2dgoggles/lovelace-the-origin-2",
+    "title": "WordPress › Error",
+    "count": "2"
+  },
+  {
+    "url": "https://www.zephyrproject.org/",
+    "title": "Zephyr Project - Zephyr Project",
+    "count": "2"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=Z4oYSByyRak",
+    "title": "Zig: A programming language designed for robustness, optimality, and clarity –  Andrew Kelley - YouTube",
+    "count": "2"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=JBmIQIZPaHY",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=_ahvzDzKdB0",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.theverge.com/2018/2/8/16985666/alexandra-elbakyan-sci-hub-open-access-science-papers-lawsuit",
+    "title": "Meet the pirate queen making academic papers free online - The Verge",
+    "count": "2"
+  },
+  {
+    "url": "https://www.thestar.com/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages.html",
+    "title": "When U.S. air force discovered the flaw of averages | The Star",
+    "count": "2"
+  },
+  {
+    "url": "https://www.thelightphone.com/",
+    "title": "The Light Phone",
+    "count": "2"
+  },
+  {
+    "url": "https://www.theguardian.com/cities/2019/apr/29/are-the-hyper-specialist-shops-of-berlin-the-future-of-retail",
+    "title": "Are the hyper-specialist shops of Berlin the future of retail? | Cities | The Guardian",
+    "count": "2"
+  },
+  {
+    "url": "https://www.starlink.com/",
+    "title": "Order Starlink",
+    "count": "2"
+  },
+  {
+    "url": "https://www.sixdegreesofwikipedia.com/",
+    "title": "Six Degrees of Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://www.shortcutfoo.com/",
+    "title": "Learn shortcuts and commands | ShortcutFoo",
+    "count": "2"
+  },
+  {
+    "url": "https://www.sharelatex.com/",
+    "title": "ShareLaTeX, Online LaTeX Editor",
+    "count": "2"
+  },
+  {
+    "url": "https://www.rferl.org/a/the-mammoth-pirates/27939865.html",
+    "title": "The Mammoth Pirates - Radio Free Europe / Radio Liberty",
+    "count": "2"
+  },
+  {
+    "url": "https://www.quantamagazine.org/mathematician-solves-computer-science-conjecture-in-two-pages-20190725",
+    "title": "Decades-Old Computer Science Conjecture Solved in Two Pages | Quanta Magazine",
+    "count": "2"
+  },
+  {
+    "url": "https://www.protondb.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.npr.org/sections/thetwo-way/2016/09/13/493739074/50-years-ago-sugar-industry-quietly-paid-scientists-to-point-blame-at-fat",
+    "title": "50 Years Ago, Sugar Industry Quietly Paid Scientists To Point Blame At Fat : The Two-Way : NPR",
+    "count": "2"
+  },
+  {
+    "url": "https://www.newyorker.com/magazine/2019/10/14/how-to-read-gilgamesh",
+    "title": "How to Read “Gilgamesh” | The New Yorker",
+    "count": "2"
+  },
+  {
+    "url": "https://www.newyorker.com/culture/cultural-comment/the-woman-who-gave-the-macintosh-a-smile",
+    "title": "The Woman Who Gave the Macintosh a Smile | The New Yorker",
+    "count": "2"
+  },
+  {
+    "url": "https://www.ncsc.gov.uk/blog-post/let-them-paste-passwords",
+    "title": "NCSC",
+    "count": "2"
+  },
+  {
+    "url": "https://www.nayuki.io/page/designing-better-file-organization-around-tags-not-hierarchies",
+    "title": "Designing better file organization around tags, not hierarchies",
+    "count": "2"
+  },
+  {
+    "url": "https://www.nayuki.io/page/creating-a-qr-code-step-by-step",
+    "title": "Creating a QR Code step by step",
+    "count": "2"
+  },
+  {
+    "url": "https://www.migadu.com/",
+    "title": "Migadu Email",
+    "count": "2"
+  },
+  {
+    "url": "https://www.masswerk.at/nowgobang/2019/dec-crt-typography",
+    "title": "<Now Go Bang!> Raster CRT Typography (According to DEC)",
+    "count": "2"
+  },
+  {
+    "url": "https://www.maa.org/external_archive/devlin/LockhartsLament.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.ldeming.com/longevityfaq",
+    "title": "Longevity FAQ — Laura Deming",
+    "count": "2"
+  },
+  {
+    "url": "https://www.justice.gov/usao-wdwa/pr/six-indicted-connection-multi-million-dollar-scheme-bribe-amazon-employees-and",
+    "title": "Six indicted in connection with multi-million dollar scheme to bribe Amazon employees and contractors | USAO-WDWA | Department of Justice",
+    "count": "2"
+  },
+  {
+    "url": "https://www.judyrecords.com/",
+    "title": "Free Public Records Search - judyrecords",
+    "count": "2"
+  },
+  {
+    "url": "https://www.info.ucl.ac.be/~pvr/paradigms.html",
+    "title": "Classification of the principal programming paradigms",
+    "count": "2"
+  },
+  {
+    "url": "https://www.inboxsdk.com/",
+    "title": "InboxSDK - Build Apps inside Gmail",
+    "count": "2"
+  },
+  {
+    "url": "https://www.home-assistant.io/",
+    "title": "Home Assistant",
+    "count": "2"
+  },
+  {
+    "url": "https://www.heritageconcorde.com/concorde-b",
+    "title": "Concorde 'B' | heritage-concorde",
+    "count": "2"
+  },
+  {
+    "url": "https://www.haiku-os.org/",
+    "title": "Home | Haiku Project",
+    "count": "2"
+  },
+  {
+    "url": "https://www.gwern.net/Search",
+    "title": "Internet Search Tips · Gwern.net",
+    "count": "2"
+  },
+  {
+    "url": "https://www.gwern.net/Improvements",
+    "title": "My Ordinary Life: Improvements Since the 1990s · Gwern.net",
+    "count": "2"
+  },
+  {
+    "url": "https://www.gbstudio.dev/",
+    "title": "GB Studio",
+    "count": "2"
+  },
+  {
+    "url": "https://www.fuze.co.uk/nintendo-switch.html",
+    "title": "FUZE4 Nintendo Switch",
+    "count": "2"
+  },
+  {
+    "url": "https://www.extremetech.com/computing/315186-apple-books-tsmcs-entire-5nm-production-capability",
+    "title": "Apple Books TSMC's Entire 5nm Production Capability - ExtremeTech",
+    "count": "2"
+  },
+  {
+    "url": "https://www.edge.org/conversation/nassim_nicholas_taleb-understanding-is-a-poor-substitute-for-convexity-antifragility",
+    "title": "UNDERSTANDING IS A POOR SUBSTITUTE FOR CONVEXITY (ANTIFRAGILITY) | Edge.org",
+    "count": "2"
+  },
+  {
+    "url": "https://www.ecosia.org/",
+    "title": "Ecosia - the search engine that plants trees",
+    "count": "2"
+  },
+  {
+    "url": "https://www.dwitter.net/",
+    "title": "Dwitter - javascript demos in 140 characters",
+    "count": "2"
+  },
+  {
+    "url": "https://www.dreamsongs.com/Files/WhyOfY.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.destroyallsoftware.com/talks/the-birth-and-death-of-javascript",
+    "title": "The Birth & Death of JavaScript",
+    "count": "2"
+  },
+  {
+    "url": "https://www.destroyallsoftware.com/blog/2017/the-biggest-and-weirdest-commits-in-linux-kernel-git-history",
+    "title": "The Biggest and Weirdest Commits in Linux Kernel Git History",
+    "count": "2"
+  },
+  {
+    "url": "https://www.dampfkraft.com/ghost-characters.html",
+    "title": "A Spectre is Haunting Unicode",
+    "count": "2"
+  },
+  {
+    "url": "https://www.cs.bu.edu/~jappavoo/Resources/Papers/unikernel-hotos19.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.coinbase.com/card",
+    "title": "Just a moment...",
+    "count": "2"
+  },
+  {
+    "url": "https://www.cisa.gov/blog/2020/09/18/windows-server-vulnerability-requires-immediate-attention",
+    "title": "Windows Server Vulnerability Requires Immediate Attention | CISA",
+    "count": "2"
+  },
+  {
+    "url": "https://www.borgbackup.org/",
+    "title": "BorgBackup – Deduplicating archiver with compression and authenticated encryption",
+    "count": "2"
+  },
+  {
+    "url": "https://www.bookforum.com/print/2703/a-psychoanalytic-reading-of-social-media-and-the-death-drive-24171",
+    "title": "A psychoanalytic reading of social media and the death drive - Max Read - Bookforum Magazine",
+    "count": "2"
+  },
+  {
+    "url": "https://www.bbc.com/worklife/article/20200910-the-benefits-of-note-taking-by-hand",
+    "title": "The benefits of note-taking by hand - BBC Worklife",
+    "count": "2"
+  },
+  {
+    "url": "https://www.battleforthenet.com/",
+    "title": "Battle for the Net",
+    "count": "2"
+  },
+  {
+    "url": "https://www.atlasobscura.com/articles/history-of-milk",
+    "title": "Remembering When Only Barbarians Drank Milk - Gastro Obscura",
+    "count": "2"
+  },
+  {
+    "url": "https://www.arduboy.com/",
+    "title": "Arduboy",
+    "count": "2"
+  },
+  {
+    "url": "https://www.annashipman.co.uk/jfdi/meeting-everyone.html",
+    "title": "Anna Shipman : JFDI",
+    "count": "2"
+  },
+  {
+    "url": "https://www.action.io/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.20papercups.net/programming/sending-receiving-sms-on-linux",
+    "title": "404: Not Found | Michael Marner's Website",
+    "count": "2"
+  },
+  {
+    "url": "https://writing.kemitchell.com/2016/09/21/MIT-License-Line-by-Line.html",
+    "title": "The MIT License, Line by Line — /dev/lawyer",
+    "count": "2"
+  },
+  {
+    "url": "https://writefreely.org/",
+    "title": "WriteFreely",
+    "count": "2"
+  },
+  {
+    "url": "https://wiki.mozilla.org/Firefox/Roadmap",
+    "title": "Firefox/Roadmap - MozillaWiki",
+    "count": "2"
+  },
+  {
+    "url": "https://wiki.debian.org/WhyTheName",
+    "title": "WhyTheName - Debian Wiki",
+    "count": "2"
+  },
+  {
+    "url": "https://wekan.github.io/",
+    "title": "WeKan ® — Open-Source kanban",
+    "count": "2"
+  },
+  {
+    "url": "https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://userinyerface.com/",
+    "title": "User Inyerface - A worst-practice UI experiment",
+    "count": "2"
+  },
+  {
+    "url": "https://urbit.org/",
+    "title": "Urbit",
+    "count": "2"
+  },
+  {
+    "url": "http://superherojs.com/",
+    "title": "Superhero.js",
+    "count": "2"
+  },
+  {
+    "url": "https://twobithistory.org/2020/06/28/rest.html",
+    "title": "Roy Fielding's Misappropriated REST Dissertation",
+    "count": "2"
+  },
+  {
+    "url": "https://twitter.com/shit_hn_says",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://twisteros.com/index.html",
+    "title": "Twister OS",
+    "count": "2"
+  },
+  {
+    "url": "http://stuffin.space/",
+    "title": "stuffin.space",
+    "count": "2"
+  },
+  {
+    "url": "https://triplebyte.com/software-engineer-salary",
+    "title": "Software Engineer Salary - How much money do Software Engineers actually make?",
+    "count": "2"
+  },
+  {
+    "url": "https://training.kalzumeus.com/newsletters/archive/do-not-end-the-week-with-nothing",
+    "title": "Don't End The Week With Nothing",
+    "count": "2"
+  },
+  {
+    "url": "https://trafficserver.apache.org/",
+    "title": "Apache Traffic Server",
+    "count": "2"
+  },
+  {
+    "url": "https://toc.cryptobook.us/",
+    "title": "A Graduate Course in Applied Cryptography",
+    "count": "2"
+  },
+  {
+    "url": "https://the.exa.website/",
+    "title": "exa · a modern replacement for ls",
+    "count": "2"
+  },
+  {
+    "url": "https://thedaywefightback.org/",
+    "title": "The Day We Fight Back - February 11th 2014",
+    "count": "2"
+  },
+  {
+    "url": "https://theconversation.com/mayflower-400-the-science-of-sailing-across-the-ocean-in-1620-144233",
+    "title": "Mayflower 400: the science of sailing across the ocean in 1620",
+    "count": "2"
+  },
+  {
+    "url": "http://steve-yegge.blogspot.com/2006/03/math-for-programmers.html",
+    "title": "Stevey's Blog Rants: Math For Programmers",
+    "count": "2"
+  },
+  {
+    "url": "https://teachyourselfcs.com/",
+    "title": "Teach Yourself Computer Science",
+    "count": "2"
+  },
+  {
+    "url": "http://startuplawyer.com/startup-issues/if-i-launched-a-startup",
+    "title": "If I Launched a Startup",
+    "count": "2"
+  },
+  {
+    "url": "http://startingdotneprogramming.blogspot.com/2013/04/i-knew-programmer-that-went-completely.html",
+    "title": "Ken's Programming Blog: I Knew a Programmer that Went Completely Insane",
+    "count": "2"
+  },
+  {
+    "url": "https://system76.com/laptops/pangolin",
+    "title": "AMD-Powered Laptops - System76 Pangolin - Thin 15\" Laptop",
+    "count": "2"
+  },
+  {
+    "url": "https://stribika.github.io/2015/01/04/secure-secure-shell.html",
+    "title": "Secure Secure Shell",
+    "count": "2"
+  },
+  {
+    "url": "https://startyourownisp.com/",
+    "title": "Start Your Own ISP",
+    "count": "2"
+  },
+  {
+    "url": "https://standardebooks.org/",
+    "title": "Standard Ebooks: Free and liberated ebooks, carefully produced for the true book lover.",
+    "count": "2"
+  },
+  {
+    "url": "https://staltz.com/the-web-began-dying-in-2014-heres-how.html",
+    "title": "André Staltz - The Web began dying in 2014, here's how",
+    "count": "2"
+  },
+  {
+    "url": "https://staltz.com/a-plan-to-rescue-the-web-from-the-internet.html",
+    "title": "André Staltz - A plan to rescue the Web from the Internet",
+    "count": "2"
+  },
+  {
+    "url": "https://sourceforge.net/p/joe-editor/mercurial/ci/default/tree/NEWS.md",
+    "title": "JOE - Joe's own editor / Mercurial / [8078f2] /NEWS.md",
+    "count": "2"
+  },
+  {
+    "url": "https://solar.lowtechmagazine.com/power.html",
+    "title": "Power | LOW←TECH MAGAZINE",
+    "count": "2"
+  },
+  {
+    "url": "https://sites.google.com/site/steveyegge2/ten-predictions",
+    "title": "steve yegge - ten-predictions",
+    "count": "2"
+  },
+  {
+    "url": "https://sites.google.com/site/steveyegge2/practicing-programming",
+    "title": "steve yegge - practicing-programming",
+    "count": "2"
+  },
+  {
+    "url": "https://sites.google.com/site/forgottenemployee",
+    "title": "Forgotten Employee",
+    "count": "2"
+  },
+  {
+    "url": "https://shoelace.style/",
+    "title": "Overview",
+    "count": "2"
+  },
+  {
+    "url": "https://seeing-theory.brown.edu/index.html",
+    "title": "Seeing Theory",
+    "count": "2"
+  },
+  {
+    "url": "https://securitytxt.org/",
+    "title": "security.txt: Proposed standard for defining security policies",
+    "count": "2"
+  },
+  {
+    "url": "https://securedrop.org/",
+    "title": "Share and accept documents securely",
+    "count": "2"
+  },
+  {
+    "url": "https://secretgeek.github.io/html_wysiwyg/html.html",
+    "title": "This page is a truly naked, brutalist html quine.",
+    "count": "2"
+  },
+  {
+    "url": "https://seaglass.cs.washington.edu/",
+    "title": "City-Wide IMSI-Catcher Detection - SeaGlass",
+    "count": "2"
+  },
+  {
+    "url": "https://scirate.com/",
+    "title": "Top arXiv papers",
+    "count": "2"
+  },
+  {
+    "url": "https://sback.it/publications/icse2018seip.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://runyourown.social/",
+    "title": "How to run a small social network site for your friends",
+    "count": "2"
+  },
+  {
+    "url": "https://rumorsontheinternets.org/2010/10/14/magnasanti-the-largest-and-most-terrifying-simcity",
+    "title": "Private Site",
+    "count": "2"
+  },
+  {
+    "url": "https://raphlinus.github.io/rust/graphics/gpu/2019/05/08/modern-2d.html",
+    "title": "2D Graphics on Modern GPU | Raph Levien’s blog",
+    "count": "2"
+  },
+  {
+    "url": "https://quickdraw.withgoogle.com/",
+    "title": "Quick, Draw!",
+    "count": "2"
+  },
+  {
+    "url": "https://queue.acm.org/detail.cfm?id=3212479",
+    "title": "C Is Not a Low-level Language - ACM Queue",
+    "count": "2"
+  },
+  {
+    "url": "http://sqlfiddle.com/",
+    "title": "SQL Fiddle",
+    "count": "2"
+  },
+  {
+    "url": "https://publicdomainreview.org/essay/more-lively-counterfaits",
+    "title": "“More Lively Counterfaits”: Experimental Imaging at the Birth of Modern Science – The Public Domain Review",
+    "count": "2"
+  },
+  {
+    "url": "https://ptsjs.org/",
+    "title": "Pts.js",
+    "count": "2"
+  },
+  {
+    "url": "https://probmods.org/",
+    "title": "Probabilistic Models of Cognition - 2nd Edition",
+    "count": "2"
+  },
+  {
+    "url": "https://primitive.lol/",
+    "title": "Primitive for macOS",
+    "count": "2"
+  },
+  {
+    "url": "https://press.stripe.com/",
+    "title": "Stripe Press — Ideas for progress",
+    "count": "2"
+  },
+  {
+    "url": "https://polyhedra.tessera.li/",
+    "title": "Polyhedra Viewer",
+    "count": "2"
+  },
+  {
+    "url": "https://plus.maths.org/content/ramanujan",
+    "title": "Ramanujan surprises again | plus.maths.org",
+    "count": "2"
+  },
+  {
+    "url": "https://plfa.github.io/",
+    "title": "Programming Language Foundations in Agda – Table of Contents",
+    "count": "2"
+  },
+  {
+    "url": "https://please.build/",
+    "title": "Please",
+    "count": "2"
+  },
+  {
+    "url": "http://spiffingcss.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://perkeep.org/",
+    "title": "Perkeep",
+    "count": "2"
+  },
+  {
+    "url": "https://peermaps.org/",
+    "title": "peermaps",
+    "count": "2"
+  },
+  {
+    "url": "https://patrickcollison.com/questions",
+    "title": "Questions · Patrick Collison",
+    "count": "2"
+  },
+  {
+    "url": "https://paperswithcode.com/",
+    "title": "The latest in Machine Learning | Papers With Code",
+    "count": "2"
+  },
+  {
+    "url": "https://pandoc.org/",
+    "title": "Pandoc - About pandoc",
+    "count": "2"
+  },
+  {
+    "url": "https://otter-browser.org/",
+    "title": "Otter Browser",
+    "count": "2"
+  },
+  {
+    "url": "http://socialcam.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://nova.app/",
+    "title": "Panic - Nova",
+    "count": "2"
+  },
+  {
+    "url": "https://noidea.dog/glue",
+    "title": "Being Glue — No Idea Blog",
+    "count": "2"
+  },
+  {
+    "url": "https://nodered.org/",
+    "title": "Node-RED",
+    "count": "2"
+  },
+  {
+    "url": "https://ngrok.com/",
+    "title": "ngrok - Online in One Line",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=498417",
+    "title": "Ask HN: How do you do your company's taxes? | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=13108404",
+    "title": "Tell HN: Political Detox Week – No politics on HN for one week | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://news.mit.edu/2020/flat-fisheye-lens-0918",
+    "title": "Engineers produce a fisheye lens that’s completely flat | MIT News | Massachusetts Institute of Technology",
+    "count": "2"
+  },
+  {
+    "url": "https://newsinteractives.cbc.ca/longform/glybera",
+    "title": "The million-dollar drug | CBC News",
+    "count": "2"
+  },
+  {
+    "url": "https://nationalparktypeface.com/",
+    "title": "National Park Typeface",
+    "count": "2"
+  },
+  {
+    "url": "https://mzucker.github.io/2016/09/20/noteshrink.html",
+    "title": "Compressing and enhancing hand-written notes",
+    "count": "2"
+  },
+  {
+    "url": "http://smoothiecharts.org/",
+    "title": "Smoothie Charts: A JavaScript Charting Library for Streaming Data",
+    "count": "2"
+  },
+  {
+    "url": "https://mollyrocket.com/meowhash",
+    "title": "Meow Hash",
+    "count": "2"
+  },
+  {
+    "url": "https://microg.org/",
+    "title": "microG Project",
+    "count": "2"
+  },
+  {
+    "url": "https://meta.wikimedia.org/wiki/Cunningham%27s_Law",
+    "title": "Cunningham's Law - Meta",
+    "count": "2"
+  },
+  {
+    "url": "https://meet.jit.si/",
+    "title": "Jitsi Meet",
+    "count": "2"
+  },
+  {
+    "url": "https://medium.com/@kentbeck_7670/inefficient-efficiency-5b3ab5294791",
+    "title": "Inefficient Efficiency. You’re making morning drip coffee. You… | by Kent Beck | Medium",
+    "count": "2"
+  },
+  {
+    "url": "https://medium.com/@blakeross/don-t-outsource-your-thinking-ad825a9b4653",
+    "title": "Don’t Outsource Your Thinking. One of the most useful lessons I… | by Blake Ross | Medium",
+    "count": "2"
+  },
+  {
+    "url": "https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html",
+    "title": "Please stop calling databases CP or AP — Martin Kleppmann’s blog",
+    "count": "2"
+  },
+  {
+    "url": "https://makingartstudios.itch.io/dls",
+    "title": "DLS by Making Art Studios",
+    "count": "2"
+  },
+  {
+    "url": "https://machinelearning.apple.com/",
+    "title": "Overview - Apple Machine Learning Research",
+    "count": "2"
+  },
+  {
+    "url": "https://lithub.com/color-or-fruit-on-the-unlikely-etymology-of-orange",
+    "title": "Color or Fruit? On the Unlikely Etymology of “Orange” ‹ Literary Hub",
+    "count": "2"
+  },
+  {
+    "url": "https://learningmusic.ableton.com/",
+    "title": "Get started | Learning Music",
+    "count": "2"
+  },
+  {
+    "url": "https://landgreen.github.io/physics/index.html",
+    "title": "Physics Notes",
+    "count": "2"
+  },
+  {
+    "url": "https://kore.io/",
+    "title": "Kore - A robust web platform for applications in C and Python",
+    "count": "2"
+  },
+  {
+    "url": "https://knightcolumbia.org/content/protocols-not-platforms-a-technological-approach-to-free-speech",
+    "title": "Protocols, Not Platforms: A Technological Approach to Free Speech | Knight First Amendment Institute",
+    "count": "2"
+  },
+  {
+    "url": "http://skiplang.com/",
+    "title": "skip · A programming language to skip the things you have already computed",
+    "count": "2"
+  },
+  {
+    "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0239252",
+    "title": "SARS-CoV-2 positivity rates associated with circulating 25-hydroxyvitamin D levels | PLOS ONE",
+    "count": "2"
+  },
+  {
+    "url": "https://jimshaver.net/2015/02/11/decrypting-tls-browser-traffic-with-wireshark-the-easy-way",
+    "title": "Jim Shaver | Cloud Security Professional",
+    "count": "2"
+  },
+  {
+    "url": "https://jepsen.io/consistency",
+    "title": "Consistency Models",
+    "count": "2"
+  },
+  {
+    "url": "https://jellyfin.org/",
+    "title": "Jellyfin: The Free Software Media System",
+    "count": "2"
+  },
+  {
+    "url": "https://jaycarlson.net/embedded-linux",
+    "title": "One moment, please...",
+    "count": "2"
+  },
+  {
+    "url": "https://janet-lang.org/",
+    "title": "Janet Programming Language",
+    "count": "2"
+  },
+  {
+    "url": "https://ish.app/",
+    "title": "iSH",
+    "count": "2"
+  },
+  {
+    "url": "https://intelxed.github.io/",
+    "title": "Intel XED",
+    "count": "2"
+  },
+  {
+    "url": "http://singlepageappbook.com/",
+    "title": "Introduction",
+    "count": "2"
+  },
+  {
+    "url": "https://increment.com/teams/the-team-that-powers-vlc",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://simplexify.net/blog/2012/5/6/i-am-a-statistician-and-i-buy-lottery-tickets.html",
+    "title": "Simplexify - Posts - I am a statistician and I buy lottery tickets",
+    "count": "2"
+  },
+  {
+    "url": "http://sicpinclojure.com/",
+    "title": "【関東版】おすすめJNA認定校ネイルスクール一覧┃sicp in clojure",
+    "count": "2"
+  },
+  {
+    "url": "https://hpbn.co/",
+    "title": "High Performance Browser Networking (O'Reilly)",
+    "count": "2"
+  },
+  {
+    "url": "https://hbr.org/2016/12/if-your-boss-could-do-your-job-youre-more-likely-to-be-happy-at-work",
+    "title": "If Your Boss Could Do Your Job, You’re More Likely to Be Happy at Work",
+    "count": "2"
+  },
+  {
+    "url": "http://shapecatcher.com/",
+    "title": "Shapecatcher: Draw the Unicode character you want!",
+    "count": "2"
+  },
+  {
+    "url": "https://gtfobins.github.io/",
+    "title": "GTFOBins",
+    "count": "2"
+  },
+  {
+    "url": "https://goaccess.io/",
+    "title": "GoAccess - Visual Web Log Analyzer",
+    "count": "2"
+  },
+  {
+    "url": "https://glyph.twistedmatrix.com/2016/08/attrs.html",
+    "title": "Deciphering Glyph :: The One Python Library Everyone Needs",
+    "count": "2"
+  },
+  {
+    "url": "https://gitlab.com/edouardklein/falsisign",
+    "title": "Edouard Klein / falsisign · GitLab",
+    "count": "2"
+  },
+  {
+    "url": "https://gitlab.brokenpipe.de/stettberger/avremu/tree/master",
+    "title": "Files · master · Christian Dietrich / avremu · GitLab",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/Zulko/moviepy",
+    "title": "GitHub - Zulko/moviepy: Video editing with Python",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/zsaleeba/picoc",
+    "title": "GitHub - zsaleeba/picoc: A very small C interpreter",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/zadam/trilium",
+    "title": "GitHub - zadam/trilium: Build your personal knowledge base with Trilium Notes",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/Z3Prover/z3",
+    "title": "GitHub - Z3Prover/z3: The Z3 Theorem Prover",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/you-dont-need/You-Dont-Need-Momentjs",
+    "title": "GitHub - you-dont-need/You-Dont-Need-Momentjs: List of functions which you can use to replace moment.js + ESLint Plugin",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/YingtongDou/Nash-Detect",
+    "title": "GitHub - YingtongDou/Nash-Detect: Code for KDD 2020 paper Robust Spammer Detection by Nash Reinforcement Learning",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/yandex/odyssey",
+    "title": "GitHub - yandex/odyssey: Scalable PostgreSQL connection pooler",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/xoreaxeaxeax/movfuscator",
+    "title": "GitHub - xoreaxeaxeax/movfuscator: The single instruction C compiler",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/vygr/ChrysaLisp",
+    "title": "GitHub - vygr/ChrysaLisp: Parallel OS, with GUI, Terminal, OO Assembler, Class libraries, C-Script compiler, Lisp interpreter and more...",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/vurtun/nuklear",
+    "title": "GitHub - vurtun/nuklear: A single-header ANSI C gui library",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/veltman/clmystery",
+    "title": "GitHub - veltman/clmystery: A command-line murder mystery",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/TrustInSoft/tis-interpreter",
+    "title": "GitHub - TrustInSoft/tis-interpreter: An interpreter for finding subtle bugs in programs written in standard C",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/tomprimozic/type-systems",
+    "title": "GitHub - tomprimozic/type-systems: Implementations of various type systems in OCaml.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/tiimgreen/github-cheat-sheet",
+    "title": "GitHub - tiimgreen/github-cheat-sheet: A list of cool features of Git and GitHub.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/sunainapai/makesite",
+    "title": "GitHub - sunainapai/makesite: Simple, lightweight, and magic-free static site/blog generator for Python coders",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ssloy/tinyrenderer/wiki",
+    "title": "Home · ssloy/tinyrenderer Wiki · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/s-macke/VoxelSpace",
+    "title": "GitHub - s-macke/VoxelSpace: Terrain rendering algorithm in less than 20 lines of code",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/SFTtech/openage",
+    "title": "GitHub - SFTtech/openage: Free (as in freedom) open source clone of the Age of Empires II engine",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/seL4/seL4",
+    "title": "GitHub - seL4/seL4: The seL4 microkernel",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/seemoo-lab/opendrop",
+    "title": "GitHub - seemoo-lab/opendrop: An open Apple AirDrop implementation written in Python",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/sctb/lumen",
+    "title": "GitHub - sctb/lumen: A Lisp for Lua and JavaScript",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/schollz/howmanypeoplearearound",
+    "title": "GitHub - schollz/howmanypeoplearearound: Count the number of people around you by monitoring wifi signals",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/schollz/find3",
+    "title": "GitHub - schollz/find3: High-precision indoor positioning framework, version 3.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/schani/clojurec",
+    "title": "GitHub - schani/clojurec: A Clojure implementation on top of C",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/SamyPesse/How-to-Make-a-Computer-Operating-System",
+    "title": "GitHub - SamyPesse/How-to-Make-a-Computer-Operating-System: How to Make a Computer Operating System in C++",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/robinhouston/image-unshredding",
+    "title": "GitHub - robinhouston/image-unshredding",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/robert-strandh/SICL",
+    "title": "GitHub - robert-strandh/SICL: A fresh implementation of Common Lisp",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/rclone/rclone",
+    "title": "GitHub - rclone/rclone: \"rsync for cloud storage\" - Google Drive, S3, Dropbox, Backblaze B2, One Drive, Swift, Hubic, Wasabi, Google Cloud Storage, Yandex Files",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/rastapasta/mapscii",
+    "title": "GitHub - rastapasta/mapscii: 🗺 MapSCII is a Braille & ASCII world map renderer for your console - enter => telnet mapscii.me <= on Mac (brew install telnet) and Linux, connect with PuTTY on Windows",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/quiet/org.quietmodem.Quiet",
+    "title": "GitHub - quiet/org.quietmodem.Quiet: Quiet for Android - TCP over sound",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/quchen/stgi",
+    "title": "GitHub - quchen/stgi: A user-centric visual STG implementation to help understand GHC/Haskell's execution model.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/pytoolz/toolz",
+    "title": "GitHub - pytoolz/toolz: A functional standard library for Python.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/PyO3/pyo3",
+    "title": "GitHub - PyO3/pyo3: Rust bindings for the Python interpreter",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ossu/computer-science",
+    "title": "GitHub - ossu/computer-science: Path to a free self-taught education in Computer Science!",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/orbitdb/orbit-db",
+    "title": "GitHub - orbitdb/orbit-db: Peer-to-Peer Databases for the Decentralized Web",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/okTurtles/dnschain",
+    "title": "GitHub - okTurtles/dnschain: A blockchain-based DNS + HTTP server that fixes HTTPS security, and more!",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/NVIDIA/libcudacxx",
+    "title": "GitHub - NVIDIA/libcudacxx: The C++ Standard Library for your entire system.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/nothings/single_file_libs",
+    "title": "GitHub - nothings/single_file_libs: List of single-file C/C++ libraries.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/nim-lang/nimforum",
+    "title": "GitHub - nim-lang/nimforum: Lightweight alternative to Discourse written in Nim",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/nemasu/asmttpd",
+    "title": "GitHub - nemasu/asmttpd: Web server for Linux written in amd64 assembly.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/mxgmn/WaveFunctionCollapse",
+    "title": "GitHub - mxgmn/WaveFunctionCollapse: Bitmap & tilemap generation from a single example with the help of ideas from quantum mechanics",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/mozilla/mentat",
+    "title": "GitHub - mozilla/mentat: UNMAINTAINED A persistent, relational store inspired by Datomic and DataScript.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/MiSTer-devel/Main_MiSTer/wiki",
+    "title": "Home · MiSTer-devel/Main_MiSTer Wiki · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/microsoft/playwright-cli",
+    "title": "GitHub - microsoft/playwright-cli: CLI for common Playwright actions. Record and generate Playwright code, inspect selectors and take screenshots.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md",
+    "title": "api-guidelines/Guidelines.md at master · microsoft/api-guidelines · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/martanne/vis",
+    "title": "GitHub - martanne/vis: A vi-like editor based on Plan 9's structural regular expressions",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/louthy/language-ext",
+    "title": "GitHub - louthy/language-ext: C# functional language extensions - a base class library for functional programming",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/levskaya/jslinux-deobfuscated",
+    "title": "GitHub - levskaya/jslinux-deobfuscated: An old version of Mr. Bellard's JSLinux rewritten to be human readable, hand deobfuscated and annotated.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/lettier/3d-game-shaders-for-beginners",
+    "title": "GitHub - lettier/3d-game-shaders-for-beginners: 🎮 A step-by-step guide to implementing SSAO, depth of field, lighting, normal mapping, and more for your 3D game.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/karthick18/inception",
+    "title": "GitHub - karthick18/inception: Inception movie explained programmatically",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/karan/Projects",
+    "title": "GitHub - karan/Projects: A list of practical projects that anyone can solve in any programming language.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jopohl/urh",
+    "title": "GitHub - jopohl/urh: Universal Radio Hacker: Investigate Wireless Protocols Like A Boss",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/JohnEarnest/ok",
+    "title": "GitHub - JohnEarnest/ok: An open-source interpreter for the K5 programming language.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jmdugan/blocklists/blob/master/corporations/facebook/all",
+    "title": "blocklists/all at master · jmdugan/blocklists · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jesseduffield/lazygit",
+    "title": "GitHub - jesseduffield/lazygit: simple terminal UI for git commands",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/JeffBezanson/femtolisp",
+    "title": "GitHub - JeffBezanson/femtolisp: a lightweight, robust, scheme-like lisp implementation",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jarun/nnn",
+    "title": "GitHub - jarun/nnn: n³ The unorthodox terminal file manager",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/janet-lang/janet",
+    "title": "GitHub - janet-lang/janet: A dynamic language and bytecode vm",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jamesob/desk",
+    "title": "GitHub - jamesob/desk: A lightweight workspace manager for the shell",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/Jam3/math-as-code",
+    "title": "GitHub - Jam3/math-as-code: a cheat-sheet for mathematical notation in code form",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jagregory/abrash-black-book",
+    "title": "GitHub - jagregory/abrash-black-book: Markdown source for Michael Abrash's Graphics Programming Black Book",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ivanceras/svgbob",
+    "title": "GitHub - ivanceras/svgbob: Convert your ascii diagram scribbles into happy little SVG",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md",
+    "title": "CppCoreGuidelines/CppCoreGuidelines.md at master · isocpp/CppCoreGuidelines · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/igrigorik/hackernews-button",
+    "title": "GitHub - igrigorik/hackernews-button: Embeddable Hacker News button + vote counter for your site",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/id-Software",
+    "title": "id Software · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/hylang/hy",
+    "title": "GitHub - hylang/hy: A dialect of Lisp that's embedded in Python",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/hemanth/functional-programming-jargon",
+    "title": "GitHub - hemanth/functional-programming-jargon: Jargon from the functional programming world in simple terms!",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/harthur/brain",
+    "title": "GitHub - harthur/brain: [UNMAINTAINED] Simple feed-forward neural network in JavaScript",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/google/jax",
+    "title": "GitHub - google/jax: Composable transformations of Python+NumPy programs: differentiate, vectorize, JIT to GPU/TPU, and more",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/git/git/blob/master/banned.h",
+    "title": "git/banned.h at master · git/git · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/getify/You-Dont-Know-JS",
+    "title": "GitHub - getify/You-Dont-Know-JS: A book series on JavaScript. @YDKJS on twitter.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/genuinetools/binctr",
+    "title": "GitHub - genuinetools/binctr: Fully static, unprivileged, self-contained, containers as executable binaries.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/fulldecent/system-bus-radio",
+    "title": "GitHub - fulldecent/system-bus-radio: Transmits AM radio on computers without radio transmitting hardware.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/fogleman/Craft",
+    "title": "GitHub - fogleman/Craft: A simple Minecraft clone written in C using modern OpenGL (shaders).",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/floooh/oryol",
+    "title": "GitHub - floooh/oryol: A small, portable and extensible C++ 3D coding framework",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/evilsocket/opensnitch",
+    "title": "GitHub - evilsocket/opensnitch: OpenSnitch is a GNU/Linux port of the Little Snitch application firewall",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/endrazine/wcc",
+    "title": "GitHub - endrazine/wcc: The Witchcraft Compiler Collection",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/electronicarts/EASTL",
+    "title": "GitHub - electronicarts/EASTL: EASTL stands for Electronic Arts Standard Template Library. It is an extensive and robust implementation that has an emphasis on high performance.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/eduard-permyakov/permafrost-engine",
+    "title": "GitHub - eduard-permyakov/permafrost-engine: An OpenGL RTS game engine written in C",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/dylanaraps/pure-bash-bible",
+    "title": "GitHub - dylanaraps/pure-bash-bible: 📖 A collection of pure bash alternatives to external processes.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/donnemartin/system-design-primer",
+    "title": "GitHub - donnemartin/system-design-primer: Learn how to design large-scale systems. Prep for the system design interview. Includes Anki flashcards.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/djrobstep/migra",
+    "title": "GitHub - djrobstep/migra: Like diff but for PostgreSQL schemas",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/dirkschumacher/llr",
+    "title": "GitHub - dirkschumacher/llr: Lisp-like-R: A clojure inspired lisp that compiles to R in R",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/dinedal/textql",
+    "title": "GitHub - dinedal/textql: Execute SQL against structured text like CSV or TSV",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/danluu/post-mortems",
+    "title": "GitHub - danluu/post-mortems: A collection of postmortems. Sorry for the delay in merging PRs!",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/commaai/openpilot",
+    "title": "GitHub - commaai/openpilot: openpilot is an open source driver assistance system. openpilot performs the functions of Automated Lane Centering and Adaptive Cruise Control for over 200 supported car makes and models.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/cjbarber/ToolsOfTheTrade",
+    "title": "GitHub - cjbarber/ToolsOfTheTrade: Tools of The Trade, from Hacker News.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/cbaggers/cepl",
+    "title": "GitHub - cbaggers/cepl: Code Evaluate Play Loop",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/CadQuery/cadquery",
+    "title": "GitHub - CadQuery/cadquery: A python parametric CAD scripting framework based on OCCT",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/automerge/automerge",
+    "title": "GitHub - automerge/automerge: A JSON-like data structure (a CRDT) that can be modified concurrently by different users, and merged again automatically.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/atlassian/localstack",
+    "title": "GitHub - atlassian/localstack: ⚠️ **Note**: This repository is no longer actively maintained (see README below) ⚠️",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/AsamK/signal-cli",
+    "title": "GitHub - AsamK/signal-cli: signal-cli provides an unofficial commandline and dbus interface for signalapp/libsignal-service-java",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/artichoke/artichoke",
+    "title": "GitHub - artichoke/artichoke: 💎 Artichoke is a Ruby made with Rust",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/artagnon/clayoven",
+    "title": "GitHub - artagnon/clayoven: 💎 beautiful website generator aimed at math-heavy sites",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/antontarasenko/smq/blob/master/reports/hackernews-links-in-comments.md",
+    "title": "smq/hackernews-links-in-comments.md at master · antontarasenko/smq · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/antirez/sds",
+    "title": "GitHub - antirez/sds: Simple Dynamic Strings library for C",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/andlabs/libui",
+    "title": "GitHub - andlabs/libui: Simple and portable (but not inflexible) GUI library in C that uses the native GUI technologies of each platform it supports.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/akavel/up",
+    "title": "GitHub - akavel/up: Ultimate Plumber is a tool for writing Linux pipes with instant live preview",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/3b1b/manim",
+    "title": "GitHub - 3b1b/manim: Animation engine for explanatory math videos",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/0x4447/0x4447_product_s3_email",
+    "title": "GitHub - 0x4447/0x4447_product_s3_email: 📫 A serverless email server on AWS using S3 and SES",
+    "count": "2"
+  },
+  {
+    "url": "https://gist.github.com/willurd/5720255",
+    "title": "Big list of http static server one-liners · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://gist.github.com/kachayev/21e7fe149bc5ae0bd878",
+    "title": "Channels Are Not Enough or Why Pipelining Is Not That Easy · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://gist.github.com/1277224",
+    "title": "Page not found · GitHub · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://frinklang.org/",
+    "title": "Frink",
+    "count": "2"
+  },
+  {
+    "url": "https://fortran.io/",
+    "title": "FORTRAN.io",
+    "count": "2"
+  },
+  {
+    "url": "https://fermatslibrary.com/s/electronic-lottery-tickets-as-micropayments",
+    "title": "Fermat's Library | Electronic Lottery Tickets as Micropayments annotated/explained version.",
+    "count": "2"
+  },
+  {
+    "url": "https://fennel-lang.org/",
+    "title": "the Fennel programming language",
+    "count": "2"
+  },
+  {
+    "url": "https://fengari.io/",
+    "title": "Fengari",
+    "count": "2"
+  },
+  {
+    "url": "http://sev-notes.blogspot.com/2009/06/gpl-scummvm-and-violations.html",
+    "title": "Sev's ScummVM notes: GPL, ScummVM and violations",
+    "count": "2"
+  },
+  {
+    "url": "https://etacts.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://seriouspony.com/blog/2013/7/24/your-app-makes-me-fat",
+    "title": "Your app makes me fat — Serious Pony",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Ulam_spiral",
+    "title": "Ulam spiral - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Soundex",
+    "title": "Soundex - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Reply_of_the_Zaporozhian_Cossacks",
+    "title": "Reply of the Zaporozhian Cossacks - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Preferred_number",
+    "title": "Preferred number - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Poka-yoke",
+    "title": "Poka-yoke - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Phoebus_cartel",
+    "title": "Phoebus cartel - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Moravec%27s_paradox",
+    "title": "Moravec's paradox - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Molyneux%27s_problem",
+    "title": "Molyneux's problem - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Great_Vowel_Shift",
+    "title": "Great Vowel Shift - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Gombe_Chimpanzee_War",
+    "title": "Gombe Chimpanzee War - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/FE-Schrift",
+    "title": "FE-Schrift - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Diolkos",
+    "title": "Diolkos - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Burned_house_horizon",
+    "title": "Burned house horizon - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Beverly_Clock",
+    "title": "Beverly Clock - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Bastion_fort",
+    "title": "Bastion fort - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Atlantropa",
+    "title": "Atlantropa - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Alu_(runic)",
+    "title": "Alu (runic) - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/52-hertz_whale",
+    "title": "52-hertz whale - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "http://selfie.cs.uni-salzburg.at/",
+    "title": "selfie | An educational software system of a tiny self-compiling C compiler, a tiny self-executing RISC-V emulator, and a tiny self-hosting RISC-V hypervisor.",
+    "count": "2"
+  },
+  {
+    "url": "http://seedmagazine.com/content/article/why_we_havent_met_any_aliens",
+    "title": "seedmagazine.com | 522: Connection timed out",
+    "count": "2"
+  },
+  {
+    "url": "http://seat.massey.ac.nz/personal/s.r.marsland/MLBook.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://dynamicland.org/",
+    "title": "Dynamicland",
+    "count": "2"
+  },
+  {
+    "url": "https://dvc.org/",
+    "title": "Data Version Control · DVC",
+    "count": "2"
+  },
+  {
+    "url": "https://duo.com/decipher/an-oral-history-of-the-l0pht",
+    "title": "‘We Got to Be Cool About This‘: An Oral History of the L0pht, Part 1 | Decipher",
+    "count": "2"
+  },
+  {
+    "url": "https://docs.google.com/document/d/1iNSQIyNpVGHeak6isbP6AHdHD50gs8MNXF1GCf08efg/pub",
+    "title": "Scroll Back: The Theory and Practice of Cameras in Side-Scrollers",
+    "count": "2"
+  },
+  {
+    "url": "https://digiconomist.net/bitcoin-energy-consumption",
+    "title": "Bitcoin Energy Consumption Index - Digiconomist",
+    "count": "2"
+  },
+  {
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript",
+    "title": "A re-introduction to JavaScript (JS tutorial) - JavaScript | MDN",
+    "count": "2"
+  },
+  {
+    "url": "https://datatransferproject.dev/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://culdesac.com/",
+    "title": "Cities For People Not Cars | Culdesac",
+    "count": "2"
+  },
+  {
+    "url": "https://cuelang.org/",
+    "title": "CUE",
+    "count": "2"
+  },
+  {
+    "url": "https://crate.io/",
+    "title": "CrateDB – Distributed SQL Database Enabling Data Insights at Scale",
+    "count": "2"
+  },
+  {
+    "url": "https://courses.csail.mit.edu/6.042/spring17/mcs.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://codewords.recurse.com/issues/two/git-from-the-inside-out",
+    "title": "Git from the inside out",
+    "count": "2"
+  },
+  {
+    "url": "https://codewords.recurse.com/issues/six/immutability-is-not-enough",
+    "title": "Immutability is not enough",
+    "count": "2"
+  },
+  {
+    "url": "https://codewords.recurse.com/issues/four/the-language-of-choice",
+    "title": "The language of choice",
+    "count": "2"
+  },
+  {
+    "url": "https://clickclickclick.click/",
+    "title": "Click",
+    "count": "2"
+  },
+  {
+    "url": "https://chriskiehl.com/article/event-sourcing-is-hard",
+    "title": "Don't Let the Internet Dupe You, Event Sourcing is Hard - Blogomatano",
+    "count": "2"
+  },
+  {
+    "url": "http://scheme2006.cs.uchicago.edu/11-ghuloum.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://cheats.rs/",
+    "title": "Rust Language Cheat Sheet",
+    "count": "2"
+  },
+  {
+    "url": "https://carbon.now.sh/",
+    "title": "Carbon | Create and share beautiful images of your source code",
+    "count": "2"
+  },
+  {
+    "url": "https://calmtech.com/",
+    "title": "Calm Technology",
+    "count": "2"
+  },
+  {
+    "url": "https://caddyserver.com/",
+    "title": "Caddy - The Ultimate Server with Automatic HTTPS",
+    "count": "2"
+  },
+  {
+    "url": "https://bugs.launchpad.net/ubuntu/+source/cupsys/+bug/255161/comments/28",
+    "title": "Comment #28 : Bug #255161 : Bugs : cupsys package : Ubuntu",
+    "count": "2"
+  },
+  {
+    "url": "https://browsix.org/",
+    "title": "Browsix: Unix in the browser tab",
+    "count": "2"
+  },
+  {
+    "url": "https://brandur.org/interfaces",
+    "title": "Learning From Terminals to Design the Future of User Interfaces — brandur.org",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.reverberate.org/2020/05/29/hoares-rebuttal-bubble-sorts-comeback.html",
+    "title": "Hoare’s Rebuttal and Bubble Sort’s Comeback",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.lizzie.io/linux-containers-in-500-loc.html",
+    "title": "Linux containers in 500 lines of code",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.jessfraz.com/post/thoughts-on-conways-law-and-the-software-stack",
+    "title": "Ramblings from Jessie: Thoughts on Conway's Law and the software stack",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.jessfraz.com/post/containers-zones-jails-vms",
+    "title": "Ramblings from Jessie: Setting the Record Straight: containers vs. Zones vs. Jails vs. VMs",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.innerht.ml/google-yolo",
+    "title": "503 Service Temporarily Unavailable",
+    "count": "2"
+  },
+  {
+    "url": "https://bitwarden.com/",
+    "title": "Bitwarden Open Source Password Manager | Bitwarden",
+    "count": "2"
+  },
+  {
+    "url": "https://begriffs.com/posts/2018-03-20-user-defined-order.html",
+    "title": "User-defined Order in SQL",
+    "count": "2"
+  },
+  {
+    "url": "https://beakerbrowser.com/",
+    "title": "Beaker Browser",
+    "count": "2"
+  },
+  {
+    "url": "https://asciinema.org/",
+    "title": "asciinema - Record and share your terminal sessions, the simple way",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/math/0411418",
+    "title": "[math/0411418] How real are real numbers?",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/1809.10756",
+    "title": "[1809.10756] An Introduction to Probabilistic Programming",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/1809.02942",
+    "title": "[1809.02942] Cellular automata as convolutional neural networks",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/1801.03534",
+    "title": "[1801.03534] Mechanical Computing Systems Using Only Links and Rotary Joints",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/1801.00631",
+    "title": "[1801.00631] Deep Learning: A Critical Appraisal",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/1701.06538",
+    "title": "[1701.06538] Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer",
+    "count": "2"
+  },
+  {
+    "url": "https://archive.org/details/OTRR_X_Minus_One_Singles",
+    "title": "X Minus One - Single Episodes : Old Time Radio Researchers Group : Free Download, Borrow, and Streaming : Internet Archive",
+    "count": "2"
+  },
+  {
+    "url": "https://aphyr.com/posts/341-hexing-the-technical-interview",
+    "title": "Hexing the technical interview",
+    "count": "2"
+  },
+  {
+    "url": "https://andrewkelley.me/post/zig-stack-traces-kernel-panic-bare-bones-os.html",
+    "title": "Using Zig to Provide Stack Traces on Kernel Panic for a Bare Bones Operating System - Andrew Kelley",
+    "count": "2"
+  },
+  {
+    "url": "https://andrewkelley.me/post/zig-cc-powerful-drop-in-replacement-gcc-clang.html",
+    "title": "`zig cc`: a Powerful Drop-In Replacement for GCC/Clang - Andrew Kelley",
+    "count": "2"
+  },
+  {
+    "url": "https://analytics.usa.gov/",
+    "title": "analytics.usa.gov | The US government's web traffic.",
+    "count": "2"
+  },
+  {
+    "url": "https://allthatsinteresting.com/fugate-family-blue-people-of-kentucky",
+    "title": "Why The Fugate Family Are Literally \"The Blue People Of Kentucky\"",
+    "count": "2"
+  },
+  {
+    "url": "https://alexcabal.com/creating-the-perfect-gpg-keypair",
+    "title": "Creating the perfect GPG keypair - Alex Cabal",
+    "count": "2"
+  },
+  {
+    "url": "https://aeon.co/essays/the-human-story-of-how-ventilators-came-to-breathe-for-us",
+    "title": "The human story of how ventilators came to breathe for us | Aeon Essays",
+    "count": "2"
+  },
+  {
+    "url": "https://aeon.co/essays/busy-and-distracted-everybody-has-been-since-at-least-1710",
+    "title": "Busy and distracted? Everybody has been, since at least 1710 | Aeon Essays",
+    "count": "2"
+  },
+  {
+    "url": "https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html",
+    "title": "Command-line Tools can be 235x Faster than your Hadoop Cluster - Adam Drake",
+    "count": "2"
+  },
+  {
+    "url": "http://regex.info/blog/2006-09-15/247",
+    "title": "Jeffrey Friedl's Blog » Source of the famous “Now you have two problems” quote",
+    "count": "2"
+  },
+  {
+    "url": "http://recursivedrawing.com/",
+    "title": "Recursive Drawing",
+    "count": "2"
+  },
+  {
+    "url": "http://rayninfo.co.uk/vimtips.html",
+    "title": "Best of VIM Tips, gVIM's Key Features zzapper",
+    "count": "2"
+  },
+  {
+    "url": "http://raphaeljs.com/",
+    "title": "An Intro to Raphaël - Raphaël",
+    "count": "2"
+  },
+  {
+    "url": "http://railscasts.com/episodes/288-billing-with-stripe",
+    "title": "#288 Billing with Stripe - RailsCasts",
+    "count": "2"
+  },
+  {
+    "url": "http://radio.garden/",
+    "title": "Radio Garden – Explore live radio by rotating the globe",
+    "count": "2"
+  },
+  {
+    "url": "http://pzemtsov.github.io/2016/11/06/bug-story-alignment-on-x86.html",
+    "title": "A bug story: data alignment on x86",
+    "count": "2"
+  },
+  {
+    "url": "http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://pyjs.org/",
+    "title": "Pyjs",
+    "count": "2"
+  },
+  {
+    "url": "http://probcomp.csail.mit.edu/bayesdb",
+    "title": "Page not found – MIT Probabilistic Computing Project",
+    "count": "2"
+  },
+  {
+    "url": "http://previous.alternative-system.com/",
+    "title": "About",
+    "count": "2"
+  },
+  {
+    "url": "http://politics.salon.com/2011/10/08/steve_jobs_and_drug_policy/singleton",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://phrack.org/issues/69/1.html",
+    "title": ".:: Phrack Magazine ::.",
+    "count": "2"
+  },
+  {
+    "url": "http://phonegap.com/",
+    "title": "Phonegap.com",
+    "count": "2"
+  },
+  {
+    "url": "http://philosecurity.org/2009/01/12/interview-with-an-adware-author",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://phil.nullable.eu/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://philip.greenspun.com/humor/eecs-difference-explained",
+    "title": "EE versus CS",
+    "count": "2"
+  },
+  {
+    "url": "http://philip.greenspun.com/ancient-history/managing-software-engineers",
+    "title": "Managing Software Engineers",
+    "count": "2"
+  },
+  {
+    "url": "http://phaser.io/",
+    "title": "Phaser - A fast, fun and free open source HTML5 game framework",
+    "count": "2"
+  },
+  {
+    "url": "http://pelulamu.net/unscii",
+    "title": "Pelulamu.net",
+    "count": "2"
+  },
+  {
+    "url": "http://pdp11.aiju.de/",
+    "title": "PDP-11 emulator",
+    "count": "2"
+  },
+  {
+    "url": "http://paulgraham.com/vb.html",
+    "title": "Life is Short",
+    "count": "2"
+  },
+  {
+    "url": "http://paulgraham.com/makersschedule.html",
+    "title": "Maker's Schedule, Manager's Schedule",
+    "count": "2"
+  },
+  {
+    "url": "http://paulgraham.com/ideas.html",
+    "title": "Ideas for Startups",
+    "count": "2"
+  },
+  {
+    "url": "http://paulgraham.com/hs.html",
+    "title": "What You'll Wish You'd Known",
+    "count": "2"
+  },
+  {
+    "url": "http://paulgraham.com/head.html",
+    "title": "Holding a Program in One's Head",
+    "count": "2"
+  },
+  {
+    "url": "http://paulgraham.com/ds.html",
+    "title": "Do Things that Don't Scale",
+    "count": "2"
+  },
+  {
+    "url": "http://patriciopalladino.com/blog/2012/08/09/non-alphanumeric-javascript.html",
+    "title": "Page not found · GitHub Pages",
+    "count": "2"
+  },
+  {
+    "url": "http://patoline.org/",
+    "title": "NameBright - Coming Soon",
+    "count": "2"
+  },
+  {
+    "url": "http://opensource.plurk.com/LightCloud",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://opendatastructures.org/",
+    "title": "Open Data Structures",
+    "count": "2"
+  },
+  {
+    "url": "http://okbjgm.weebly.com/uploads/3/1/5/0/31506003/11_laws_of_showrunning_nice_version.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://nsa.unaligned.org/",
+    "title": "NSA :: Overview",
+    "count": "2"
+  },
+  {
+    "url": "http://norvig.com/spell-correct.html",
+    "title": "How to Write a Spelling Corrector",
+    "count": "2"
+  },
+  {
+    "url": "http://norvig.com/python-iaq.html",
+    "title": "Python IAQ: Infrequently Answered Questions",
+    "count": "2"
+  },
+  {
+    "url": "http://norvig.com/chomsky.html",
+    "title": "On Chomsky and the Two Cultures of Statistical Learning",
+    "count": "2"
+  },
+  {
+    "url": "http://news.bbc.co.uk/2/hi/health/7909464.stm",
+    "title": "BBC NEWS | Health | Long hours link to dementia risk",
+    "count": "2"
+  },
+  {
+    "url": "http://nethack4.org/blog/memory.html",
+    "title": "Memory management in C programs",
+    "count": "2"
+  },
+  {
+    "url": "http://ncombinator.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://nathanmarz.com/blog/you-should-blog-even-if-you-have-no-readers.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://nathanmarz.com/blog/clojures-missing-piece.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://mycpu.thtec.org/www-mycpu-eu/index1.htm",
+    "title": "FEHLER 404 - Nicht gefunden!",
+    "count": "2"
+  },
+  {
+    "url": "http://mitpress.mit.edu/books/full_pdfs/Street-Fighting_Mathematics.pdf",
+    "title": "Page not found - MIT Press",
+    "count": "2"
+  },
+  {
+    "url": "http://mislav.uniqpath.com/2010/07/git-tips",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://metamodern.com/2009/05/27/how-to-learn-about-everything",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://media3.washingtonpost.com/wp-dyn/content/graphic/2006/03/16/GR2006031600213.gif",
+    "title": "GR2006031600213.gif (624×678)",
+    "count": "2"
+  },
+  {
+    "url": "http://matt-welsh.blogspot.com/2009/02/how-i-almost-killed-facebook.html",
+    "title": "Volatile and Decentralized: How I almost killed Facebook",
+    "count": "2"
+  },
+  {
+    "url": "http://matrixmultiplication.xyz/",
+    "title": "Matrix Multiplication",
+    "count": "2"
+  },
+  {
+    "url": "http://lua-users.org/lists/lua-l/2009-11/msg00089.html",
+    "title": "LuaJIT 2.0 intellectual property disclosure and research opportunities",
+    "count": "2"
+  },
+  {
+    "url": "http://lists.ethernal.org/oldarchives/cantlug-0211/msg00174.html",
+    "title": "Re: Not an awk question",
+    "count": "2"
+  },
+  {
+    "url": "http://lispwebtales.ppenev.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://lispm.de/symbolics-lisp-machine-ergonomics",
+    "title": "Ergonomics of the Symbolics Lisp Machine",
+    "count": "2"
+  },
+  {
+    "url": "http://libmill.org/index.html",
+    "title": "libmill.org",
+    "count": "2"
+  },
+  {
+    "url": "http://kushagragour.in/lab/hint",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://kurtmunger.com/dirty_lens_articleid35.html",
+    "title": "Dirty lens article",
+    "count": "2"
+  },
+  {
+    "url": "http://ksat.me/map-reduce-a-really-simple-introduction-kloudo",
+    "title": "Map Reduce - A really simple introduction « Kaushik Sathupadi",
+    "count": "2"
+  },
+  {
+    "url": "http://kittenlang.org/",
+    "title": "Kitten Programming Language",
+    "count": "2"
+  },
+  {
+    "url": "http://kbrower.posterous.com/banned-from-adwords-and-google-search-in-less",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://jqapi.com/",
+    "title": "jQAPI - Alternative jQuery Documentation Browser",
+    "count": "2"
+  },
+  {
+    "url": "http://joxa.org/",
+    "title": "Joxa",
+    "count": "2"
+  },
+  {
+    "url": "http://jonathan.tang.name/files/scheme_in_48/tutorial/overview.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://joekraus.com/were-creating-a-culture-of-distraction",
+    "title": "Site Not Configured | 404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://jesusphreak.infogami.com/blog/why_django",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://jekor.com/article/is-haskell-a-good-choice-for-web-applications",
+    "title": "Is Haskell a Good Choice for Web Applications?",
+    "count": "2"
+  },
+  {
+    "url": "http://javascript.infogami.com/Javascript_in_Ten_Minutes",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://james-iry.blogspot.com/2009/05/brief-incomplete-and-mostly-wrong.html",
+    "title": "One Div Zero: A Brief, Incomplete, and Mostly Wrong History of Programming Languages",
+    "count": "2"
+  },
+  {
+    "url": "http://ixoth.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://ioccc.org/2013/cable3/hint.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://immersivemath.com/ila/index.html",
+    "title": "Immersive Math",
+    "count": "2"
+  },
+  {
+    "url": "http://html5test.com/",
+    "title": "HTML5test - How well does your browser support HTML5?",
+    "count": "2"
+  },
+  {
+    "url": "http://howtosplitanatom.com/news/32-sci-fi-novels-you-should-read",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://hood.ie/",
+    "title": "hood.ie",
+    "count": "2"
+  },
+  {
+    "url": "http://home.pipeline.com/~hbaker1/LinearLisp.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://hnpoints.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://highscalability.com/latency-everywhere-and-it-costs-you-sales-how-crush-it",
+    "title": "Latency is Everywhere and it Costs You Sales - How to Crush it - High Scalability -",
+    "count": "2"
+  },
+  {
+    "url": "http://highscalability.com/how-google-taught-me-cache-and-cash",
+    "title": "How Google Taught Me to Cache and Cash-In - High Scalability -",
+    "count": "2"
+  },
+  {
+    "url": "http://highscalability.com/blog/2016/1/11/a-beginners-guide-to-scaling-to-11-million-users-on-amazons.html",
+    "title": "A Beginner's Guide to Scaling to 11 Million+ Users on Amazon's AWS - High Scalability -",
+    "count": "2"
+  },
+  {
+    "url": "http://highscalability.com/blog/2010/3/16/justintvs-live-video-broadcasting-architecture.html",
+    "title": "Justin.tv's Live Video Broadcasting Architecture - High Scalability -",
+    "count": "2"
+  },
+  {
+    "url": "http://haskellformac.com/",
+    "title": "Haskell for Mac IDE — Learn Functional Programming with Haskell",
+    "count": "2"
+  },
+  {
+    "url": "http://hackermonthly.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://graph.tk/",
+    "title": "graph.tk",
+    "count": "2"
+  },
+  {
+    "url": "http://google-styleguide.googlecode.com/svn/trunk/pyguide.html",
+    "title": "Error 404 (Not Found)!!1",
+    "count": "2"
+  },
+  {
+    "url": "http://google-engtools.blogspot.com/2011/12/bug-prediction-at-google.html",
+    "title": "Google Engineering Tools: Bug Prediction at Google",
+    "count": "2"
+  },
+  {
+    "url": "http://gagne.homedns.org/~tgagne/contrib/EarlyHistoryST.html",
+    "title": "The Early History of Smalltalk",
+    "count": "2"
+  },
+  {
+    "url": "http://ftp.squeak.org/docs/OOPSLA.Squeak.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://ftp.newartisans.com/pub/git.from.bottom.up.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://fnord1.blog.ca/2008/06/30/bad-security-at-evite-4382575",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://flint.cs.yale.edu/cs421/case-for-ml.html",
+    "title": "Why ML/OCaml are good for writing compilers",
+    "count": "2"
+  },
+  {
+    "url": "http://flexcoin.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://filer.case.edu/dts8/thelastq.htm",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://facebook.github.io/origami",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://ergoemacs.org/emacs/elisp.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://elixir-lang.org/",
+    "title": "The Elixir programming language",
+    "count": "2"
+  },
+  {
+    "url": "http://ebiquity.umbc.edu/blogger/2008/01/19/how-dr-suess-would-prove-the-halting-problem-undecidable",
+    "title": "403 Forbidden",
+    "count": "2"
+  },
+  {
+    "url": "http://e7l3.org/classics.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://ducklang.org/designing-a-programming-language-i",
+    "title": "Designing a Programming Language: I | Duck Programming Language Official Website",
+    "count": "2"
+  },
+  {
+    "url": "http://drakon-editor.sourceforge.net/",
+    "title": "DRAKON Editor",
+    "count": "2"
+  },
+  {
+    "url": "http://dippl.org/",
+    "title": "The Design and Implementation of Probabilistic Programming Languages",
+    "count": "2"
+  },
+  {
+    "url": "http://dev.stephendiehl.com/numpile",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://dev.stephendiehl.com/fun",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://dbmsmusings.blogspot.com/2010/04/problems-with-cap-and-yahoos-little.html",
+    "title": "DBMS Musings: Problems with CAP, and Yahoo’s little known NoSQL system",
+    "count": "2"
+  },
+  {
+    "url": "http://dave.fayr.am/posts/2012-10-4-finding-fizzbuzz.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://databrewery.org/",
+    "title": "Data a Brewery",
+    "count": "2"
+  },
+  {
+    "url": "http://darling.dolezel.info/en/Darling",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://danshipper.com/nothing-happens-until-the-sale-is-made",
+    "title": "How to get your first 10 customers",
+    "count": "2"
+  },
+  {
+    "url": "http://damienkatz.net/2008/03/what_sucks_abou.html",
+    "title": "Damien Katz: What Sucks About Erlang",
+    "count": "2"
+  },
+  {
+    "url": "http://cslibrary.stanford.edu/",
+    "title": "Stanford CS Ed Library",
+    "count": "2"
+  },
+  {
+    "url": "http://cr.yp.to/critbit.html",
+    "title": "Crit-bit trees",
+    "count": "2"
+  },
+  {
+    "url": "http://computers-are-fast.github.io/",
+    "title": "One second code: Do YOU know how much your computer can do in a second?",
+    "count": "2"
+  },
+  {
+    "url": "http://compgeom.cs.uiuc.edu/~jeffe/teaching/algorithms",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://commfaculty.fullerton.edu/woverbeck/dtr5.htm",
+    "title": "Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://coffeekup.org/",
+    "title": "CoffeeKup",
+    "count": "2"
+  },
+  {
+    "url": "http://codex99.com/design/the-hp35.html",
+    "title": "The HP-35",
+    "count": "2"
+  },
+  {
+    "url": "http://coconut-lang.org/",
+    "title": "Coconut Programming Language",
+    "count": "2"
+  },
+  {
+    "url": "http://clrs.cc/",
+    "title": "Colors - A nicer color palette for the web.",
+    "count": "2"
+  },
+  {
+    "url": "http://classics.mit.edu/Antoninus/meditations.html",
+    "title": "The Internet Classics Archive | The Meditations by Marcus Aurelius",
+    "count": "2"
+  },
+  {
+    "url": "http://ciml.info/",
+    "title": "A Course in Machine Learning",
+    "count": "2"
+  },
+  {
+    "url": "http://chargen.matasano.com/chargen/2009/7/22/if-youre-typing-the-letters-a-e-s-into-your-code-youre-doing.html",
+    "title": "Error: Active domain connection for this domain not found",
+    "count": "2"
+  },
+  {
+    "url": "http://chadfowler.com/blog/2014/01/19/empathy",
+    "title": "Page not found · GitHub Pages",
+    "count": "2"
+  },
+  {
+    "url": "http://cb.vu/unixtoolbox.xhtml",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://catb.org/jargon/html/magic-story.html",
+    "title": "A Story About ‘Magic'",
+    "count": "2"
+  },
+  {
+    "url": "http://carl.flax.ie/dothingstellpeople.html",
+    "title": "Do Things, Tell People.",
+    "count": "2"
+  },
+  {
+    "url": "http://cantada.ca/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://calteches.library.caltech.edu/51/2/CargoCult.htm",
+    "title": "Cargo Cult Science",
+    "count": "2"
+  },
+  {
+    "url": "http://boston.conman.org/2015/06/16.1",
+    "title": "A constructive look at the Atari 2600 BASIC cartridge - The Boston Diaries - Captain Napalm",
+    "count": "2"
+  },
+  {
+    "url": "http://book.mixu.net/distsys/single-page.html",
+    "title": "Distributed systems for fun and profit",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.wilshipley.com/2013/12/my-doom-20th-anniversary-stories.html",
+    "title": "My “Doom” 20th Anniversary Stories | Call Me Fishmeal.",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.webmynd.com/2009/02/28/databases-as-a-service-fathomdb",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.weatherby.net/2009/02/could-atlanta-buy-a-silicon-valley-the-answers.html",
+    "title": "Could Atlanta Buy A Silicon Valley? The Answers | Force of Good",
+    "count": "2"
+  },
+  {
+    "url": "http://blogs.valvesoftware.com/economics/arbitrage-and-equilibrium-in-the-team-fortress-2-economy",
+    "title": "403 Forbidden",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.sumall.com/journal/optimizely-got-me-fired.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://blogs.perl.org/users/rafael_garcia-suarez/2011/10/why-dart-is-not-the-language-of-the-future.html",
+    "title": "Why Dart is not the language of the future | Rafaël Garcia-Suarez [blogs.perl.org]",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.samaltman.com/board-members",
+    "title": "Board Members - Sam Altman",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.rongarret.info/2015/05/why-lisp.html",
+    "title": "Rondam Ramblings: Why Lisp?",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.n01se.net/?p=41",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.llvm.org/2011/05/what-every-c-programmer-should-know_14.html",
+    "title": "What Every C Programmer Should Know About Undefined Behavior #2/3 - The LLVM Project Blog",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.burtonthird.com/?p=81",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.bjrn.se/2008/10/lets-build-mp3-decoder.html",
+    "title": "blog.bjrn.se: Let’s build an MP3-decoder!",
+    "count": "2"
+  },
+  {
+    "url": "http://bitcore.io/",
+    "title": "Bitcoin Platform and API | Bitcore",
+    "count": "2"
+  },
+  {
+    "url": "http://billhails.net/Book/front.html",
+    "title": "Exploring Programming Language Architecture in Perl",
+    "count": "2"
+  },
+  {
+    "url": "http://bentilly.blogspot.com/2009/09/teaching-linear-algebra.html",
+    "title": "Random Observations: Teaching linear algebra",
+    "count": "2"
+  },
+  {
+    "url": "http://bastiat.org/en/petition.html",
+    "title": "Bastiat's famous Candlestick makers' Petition",
+    "count": "2"
+  },
+  {
+    "url": "http://astronaut.io/",
+    "title": "Astronaut",
+    "count": "2"
+  },
+  {
+    "url": "http://archive.vector.org.uk/art10010830",
+    "title": "Vector, the Journal of the British APL Association",
+    "count": "2"
+  },
+  {
+    "url": "http://archive.boston.com/bigpicture/2010/08/comments_russia_in_color_a_century_ago.html",
+    "title": "Russia in color, a century ago | Photos | The Big Picture | Boston.com",
+    "count": "2"
+  },
+  {
+    "url": "http://antirez.com/news/61",
+    "title": "English has been my pain for 15 years - <antirez>",
+    "count": "2"
+  },
+  {
+    "url": "http://antirez.com/articoli/tclmisunderstood.html",
+    "title": "Tcl the misunderstood",
+    "count": "2"
+  },
+  {
+    "url": "http://amasci.com/weird/unusual/e-wall.html",
+    "title": "David Swenson's electrostatic \"invisible wall\" (1996)",
+    "count": "2"
+  },
+  {
+    "url": "http://amasci.com/miscon/whyhard2.html",
+    "title": "WHY HARD: Why Electricity is Impossible to Understand",
+    "count": "2"
+  },
+  {
+    "url": "http://amasci.com/amateur/whygnd.html",
+    "title": "WHY THREE PRONGS? Electrical ground, stray voltage",
+    "count": "2"
+  },
+  {
+    "url": "http://alumni.media.mit.edu/~jorkin/aibooks.html",
+    "title": "The AI Programmer's Bookshelf",
+    "count": "2"
+  },
+  {
+    "url": "http://alan.blog-city.com/has_amazon_ec2_become_over_subscribed.htm",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://adv-r.had.co.nz/",
+    "title": "Welcome · Advanced R.",
+    "count": "2"
+  },
+  {
+    "url": "http://507movements.com/",
+    "title": "507 Mechanical Movements",
+    "count": "2"
+  },
+  {
+    "url": "http://0pointer.net/blog/revisiting-how-we-put-together-linux-systems.html",
+    "title": "Revisiting How We Put Together Linux Systems",
+    "count": "2"
+  },
+  {
+    "url": "https://0.30000000000000004.com/",
+    "title": "Floating Point Math",
+    "count": "2"
+  },
+  {
+    "url": "https://aaronsw.jottit.com/howtoget",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://acko.net/blog/on-termkit",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://adgrok.com/why-founding-a-three-person-startup-with-zero-revenue-is-better-than-working-for-goldman-sachs",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://al3x.svbtle.com/alexander-grothendieck",
+    "title": "Alexander Grothendieck, the secret genius of mathematics",
+    "count": "2"
+  },
+  {
+    "url": "http://aprilzero.com/",
+    "title": "Anand Sharma on Gyroscope",
+    "count": "2"
+  },
+  {
+    "url": "https://archive.org/donate",
+    "title": "Internet Archive: Digital Library of Free & Borrowable Books, Movies, Music & Wayback Machine",
+    "count": "2"
+  },
+  {
+    "url": "https://arc.io/",
+    "title": "Arc - The peer-to-peer CDN that pays you.",
+    "count": "2"
+  },
+  {
+    "url": "https://arduinohistory.github.io/",
+    "title": "The Untold History of Arduino",
+    "count": "2"
+  },
+  {
+    "url": "https://arxiv.org/abs/1512.06808",
+    "title": "[1512.06808] Game Theory (Open Access textbook with 165 solved exercises)",
+    "count": "2"
+  },
+  {
+    "url": "https://asteroidos.org/",
+    "title": "Hack your wrist - AsteroidOS",
+    "count": "2"
+  },
+  {
+    "url": "http://backbonejs.org/",
+    "title": "Backbone.js",
+    "count": "2"
+  },
+  {
+    "url": "https://bedrocklinux.org/",
+    "title": "Bedrock Linux",
+    "count": "2"
+  },
+  {
+    "url": "https://betterexplained.com/",
+    "title": "BetterExplained – Math lessons that click",
+    "count": "2"
+  },
+  {
+    "url": "https://blizzard.cs.uwaterloo.ca/keshav/home/Papers/data/07/paper-reading.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://bl.ocks.org/jinroh/7524988",
+    "title": "Fourier series visualisation with d3.js. - bl.ocks.org",
+    "count": "2"
+  },
+  {
+    "url": "https://bl.ocks.org/mbostock/11357811",
+    "title": "Wilson’s Algorithm - bl.ocks.org",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.0x972.info/?d=2014/11/13/10/40/50-how-does-a-debugger-work",
+    "title": "How Does a C Debugger Work? (GDB Ptrace/x86 example) - (gdb) break *0x972",
+    "count": "2"
+  },
+  {
+    "url": "http://blog.bumblebeelabs.com/social-software-sundays-2-the-evaporative-cooling-effect",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.chriszacharias.com/a-conspiracy-to-kill-ie6",
+    "title": "A Conspiracy To Kill IE6",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.garrytan.com/travel-planning-software-the-most-common-bad",
+    "title": "Travel planning software: The most common bad startup idea - garry's posthaven",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.invisiblethings.org/2015/12/23/state_harmful.html",
+    "title": "State considered harmful - A proposal for a stateless laptop (new paper) | The Invisible Things",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.metaobject.com/2015/10/jitterdammerung.html",
+    "title": "metablog: Jitterdämmerung",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.plover.com/tech/prudential.html",
+    "title": "The Universe of Discourse : The shittiest project I ever worked on",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.regehr.org/archives/1292",
+    "title": "SQLite with a Fine-Toothed Comb – Embedded in Academia",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.regehr.org/archives/861",
+    "title": "Operant Conditioning by Software Bugs – Embedded in Academia",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.regehr.org/archives/953",
+    "title": "MSCS – Embedded in Academia",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.robertelder.org/recording-660-fps-on-raspberry-pi-camera",
+    "title": "A Guide to Recording 660FPS Video On A $6 Raspberry Pi Camera",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.robertelder.org/switch-statements-statement-expressions",
+    "title": "How to Get Fired Using Switch Statements & Statement Expressions",
+    "count": "2"
+  },
+  {
+    "url": "https://blog.samaltman.com/the-days-are-long-but-the-decades-are-short",
+    "title": "The days are long but the decades are short - Sam Altman",
+    "count": "2"
+  },
+  {
+    "url": "https://boingboing.net/2012/08/23/civilwar.html",
+    "title": "The coming civil war over general purpose computing | Boing Boing",
+    "count": "2"
+  },
+  {
+    "url": "https://boingboing.net/2015/05/08/your-cyberpunk-games-are-dange.html",
+    "title": "Your cyberpunk games are dangerous | Boing Boing",
+    "count": "2"
+  },
+  {
+    "url": "http://bombsight.org/",
+    "title": "Bomb Sight - Mapping the World War 2 London Blitz Bomb Census",
+    "count": "2"
+  },
+  {
+    "url": "http://brianreily.com/project/juno",
+    "title": "Brian Reily - Robotics PhD",
+    "count": "2"
+  },
+  {
+    "url": "https://brokenbytes.blogspot.com/2018/03/a-48khz-digital-music-player-for.html",
+    "title": "Broken Bytes: A 48Khz digital music player for the Commodore 64",
+    "count": "2"
+  },
+  {
+    "url": "https://bugs.php.net/bug.php?id=50696",
+    "title": "PHP :: Bug #50696 :: number_format when passed a 0 as first function argument, returns null",
+    "count": "2"
+  },
+  {
+    "url": "https://c2.com/cgi/wiki?LispIsTooPowerful",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://c9x.me/articles/gthreads/intro.html",
+    "title": "Green threads explained (intro)",
+    "count": "2"
+  },
+  {
+    "url": "https://cacm.acm.org/magazines/2016/7/204032-why-google-stores-billions-of-lines-of-code-in-a-single-repository/fulltext",
+    "title": "Why Google Stores Billions of Lines of Code in a Single Repository | July 2016 | Communications of the ACM",
+    "count": "2"
+  },
+  {
+    "url": "https://calculusmadeeasy.org/",
+    "title": "Calculus Made Easy",
+    "count": "2"
+  },
+  {
+    "url": "https://cbor.io/",
+    "title": "CBOR — Concise Binary Object Representation | Overview",
+    "count": "2"
+  },
+  {
+    "url": "https://cchound.com/",
+    "title": "cchound.com - Royalty Free Music Providers. • cchound",
+    "count": "2"
+  },
+  {
+    "url": "https://cdecl.org/",
+    "title": "cdecl: C gibberish ↔ English",
+    "count": "2"
+  },
+  {
+    "url": "https://cdixon.org/2010/01/03/the-next-big-thing-will-start-out-looking-like-a-toy",
+    "title": "cdixon | The next big thing will start out looking like a toy",
+    "count": "2"
+  },
+  {
+    "url": "https://changelog.complete.org/archives/7562-i-introduced-my-5-year-old-and-2-year-old-to-startx-and-xmonad-theyre-delighted",
+    "title": "I introduced my 5-year-old and 2-year-old to startx and xmonad. They’re DELIGHTED! | The Changelog",
+    "count": "2"
+  },
+  {
+    "url": "https://choosealicense.com/",
+    "title": "Choose an open source license | Choose a License",
+    "count": "2"
+  },
+  {
+    "url": "https://clojurecup.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://cockpit-project.org/",
+    "title": "Cockpit Project — Cockpit Project",
+    "count": "2"
+  },
+  {
+    "url": "https://code.joejag.com/2016/anti-if-the-missing-patterns.html",
+    "title": "Anti-If: The missing patterns",
+    "count": "2"
+  },
+  {
+    "url": "https://code.visualstudio.com/updates/v1_7",
+    "title": "Visual Studio Code October 2016 1.7",
+    "count": "2"
+  },
+  {
+    "url": "https://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html",
+    "title": "command center: Less is exponentially more",
+    "count": "2"
+  },
+  {
+    "url": "https://commoncrawl.org/",
+    "title": "Common Crawl",
+    "count": "2"
+  },
+  {
+    "url": "https://composingprograms.com/",
+    "title": "Composing Programs",
+    "count": "2"
+  },
+  {
+    "url": "http://conal.net/blog/posts/can-functional-programming-be-liberated-from-the-von-neumann-paradigm",
+    "title": "Conal Elliott » Can functional programming be liberated from the von Neumann paradigm?",
+    "count": "2"
+  },
+  {
+    "url": "http://conal.net/blog/posts/the-c-language-is-purely-functional",
+    "title": "Conal Elliott » The C language is purely functional",
+    "count": "2"
+  },
+  {
+    "url": "https://crackstation.net/hashing-security.htm",
+    "title": "Secure Salted Password Hashing - How to do it Properly",
+    "count": "2"
+  },
+  {
+    "url": "https://crates.io/",
+    "title": "crates.io: Rust Package Registry",
+    "count": "2"
+  },
+  {
+    "url": "https://cryptopals.com/",
+    "title": "The Cryptopals Crypto Challenges",
+    "count": "2"
+  },
+  {
+    "url": "http://cssgridgarden.com/",
+    "title": "Grid Garden - A game for learning CSS grid",
+    "count": "2"
+  },
+  {
+    "url": "https://cssreference.io/",
+    "title": "CSS Reference - A free visual guide to CSS",
+    "count": "2"
+  },
+  {
+    "url": "https://cube20.org/",
+    "title": "God's Number is 20",
+    "count": "2"
+  },
+  {
+    "url": "http://danbricklin.com/log/2009_12_05.htm",
+    "title": "Starting December 5, 2009",
+    "count": "2"
+  },
+  {
+    "url": "https://daniel.haxx.se/docs/curl-vs-wget.html",
+    "title": "curl vs Wget",
+    "count": "2"
+  },
+  {
+    "url": "https://deepstream.io/",
+    "title": "deepstream.io",
+    "count": "2"
+  },
+  {
+    "url": "http://defundthensa.com/",
+    "title": "NSA surveillance program nearly defunded by the Amash amendment",
+    "count": "2"
+  },
+  {
+    "url": "http://designingwebinterfaces.com/designing-web-interfaces-12-screen-patterns",
+    "title": "12 Standard Screen Patterns",
+    "count": "2"
+  },
+  {
+    "url": "https://devdocs.io/",
+    "title": "DevDocs API Documentation",
+    "count": "2"
+  },
+  {
+    "url": "https://developer.marvel.com/",
+    "title": "Marvel Developer Portal",
+    "count": "2"
+  },
+  {
+    "url": "https://developer.palm.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://dmitryfrank.com/articles/how_i_ended_up_writing_my_own_kernel",
+    "title": "How I ended up writing a new real-time kernel [Dmitry Frank]",
+    "count": "2"
+  },
+  {
+    "url": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+    "title": "What Every Computer Scientist Should Know About Floating-Point Arithmetic",
+    "count": "2"
+  },
+  {
+    "url": "https://douaneapp.com/",
+    "title": "Douane: Linux personal firewall with per application rule controls",
+    "count": "2"
+  },
+  {
+    "url": "https://dougblack.io/words/a-good-vimrc.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://duckduckgo.com/",
+    "title": "DuckDuckGo — Privacy, simplified.",
+    "count": "2"
+  },
+  {
+    "url": "https://duckduckhack.com/",
+    "title": "DuckDuckHack",
+    "count": "2"
+  },
+  {
+    "url": "https://duktape.org/",
+    "title": "Duktape",
+    "count": "2"
+  },
+  {
+    "url": "https://ecc-comp.blogspot.com/2015/05/a-brief-glance-at-how-5-text-editors.html",
+    "title": "A Brief Glance at How Various Text Editors Manage Their Textual Data",
+    "count": "2"
+  },
+  {
+    "url": "https://electronics.stackexchange.com/questions/18552/why-was-mini-usb-deprecated-in-favor-of-micro-usb",
+    "title": "connector - Why was Mini USB deprecated in favor of Micro USB? - Electrical Engineering Stack Exchange",
+    "count": "2"
+  },
+  {
+    "url": "https://elementary.io/",
+    "title": "The thoughtful, capable, and ethical replacement for Windows and macOS ⋅ elementary OS",
+    "count": "2"
+  },
+  {
+    "url": "https://element.eleme.io/",
+    "title": "Element - The world's most popular Vue UI framework",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Antikythera_mechanism",
+    "title": "Antikythera mechanism - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Arcosanti",
+    "title": "Arcosanti - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/E-Prime",
+    "title": "E-Prime - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/G%C3%B6del%27s_ontological_proof",
+    "title": "Gödel's ontological proof - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Gimli_Glider",
+    "title": "Gimli Glider - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Hawala",
+    "title": "Hawala - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Impossible_color",
+    "title": "Impossible color - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/List_of_unsolved_problems_in_physics",
+    "title": "List of unsolved problems in physics - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Micromort",
+    "title": "Micromort - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Mpemba_effect",
+    "title": "Mpemba effect - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Pirate_game",
+    "title": "Pirate game - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Raising_of_Chicago",
+    "title": "Raising of Chicago - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Secretary_problem",
+    "title": "Secretary problem - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Silphium",
+    "title": "Silphium - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Sweden_Solar_System",
+    "title": "Sweden Solar System - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Timeline_of_the_far_future",
+    "title": "Timeline of the far future - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/User_talk:Jimbo_Wales",
+    "title": "User talk:Jimbo Wales - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/UVB-76",
+    "title": "UVB-76 - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://ephtracy.github.io/",
+    "title": "MagicaVoxel",
+    "count": "2"
+  },
+  {
+    "url": "https://eprint.iacr.org/2014/904",
+    "title": "How Secure is TextSecure?",
+    "count": "2"
+  },
+  {
+    "url": "https://everynoise.com/",
+    "title": "Every Noise at Once",
+    "count": "2"
+  },
+  {
+    "url": "https://evincarofautumn.blogspot.com/2012/02/why-concatenative-programming-matters.html",
+    "title": "The Big Mud Puddle: Why Concatenative Programming Matters",
+    "count": "2"
+  },
+  {
+    "url": "https://existentialtype.wordpress.com/2012/08/14/haskell-is-exceptionally-unsafe",
+    "title": "Page not found | Existential Type",
+    "count": "2"
+  },
+  {
+    "url": "https://explained.ai/decision-tree-viz/index.html",
+    "title": "How to visualize decision trees",
+    "count": "2"
+  },
+  {
+    "url": "https://explained.ai/matrix-calculus/index.html",
+    "title": "The Matrix Calculus You Need For Deep Learning",
+    "count": "2"
+  },
+  {
+    "url": "https://exploit-exercises.com/",
+    "title": "Homepage One - exploit-exercises.com",
+    "count": "2"
+  },
+  {
+    "url": "https://fabiensanglard.net/another_world_polygons/index.html",
+    "title": "The polygons of Another World",
+    "count": "2"
+  },
+  {
+    "url": "https://ferd.ca/awk-in-20-minutes.html",
+    "title": "Awk in 20 Minutes",
+    "count": "2"
+  },
+  {
+    "url": "https://ferd.ca/the-little-printf.html",
+    "title": "The Little Printf",
+    "count": "2"
+  },
+  {
+    "url": "https://ffmpeg.org/download.html",
+    "title": "Download FFmpeg",
+    "count": "2"
+  },
+  {
+    "url": "https://flexboxfroggy.com/",
+    "title": "Flexbox Froggy - A game for learning CSS flexbox",
+    "count": "2"
+  },
+  {
+    "url": "https://flif.info/",
+    "title": "FLIF - Free Lossless Image Format",
+    "count": "2"
+  },
+  {
+    "url": "https://floating-point-gui.de/",
+    "title": "The Floating-Point Guide - What Every Programmer Should Know About Floating-Point Arithmetic",
+    "count": "2"
+  },
+  {
+    "url": "https://ftp.arl.army.mil/~mike/ping.html",
+    "title": "The Story of the PING Program",
+    "count": "2"
+  },
+  {
+    "url": "http://futurice.com/blog/reactive-mvc-and-the-virtual-dom",
+    "title": "Reactive MVC and the Virtual DOM",
+    "count": "2"
+  },
+  {
+    "url": "https://gamesfromwithin.com/data-oriented-design",
+    "title": "Data-Oriented Design (Or Why You Might Be Shooting Yourself in The Foot With OOP) – Games from Within",
+    "count": "2"
+  },
+  {
+    "url": "https://gcc.godbolt.org/",
+    "title": "Compiler Explorer",
+    "count": "2"
+  },
+  {
+    "url": "https://geocar.sdf1.org/alloc.html",
+    "title": "How to allocate memory",
+    "count": "2"
+  },
+  {
+    "url": "http://geohot.com/",
+    "title": "geohot",
+    "count": "2"
+  },
+  {
+    "url": "https://getaether.net/",
+    "title": "Aether",
+    "count": "2"
+  },
+  {
+    "url": "https://getbootstrap.com/",
+    "title": "Bootstrap · The most popular HTML, CSS, and JS library in the world.",
+    "count": "2"
+  },
+  {
+    "url": "https://getfirebug.com/",
+    "title": "Firebug",
+    "count": "2"
+  },
+  {
+    "url": "https://gist.github.com/289467",
+    "title": "Page not found · GitHub · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/alexellis/faas",
+    "title": "GitHub - alexellis/faas: OpenFaaS - Serverless Functions Made Simple",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/git/git/commit/e83c5163316f89bfbde7d9ab23ca2e25604af290",
+    "title": "Initial revision of \"git\", the information manager from hell · git/git@e83c516 · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ieure/sicp",
+    "title": "GitHub - ieure/sicp: Structure and Interpretation of Computer Programs, Second Edition",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/mahmoud/boltons",
+    "title": "GitHub - mahmoud/boltons: 🔩 Like builtins, but boltons. 250+ constructs, recipes, and snippets which extend (and rely on nothing but) the Python standard library. Nothing like Michael Bolton.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/marak/Faker.js",
+    "title": "Page not found · GitHub · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/marcuswestin/store.js",
+    "title": "GitHub - marcuswestin/store.js: Cross-browser storage for all use cases, used across the web.",
+    "count": "2"
+  },
+  {
+    "url": "https://gitless.com/",
+    "title": "Gitless",
+    "count": "2"
+  },
+  {
+    "url": "https://gizmodo.com/how-fighter-jets-lock-on-and-how-the-targets-know-1644871272",
+    "title": "How Fighter Jets Lock On (and How the Targets Know)",
+    "count": "2"
+  },
+  {
+    "url": "https://gojs.net/latest/index.html",
+    "title": "GoJS",
+    "count": "2"
+  },
+  {
+    "url": "https://graphicallinearalgebra.net/",
+    "title": "Graphical Linear Algebra",
+    "count": "2"
+  },
+  {
+    "url": "https://graydon2.dreamwidth.org/193447.html",
+    "title": "Just a moment...",
+    "count": "2"
+  },
+  {
+    "url": "https://graydon2.dreamwidth.org/253769.html",
+    "title": "Just a moment...",
+    "count": "2"
+  },
+  {
+    "url": "https://gridcoin.us/",
+    "title": "Gridcoin - Rewarding Scientific Distributed Computing",
+    "count": "2"
+  },
+  {
+    "url": "https://hackerpublicradio.org/",
+    "title": "Hacker Public Radio ~ The Technology Community Podcast",
+    "count": "2"
+  },
+  {
+    "url": "https://hamberg.no/erlend/posts/2013-02-18-static-array-indices.html",
+    "title": "A nice, little known C feature: Static array indices in parameter declarations",
+    "count": "2"
+  },
+  {
+    "url": "https://handmadehero.org/",
+    "title": "Handmade Hero",
+    "count": "2"
+  },
+  {
+    "url": "http://harry.me/2011/02/17/neat-algorithms---flocking",
+    "title": "Page not found · GitHub Pages",
+    "count": "2"
+  },
+  {
+    "url": "https://harvey-os.org/",
+    "title": "Harvey OS",
+    "count": "2"
+  },
+  {
+    "url": "https://hasura.io/",
+    "title": "Instant GraphQL APIs on your data | Built-in Authz & Caching",
+    "count": "2"
+  },
+  {
+    "url": "https://hledger.org/",
+    "title": "Home - hledger",
+    "count": "2"
+  },
+  {
+    "url": "http://hnpickup.appspot.com/",
+    "title": "404 Page not found",
+    "count": "2"
+  },
+  {
+    "url": "https://home.hccnet.nl/h.g.muller/max-src2.html",
+    "title": "Micro-Max",
+    "count": "2"
+  },
+  {
+    "url": "http://howtosplitanatom.com/news/how-to-ensure-your-startup-will-fail",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://iamwil.posterous.com/i-got-into-yc-after-applying-six-times-heres",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://idlewords.com/2011/08/why_arabic_is_terrific.htm",
+    "title": "Why Arabic Is Terrific (Idle Words)",
+    "count": "2"
+  },
+  {
+    "url": "https://ijdykeman.github.io/ml/2017/10/12/wang-tile-procedural-generation.html",
+    "title": "Procedural Worlds from Simple Tiles",
+    "count": "2"
+  },
+  {
+    "url": "https://ils.unc.edu/callee/gopherpaper.htm",
+    "title": "Where Have all the Gophers Gone? Why the Web beat Gopher in the Battle for Protocol Mind Share",
+    "count": "2"
+  },
+  {
+    "url": "https://ilya.sukhar.com/blog/an-algorithmic-solution-to-insomnia.html",
+    "title": "An Algorithmic Solution to Insomnia",
+    "count": "2"
+  },
+  {
+    "url": "https://include-what-you-use.org/",
+    "title": "include-what-you-use - A tool for use with clang to analyze #includes in C and C++ source files",
+    "count": "2"
+  },
+  {
+    "url": "https://inkstitch.org/",
+    "title": "Ink/Stitch - Ink/Stitch",
+    "count": "2"
+  },
+  {
+    "url": "https://ioke.org/",
+    "title": "Ioke",
+    "count": "2"
+  },
+  {
+    "url": "https://ispc.github.io/",
+    "title": "Intel® Implicit SPMD Program Compiler",
+    "count": "2"
+  },
+  {
+    "url": "https://j2kun.svbtle.com/mathematicians-are-chronically-lost-and-confused",
+    "title": "Mathematicians are chronically lost and confused (and that’s how it’s supposed to be)",
+    "count": "2"
+  },
+  {
+    "url": "http://java.ociweb.com/mark/stm/article.html",
+    "title": "Object Computing, Inc. - Java News Brief - September 2009",
+    "count": "2"
+  },
+  {
+    "url": "https://j-core.org/",
+    "title": "J-core Open Processor",
+    "count": "2"
+  },
+  {
+    "url": "http://jeanphix.me/Ghost.py",
+    "title": "jeanphix.me",
+    "count": "2"
+  },
+  {
+    "url": "https://jodd.org/",
+    "title": "Jodd",
+    "count": "2"
+  },
+  {
+    "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005268",
+    "title": "Could a Neuroscientist Understand a Microprocessor? | PLOS Computational Biology",
+    "count": "2"
+  },
+  {
+    "url": "https://jroweboy.github.io/c/asm/2015/01/26/when-is-main-not-a-function.html",
+    "title": "Main is usually a function. So then when is it not?",
+    "count": "2"
+  },
+  {
+    "url": "https://jsmpeg.com/",
+    "title": "JSMpeg – Decode it like it's 1999",
+    "count": "2"
+  },
+  {
+    "url": "https://jsomers.net/blog/dictionary",
+    "title": "You’re probably using the wrong dictionary « the jsomers.net blog",
+    "count": "2"
+  },
+  {
+    "url": "https://kakoune.org/",
+    "title": "Kakoune - Official site",
+    "count": "2"
+  },
+  {
+    "url": "https://kam.mff.cuni.cz/~matousek/stml-53-matousek-1.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://kde.slimbook.es/",
+    "title": "KDE Slimbook 4",
+    "count": "2"
+  },
+  {
+    "url": "http://kim.com/mega",
+    "title": "Kim Dotcom",
+    "count": "2"
+  },
+  {
+    "url": "https://krebsonsecurity.com/wp-content/uploads/2013/10/UlbrichtCriminalComplaint.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://lab.arc90.com/experiments/readability",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://labix.org/lunatic-python",
+    "title": "Lunatic Python - Labix",
+    "count": "2"
+  },
+  {
+    "url": "http://lambda-the-ultimate.org/node/3851",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://lamport.azurewebsites.net/pubs/byz.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://lars-lab.jpl.nasa.gov/JPL_Coding_Standard_C.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://lcamtuf.blogspot.com/2014/11/pulling-jpegs-out-of-thin-air.html",
+    "title": "lcamtuf's blog: Pulling JPEGs out of thin air",
+    "count": "2"
+  },
+  {
+    "url": "https://lcamtuf.blogspot.com/2015/03/on-journeys.html",
+    "title": "lcamtuf's blog: On journeys",
+    "count": "2"
+  },
+  {
+    "url": "https://leafletjs.com/",
+    "title": "Leaflet - a JavaScript library for interactive maps",
+    "count": "2"
+  },
+  {
+    "url": "https://learnxinyminutes.com/",
+    "title": "Learn X in Y Minutes: Scenic Programming Language Tours",
+    "count": "2"
+  },
+  {
+    "url": "https://lg.io/2015/07/05/revised-and-much-faster-run-your-own-highend-cloud-gaming-service-on-ec2.html",
+    "title": "Revised and much faster, run your own high-end cloud gaming service on EC2!",
+    "count": "2"
+  },
+  {
+    "url": "https://libcinder.org/",
+    "title": "Cinder",
+    "count": "2"
+  },
+  {
+    "url": "http://listen.grooveshark.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://listen.hatnote.com/",
+    "title": "Hatnote Listen to Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://locust.io/",
+    "title": "Locust - A modern load testing framework",
+    "count": "2"
+  },
+  {
+    "url": "https://longform.org/",
+    "title": "Longform",
+    "count": "2"
+  },
+  {
+    "url": "https://lovr.org/",
+    "title": "LÖVR",
+    "count": "2"
+  },
+  {
+    "url": "https://ludens.cl/paradise/turbine/turbine.html",
+    "title": "The microhydro plant",
+    "count": "2"
+  },
+  {
+    "url": "https://magcius.github.io/xplain/article/index.html",
+    "title": "Explanations - Introduction & Table of Contents",
+    "count": "2"
+  },
+  {
+    "url": "https://martinfowler.com/bliki/MonolithFirst.html",
+    "title": "MonolithFirst",
+    "count": "2"
+  },
+  {
+    "url": "https://martinfowler.com/bliki/TechnicalDebt.html",
+    "title": "TechnicalDebt",
+    "count": "2"
+  },
+  {
+    "url": "https://martinfowler.com/bliki/Yagni.html",
+    "title": "Yagni",
+    "count": "2"
+  },
+  {
+    "url": "https://martinfowler.com/eaaDev/uiArchs.html",
+    "title": "GUI Architectures",
+    "count": "2"
+  },
+  {
+    "url": "https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html",
+    "title": "How to do distributed locking — Martin Kleppmann’s blog",
+    "count": "2"
+  },
+  {
+    "url": "https://maruos.com/",
+    "title": "maru - Your phone is your PC",
+    "count": "2"
+  },
+  {
+    "url": "https://maryrosecook.com/blog/post/a-practical-introduction-to-functional-programming",
+    "title": "A practical introduction to functional programming",
+    "count": "2"
+  },
+  {
+    "url": "https://mathiasbynens.be/demo/url-regex",
+    "title": "In search of the perfect URL validation regex",
+    "count": "2"
+  },
+  {
+    "url": "https://mathoverflow.net/questions/23478/examples-of-common-false-beliefs-in-mathematics",
+    "title": "big list - Examples of common false beliefs in mathematics - MathOverflow",
+    "count": "2"
+  },
+  {
+    "url": "https://mattdesl.svbtle.com/drawing-lines-is-hard",
+    "title": "Drawing Lines is Hard",
+    "count": "2"
+  },
+  {
+    "url": "https://mcfunley.com/choose-boring-technology",
+    "title": "Dan McKinley :: Choose Boring Technology",
+    "count": "2"
+  },
+  {
+    "url": "https://mchap.io/using-foia-data-and-unix-to-halve-major-source-of-parking-tickets.html",
+    "title": "Using FOIA Data and Unix to halve major source of parking tickets",
+    "count": "2"
+  },
+  {
+    "url": "https://mediagoblin.org/",
+    "title": "MediaGoblin",
+    "count": "2"
+  },
+  {
+    "url": "https://micropython.org/",
+    "title": "MicroPython - Python for microcontrollers",
+    "count": "2"
+  },
+  {
+    "url": "https://mikehadlow.blogspot.com/2014/12/the-lava-layer-anti-pattern.html",
+    "title": "Code rant: The Lava Layer Anti-Pattern",
+    "count": "2"
+  },
+  {
+    "url": "https://miter.mit.edu/the-unexotic-underclass",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "https://mitmproxy.org/",
+    "title": "mitmproxy - an interactive HTTPS proxy",
+    "count": "2"
+  },
+  {
+    "url": "https://mklinux.org/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://monodraw.helftone.com/",
+    "title": "Monodraw for macOS — Helftone",
+    "count": "2"
+  },
+  {
+    "url": "https://mrale.ph/blog/2018/02/03/maybe-you-dont-need-rust-to-speed-up-your-js.html",
+    "title": "Maybe you don't need Rust and WASM to speed up your JS",
+    "count": "2"
+  },
+  {
+    "url": "https://muen.sk/",
+    "title": "Muen | SK for x86/64",
+    "count": "2"
+  },
+  {
+    "url": "https://nautil.us/issue/86/energy/why-birds-can-fly-over-mount-everest",
+    "title": "Page not found - Nautilus | Science Connected",
+    "count": "2"
+  },
+  {
+    "url": "https://neocities.org/",
+    "title": "Neocities: Create your own free website!",
+    "count": "2"
+  },
+  {
+    "url": "https://netboot.xyz/",
+    "title": "Your favorite operating systems in one place! | netboot.xyz",
+    "count": "2"
+  },
+  {
+    "url": "https://news.mit.edu/2020/passive-solar-powered-water-desalination-0207",
+    "title": "Simple, solar-powered water desalination | MIT News | Massachusetts Institute of Technology",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/active",
+    "title": "Active Threads | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/best",
+    "title": "Top Links | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=363",
+    "title": "Please tell us what features you'd like in news.ycombinator | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/item?id=74633",
+    "title": "Boston Hacker News Meetup. Sunday 8:30pm, Miracle of Science Bar | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://news.ycombinator.com/noobstories",
+    "title": "Noob Submissions | Hacker News",
+    "count": "2"
+  },
+  {
+    "url": "https://nightweb.net/",
+    "title": "Night Web Society: Help Me Finish This Homework!",
+    "count": "2"
+  },
+  {
+    "url": "https://nixos.org/",
+    "title": "NixOS - NixOS Linux",
+    "count": "2"
+  },
+  {
+    "url": "https://norvig.com/java-lisp.html",
+    "title": "Lisp as an Alternative to Java",
+    "count": "2"
+  },
+  {
+    "url": "https://nphysics.org/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://nuitka.net/",
+    "title": "Nuitka the Python Compiler — Nuitka the Python Compiler documentation",
+    "count": "2"
+  },
+  {
+    "url": "https://ohshitgit.com/",
+    "title": "Oh Shit, Git!?!",
+    "count": "2"
+  },
+  {
+    "url": "https://openage.sft.mx/",
+    "title": "openage - free, modern RTS game engine",
+    "count": "2"
+  },
+  {
+    "url": "https://orgmode.org/",
+    "title": "Org mode for Emacs",
+    "count": "2"
+  },
+  {
+    "url": "https://osgameclones.com/",
+    "title": "Open Source Game Clones",
+    "count": "2"
+  },
+  {
+    "url": "https://p5js.org/",
+    "title": "home | p5.js",
+    "count": "2"
+  },
+  {
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2801385",
+    "title": "How Do Venture Capitalists Make Decisions? by Paul A. Gompers, Will Gornall, Steven N. Kaplan, Ilya A. Strebulaev :: SSRN",
+    "count": "2"
+  },
+  {
+    "url": "https://paperswelove.org/",
+    "title": "Papers We Love",
+    "count": "2"
+  },
+  {
+    "url": "https://paulbuchheit.blogspot.com/2014/07/the-technology.html",
+    "title": "Paul Buchheit: The Technology",
+    "count": "2"
+  },
+  {
+    "url": "https://pbpython.com/effective-matplotlib.html",
+    "title": "Effectively Using Matplotlib - Practical Business Python",
+    "count": "2"
+  },
+  {
+    "url": "https://pchiusano.github.io/2014-10-11/defensive-writing.html",
+    "title": "Paul Chiusano: The internet has made defensive writers of us all",
+    "count": "2"
+  },
+  {
+    "url": "https://peerjs.com/",
+    "title": "PeerJS - Simple peer-to-peer with WebRTC",
+    "count": "2"
+  },
+  {
+    "url": "https://pencil.evolus.vn/",
+    "title": "Home - Pencil Project",
+    "count": "2"
+  },
+  {
+    "url": "https://pgexercises.com/",
+    "title": "PostgreSQL Exercises",
+    "count": "2"
+  },
+  {
+    "url": "http://phil.ipal.org/tc.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://philip.greenspun.com/flying/unions-and-airlines.html",
+    "title": "Unions and Airlines",
+    "count": "2"
+  },
+  {
+    "url": "https://picolisp.com/wiki?home",
+    "title": "PicoLisp Wiki: home",
+    "count": "2"
+  },
+  {
+    "url": "https://plaintextaccounting.org/",
+    "title": "Plain Text Accounting portal - plaintextaccounting.org",
+    "count": "2"
+  },
+  {
+    "url": "https://plantuml.com/",
+    "title": "Open-source tool that uses simple textual descriptions to draw beautiful UML diagrams.",
+    "count": "2"
+  },
+  {
+    "url": "https://plasma-mobile.org/",
+    "title": "Plasma Mobile",
+    "count": "2"
+  },
+  {
+    "url": "https://playbook.samaltman.com/",
+    "title": "Startup Playbook",
+    "count": "2"
+  },
+  {
+    "url": "https://play.elevatorsaga.com/",
+    "title": "Elevator Saga - the elevator programming game",
+    "count": "2"
+  },
+  {
+    "url": "https://plus.maths.org/content/goumldel-and-limits-logic",
+    "title": "Gödel and the limits of logic | plus.maths.org",
+    "count": "2"
+  },
+  {
+    "url": "https://plzoo.andrej.com/",
+    "title": "The Programming Languages Zoo",
+    "count": "2"
+  },
+  {
+    "url": "https://postgres.heroku.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://practicaltypography.com/",
+    "title": "Butterick’s Practical Typography",
+    "count": "2"
+  },
+  {
+    "url": "https://pragprog.com/articles/erlang",
+    "title": "Pragmatic Bookshelf: By Developers, For Developers",
+    "count": "2"
+  },
+  {
+    "url": "https://prog21.dadgum.com/116.html",
+    "title": "Things That Turbo Pascal is Smaller Than",
+    "count": "2"
+  },
+  {
+    "url": "https://prog21.dadgum.com/29.html",
+    "title": "A Spellchecker Used to Be a Major Feat of Software Engineering",
+    "count": "2"
+  },
+  {
+    "url": "https://prog21.dadgum.com/56.html",
+    "title": "The Recovering Programmer",
+    "count": "2"
+  },
+  {
+    "url": "https://projecteuler.net/news",
+    "title": "News - Project Euler",
+    "count": "2"
+  },
+  {
+    "url": "https://projectnaptha.com/",
+    "title": "Project Naptha",
+    "count": "2"
+  },
+  {
+    "url": "https://pruned.blogspot.com/2012/01/gardens-as-crypto-water-computers.html",
+    "title": "Pruned: Gardens as Crypto-Water-Computers",
+    "count": "2"
+  },
+  {
+    "url": "http://pybrain.org/",
+    "title": "PyBrain",
+    "count": "2"
+  },
+  {
+    "url": "https://pypyjs.org/",
+    "title": "PyPy.js",
+    "count": "2"
+  },
+  {
+    "url": "https://pythonwheels.com/",
+    "title": "Python Wheels",
+    "count": "2"
+  },
+  {
+    "url": "https://qmlbook.github.io/",
+    "title": "Qt5 Cadaques — Qt5 Cadaques Book vmaster",
+    "count": "2"
+  },
+  {
+    "url": "https://qntm.org/destroy",
+    "title": "How to destroy the Earth @ Things Of Interest",
+    "count": "2"
+  },
+  {
+    "url": "https://qntm.org/hatetris",
+    "title": "HATETRIS @ Things Of Interest",
+    "count": "2"
+  },
+  {
+    "url": "https://qntm.org/responsibility",
+    "title": "I don't know, Timmy, being God is a big responsibility @ Things Of Interest",
+    "count": "2"
+  },
+  {
+    "url": "https://qntm.org/suicide",
+    "title": "Suicide Linux @ Things Of Interest",
+    "count": "2"
+  },
+  {
+    "url": "https://queue.acm.org/detail.cfm?id=1871406",
+    "title": "Sir, Please Step Away from the ASR-33! - ACM Queue",
+    "count": "2"
+  },
+  {
+    "url": "https://queue.acm.org/detail.cfm?id=2038036",
+    "title": "OCaml for the Masses - ACM Queue",
+    "count": "2"
+  },
+  {
+    "url": "https://queue.acm.org/detail.cfm?id=2349257&ref=fullrss",
+    "title": "A Generation Lost in the Bazaar - ACM Queue",
+    "count": "2"
+  },
+  {
+    "url": "https://queue.acm.org/detail.cfm?id=2610533",
+    "title": "Don’t Settle for Eventual Consistency - ACM Queue",
+    "count": "2"
+  },
+  {
+    "url": "http://radian.org/notebook/porsche",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://randomwire.com/why-japanese-web-design-is-so-different",
+    "title": "Why Japanese Web Design Is So Different – Cultural, Linguistic & Technical Factors – Randomwire",
+    "count": "2"
+  },
+  {
+    "url": "https://ranprieur.com/essays/dropout.html",
+    "title": "How to Drop Out",
+    "count": "2"
+  },
+  {
+    "url": "https://rauchg.com/2015/pure-ui",
+    "title": "Pure UI",
+    "count": "2"
+  },
+  {
+    "url": "https://rbcs-us.com/documents/Why-Most-Unit-Testing-is-Waste.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://rcrowley.org/2010/01/06/things-unix-can-do-atomically.html",
+    "title": "Things UNIX can do atomically — Crowley Code!",
+    "count": "2"
+  },
+  {
+    "url": "https://regex101.com/",
+    "title": "regex101: build, test, and debug regex",
+    "count": "2"
+  },
+  {
+    "url": "https://rejected.us/",
+    "title": "Rejected.us",
+    "count": "2"
+  },
+  {
+    "url": "http://rigaux.org/language-study/syntax-across-languages.html",
+    "title": "syntax across languages (One Big Page)",
+    "count": "2"
+  },
+  {
+    "url": "https://rob-bell.net/2009/06/a-beginners-guide-to-big-o-notation",
+    "title": "A beginner's guide to Big O Notation - Rob Bell",
+    "count": "2"
+  },
+  {
+    "url": "http://roberto.open-lab.com/2010/01/18/javascript-grid-editor-i-want-to-be-excel",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://roughjs.com/",
+    "title": "Rough.js",
+    "count": "2"
+  },
+  {
+    "url": "https://ru-submarine.livejournal.com/17486.html",
+    "title": "тип 941 акула она же typhoon: самая большая лодка в мире: ru_submarine — LiveJournal",
+    "count": "2"
+  },
+  {
+    "url": "https://sandstorm.io/",
+    "title": "Sandstorm",
+    "count": "2"
+  },
+  {
+    "url": "https://arielelkin.github.io/articles/why-im-not-a-react-native-developer.html",
+    "title": "Why I'm not a React Native Developer",
+    "count": "2"
+  },
+  {
+    "url": "https://buttercoin.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://schemaverse.com/",
+    "title": "The Schemaverse",
+    "count": "2"
+  },
+  {
+    "url": "https://science.nasa.gov/science-news/science-at-nasa/2014/23jul_superstorm",
+    "title": "Near Miss: The Solar Superstorm of July 2012 | Science Mission Directorate",
+    "count": "2"
+  },
+  {
+    "url": "https://codewords.recurse.com/issues/three/algebra-and-calculus-of-algebraic-data-types",
+    "title": "The algebra (and calculus!) of algebraic data types",
+    "count": "2"
+  },
+  {
+    "url": "https://scoop.sh/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html",
+    "title": "Release Notes :: CUDA Toolkit Documentation",
+    "count": "2"
+  },
+  {
+    "url": "https://eater.net/8bit",
+    "title": "Build an 8-bit computer | Ben Eater",
+    "count": "2"
+  },
+  {
+    "url": "https://semantic-ui.com/",
+    "title": "Semantic UI",
+    "count": "2"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Olbers%27_paradox",
+    "title": "Olbers' paradox - Wikipedia",
+    "count": "2"
+  },
+  {
+    "url": "https://erikbern.com/2019/04/15/why-software-projects-take-longer-than-you-think-a-statistical-model.html",
+    "title": "Why software projects take longer than you think: a statistical model · Erik Bernhardsson",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/a1studmuffin/SpaceshipGenerator",
+    "title": "GitHub - a1studmuffin/SpaceshipGenerator: A Blender script to procedurally generate 3D spaceships",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/asciimoo/drawille",
+    "title": "GitHub - asciimoo/drawille: Pixel graphics in terminal with unicode braille characters",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/bmatzelle/gow/wiki",
+    "title": "Home · bmatzelle/gow Wiki · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/datasciencemasters/go",
+    "title": "GitHub - datasciencemasters/go: The Open Source Data Science Masters",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/dthree/vantage",
+    "title": "GitHub - dthree/vantage: Distributed, realtime CLI for live Node apps.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/dwmkerr/hacker-laws",
+    "title": "GitHub - dwmkerr/hacker-laws: 💻📖 Laws, Theories, Principles and Patterns that developers will find useful. #hackerlaws",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ianh/owl",
+    "title": "GitHub - ianh/owl: A parser generator for visibly pushdown languages.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/idea4good/GuiLite",
+    "title": "GitHub - idea4good/GuiLite: ✔️The smallest header-only GUI library(4 KLOC) for all platforms",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ipython/ipython/wiki/A-gallery-of-interesting-IPython-Notebooks",
+    "title": "A gallery of interesting IPython Notebooks · ipython/ipython Wiki · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/jbush001/NyuziProcessor",
+    "title": "GitHub - jbush001/NyuziProcessor: GPGPU microprocessor architecture",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/kasper/phoenix",
+    "title": "GitHub - kasper/phoenix: A lightweight macOS window and app manager scriptable with JavaScript",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/laurent22/joplin",
+    "title": "GitHub - laurent22/joplin: Joplin - an open source note taking and to-do application with synchronisation capabilities for Windows, macOS, Linux, Android and iOS.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/leandromoreira/digital_video_introduction",
+    "title": "GitHub - leandromoreira/digital_video_introduction: A hands-on introduction to video technology: image, video, codec (av1, vp9, h265) and more (ffmpeg encoding).",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/lihaoyi/macropy",
+    "title": "GitHub - lihaoyi/macropy: Macros in Python: quasiquotes, case classes, LINQ and more!",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/litl/rauth",
+    "title": "GitHub - litl/rauth: A Python library for OAuth 1.0/a, 2.0, and Ofly.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/madrobby/keymaster",
+    "title": "GitHub - madrobby/keymaster: A simple micro-library for defining and dispatching keyboard shortcuts. It has no dependencies.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/photonstorm/phaser",
+    "title": "GitHub - photonstorm/phaser: Phaser is a fun, free and fast 2D game framework for making HTML5 games for desktop and mobile web browsers, supporting Canvas and WebGL rendering.",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/pubkey/rxdb",
+    "title": "GitHub - pubkey/rxdb: 🔄 A fast, offline-first, reactive database for JavaScript Applications",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/Russell91/pythonpy",
+    "title": "Page not found · GitHub · GitHub",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/tomnomnom/gron",
+    "title": "GitHub - tomnomnom/gron: Make JSON greppable!",
+    "count": "2"
+  },
+  {
+    "url": "https://github.com/ycoroneos/G.E.R.T",
+    "title": "GitHub - ycoroneos/G.E.R.T",
+    "count": "2"
+  },
+  {
+    "url": "https://howvideo.works/",
+    "title": "HowVideo.works",
+    "count": "2"
+  },
+  {
+    "url": "https://simpleoptout.com/",
+    "title": "Deep links to opt-out of data sharing by 100+ companies – Simple Opt Out",
+    "count": "2"
+  },
+  {
+    "url": "https://singingbanana.com/dice/article.htm",
+    "title": "Non-transitive Dice",
+    "count": "2"
+  },
+  {
+    "url": "https://singletrackworld.com/2018/01/collision-course-why-this-type-of-road-junction-will-keep-killing-cyclists",
+    "title": "Ipley Cross | Why This Type Of Road Junction Will Keep Killing Cyclists",
+    "count": "2"
+  },
+  {
+    "url": "https://instant.io/",
+    "title": "Instant.io - Streaming file transfer over WebTorrent",
+    "count": "2"
+  },
+  {
+    "url": "https://mdsattacks.com/",
+    "title": "MDS Attacks: Microarchitectural Data Sampling",
+    "count": "2"
+  },
+  {
+    "url": "http://socrates.io/",
+    "title": "Registered & Protected by MarkMonitor",
+    "count": "2"
+  },
+  {
+    "url": "http://solutoire.com/plotr",
+    "title": "Solutoire.com",
+    "count": "2"
+  },
+  {
+    "url": "https://spaceprob.es/",
+    "title": "spaceprob.es catalogs the active human-made machines that freckle our solar system",
+    "count": "2"
+  },
+  {
+    "url": "https://picovoice.ai/",
+    "title": "End-to-End Edge Voice AI | Picovoice On-Device Voice Recognition",
+    "count": "2"
+  },
+  {
+    "url": "http://spotthedrowningchild.com/",
+    "title": "Spot The Drowning Child",
+    "count": "2"
+  },
+  {
+    "url": "https://sqlite.org/lang_with.html",
+    "title": "The WITH Clause",
+    "count": "2"
+  },
+  {
+    "url": "https://rally.org/lavabit",
+    "title": "The Story continues | Rally.org",
+    "count": "2"
+  },
+  {
+    "url": "https://solar.lowtechmagazine.com/2018/09/how-to-build-a-lowtech-website.html",
+    "title": "How to Build a Low-tech Website? | LOW←TECH MAGAZINE",
+    "count": "2"
+  },
+  {
+    "url": "http://stellarium.org/",
+    "title": "Stellarium Astronomy Software",
+    "count": "2"
+  },
+  {
+    "url": "http://svn.cacert.org/CAcert/CAcert_Inc/Board/oss/oss_sabotage.html",
+    "title": "OSS Simple Sabotage Manual, Sections 11, 12",
+    "count": "2"
+  },
+  {
+    "url": "http://steve-yegge.blogspot.com/2006/07/wizard-school.html",
+    "title": "Stevey's Blog Rants: Wizard School",
+    "count": "2"
+  },
+  {
+    "url": "http://thejh.net/written-stuff/want-to-use-my-wifi?",
+    "title": "Want to use my wifi?",
+    "count": "2"
+  },
+  {
+    "url": "http://useiconic.com/",
+    "title": "useiconic.com",
+    "count": "2"
+  },
+  {
+    "url": "https://v8.dev/blog/cost-of-javascript-2019",
+    "title": "The cost of JavaScript in 2019 · V8",
+    "count": "2"
+  },
+  {
+    "url": "http://wayne.lorentz.me/This_TRS-80",
+    "title": "404 Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://web.stanford.edu/~learnest/les/crypto.htm",
+    "title": "I Spy",
+    "count": "2"
+  },
+  {
+    "url": "http://swombat.com/2011/12/19/bomb-changed-my-life",
+    "title": "The bomb that changed my life - swombat.com on startups",
+    "count": "2"
+  },
+  {
+    "url": "http://www.betrfs.org/",
+    "title": "BetrFS",
+    "count": "2"
+  },
+  {
+    "url": "https://www.blueorigin.com/",
+    "title": "Home | Blue Origin",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cs.yale.edu/homes/hudak/Papers/HSoM.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "https://www.ctrl.blog/entry/resolvconf-tutorial.html",
+    "title": "How to take back control of /etc/resolv.conf on Linux | Ctrl blog",
+    "count": "2"
+  },
+  {
+    "url": "http://www.damtp.cam.ac.uk/user/tong/em/dyson.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.dartmouth.edu/~matc/MathDrama/reading/Hamming.html",
+    "title": "Page Not Found | Dartmouth",
+    "count": "2"
+  },
+  {
+    "url": "https://www.dendron.so/",
+    "title": "Dendron",
+    "count": "2"
+  },
+  {
+    "url": "http://www.dkriesel.com/en/blog/2013/0802_xerox-workcentres_are_switching_written_numbers_when_scanning",
+    "title": "Xerox scanners/photocopiers randomly alter numbers in scanned documents [D. Kriesel]",
+    "count": "2"
+  },
+  {
+    "url": "http://www.erlang-in-anger.com/",
+    "title": "Stuff Goes Bad: Erlang in Anger",
+    "count": "2"
+  },
+  {
+    "url": "https://www.khanacademy.org/computing/computer-science/algorithms",
+    "title": "Algorithms | Computer science | Computing | Khan Academy",
+    "count": "2"
+  },
+  {
+    "url": "http://www.lhup.edu/~dsimanek/neverwrk.htm",
+    "title": "500 - Internal server error.",
+    "count": "2"
+  },
+  {
+    "url": "http://www.lhup.edu/~dsimanek/pseudo/fibonacc.htm",
+    "title": "500 - Internal server error.",
+    "count": "2"
+  },
+  {
+    "url": "http://www.linusakesson.net/dialog/index.php",
+    "title": "Dialog",
+    "count": "2"
+  },
+  {
+    "url": "http://www.logicmatters.net/resources/pdfs/TeachYourselfLogic2017.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.lysator.liu.se/c/ten-commandments.html",
+    "title": "The Ten Commandments for C Programmers (Annotated Edition)",
+    "count": "2"
+  },
+  {
+    "url": "http://www.maizure.org/projects/decoded-gnu-coreutils/index.html",
+    "title": "Decoded: GNU coreutils – MaiZure's Projects",
+    "count": "2"
+  },
+  {
+    "url": "http://www.maizure.org/projects/printf/index.html",
+    "title": "Tearing apart printf() – MaiZure's Projects",
+    "count": "2"
+  },
+  {
+    "url": "http://www.mit.edu/~xela/tao.html",
+    "title": "The Tao of Programming",
+    "count": "2"
+  },
+  {
+    "url": "http://www.netsurf-browser.org/",
+    "title": "NetSurf Web Browser",
+    "count": "2"
+  },
+  {
+    "url": "http://www.peereboom.us/assl/assl/html/openssl.html",
+    "title": "DNS resolution error | www.peereboom.us | Cloudflare",
+    "count": "2"
+  },
+  {
+    "url": "http://www.philzimmermann.com/EN/essays/WhyIWrotePGP.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.pizzahut.com/assets/pizzanet/home.html",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.privoxy.org/",
+    "title": "Privoxy - Home Page",
+    "count": "2"
+  },
+  {
+    "url": "https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it",
+    "title": "Filing Taxes Could Be Free and Simple. But H&R Block and Intuit Are Still Lobbying Against It. — ProPublica",
+    "count": "2"
+  },
+  {
+    "url": "https://www.stockfighter.io/",
+    "title": "Stockfighter - The Ultimate Stock Market Experience",
+    "count": "2"
+  },
+  {
+    "url": "http://www.tarsnap.com/GB-why.html",
+    "title": "Tarsnap - Why is 1 GB 10^9 bytes instead of 2^30?",
+    "count": "2"
+  },
+  {
+    "url": "http://www.wescottdesign.com/articles/pid/pidWithoutAPhd.pdf",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://yosefk.com/blog/c-as-an-intermediate-language.html",
+    "title": "C as an intermediate language",
+    "count": "2"
+  },
+  {
+    "url": "http://weblog.raganwald.com/2005/03/are-you-thinking-of-working-for-start.html",
+    "title": "Are you thinking of working for a start up?",
+    "count": "2"
+  },
+  {
+    "url": "http://web.stonehill.edu/compsci/History_Math/math-read.htm",
+    "title": "How to Read Mathematics",
+    "count": "2"
+  },
+  {
+    "url": "http://www.advancedlinuxprogramming.com/alp-folder",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.aosabook.org/en/nginx.html",
+    "title": "The Architecture of Open Source Applications (Volume 2): nginx",
+    "count": "2"
+  },
+  {
+    "url": "http://www.awesomenessreminders.com/",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.chromoscope.net/",
+    "title": "Chromoscope",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cs.uni.edu/~wallingf/blog/archives/monthly/2018-10.html",
+    "title": "Knowing and Doing: October 2018 Archives",
+    "count": "2"
+  },
+  {
+    "url": "http://www.datawrangling.com/some-datasets-available-on-the-web.html",
+    "title": "Page not found - Trifacta",
+    "count": "2"
+  },
+  {
+    "url": "http://www.entropykey.co.uk/",
+    "title": "Simtec Electronics Entropy Key: USB True Random Number Generator",
+    "count": "2"
+  },
+  {
+    "url": "http://www.hnsearch.com/search",
+    "title": "Origin DNS error | www.hnsearch.com | Cloudflare",
+    "count": "2"
+  },
+  {
+    "url": "http://www.holmea.demon.co.uk/GPS/Main.htm",
+    "title": "",
+    "count": "2"
+  },
+  {
+    "url": "http://www.publications.parliament.uk/pa/cm201314/cmhansrd/cm131023/debtext/131023-0001.htm",
+    "title": "Just a moment...",
+    "count": "2"
+  },
+  {
+    "url": "http://www.squidoo.com/starup_failures",
+    "title": "404 - Squidoo Page Not Found",
+    "count": "2"
+  },
+  {
+    "url": "http://www.t3.org/tangledwebs/07/tw0706.html",
+    "title": "Tangled Webs 7.6 - The Black Team",
+    "count": "2"
+  },
+  {
+    "url": "http://www.therestartpage.com/",
+    "title": "The Restart Page - Free unlimited rebooting experience from vintage operating systems",
+    "count": "2"
+  },
+  {
+    "url": "http://www.underhanded-c.org/",
+    "title": "The Underhanded C Contest",
+    "count": "2"
+  },
+  {
+    "url": "http://www.valuedlessons.com/2008/01/monads-in-python-with-nice-syntax.html",
+    "title": "Valued Lessons: Monads in Python (with nice syntax!)",
+    "count": "2"
+  },
+  {
+    "url": "http://www.wikivs.com/wiki/MySQL_vs_PostgreSQL",
+    "title": "",
+    "count": "2"
+  }
+]
