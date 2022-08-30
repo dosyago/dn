@@ -7,11 +7,22 @@ import child_process from 'node:child_process';
 const CLEAN = false;
 const CONCURRENT = 7;
 const sleep = ms => new Promise(res => setTimeout(res, ms));
+const entries = [];
+const counted = new Set();
+const errors = new Map();
+let counts;
+let cleaning = false;
+
+process.on('exit', cleanup);
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
+process.on('SIGHUP', cleanup);
+process.on('SIGUSR2', cleanup);
+process.on('beforeExit', cleanup);
 
 make();
 
 async function make() {
-  const entries = [];
   const titlesFile = fs.readFileSync(path.resolve('.', 'topTitles.json')).toString();
   const titles = new Map(JSON.parse(titlesFile).map(([url, title]) => [url, {url,title}]));
   if ( CLEAN ) {
@@ -26,9 +37,8 @@ async function make() {
       }
     }
   }
-  const countsFile = fs.readFileSync(path.resolve('.', 'counts.json')).toString();
-  const counts = new Map(JSON.parse(countsFile));
-  const counted = new Set();
+  const countsFile = fs.readFileSync(path.resolve('.', 'ran-counts.json')).toString();
+  counts = new Map(JSON.parse(countsFile));
   let current = 0;
   for ( const [url, count] of counts ) {
     let title;
@@ -45,9 +55,9 @@ async function make() {
       console.log(`Curl call for ${url} in progress...`);
       let notifyCurlComplete;
       const curlCall = new Promise(res => notifyCurlComplete = res);
-      while ( current >= CONCURRENT ) {
-        await sleep(40);
-      }
+      do {
+        await sleep(250);
+      } while ( current >= CONCURRENT );
       child_process.exec(curlCommand(url), (err, stdout, stderr) => {
         if ( ! err && (!stderr || stderr.length == 0)) {
           realUrl = stdout; 
@@ -63,6 +73,7 @@ async function make() {
           }
         } else {
           console.log(`Error on curl for ${url}`, {err, stderr});
+          errors.set(url, {err, stderr});
         }
         console.log(`Curl call for ${url} complete!`);
         notifyCurlComplete();
@@ -70,6 +81,19 @@ async function make() {
       current += 1;
       curlCall.then(() => current -= 1);
     }
+  }
+  cleanup();
+}
+
+function cleanup() {
+  if ( cleaning ) return;
+  cleaning = true;
+  console.log('cleanup running');
+  if ( errors.size ) {
+    fs.writeFileSync(
+      path.resolve('.', 'errorLinks.json'),
+      JSON.stringify([...errors.keys()], null, 2)
+    );
   }
   if ( counted.size !== counts.size ) {
     counted.forEach(url => counts.delete(url)); 
@@ -82,6 +106,7 @@ async function make() {
     path.resolve('.', 'topFrontPageLinksWithCounts.json'), 
     JSON.stringify(entries, null, 2)
   );
+  process.exit(0);
 }
 
 async function make_v1() {
