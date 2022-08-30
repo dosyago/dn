@@ -94,6 +94,7 @@ function cleanup() {
       path.resolve('.', 'errorLinks.json'),
       JSON.stringify([...errors.keys()], null, 2)
     );
+    console.log(`Wrote errors`);
   }
   if ( counted.size !== counts.size ) {
     counted.forEach(url => counts.delete(url)); 
@@ -101,11 +102,13 @@ function cleanup() {
       path.resolve('.', 'noTitleFound.json'),
       JSON.stringify([...counts.keys()], null, 2)
     )
+    console.log(`Wrote noTitleFound`);
   }
   fs.writeFileSync(
     path.resolve('.', 'topFrontPageLinksWithCounts.json'), 
     JSON.stringify(entries, null, 2)
   );
+  console.log(`Wrote top links with counts`);
   process.exit(0);
 }
 
