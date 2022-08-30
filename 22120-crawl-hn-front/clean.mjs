@@ -32,23 +32,20 @@ lineReader.on('line', line => {
   const url = new URL(uri ? uri : realCount);
   let oProtocol = [url.protocol];
   let count = uri ? parseInt(realCount) : 1;
-  url.protocol = 'https:';
   if ( url.hash.startsWith('#!') || url.hostname.includes('google.com') || url.hostname.includes('80s.nyc') ) {
   } else {
     url.hash = '';
   }
-  if ( url.searchParams.has('utm_source') ) {
-    url.search = '';
+  for ( const [key, value] of url.searchParams ) {
+    if ( key.startsWith('utm_') ) {
+      url.searchParams.delete(key);
+    }
   }
   url.pathname = url.pathname.replace(/\/$/, '');
   const adr = url.toString();
-  url.pathname = url.pathname.replace(/\.html$/, '');
+  url.protocol = 'https:';
+  url.pathname = url.pathname.replace(/\.htm.?$/, '');
   const key = url.toString();
-  const burl = new URL(url);
-  burl.pathname += '.html';
-  if ( box.has(burl.toString()) ) {
-    //console.log(`Found a real html case`, key);
-  }
   if ( box.has(key) ) {
     const {oProtocol:op2,count:count2} = box.get(key);
     oProtocol = [op2, ...oProtocol];
@@ -57,6 +54,8 @@ lineReader.on('line', line => {
       max = count;
       //console.log(`New leader: ${key} with count: ${count}`, line);
     }
+  } else if ( uri ) {
+    count -= 1;
   }
   box.set(key, {oProtocol,count,adr});
 });
@@ -64,15 +63,14 @@ lineReader.on('line', line => {
 lineReader.on('close', () => {
   const time = Date.now() - oTime;
   console.log(`Done ${lines} lines in ${time}ms`);
-  /*
-    console.log(`Top 100 links by count`);
-    const list = [...box.entries()].sort(([k1,{count:c1}], [k2,{count:c2}]) => c2 - c1).map(([k,{adr,count}]) => (adr !== k ? SHOW && console.log('found a html case', adr) : void 0), `${count} ${adr !== k ? adr : k}`))
-    console.log(list.slice(0,100).join('\n'));
-  */
-  const list = [...box.entries()].sort(([k1,{count:c1}], [k2,{count:c2}]) => c2 - c1).map(([k,{adr,count}]) => ((adr !== k && count > 1 ? SHOW && console.log('found a html case', adr) : void 0), `${count} ${adr !== k ? adr : k}`))
+  const list = [...box.entries()].sort(([k1,{count:c1}], [k2,{count:c2}]) => c2 - c1).map(([k,{adr,count,oProtocol}]) => {
+    //((adr !== k && count > 1 ? SHOW && console.log('found a html case', adr) : void 0), `${count} ${adr !== k ? adr : k}`))
+    const u = new URL(adr !== k ? adr : k );
+    if ( oProtocol.includes('https:') ) {
+      u.protocol = 'https:';
+    }
+    return `${count} ${u}`;
+  });
   console.log(list.join('\n'));
 });
-
-
-
 
