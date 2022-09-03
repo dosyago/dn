@@ -1,0 +1,182 @@
+[
+  [
+    "https://developer.apple.com/app-store/review/guidelines/",
+    "App Store Review Guidelines - Apple Developer"
+  ],
+  [
+    "https://bitcoincharts.com/charts/mtgoxUSD#tgSzm1g10zm2g25zv",
+    "Bitcoincharts | Charts"
+  ],
+  [
+    "https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/",
+    "An Interactive Guide To The Fourier Transform – BetterExplained"
+  ],
+  [
+    "https://ev.medium.com/2005/11/ten-rules-for-web-startups.asp",
+    "Not Found – Medium"
+  ],
+  [
+    "https://play.freeciv.org/",
+    "Freeciv.org - open source empire-building strategy game."
+  ],
+  [
+    "https://mercurial.selenic.com/wiki/WhatsNew",
+    "WhatsNew - Mercurial"
+  ],
+  [
+    "https://www.washingtonpost.com/sf/business/2015/05/31/net-of-insecurity-part-2",
+    ""
+  ],
+  [
+    "https://go-review.googlesource.com/",
+    ""
+  ],
+  [
+    "https://go-review.googlesource.com/q/status:open+-is:wip",
+    "status:open -is:wip · Gerrit Code Review"
+  ],
+  [
+    "https://www.spacex.com/webcast.php",
+    ""
+  ],
+  [
+    "https://people.math.umass.edu/~lavine/Book/book.html",
+    ""
+  ],
+  [
+    "https://www.spacex.com/",
+    "SpaceX"
+  ],
+  [
+    "https://www.google.com/robots.txt",
+    ""
+  ],
+  [
+    "https://www.latimes.com/news/printedition/front/la-na-tapwater25-2009feb2506720560full.story",
+    ""
+  ],
+  [
+    "https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html",
+    ""
+  ],
+  [
+    "https://www.asktog.com/columns/022DesignedToGiveFitts.html",
+    "AskTog: A Quiz Designed to Give You Fitts"
+  ],
+  [
+    "https://web.archive.org/web/20220607102703/https://www.advogato.org/person/apenwarr/diary/371.html",
+    ""
+  ],
+  [
+    "https://www.youtube.com/watch?v=_ahvzDzKdB0",
+    "Growing a Language, by Guy Steele - YouTube"
+  ],
+  [
+    "https://www.youtube.com/watch?v=JBmIQIZPaHY",
+    "(421) STOP'15: Bracha v Felleisen - YouTube"
+  ],
+  [
+    "https://www.protondb.com/",
+    "ProtonDB | Gaming know-how from the Linux and Steam Deck community"
+  ],
+  [
+    "https://www.action.io/",
+    ""
+  ],
+  [
+    "https://twitter.com/shit_hn_says",
+    "Shit HN Says (@shit_hn_says) / Twitter"
+  ],
+  [
+    "https://increment.com/teams/the-team-that-powers-vlc",
+    ""
+  ],
+  [
+    "https://lilianweng.github.io/posts/2018-02-19-rl-overview/",
+    "A (Long) Peek into Reinforcement Learning | Lil'Log"
+  ],
+  [
+    "https://etacts.com/",
+    ""
+  ],
+  [
+    "https://datatransferproject.dev/",
+    ""
+  ],
+  [
+    "https://rush.heroku.com/",
+    ""
+  ],
+  [
+    "https://www.onstartups.com/home/tabid/3339/bid/1506/Startup-Hiring-6-Subtle-Signs-You-Might-Have-A-Winner.aspx",
+    ""
+  ],
+  [
+    "https://minnie.tuhs.org/cgi-bin/utree.pl",
+    ""
+  ],
+  [
+    "https://ipfs.tech/",
+    "IPFS Powers the Distributed Web"
+  ],
+  [
+    "https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat",
+    ""
+  ],
+  [
+    "https://haldean.org/vim-problems/",
+    ""
+  ],
+  [
+    "https://flownet.com/gat/jpl-lisp.html",
+    ""
+  ],
+  [
+    "https://code.mixpanel.com/2011/08/05/how-and-why-we-switched-from-erlang-to-python",
+    ""
+  ],
+  [
+    "https://acko.net/blog/on-termkit/",
+    "On TermKit — Acko.net"
+  ],
+  [
+    "https://aaronsw.jottit.com/howtoget",
+    ""
+  ],
+  [
+    "https://c2.com/cgi/wiki?LispIsTooPowerful",
+    ""
+  ],
+  [
+    "https://error.ghost.org/",
+    "Domain error"
+  ],
+  [
+    "https://clojurecup.com/",
+    ""
+  ],
+  [
+    "https://developer.palm.com/",
+    ""
+  ],
+  [
+    "https://faculty.econ.ucsb.edu/~doug/",
+    ""
+  ],
+  [
+    "https://dougblack.io/words/a-good-vimrc.html",
+    "A Good Vimrc"
+  ],
+  [
+    "https://jacquesricher.com/NEETS",
+    ""
+  ],
+  [
+    "https://color.adobe.com/create",
+    ""
+  ],
+  [
+    "https://color.adobe.com/create/color-wheel",
+    ""
+  ]
+]
