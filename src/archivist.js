@@ -850,6 +850,7 @@
   function saveFuzzy(basePath) {
     const docs = [...State.Docs.values()]
       .map(({url, title, content, id}) => ({url, title, content, id}));
+    if ( docs.length === 0 ) return;
     const path = getFuzzyPath(basePath);
     Fs.writeFileSync(
       path,
@@ -1073,11 +1074,13 @@
 
   function saveCache(path) {
     //DEBUG && console.log("Writing to", path || CACHE_FILE());
+    if ( State.Cache.size === 0 ) return;
     Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()],null,2));
   }
 
   function saveIndex(path) {
     if ( State.saveInProgress || Mode == 'serve' ) return;
+    if ( State.Index.size === 0 ) return;
     State.saveInProgress = true;
 
     clearTimeout(State.indexSaver);
