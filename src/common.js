@@ -6,6 +6,9 @@ import os from 'os';
 export const DEBUG = process.env.DEBUG_22120 || false;
 export const SHOW_FETCH = false;
 
+// server related
+export const PUBLIC_SERVER = true;
+
 // crawl related
 export const MIN_TIME_PER_PAGE = 10000;
 export const MAX_TIME_PER_PAGE = 32000;
