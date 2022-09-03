@@ -257,6 +257,7 @@
 
     await send("Target.setDiscoverTargets", {discover:true});
     await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
+    await send("Security.setIgnoreCertificateErrors", {ignore:true});
     await send("Fetch.enable", {
       patterns: [
         {

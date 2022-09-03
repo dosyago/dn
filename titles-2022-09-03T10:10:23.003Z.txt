@@ -1,0 +1,46 @@
+[
+  [
+    "https://mklinux.org/",
+    ""
+  ],
+  [
+    "https://nphysics.org/",
+    ""
+  ],
+  [
+    "https://postgres.heroku.com/",
+    ""
+  ],
+  [
+    "https://buttercoin.com/",
+    ""
+  ],
+  [
+    "https://scoop.sh/",
+    "Scoop"
+  ],
+  [
+    "https://mega.io/?nz=1",
+    "MEGA"
+  ],
+  [
+    "https://mega.io/",
+    "MEGA"
+  ],
+  [
+    "https://www.asktog.com/TOI/toi06KeyboardVMouse1.html",
+    "AskTog:"
+  ],
+  [
+    "https://www.ecb.torontomu.ca/~elf/hack/recovery.html",
+    ""
+  ],
+  [
+    "https://www.littleboxchallenge.com/",
+    ""
+  ],
+  [
+    "https://twitter.com/",
+    "Twitter. It’s what’s happening / Twitter"
+  ]
+]

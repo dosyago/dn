@@ -1,0 +1,70 @@
+[
+  [
+    "https://archive.ph/",
+    "archive.ph"
+  ],
+  [
+    "https://archive.ph/dIFHo",
+    "Log | Android Developers"
+  ],
+  [
+    "https://archive.ph/hKEct",
+    "Jelly Bean | Android Developers"
+  ],
+  [
+    "https://archive.ph/MAtfw",
+    "rush"
+  ],
+  [
+    "https://archive.ph/vrQ6y",
+    "NEETS - Navy Electricity and Electronics Training Series"
+  ],
+  [
+    "https://archive.ph/wGXI",
+    "Text of Steve Jobs' Commencement address (2005)"
+  ],
+  [
+    "https://archive.ph/szna1",
+    "flexcoin | the bitcoin bank - Bitcoin Bank - Access Bitcoins from Anywhere"
+  ],
+  [
+    "https://www.logicmatters.net/resources/pdfs/LogicStudyGuide.pdf",
+    ""
+  ],
+  [
+    "https://archive.ph/6EQOf",
+    "A Good Vimrc"
+  ],
+  [
+    "https://archive.ph/cTSvW",
+    "The Bipolar Lisp Programmer"
+  ],
+  [
+    "https://archive.ph/Tb2vJ",
+    "Goodbye from Justin.tv"
+  ],
+  [
+    "https://archive.ph/MIttj",
+    "Essential C"
+  ],
+  [
+    "https://play.freeciv.org/",
+    ""
+  ],
+  [
+    "https://go-review.googlesource.com/",
+    ""
+  ],
+  [
+    "https://go-review.googlesource.com/q/status:open+-is:wip",
+    "status:open -is:wip · Gerrit Code Review"
+  ],
+  [
+    "http://norvig.com/experiment-design.html",
+    ""
+  ],
+  [
+    "https://bitcoincharts.com/charts/mtgoxUSD#tgSzm1g10zm2g25zv",
+    ""
+  ]
+]
