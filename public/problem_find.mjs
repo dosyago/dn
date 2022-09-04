@@ -4,11 +4,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import child_process from 'node:child_process';
 
+import {
+  loadPref,
+  cache_file,
+  index_file,
+} from '../src/args.js';
+
 const CLEAN = false;
 const CONCURRENT = 7;
 const sleep = ms => new Promise(res => setTimeout(res, ms));
-const entries = [];
+const problems = new Map();
 let cleaning = false;
+let made = false;
 
 process.on('exit', cleanup);
 process.on('SIGINT', cleanup);
@@ -17,29 +24,47 @@ process.on('SIGHUP', cleanup);
 process.on('SIGUSR2', cleanup);
 process.on('beforeExit', cleanup);
 
+console.log({Pref:loadPref(), cache_file: cache_file(), index_file: index_file()});
 make();
 
 async function make() {
-  const titlesFile = fs.readFileSync(path.resolve('.', 'topTitles.json')).toString();
-  const titles = new Map(JSON.parse(titlesFile).map(([url, title]) => [url, {url,title}]));
-  titles.forEach(({url,title}) => {
-    if ( title.length === 0 && url.startsWith('https:') && !url.endsWith('.pdf') ) {
-      entries.push(url);
+  const indexFile = fs.readFileSync(index_file()).toString();
+  JSON.parse(indexFile).map(([key, value]) => {
+    if ( typeof key === "number" ) return;
+    if ( key.startsWith('ndx') ) return;
+    if ( value.title === undefined ) {
+      console.log('no title property', {key, value});
+    }
+    const url = key;
+    const title = value.title.toLocaleLowerCase();
+    if ( title.length === 0 || title.includes('404') || title.includes('not found') ) {
+      if ( problems.has(url) ) {
+        console.log('Found duplicate', url, title, problems.get(url));
+      }
+      problems.set(url, title);
     }
   });
+
+  made = true;
 
   cleanup();
 }
 
 function cleanup() {
   if ( cleaning ) return;
+  if ( ! made ) return;
   cleaning = true;
   console.log('cleanup running');
+  const outData = [...problems.entries()];
   fs.writeFileSync(
-    path.resolve('.', 'recrawl-https-3.json'), 
-    JSON.stringify(entries, null, 2)
+    path.resolve('.', 'url-problems.json'), 
+    JSON.stringify(outData, null, 2)
   );
-  console.log(`Wrote recrawlable urls`);
+  const {size:bytesWritten} = fs.statSync(
+    path.resolve('.', 'url-problems.json'), 
+    {bigint: true}
+  );
+  console.log(`Wrote ${outData.length} problem urls in ${bytesWritten} bytes.`);
   process.exit(0);
 }
 
