@@ -44,13 +44,14 @@ async function start({server_port}) {
   
   try {
     const sec = {
-      key: fs.readFileSync(path.resolve(os.homedir(), 'sslcerts', 'privkey.pem')),
-      cert: fs.readFileSync(path.resolve(os.homedir(), 'sslcerts', 'fullchain.pem')),
-      ca: fs.existsSync(path.resolve(os.homedir(), 'sslcerts', 'chain.pem')) ?
-          fs.readFileSync(path.resolve(os.homedir(), 'sslcerts', 'chain.pem'))
+      key: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'privkey.pem')),
+      cert: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'fullchain.pem')),
+      ca: fs.existsSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem')) ?
+          fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem'))
         :
           undefined
     };
+    console.log({sec});
     Object.assign(secure_options, sec);
   } catch(e) {
     console.warn(`No certs found so will use insecure no SSL.`);
