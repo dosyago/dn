@@ -1,1 +1,1128 @@
-[]
+[
+  [
+    "http://blog.burtonthird.com/?p=81",
+    {
+      "title": "",
+      "dupes": [
+        "http://blog.burtonthird.com/?p=81"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://blog.n01se.net/?p=41",
+    {
+      "title": "",
+      "dupes": [
+        "http://blog.n01se.net/?p=41"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://cantada.ca/",
+    {
+      "title": "",
+      "dupes": [
+        "http://cantada.ca/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://dev.stephendiehl.com/hask",
+    {
+      "title": "",
+      "dupes": [
+        "https://dev.stephendiehl.com/hask"
+      ],
+      "dupe": true,
+      "diff": true
+    }
+  ],
+  [
+    "http://flexcoin.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://flexcoin.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://hackermonthly.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://hackermonthly.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://hnpickup.appspot.com/",
+    {
+      "title": "404 page not found",
+      "dupes": [
+        "http://hnpickup.appspot.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://hnpoints.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://hnpoints.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://ixoth.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://ixoth.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://landoflisp.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://landoflisp.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://lispwebtales.ppenev.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://lispwebtales.ppenev.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://listen.grooveshark.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://listen.grooveshark.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://ncombinator.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://ncombinator.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://phil.nullable.eu/",
+    {
+      "title": "",
+      "dupes": [
+        "http://phil.nullable.eu/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://slides.html5rocks.com/",
+    {
+      "title": "error 404 (not found)!!1",
+      "dupes": [
+        "http://slides.html5rocks.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://spiffingcss.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://spiffingcss.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://tractionbook.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://tractionbook.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://underhanded.xcott.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://underhanded.xcott.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://uselessd.darknedgy.net/",
+    {
+      "title": "",
+      "dupes": [
+        "http://uselessd.darknedgy.net/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://video-js.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://video-js.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://vim.runpaint.org/",
+    {
+      "title": "",
+      "dupes": [
+        "http://vim.runpaint.org/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://ww1.apirocks.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://ww1.apirocks.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://ww17.blog.searchyc.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://ww17.blog.searchyc.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://www.awesomenessreminders.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://www.awesomenessreminders.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://www.hackrtrackr.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://www.hackrtrackr.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://www.justin.tv/startupschool",
+    {
+      "title": "",
+      "dupes": [
+        "http://www.justin.tv/"
+      ],
+      "dupe": true,
+      "diff": true
+    }
+  ],
+  [
+    "http://www.lambdanative.org/",
+    {
+      "title": "",
+      "dupes": [
+        "http://www.lambdanative.org/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://www.prettyloaded.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://www.prettyloaded.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "http://y2combinator.com/",
+    {
+      "title": "",
+      "dupes": [
+        "http://y2combinator.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://aaronsw.jottit.com/howtoget",
+    {
+      "title": "",
+      "dupes": [
+        "https://aaronsw.jottit.com/howtoget"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://acko.net/blog/how-to-fold-a-julia-fractal",
+    {
+      "title": "",
+      "dupes": [
+        "https://acko.net/blog/how-to-fold-a-julia-fractal"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://acko.net/blog/on-termkit",
+    {
+      "title": "",
+      "dupes": [
+        "https://acko.net/blog/on-termkit"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://bitcoincharts.com/charts/mtgoxUSD",
+    {
+      "title": "",
+      "dupes": [
+        "https://bitcoincharts.com/charts/mtgoxUSD"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://blizzard.cs.uwaterloo.ca/keshav/home/Papers/data/07/paper-reading.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://blizzard.cs.uwaterloo.ca/keshav/home/Papers/data/07/paper-reading.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://blog.lostpropertyhq.com/postgres-full-text-search-is-good-enough",
+    {
+      "title": "",
+      "dupes": [
+        "https://blog.lostpropertyhq.com/postgres-full-text-search-is-good-enough"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://blog.moertel.com/pages/coders-guide-to-coffee",
+    {
+      "title": "page not found",
+      "dupes": [
+        "https://blog.moertel.com/pages/coders-guide-to-coffee"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://blog.parse.ly/1691lucene",
+    {
+      "title": "page not found | parse.ly",
+      "dupes": [
+        "https://blog.parse.ly/1691lucene"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://blogs.oracle.com/roller-ui/errors/404.jsp",
+    {
+      "title": "not found",
+      "dupes": [
+        "https://blogs.oracle.com/roller-ui/errors/404.jsp"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://buttercoin.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://buttercoin.com/",
+        "https://buttercoin.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://c2.com/cgi/wiki?LispIsTooPowerful",
+    {
+      "title": "",
+      "dupes": [
+        "https://c2.com/cgi/wiki?LispIsTooPowerful"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://clarle.github.io/yui3/crockford",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://clarle.github.io/yui3/crockford"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://clojurecup.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://clojurecup.com/",
+        "https://clojurecup.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://code.google.com/apis/predict",
+    {
+      "title": "error 404 (not found)!!1",
+      "dupes": [
+        "https://code.google.com/apis/predict"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://code.google.com/codejam",
+    {
+      "title": "404 page not found",
+      "dupes": [
+        "https://code.google.com/codejam"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://code.mixpanel.com/2011/08/05/how-and-why-we-switched-from-erlang-to-python",
+    {
+      "title": "",
+      "dupes": [
+        "https://code.mixpanel.com/2011/08/05/how-and-why-we-switched-from-erlang-to-python"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://color.adobe.com/create",
+    {
+      "title": "",
+      "dupes": [
+        "https://color.adobe.com/create"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://courses.csail.mit.edu/6.042/spring17/mcs.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://courses.csail.mit.edu/6.042/spring17/mcs.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://crypto.junod.info//2013/09/09/an-aspiring-scientists-frustration-with-modern-day-academia-a-resignation",
+    {
+      "title": "404 not found",
+      "dupes": [
+        "https://crypto.junod.info//2013/09/09/an-aspiring-scientists-frustration-with-modern-day-academia-a-resignation"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://datatransferproject.dev/",
+    {
+      "title": "",
+      "dupes": [
+        "https://datatransferproject.dev/",
+        "https://datatransferproject.dev/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://developer.palm.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://developer.palm.com/",
+        "https://developer.palm.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://di.ku.dk/hjemmesider/ansatte/torbenm/Basics",
+    {
+      "title": "siden blev ikke fundet (404) – københavns universitet",
+      "dupes": [
+        "https://di.ku.dk/hjemmesider/ansatte/torbenm/Basics"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://dis.4chan.org/read/prog/1295544154",
+    {
+      "title": "404 not found",
+      "dupes": [
+        "https://dis.4chan.org/read/prog/1295544154"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://docs.microsoft.com/en-us/events/pdc/pdc-1996/pdc-1996-keynote-with-bob-muglia-and-steve-jobs",
+    {
+      "title": "404 - content not found | microsoft docs",
+      "dupes": [
+        "https://docs.microsoft.com/en-us/events/pdc/pdc-1996/pdc-1996-keynote-with-bob-muglia-and-steve-jobs"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://documentcloud.github.com/backbone",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://documentcloud.github.com/backbone"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://domainr.com/hacks/csshttprequest",
+    {
+      "title": "not found · domainr",
+      "dupes": [
+        "https://domainr.com/hacks/csshttprequest"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://ejohn.org/apps/learn",
+    {
+      "title": "",
+      "dupes": [
+        "https://ejohn.org/apps/learn"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://etacts.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://etacts.com/",
+        "https://etacts.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://existentialtype.wordpress.com/2012/08/14/haskell-is-exceptionally-unsafe",
+    {
+      "title": "page not found | existential type",
+      "dupes": [
+        "https://existentialtype.wordpress.com/2012/08/14/haskell-is-exceptionally-unsafe"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://gist.github.com/1277224",
+    {
+      "title": "page not found · github · github",
+      "dupes": [
+        "https://gist.github.com/1277224"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://gist.github.com/289467",
+    {
+      "title": "page not found · github · github",
+      "dupes": [
+        "https://gist.github.com/289467"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://github.com/marak/Faker.js",
+    {
+      "title": "page not found · github · github",
+      "dupes": [
+        "https://github.com/marak/Faker.js"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://github.com/Russell91/pythonpy",
+    {
+      "title": "page not found · github · github",
+      "dupes": [
+        "https://github.com/Russell91/pythonpy"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://go-review.googlesource.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://go-review.googlesource.com/",
+        "https://go-review.googlesource.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://gpu.rocks/",
+    {
+      "title": "",
+      "dupes": [
+        "https://gpu.rocks/",
+        "https://gpu.rocks/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://harvesthq.github.com/chosen",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://harvesthq.github.com/chosen"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat",
+    {
+      "title": "",
+      "dupes": [
+        "https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://increment.com/teams/the-team-that-powers-vlc",
+    {
+      "title": "",
+      "dupes": [
+        "https://increment.com/teams/the-team-that-powers-vlc"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://jacquesmattheij.com/Salary+negotiations+for+techies",
+    {
+      "title": "404 not found",
+      "dupes": [
+        "https://jacquesmattheij.com/Salary+negotiations+for+techies"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://jacquesricher.com/NEETS",
+    {
+      "title": "",
+      "dupes": [
+        "https://jacquesricher.com/NEETS"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://jangosteve.com/post/380926251/no-one-knows-what-theyre-doing",
+    {
+      "title": "page not found - my wordpress",
+      "dupes": [
+        "https://jangosteve.com/post/380926251/no-one-knows-what-theyre-doing"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://jashkenas.github.com/coffee-script",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://jashkenas.github.com/coffee-script"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://joelgrus.com/2012/02/16/hacking-hacker-news",
+    {
+      "title": "page not found",
+      "dupes": [
+        "https://joelgrus.com/2012/02/16/hacking-hacker-news"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://kam.mff.cuni.cz/~matousek/stml-53-matousek-1.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://kam.mff.cuni.cz/~matousek/stml-53-matousek-1.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://krebsonsecurity.com/wp-content/uploads/2013/10/UlbrichtCriminalComplaint.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://krebsonsecurity.com/wp-content/uploads/2013/10/UlbrichtCriminalComplaint.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://lamport.azurewebsites.net/pubs/byz.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://lamport.azurewebsites.net/pubs/byz.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://lars-lab.jpl.nasa.gov/JPL_Coding_Standard_C.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://lars-lab.jpl.nasa.gov/JPL_Coding_Standard_C.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://lettersofnote.com/?p=826",
+    {
+      "title": "page not found – letters of note",
+      "dupes": [
+        "https://lettersofnote.com/?p=826",
+        "https://lettersofnote.com/?p=826"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://library.sciencemadness.org/library/books/ignition.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://library.sciencemadness.org/library/books/ignition.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://magicscalingsprinkles.wordpress.com/2010/02/08/why-i-love-everything-you-hate-about-java",
+    {
+      "title": "page not found | magic scaling sprinkles",
+      "dupes": [
+        "https://magicscalingsprinkles.wordpress.com/2010/02/08/why-i-love-everything-you-hate-about-java"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://martin.zinkevich.org/rules_of_ml/rules_of_ml.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://martin.zinkevich.org/rules_of_ml/rules_of_ml.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://math.dartmouth.edu/~pw/solutions.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://math.dartmouth.edu/~pw/solutions.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://minnie.tuhs.org/cgi-bin/utree.pl",
+    {
+      "title": "",
+      "dupes": [
+        "https://minnie.tuhs.org/cgi-bin/utree.pl"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://miter.mit.edu/the-unexotic-underclass",
+    {
+      "title": "404 not found",
+      "dupes": [
+        "https://miter.mit.edu/the-unexotic-underclass"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://mklinux.org/",
+    {
+      "title": "",
+      "dupes": [
+        "https://mklinux.org/",
+        "https://mklinux.org/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://nautil.us/issue/86/energy/why-birds-can-fly-over-mount-everest",
+    {
+      "title": "page not found - nautilus | science connected",
+      "dupes": [
+        "https://nautil.us/issue/86/energy/why-birds-can-fly-over-mount-everest"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://necolas.github.com/normalize.css",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://necolas.github.com/normalize.css"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://nphysics.org/",
+    {
+      "title": "",
+      "dupes": [
+        "https://nphysics.org/",
+        "https://nphysics.org/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://porg.es/blog/functional-programming-apl-and-unix-pipes",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://porg.es/blog/functional-programming-apl-and-unix-pipes"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://postary.com/twitter/mileslennon/why-are-95-of-blogs-abandoned",
+    {
+      "title": "page not found - postary",
+      "dupes": [
+        "https://postary.com/twitter/mileslennon/why-are-95-of-blogs-abandoned"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://postgres.heroku.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://postgres.heroku.com/",
+        "https://postgres.heroku.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://ramtin-amin.fr/",
+    {
+      "title": "",
+      "dupes": [
+        "https://ramtin-amin.fr/",
+        "https://ramtin-amin.fr/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://rbcs-us.com/documents/Why-Most-Unit-Testing-is-Waste.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://rbcs-us.com/documents/Why-Most-Unit-Testing-is-Waste.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://resume.github.com/",
+    {
+      "title": "page not found · github pages",
+      "dupes": [
+        "https://resume.github.com/",
+        "https://resume.github.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://rush.heroku.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://rush.heroku.com/",
+        "https://rush.heroku.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://sback.it/publications/icse2018seip.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://sback.it/publications/icse2018seip.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://spectrum.ieee.org/computing/hardware/dudley-bucks-forgotten-cryotron-computer",
+    {
+      "title": "ieee spectrum - 404 not found",
+      "dupes": [
+        "https://spectrum.ieee.org/computing/hardware/dudley-bucks-forgotten-cryotron-computer"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://spectrum.ieee.org/podcast/at-work/tech-careers/why-bad-jobsor-no-jobshappen-to-good-workers",
+    {
+      "title": "ieee spectrum - 404 not found",
+      "dupes": [
+        "https://spectrum.ieee.org/podcast/at-work/tech-careers/why-bad-jobsor-no-jobshappen-to-good-workers"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://stackoverflow.com/questions/194812/list-of-freely-available-programming-books",
+    {
+      "title": "page not found - stack overflow",
+      "dupes": [
+        "https://stackoverflow.com/questions/194812/list-of-freely-available-programming-books"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://stackoverflow.com/questions/448613/whats-happening-with-arc",
+    {
+      "title": "page not found - stack overflow",
+      "dupes": [
+        "https://stackoverflow.com/questions/448613/whats-happening-with-arc"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://statmodeling.stat.columbia.edu/2012/11/16808",
+    {
+      "title": "page not found | statistical modeling, causal inference, and social science",
+      "dupes": [
+        "https://statmodeling.stat.columbia.edu/2012/11/16808"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://terrytao.wordpress.com/career-advice/there%E2%80%99s-more-to-mathematics-than-rigour-and-proofs",
+    {
+      "title": "page not found | what's new",
+      "dupes": [
+        "https://terrytao.wordpress.com/career-advice/there%E2%80%99s-more-to-mathematics-than-rigour-and-proofs"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://tildesites.bowdoin.edu/~ltoma/teaching/cs340/spring05/coursestuff/Bentley_BumperSticker.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://tildesites.bowdoin.edu/~ltoma/teaching/cs340/spring05/coursestuff/Bentley_BumperSticker.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://tomayko.com/blog/2004/rest-to-my-wife",
+    {
+      "title": "not found",
+      "dupes": [
+        "https://tomayko.com/blog/2004/rest-to-my-wife"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://userscape.com/blog/index.php/site/comments/what_they_never_told_you_about_handling_b2b_transactions",
+    {
+      "title": "not found",
+      "dupes": [
+        "https://userscape.com/blog/index.php/site/comments/what_they_never_told_you_about_handling_b2b_transactions"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://web.stanford.edu/~ouster/cgi-bin/papers/threads.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://web.tecgraf.puc-rio.br/~lhf/ftp/doc/hopl.pdf",
+    {
+      "title": "",
+      "dupes": [
+        "https://web.tecgraf.puc-rio.br/~lhf/ftp/doc/hopl.pdf"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://weegen.home.xs4all.nl/eelis/analogliterals.xhtml",
+    {
+      "title": "404 not found",
+      "dupes": [
+        "https://weegen.home.xs4all.nl/eelis/analogliterals.xhtml"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://www.action.io/",
+    {
+      "title": "",
+      "dupes": [
+        "https://www.action.io/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://www.egison.org/",
+    {
+      "title": "",
+      "dupes": [
+        "https://www.egison.org/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://www.littleboxchallenge.com/",
+    {
+      "title": "",
+      "dupes": [
+        "https://www.littleboxchallenge.com/"
+      ],
+      "dupe": true
+    }
+  ],
+  [
+    "https://ye.gg/startupswiki/Ask_YC_Archive",
+    {
+      "title": "404 - page not found",
+      "dupes": [
+        "https://ye.gg/startupswiki/Ask_YC_Archive"
+      ],
+      "dupe": true
+    }
+  ]
+]

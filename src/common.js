@@ -24,7 +24,7 @@ export const MAX_TITLE_LENGTH = 140;
 export const MAX_URL_LENGTH = 140;
 export const MAX_HEAD = 140;
 
-export const GO_SECURE = fs.existsSync(path.resolve(os.homedir(), 'sslcerts', 'privkey.pem'));
+export const GO_SECURE = fs.existsSync(path.resolve(os.homedir(), 'local-sslcerts', 'privkey.pem'));
 
 export class RichError extends Error {
   constructor(msg) {

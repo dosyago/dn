@@ -48,14 +48,14 @@ async function make() {
         console.log(`Found duplicate`, {url, title, cleaned1, dupeEntry:problems.get(cleaned1)});
         prob.dupe = true;
         prob.dupes.push(cleaned1);
-        problems.delete(cleaned1);
+        url !== cleaned1 && (problems.delete(cleaned1), prob.diff = true);
       }
       const cleaned2 = clean2(url);
       if ( problems.has(cleaned2) ) {
         console.log(`Found duplicate`, {url, title, cleaned2, dupeEntry: problems.get(cleaned2)});
         prob.dupe = true;
         prob.dupes.push(cleaned2);
-        problems.delete(cleaned2);
+        url !== cleaned2 && (problems.delete(cleaned2), prob.diff = true);
       }
     }
   });
@@ -71,6 +71,7 @@ function cleanup() {
   cleaning = true;
   console.log('cleanup running');
   const outData = [...problems.entries()].filter(([key, {dupe}]) => dupe);
+  outData.sort(([a], [b]) => a.localeCompare(b));
   fs.writeFileSync(
     path.resolve('.', 'url-cleaned-dupes.json'), 
     JSON.stringify(outData, null, 2)
@@ -96,7 +97,7 @@ function clean(urlString) {
   }
   url.pathname = url.pathname.replace(/\/$/, '');
   url.protocol = 'https:';
-  url.pathname = url.pathname.replace(/(\.htm.?|\.php)$/, '');
+  url.pathname = url.pathname.replace(/(\.htm.?|\.php|\.asp.?)$/, '');
   if ( url.hostname.startsWith('www.') ) {
     url.hostname = url.hostname.replace(/^www./, '');
   }
