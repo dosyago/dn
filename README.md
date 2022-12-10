@@ -70,3 +70,55 @@ $ ./scripts/compile.sh
 $ cd bin/
 ```
 
+### Frequently Asked Questions
+
+**What is the licensing for Diskernet?**
+
+Diskernet is licensed under the Polyform Strict License 1.0.0. This license allows individuals to use the tool for free for personal, noncommercial purposes. It also allows businesses and organizations to purchase a license for use in their internal tooling or anywhere in their business.
+
+**Why did you choose the Polyform license for Diskernet?**
+
+We chose the Polyform license for Diskernet because it offers several benefits. It protects our rights as the creators of the tool, it allows individuals to use the tool for free for personal use, and it allows businesses to purchase a license for use in their operations. We believe that the Polyform license strikes a good balance between the interests of the open source community and the rights of the creators of Diskernet.
+
+**Is the Polyform license open source?**
+
+The Polyform license is not an open source license as defined by the Open Source Initiative (OSI). However, it allows individuals to use the tool for free for personal, noncommercial purposes, and it allows businesses to purchase a license for use in their operations.
+
+**Can I modify or distribute Diskernet under the Polyform license?**
+
+No, the Polyform license does not allow users to modify or distribute Diskernet without the permission of the creators. This is to protect our rights as the creators of the tool and to ensure that our work is not used or distributed without our permission.
+
+**Can I use Diskernet for commercial purposes?**
+
+Yes, you can use Diskernet for commercial purposes if you purchase a license from us. The license allows businesses and organizations to use Diskernet for their own purposes, including in their internal tooling or anywhere in their business.
+
+**What is Diskernet?**
+
+Diskernet is a tool for archiving and organizing online content. It connects to your browser and automatically saves the pages you visit, allowing you to easily search, browse, and share your archived content.
+
+**What are the key features of Diskernet?**
+
+The key features of Diskernet include:
+
+- Connects to your browser and automatically archives your browsing activity
+- Two modes: archive everything or only bookmark-worthy content
+- Easy-to-use interface for searching, browsing, and sharing your archives
+- Lightweight and doesn't require any special plugins or extensions
+
+**Why should I use Diskernet?**
+
+There are several reasons to use Diskernet:
+
+- Never lose track of your favorite online content again
+- Save time by quickly finding the information you need
+- Share your archives with others, or keep them private
+- Easy to use and doesn't require any extra tools or plugins
+
+**How do I get started with Diskernet?**
+
+Getting started with Diskernet is easy! Simply download the tool and connect it to your browser. You'll be amazed at how much easier it is to save and organize the things you discover online.
+
+**Does Diskernet work with all browsers?**
+
+No, right now Diskernet is compatible with all Chrome only (although theoretically compatible with Edge).
+
