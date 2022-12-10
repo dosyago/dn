@@ -37,11 +37,9 @@
 
 <p>DiskerNet is licensed under the Polyform Strict License 1.0.0. You can purchase a license for different uses below:</p>
 
-<ul>
-    <li>For personal, research, noncommercial purposes: Buy a Perpetual Non-commercial Use License of the current Version re-upped Monthly to the Latest Version, USD$1.99 per month, paid yearly. Or purchase an Unlimited Time version for the equivalent of 5 years.</li>
-    <li>For part of your internal tooling in your org: Buy a Perpetual Internal Use License of the current Version re-upped Monthly to the Latest Version, USD $12.99 per month, paid bi-yearly, or purchase an Unlimited Time version for the equivalent of 5 years.</li>
-    <li>For anywhere in your business: Buy a Perpetual Small-medium Business License of the current Version re-upped Monthly to the Latest Version, USD $99 per month. Or purchase an Unlimited Time version for the equivalent of 5 years.</li>
-</ul>
+- For personal, research, noncommercial purposes: Buy a Perpetual Non-commercial Use License of the current Version re-upped Monthly to the Latest Version, [USD$1.99 per month, paid yearly](https://buy.stripe.com/7sIg0acC5amT7PW6pl). Or [purchase an Unlimited Time version for the equivalent of 5 years](https://buy.stripe.com/14k5lw31veD96LS29b).
+- For part of your internal tooling in your org: Buy a Perpetual Internal Use License of the current Version re-upped Monthly to the Latest Version, [USD $12.99 per month, paid yearly](https://buy.stripe.com/9AQaFQ59D52z3zGdRS), or [purchase an Unlimited Time version for the equivalent of 5 years](https://buy.stripe.com/fZe3do1Xr1Qn9Y4011).
+- For anywhere in your business: Buy a Perpetual Small-medium Business License of the current Version re-upped Monthly to the Latest Version, [USD $99 per month, paid yearly](https://buy.stripe.com/eVa8xIcC5gLhfio6po). Or [purchase an Unlimited Time version for the equivalent of 5 years](https://buy.stripe.com/00g5lwcC566D7PW00Z).
 
 ## Get it
 
