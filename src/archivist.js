@@ -16,6 +16,8 @@
 
   // search related
     import FlexSearch from 'flexsearch';
+    const {Index: FTSIndex} = FlexSearch;
+    //const {Index: FTSIndex} = require('flexsearch');
     import { 
       createIndex as NDX, 
       addDocumentToIndex as ndx, 
@@ -69,7 +71,6 @@
     //const termFilter = s => s.toLocaleLowerCase();
 
   // FlexSearch
-    const {Index: FTSIndex, /*registerCharset, registerLanguage*/} = FlexSearch;
     const FLEX_OPTS = {
       charset: "utf8",
       context: true,
@@ -336,6 +337,7 @@ export default Archivist;
 
     async function reloadIfNotLive({targetInfo}) {
       if ( Mode == 'serve' ) return; 
+      if ( neverCache(targetInfo.url) ) return;
       const {attached, type} = targetInfo;
       if ( attached && type == 'page' ) {
         const {url, targetId} = targetInfo;
@@ -356,7 +358,13 @@ export default Archivist;
     }
 
     function neverCache(url) {
-      return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
+      try {
+        url = new URL(url);
+        return url?.href == "about:blank" || url?.href?.startsWith('chrome') || NEVER_CACHE.has(url.origin);
+      } catch(e) {
+        DEBUG.debug && console.warn('Could not form url', url, e);
+        return true;
+      } 
     }
 
     async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
