@@ -4,31 +4,34 @@
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
-  "module": "dist/22120-module.js",
+  "module": "dist/diskernet.js",
   "bin": {
-    "diskernet": "build/22120.js"
+    "diskernet": "build/diskernet.cjs"
   },
   "scripts": {
-    "bundle": "npx rollup --config",
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
-    "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
+    "build": "echo Ensure you 'npm run setup' first && bash ./scripts/compile.sh",
+    "compile": "npm run build",
+    "build-only": "bash ./scripts/build_only.sh",
     "clean": "rm -rf build/* bin/*",
+    "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
-    "save": "nodemon src/app.js 22120 save",
-    "serve": "nodemon src/app.js 22120 serve",
+    "save": "nodemon src/app.js DiskerNet save",
+    "serve": "nodemon src/app.js DiskerNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
-    "postpublish": "cp package.json .package.build.json",
-    "prepublishOnly": "npm run bundle && npx webpack ."
+    "prepublishOnly": "npm run build-only"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/22120.git"
+    "url": "git+https://github.com/dosyago/DiskerNet.git"
   },
   "pkg": {
-    "scripts": "build/*.js",
-    "assets": "public/**/*",
+    "scripts": "build/**/*.js",
+    "assets": [
+      "public/**/*"
+    ],
     "outputPath": "bin"
   },
   "keywords": [
@@ -36,11 +39,11 @@
     "library"
   ],
   "author": "@dosy",
-  "license": "AGPL-3.0",
+  "license": "PolyForm Strict 1.0",
   "bugs": {
-    "url": "https://github.com/dosyago/22120/issues"
+    "url": "https://github.com/dosyago/DiskerNet/issues"
   },
-  "homepage": "https://github.com/dosyago/22120#readme",
+  "homepage": "https://github.com/dosyago/DiskerNet#readme",
   "dependencies": {
     "chrome-launcher": "latest",
     "express": "latest",
@@ -56,12 +59,8 @@
     "ws": "latest"
   },
   "devDependencies": {
+    "esbuild": "0.16.17",
     "eslint": "^8.4.1",
-    "esm": "^3.2.25",
-    "nexe": "^1.1.6",
-    "nodemon": "latest",
-    "npx": "^3.0.0",
-    "webpack": "latest",
-    "webpack-cli": "latest"
+    "nodemon": "latest"
   }
 }
