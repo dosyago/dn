@@ -1,6 +1,4 @@
-# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![source lines of code](https://sloc.xyz/github/crisdosyago/Diskernet)](https://sloc.xyz) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/diskernet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/crisdosyago/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
-
-:floppy_disk: - an internet on yer Disk
+# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![source lines of code](https://sloc.xyz/github/crisdosyago/Diskernet)](https://sloc.xyz) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/diskernet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/crisdosyago/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1) [![DiskerNet slogan](https://img.shields.io/badge/%F0%9F%92%BE%20DiskerNet-an%20internet%20on%20yer%20disc-hotpink)](#DiskerNet) 
 
 <h1>DiskerNet</h1>
 
@@ -120,5 +118,5 @@ Getting started with Diskernet is easy! Simply download the tool and connect it 
 
 **Does Diskernet work with all browsers?**
 
-No, right now Diskernet is compatible with all Chrome only (although theoretically compatible with Edge owing to the Remote Debugging Protocol).
+No, right now Diskernet is compatible with Chrome and Chromium only (although theoretically compatible with Edge owing to the Remote Debugging Protocol).
 
