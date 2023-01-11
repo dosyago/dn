@@ -6,25 +6,26 @@
   "main": "src/app.js",
   "module": "dist/22120-module.js",
   "bin": {
-    "diskernet": "build/22120.js"
+    "diskernet": "build/DiskerNet.js"
   },
   "scripts": {
-    "bundle": "npx rollup --config",
+    "bundle": "rollup --config",
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
     "clean": "rm -rf build/* bin/*",
     "test": "nodemon src/app.js",
-    "save": "nodemon src/app.js 22120 save",
-    "serve": "nodemon src/app.js 22120 serve",
-    "lint": "watch -n 5 npx eslint .",
+    "save": "nodemon src/app.js DiskerNet save",
+    "serve": "nodemon src/app.js DiskerNet serve",
+    "lint": "watch -n 5 eslint .",
     "test-hl": "node src/highlighter.js",
     "postpublish": "cp package.json .package.build.json",
-    "prepublishOnly": "npm run bundle && npx webpack ."
+    "prepublishOnly": "npm run bundle && npx webpack .",
+    "postinstall": "./scripts/postinstall.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/22120.git"
+    "url": "git+https://github.com/dosyago/DiskerNet.git"
   },
   "pkg": {
     "scripts": "build/*.js",
@@ -36,31 +37,30 @@
     "library"
   ],
   "author": "@dosy",
-  "license": "AGPL-3.0",
+  "license": "PolyForm Strict 1.0",
   "bugs": {
-    "url": "https://github.com/dosyago/22120/issues"
+    "url": "https://github.com/dosyago/DiskerNet/issues"
   },
-  "homepage": "https://github.com/dosyago/22120#readme",
+  "homepage": "https://github.com/dosyago/DiskerNet#readme",
   "dependencies": {
     "chrome-launcher": "latest",
     "express": "latest",
-    "flexsearch": "^0.7.21",
-    "fz-search": "^1.0.0",
+    "flexsearch": "latest",
+    "fz-search": "latest",
     "hasha": "latest",
-    "natural": "^5.1.11",
-    "ndx": "^1.0.2",
-    "ndx-query": "^1.0.1",
-    "ndx-serializable": "^1.0.0",
+    "natural": "latest",
+    "ndx": "latest",
+    "ndx-query": "latest",
+    "ndx-serializable": "latest",
     "node-fetch": "latest",
-    "ukkonen": "^1.4.0",
+    "ukkonen": "latest",
     "ws": "latest"
   },
   "devDependencies": {
-    "eslint": "^8.4.1",
-    "esm": "^3.2.25",
-    "nexe": "^1.1.6",
+    "eslint": "latest",
+    "esm": "latest",
+    "pkg": "latest",
     "nodemon": "latest",
-    "npx": "^3.0.0",
     "webpack": "latest",
     "webpack-cli": "latest"
   }
