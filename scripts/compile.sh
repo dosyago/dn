@@ -40,7 +40,7 @@ export NODE_ENV='production'
 npx webpack
 chmod +x ./build/22120.js
 echo "Building for windows nix and macos..."
-pkg --compress Gzip . 
+npx pkg --compress Gzip . 
 
 echo "Restoring dev (ES module) mode..."
 ./scripts/go_dev.sh
