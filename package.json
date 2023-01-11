@@ -14,6 +14,7 @@
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
     "clean": "rm -rf build/* bin/*",
+    "super-clean": "npm run clean && (rm package-lock.json || :) && rm -rf node_modules",
     "test": "nodemon src/app.js",
     "save": "nodemon src/app.js DiskerNet save",
     "serve": "nodemon src/app.js DiskerNet serve",
