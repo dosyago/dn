@@ -36,6 +36,7 @@ fi
 
 npm run bundle
 echo "Bundling javascript..."
+export NODE_ENV='production'
 npx webpack
 chmod +x ./build/22120.js
 echo "Building for windows nix and macos..."
