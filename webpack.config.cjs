@@ -7,6 +7,9 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     filename: "22120.js"
   },
+  optimization: {
+    minimize: false
+  },
   target: "node",
   node: {
     __dirname: false
