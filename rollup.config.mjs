@@ -1,6 +1,6 @@
 import path from 'path';
 //import commonjs from '@rollup/plugin-commonjs';
-import { terser } from "@rollup/plugin-terser";
+import terser from "@rollup/plugin-terser";
 
 export default {
   input: path.resolve('src', 'app.js'),
