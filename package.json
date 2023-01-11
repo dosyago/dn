@@ -60,8 +60,8 @@
   "devDependencies": {
     "eslint": "latest",
     "esm": "latest",
-    "pkg": "latest",
     "nodemon": "latest",
+    "pkg": "latest",
     "webpack": "latest",
     "webpack-cli": "latest"
   }
