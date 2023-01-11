@@ -10,6 +10,9 @@ export default {
     generatedCode: 'es2015'
   },
   /*
-  plugins: [/*commonjs(),*/ terser()]
+  plugins: [
+    //commonjs(),
+    terser()
+  ]
   */
 };
