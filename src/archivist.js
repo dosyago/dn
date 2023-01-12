@@ -15,9 +15,9 @@
   import readline from 'readline';
 
   // search related
-    //import FlexSearch from 'flexsearch';
-    //const {Index: FTSIndex} = FlexSearch;
-    const {Index: FTSIndex} = require('flexsearch');
+    import FlexSearch from 'flexsearch';
+    const {Index: FTSIndex} = FlexSearch;
+    //const {Index: FTSIndex} = require('flexsearch');
     import { 
       createIndex as NDX, 
       addDocumentToIndex as ndx, 
