@@ -34,7 +34,6 @@ if [[ ! -z "$patch_required" ]]; then
   done <<< $files
 fi
 
-npm run bundle
 echo "Bundling javascript..."
 export NODE_ENV='production'
 npx webpack
