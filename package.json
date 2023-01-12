@@ -6,12 +6,12 @@
   "main": "src/app.js",
   "module": "module/22120-module.js",
   "bin": {
-    "diskernet": "dist/22120.cjs"
+    "diskernet": "build/out.cjs"
   },
   "scripts": {
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
-    "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
+    "build": "echo Ensure you 'npm run setup' first && bash ./scripts/compile.sh",
     "clean": "rm -rf build/* bin/*",
     "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
@@ -20,15 +20,17 @@
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
     "postpublish": "cp package.json .package.build.json",
-    "prepublishOnly": "npm run bundle && npx webpack ."
+    "prepublishOnly": "./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/out.cjs --platform=node"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dosyago/22120.git"
   },
   "pkg": {
-    "scripts": "dist/**/*.js",
-    "assets": ["dist/**/*.js", "public/**/*"],
+    "scripts": "build/**/*.js",
+    "assets": [
+      "public/**/*"
+    ],
     "outputPath": "bin"
   },
   "keywords": [
@@ -56,12 +58,8 @@
     "ws": "latest"
   },
   "devDependencies": {
+    "esbuild": "0.16.17",
     "eslint": "^8.4.1",
-    "esm": "^3.2.25",
-    "nexe": "^1.1.6",
-    "nodemon": "latest",
-    "npx": "^3.0.0",
-    "webpack": "latest",
-    "webpack-cli": "latest"
+    "nodemon": "latest"
   }
 }
