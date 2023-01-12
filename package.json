@@ -4,16 +4,16 @@
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
-  "module": "dist/22120-module.js",
+  "module": "module/22120-module.js",
   "bin": {
-    "diskernet": "build/22120.js"
+    "diskernet": "dist/22120.cjs"
   },
   "scripts": {
-    "bundle": "npx rollup --config",
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo 'please run ./scripts/build_setup.sh first (one time only) and then ./scripts/compile.sh'",
     "clean": "rm -rf build/* bin/*",
+    "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
     "save": "nodemon src/app.js 22120 save",
     "serve": "nodemon src/app.js 22120 serve",
@@ -27,8 +27,8 @@
     "url": "git+https://github.com/dosyago/22120.git"
   },
   "pkg": {
-    "scripts": "build/*.js",
-    "assets": "public/**/*",
+    "scripts": "dist/**/*.js",
+    "assets": ["dist/**/*.js", "public/**/*"],
     "outputPath": "bin"
   },
   "keywords": [

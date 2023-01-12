@@ -2,10 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: "./dist/22120-module.js",
+  entry: "./src/app.js",
   output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: "22120.js"
+    path: path.resolve(__dirname, 'dist'),
+    filename: "22120.cjs"
   },
   optimization: {
     minimize: false
@@ -14,7 +14,20 @@ module.exports = {
   node: {
     __dirname: false
   },
+  externalsPresets: {
+    node: true
+  },
+  externals: [
+  ],
   plugins: [
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.node$/,
+        loader: 'node-loader',
+      },
+    ],
+  },
 };
