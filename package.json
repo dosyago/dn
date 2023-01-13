@@ -6,12 +6,14 @@
   "main": "src/app.js",
   "module": "dist/diskernet.js",
   "bin": {
-    "diskernet": "build/out.cjs"
+    "diskernet": "build/diskernet.cjs"
   },
   "scripts": {
     "start": "node src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo Ensure you 'npm run setup' first && bash ./scripts/compile.sh",
+    "compile": "npm run build",
+    "build-only": "bash ./scripts/build_only.sh",
     "clean": "rm -rf build/* bin/*",
     "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
@@ -19,8 +21,7 @@
     "serve": "nodemon src/app.js DiskerNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
-    "postpublish": "cp package.json .package.build.json",
-    "prepublishOnly": "./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/out.cjs --platform=node"
+    "prepublishOnly": "npm run build-only"
   },
   "repository": {
     "type": "git",
