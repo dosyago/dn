@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
-  "module": "module/22120-module.js",
+  "module": "dist/diskernet.js",
   "bin": {
     "diskernet": "build/out.cjs"
   },
@@ -15,8 +15,8 @@
     "clean": "rm -rf build/* bin/*",
     "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
-    "save": "nodemon src/app.js 22120 save",
-    "serve": "nodemon src/app.js 22120 serve",
+    "save": "nodemon src/app.js DiskerNet save",
+    "serve": "nodemon src/app.js DiskerNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
     "postpublish": "cp package.json .package.build.json",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/22120.git"
+    "url": "git+https://github.com/dosyago/DiskerNet.git"
   },
   "pkg": {
     "scripts": "build/**/*.js",
@@ -38,11 +38,11 @@
     "library"
   ],
   "author": "@dosy",
-  "license": "AGPL-3.0",
+  "license": "PolyForm Strict 1.0",
   "bugs": {
-    "url": "https://github.com/dosyago/22120/issues"
+    "url": "https://github.com/dosyago/DiskerNet/issues"
   },
-  "homepage": "https://github.com/dosyago/22120#readme",
+  "homepage": "https://github.com/dosyago/DiskerNet#readme",
   "dependencies": {
     "chrome-launcher": "latest",
     "express": "latest",
