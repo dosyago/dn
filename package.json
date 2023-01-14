@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
-  "module": "dist/diskernet.js",
+  "module": "dist/diskernet.mjs",
   "bin": {
     "diskernet": "build/diskernet.cjs"
   },
@@ -56,7 +56,7 @@
     "ndx-query": "^1.0.1",
     "ndx-serializable": "^1.0.0",
     "node-fetch": "latest",
-    "ps-list": "^8.1.1",
+    "ps-list-commonjs": "^8.1.2",
     "ukkonen": "^1.4.0",
     "ws": "latest"
   },

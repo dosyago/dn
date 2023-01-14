@@ -5,7 +5,7 @@ import util from 'util';
 import {stdin as input, stdout as output} from 'process';
 
 import ChromeLauncher from 'chrome-launcher';
-import psList from 'ps-list';
+import psList from 'ps-list-commonjs';
 
 import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';
 

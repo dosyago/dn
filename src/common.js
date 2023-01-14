@@ -73,8 +73,8 @@ export const SNIP_CONTEXT = 31;
 export const NO_SANDBOX = (process.env.DEBUG_22120 && process.env.SET_22120_NO_SANDBOX) || false;
 
 //export const APP_ROOT = '.';
-//export const APP_ROOT = __dirname;
-export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
+export const APP_ROOT = path.dirname(process.argv[0]);
+//export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
