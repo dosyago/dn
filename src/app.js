@@ -64,7 +64,7 @@ async function start() {
 
   const list = await psList();
 
-  chromeOpen = list.some(({name,cmd}) => name.match(/chrome/g) || cmd.match(/chrome/g));
+  chromeOpen = list.some(({name,cmd}) => name?.match?.(/chrome/g) || cmd?.match?.(/chrome/g));
 
   if ( chromeOpen ) {
     console.info(`Seems Chrome is open`);

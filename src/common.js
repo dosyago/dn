@@ -3,10 +3,12 @@ import {fileURLToPath} from 'url';
 import fs from 'fs';
 import os from 'os';
 
+const DEEB = false;
+
 export const DEBUG = {
   askFirst: true,
-  verboseSlow: false,
-  debug: process.env.DEBUG_22120 || false,
+  verboseSlow: process.env.VERBOSE_DEBUG_22120 || DEEB,
+  debug: process.env.DEBUG_22120 || DEEB,
   checkPred: false
 }
 export const SHOW_FETCH = false;
