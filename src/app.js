@@ -3,34 +3,34 @@ import ChildProcess from 'child_process';
 
 import ChromeLauncher from 'chrome-launcher';
 
-import {DEBUG, sleep, NO_SANDBOX} from './common.js';
+import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';
 
-import Archivist from './archivist.js';
+import {Archivist} from './archivist.js';
 import LibraryServer from './libraryServer.js';
 import args from './args.js';
 
 const {server_port, mode, chrome_port} = args;
 const CHROME_OPTS = !NO_SANDBOX ? [
-  '--restore-last-session',
+  /*'--restore-last-session',*/
   `--disk-cache-dir=${args.temp_browser_cache()}`,
   `--aggressive-cache-discard`
 ] : [
-  '--restore-last-session',
+  /*'--restore-last-session',*/
   `--disk-cache-dir=${args.temp_browser_cache()}`,
   `--aggressive-cache-discard`,
-  '--no-sandbox'
+  '--no-sandbox',
 ];
 const LAUNCH_OPTS = {
   logLevel: DEBUG ? 'verbose' : 'silent',
   port: chrome_port, 
   chromeFlags:CHROME_OPTS, 
   userDataDir:false, 
-  startingUrl: `http://localhost:${args.server_port}`,
+  startingUrl: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
   ignoreDefaultFlags: true
 }
 const KILL_ON = {
   win32: 'taskkill /IM chrome.exe /F',
-  darwin: 'pkill -15 chrome',
+  darwin: 'kill $(pgrep Chrome)',
   freebsd: 'pkill -15 chrome',
   linux: 'pkill -15 chrome',
 };
@@ -42,11 +42,16 @@ start();
 async function start() {
   console.log(`Running in node...`);
 
-  process.on('beforeExit', cleanup);
-  process.on('SIGBREAK', cleanup);
+  process.on('error', cleanup);
+  process.on('unhandledRejection', cleanup);
+  process.on('uncaughtException', cleanup);
   process.on('SIGHUP', cleanup);
-  process.on('SIGINT', cleanup);
-  process.on('SIGTERM', cleanup);
+  process.on('beforeExit', cleanup);
+  process.on('SIGINT', code => cleanup(code, 'signal', {exit:true}));
+  process.on('SIGTERM', code => cleanup(code, 'signal',  {exit:true}));
+  process.on('SIGQUIT', code => cleanup(code, 'signal',  {exit:true}));
+  process.on('SIGBREAK', code => cleanup(code, 'signal', {exit:true}));
+  process.on('SIGABRT', code => cleanup(code, 'signal',  {exit:true}));
 
   console.log(`Importing dependencies...`);
   const {launch:ChromeLaunch} = ChromeLauncher;
@@ -71,7 +76,7 @@ async function start() {
     await ChromeLaunch(LAUNCH_OPTS);
   } catch(e) {
     console.log(`Could not launch chrome.`);
-    DEBUG && console.info('Chrome launch error:', e);
+    DEBUG.verboseSlow && console.info('Chrome launch error:', e);
     process.exit(1);
   }
   console.log(`Chrome started.`);
@@ -92,7 +97,7 @@ async function killChrome(wait = true) {
       ));
       if ( err ) {
         console.log(`There was no running chrome.`);
-        //DEBUG && console.warn("Error closing existing chrome", err);
+        DEBUG.verboseSlow && console.warn("Error closing existing chrome", err);
       } else {
         console.log(`Running chrome shut down.`);
         if ( wait ) {
@@ -108,8 +113,8 @@ async function killChrome(wait = true) {
   }
 }
 
-async function cleanup(reason) {
-  console.log(`Cleanup called on reason: ${reason}`);
+async function cleanup(reason, err, {exit = false} = {}) {
+  console.log(`Cleanup called on reason: ${reason}`, err);
 
   if ( quitting ) {
     console.log(`Cleanup already called so not running again.`);
@@ -123,9 +128,11 @@ async function cleanup(reason) {
 
   killChrome(false); 
 
-  console.log(`Take a breath. Everything's done. 22120 is exiting in 3 seconds...`);
+  if ( exit ) {
+    console.log(`Take a breath. Everything's done. DiskerNet is exiting in 3 seconds...`);
 
-  await sleep(3000);
+    await sleep(3000);
 
-  process.exit(0);
+    process.exit(0);
+  }
 } 

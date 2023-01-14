@@ -12,7 +12,8 @@ export function getInjection({sessionId}) {
       // in future
   return `
     {
-      const DEBUG = ${DEBUG};
+      const X = 1;
+      const DEBUG = ${JSON.stringify(DEBUG, null, 2)};
       const MIN_CHECK_TEXT = 3000;  // min time between checking documentElement.innerText
       const MIN_NOTIFY = 5000;      // min time between telling controller text maybe changed
       const MAX_NOTIFICATIONS = 13; // max times we will tell controller text maybe changed
@@ -99,7 +100,7 @@ export function getInjection({sessionId}) {
               count++;
               handler({textChange:{source}});
             } catch(e) {
-              DEBUG && console.warn('could not parse message', data, e);
+              DEBUG.verboseSlow && console.warn('could not parse message', data, e);
             }
           }
         }
@@ -126,7 +127,7 @@ export function getInjection({sessionId}) {
           console.log('check');
           const textMutated = document.documentElement.innerText !== lastInnerText;
           if ( textMutated ) {
-            DEBUG && console.log('Text changed');
+            DEBUG.verboseSlow && console.log('Text changed');
             lastInnerText = document.documentElement.innerText;
             Top.postMessage({frameTextChangeNotification:{source:location.href}}, '*');
           }

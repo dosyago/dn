@@ -17,6 +17,7 @@
     "clean": "rm -rf build/* bin/*",
     "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
+    "inspect": "node --inspect-brk=127.0.0.1:9999 src/app.js",
     "save": "nodemon src/app.js DiskerNet save",
     "serve": "nodemon src/app.js DiskerNet serve",
     "lint": "watch -n 5 npx eslint .",

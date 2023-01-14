@@ -1,15 +1,25 @@
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
+
 import express from 'express';
 
 import args from './args.js';
 import {
+  GO_SECURE,
+  MAX_REAL_URL_LENGTH,
   MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, DEBUG, 
-  say, sleep, APP_ROOT
+  say, sleep, APP_ROOT,
+  RichError
 } from './common.js';
-import Archivist from './archivist.js';
-import {trilight, /*highlight*/} from './highlighter.js';
+import {startCrawl, Archivist} from './archivist.js';
+import {trilight, highlight} from './highlighter.js';
 
 const SITE_PATH = path.resolve(APP_ROOT, '..', 'public');
+
+const SearchCache = new Map();
 
 const app = express();
 
@@ -20,18 +30,39 @@ const LibraryServer = {
   start, stop
 }
 
+const secure_options = {};
+const protocol = GO_SECURE ? https : http;
+
 export default LibraryServer;
 
 async function start({server_port}) {
   if ( running ) {
-    DEBUG && console.warn(`Attempting to start server when it is not closed. Exiting start()...`);
+    DEBUG.verboseSlow && console.warn(`Attempting to start server when it is not closed. Exiting start()...`);
     return;
   }
   running = true;
+  
+  try {
+    const sec = {
+      key: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'privkey.pem')),
+      cert: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'fullchain.pem')),
+      ca: fs.existsSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem')) ?
+          fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem'))
+        :
+          undefined
+    };
+    console.log({sec});
+    Object.assign(secure_options, sec);
+  } catch(e) {
+    console.warn(`No certs found so will use insecure no SSL.`);
+  }
+
   try {
     port = server_port;
     addHandlers();
-    Server = app.listen(Number(port), err => {
+    const secure = secure_options.cert && secure_options.key;
+    const server = protocol.createServer.apply(protocol, GO_SECURE && secure ? [secure_options, app] : [app]);
+    Server = server.listen(Number(port), err => {
       if ( err ) { 
         running = false;
         throw err;
@@ -41,12 +72,13 @@ async function start({server_port}) {
     });
   } catch(e) {
     running = false;
-    DEBUG && console.error(`Error starting server`, e);
+    DEBUG.verboseSlow && console.error(`Error starting server`, e);
+    process.exit(1);
   }
 }
 
 function addHandlers() {
-  app.use(express.urlencoded({extended:true}));
+  app.use(express.urlencoded({extended:true, limit: '50mb'}));
   app.use(express.static(SITE_PATH));
 
   if ( args.library_path() ) {
@@ -55,8 +87,29 @@ function addHandlers() {
 
   app.get('/search(.json)?', async (req, res) => {
     await Archivist.isReady();
-    const {query, results:resultIds, HL} = await Archivist.search(req.query.query);
-    const results = resultIds.map(docId => Archivist.getDetails(docId));
+    let {query:oquery} = req.query;
+    if ( ! oquery ) {
+      return res.end(SearchResultView({results:[], query:'', HL:new Map, page:1}));
+    }
+    oquery = oquery.trim();
+    if ( ! oquery ) {
+      return res.end(SearchResultView({results:[], query:'', HL:new Map, page:1}));
+    }
+    let {page} = req.query;
+    if ( ! page || ! Number.isInteger(parseInt(page)) ) {
+      page = 1;
+    } else {
+      page = parseInt(page);
+    }
+    let resultIds, query, HL;
+    if ( SearchCache.has(req.query.query) ) {
+      ({query, resultIds, HL} = SearchCache.get(oquery));
+    } else {
+      ({query, results:resultIds, HL} = await Archivist.search(oquery));
+      SearchCache.set(req.query.query, {query, resultIds, HL});
+    }
+    const start = (page-1)*args.results_per_page;
+    const results = resultIds.slice(start,start+args.results_per_page).map(docId => Archivist.getDetails(docId))
     if ( req.path.endsWith('.json') ) {
       res.end(JSON.stringify({
         results, query
@@ -73,7 +126,7 @@ function addHandlers() {
           .map(segment => Archivist.findOffsets(query, segment))
           .join(' ... ');
       });
-      res.end(SearchResultView({results, query, HL}));
+      res.end(SearchResultView({results, query, HL, page}));
     }
   });
 
@@ -131,6 +184,63 @@ function addHandlers() {
     } else {
       //res.end(`Base path did not change.`);
       res.redirect('/');
+    }
+  });
+
+  app.post('/crawl', async (req, res) => {
+    try {
+      let {
+        links, timeout, depth, saveToFile, 
+        maxPageCrawlTime, minPageCrawlTime, batchSize,
+        program,
+      } = req.body;
+      const oTimeout = timeout;
+      timeout = Math.round(parseFloat(timeout)*1000);
+      depth = Math.round(parseInt(depth));
+      batchSize = Math.round(parseInt(batchSize));
+      saveToFile = !!saveToFile;
+      minPageCrawlTime = Math.round(parseInt(minPageCrawlTime)*1000);
+      maxPageCrawlTime = Math.round(parseInt(maxPageCrawlTime)*1000);
+      if ( Number.isNaN(timeout) || Number.isNaN(depth) || typeof links != 'string' ) {
+        console.warn({invalid:{timeout,depth,links}});
+        throw new RichError({
+          status: 400, 
+          message: 'Invalid parameters: timeout, depth or links'
+        });
+      }
+      const urls = links.split(/[\n\s\r]+/g).map(u => u.trim()).filter(u => {
+        const tooShort = u.length === 0;
+        if ( tooShort ) return false;
+
+        const tooLong = u.length > MAX_REAL_URL_LENGTH;
+        if ( tooLong ) return false;
+
+        let invalid = false;
+        try {
+          new URL(u);
+        } catch { 
+          invalid = true;
+        };
+        if ( invalid ) return false;
+
+        return true;
+      }).map(url => ({url,depth:1}));
+      console.log(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`); 
+      await startCrawl({
+        urls, timeout, depth, saveToFile, batchSize, minPageCrawlTime, maxPageCrawlTime, program,
+      });
+      res.end(`Starting crawl from ${urls.length} URLs, waiting ${oTimeout} seconds for each to load, and continuing to a depth of ${depth} clicks...`);
+    } catch(e) {
+      if ( e instanceof RichError ) { 
+        console.warn(e);
+        const {status, message} = JSON.parse(e.message);
+        res.status(status);
+        res.end(message);
+      } else {
+        console.warn(e);
+        res.sendStatus(500);
+      }
+      return;
     }
   });
 }
@@ -251,7 +361,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
   `
 }
 
-function SearchResultView({results, query, HL}) {
+function SearchResultView({results, query, HL, page}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
@@ -273,7 +383,7 @@ function SearchResultView({results, query, HL}) {
     <p>
       Showing results for <b>${query}</b>
     </p>
-    <ol>
+    <ol class=results start="${(page-1)*args.results_per_page+1}">
     ${
       results.map(({snippet, url,title,id}) => `
         <li>
@@ -289,6 +399,19 @@ function SearchResultView({results, query, HL}) {
       `).join('\n')
     }
     </ol>
+    <p class=cent>
+      ${page > 1 ? `
+      <a href=/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page-1)}>
+        &lt; Page ${page-1}
+      </a> |` : ''}
+      <span class=grey>
+        Page ${page}
+      </span>
+      |
+      <a href=/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page+1)}>
+        Page ${page+1} &gt;
+      </a>
+    </p>
   `
 }
 

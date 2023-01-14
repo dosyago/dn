@@ -86,13 +86,13 @@ export async function* bookmarkChanges() {
           filename = filename || '';
           // listen to everything
           const path = Path.resolve(dirPath, filename);
-          DEBUG && console.log(event, path);
+          DEBUG.verboseSlow && console.log(event, path);
           if ( isBookmarkFile(filename) ) {
             if ( ! State.active.has(path) ) {
               State.active.add(path);
             }
             // but only act if it is a bookmark file
-            DEBUG && console.log(event, path, notifyChange);
+            DEBUG.verboseSlow && console.log(event, path, notifyChange);
             // save the event type and file it happened to
             change = {event, path};
             // drop the most recently pushed promise from our bookkeeping list
@@ -208,7 +208,7 @@ function getProfileRootDir() {
   let name = PLAT_TABLE[plat];
   let rootDir;
 
-  DEBUG && console.log({plat, name});
+  DEBUG.verboseSlow && console.log({plat, name});
 
   if ( !name ) {
     if ( plat === 'win32' ) {
