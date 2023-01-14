@@ -40,7 +40,7 @@ export async function connect({port:port = 9222} = {}) {
 
   return {
     send,
-    on, ons,
+    on, ons, ona,
     close
   };
   
@@ -59,11 +59,18 @@ export async function connect({port:port = 9222} = {}) {
     const outGoing = JSON.stringify(message);
     MESSAGES.set(key, outGoing);
     socket.send(outGoing);
-    DEBUG && (SHOW_FETCH || !method.startsWith('Fetch')) && console.log("Sent", message);
+    DEBUG.verboseSlow && (SHOW_FETCH || !method.startsWith('Fetch')) && console.log("Sent", message);
     return promise;
   }
 
   async function handle(message) {
+    if ( typeof message !== "string" ) {
+      try {
+        message += '';
+      } catch(e) {
+        message = message.toString();
+      }
+    }
     const stringMessage = message;
     message = JSON.parse(message);
     if ( message.error ) {
@@ -71,6 +78,7 @@ export async function connect({port:port = 9222} = {}) {
       if ( showError ) {
         console.warn(message);
       }
+      console.warn(message);
     }
     const {sessionId} = message;
     const {method} = message;
@@ -129,6 +137,20 @@ export async function connect({port:port = 9222} = {}) {
       Handlers[method] = listeners = [];
     }
     listeners.push(handler);
+  }
+
+  function ona(method, handler, sessionId) {
+    let listeners = Handlers[method]; 
+    if ( ! listeners ) {
+      Handlers[method] = listeners = [];
+    }
+    listeners.push(({message}) => {
+      if ( message.sessionId === sessionId ) {
+        handler(message.params);
+      } else {
+        console.log(`No such`, {method, handler, sessionId, message});
+      }
+    });
   }
 
   function close() {
