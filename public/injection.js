@@ -99,7 +99,7 @@ export function getInjection({sessionId}) {
               count++;
               handler({textChange:{source}});
             } catch(e) {
-              DEBUG && console.warn('could not parse message', data, e);
+              DEBUG.verboseSlow && console.warn('could not parse message', data, e);
             }
           }
         }
@@ -126,7 +126,7 @@ export function getInjection({sessionId}) {
           console.log('check');
           const textMutated = document.documentElement.innerText !== lastInnerText;
           if ( textMutated ) {
-            DEBUG && console.log('Text changed');
+            DEBUG.verboseSlow && console.log('Text changed');
             lastInnerText = document.documentElement.innerText;
             Top.postMessage({frameTextChangeNotification:{source:location.href}}, '*');
           }

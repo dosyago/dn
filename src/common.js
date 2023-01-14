@@ -4,8 +4,9 @@ import fs from 'fs';
 import os from 'os';
 
 export const DEBUG = {
+  verboseSlow: false,
   debug: process.env.DEBUG_22120 || false,
-  checkPred: true
+  checkPred: false
 }
 export const SHOW_FETCH = false;
 

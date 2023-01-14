@@ -33,11 +33,17 @@
 
   import args from './args.js';
   import {
+    GO_SECURE,
+    untilTrue,
     sleep, DEBUG as debug, 
+    BATCH_SIZE,
+    MIN_TIME_PER_PAGE,
+    MAX_TIME_PER_PAGE,
     MAX_TITLE_LENGTH,
     MAX_URL_LENGTH,
     clone,
-    CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT
+    CHECK_INTERVAL, TEXT_NODE, FORBIDDEN_TEXT_PARENT,
+    RichError
   } from './common.js';
   import {connect} from './protocol.js';
   import {BLOCKED_CODE, BLOCKED_HEADERS} from './blockedResponse.js';
@@ -78,7 +84,7 @@
       tokenize: "reverse"
     };
     let Flex = new FTSIndex(FLEX_OPTS);
-    DEBUG && console.log({Flex});
+    DEBUG.verboseSlow && console.log({Flex});
 
   // NDX
     const NDXRemoved = new Set();
@@ -86,7 +92,7 @@
     const NDX_FIELDS = ndxDocFields();
     let NDX_FTSIndex = new NDXIndex(NDX_FIELDS);
     let NDXId;
-    DEBUG && console.log({NDX_FTSIndex});
+    DEBUG.verboseSlow && console.log({NDX_FTSIndex});
 
   // fuzzy (maybe just for queries ?)
     const REGULAR_SEARCH_OPTIONS_FUZZY = {
@@ -114,6 +120,10 @@
   const Cache = new Map();
   const Index = new Map();
   const Indexing = new Set();
+  const CrawlIndexing = new Set();
+  const CrawlTargets = new Set();
+  const CrawlData = new Map();
+  const Q = new Set();
   const Sessions = new Map();
   const Installations = new Set();
   const ConfirmedInstalls = new Set();
@@ -125,6 +135,9 @@
     FrameNodes,
     Docs,
     Indexing,
+    CrawlIndexing,
+    CrawlData,
+    CrawlTargets,
     Cache, 
     Index,
     NDX_FTSIndex,
@@ -140,7 +153,7 @@
     ftsSaveInProgress: false
   };
   const State = Object.assign({}, BLANK_STATE);
-  const Archivist = { 
+  export const Archivist = { 
     NDX_OLD,
     USE_FLEX,
     collect, getMode, changeMode, shutdown, 
@@ -153,6 +166,7 @@
     getDetails,
     isReady,
     findOffsets,
+    archiveAndIndexURL
   }
   const BODYLESS = new Set([
     301,
@@ -161,7 +175,7 @@
     307
   ]);
   const NEVER_CACHE = new Set([
-    `http://localhost:${args.server_port}`,
+    `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
     `http://localhost:${args.chrome_port}`
   ]);
   const SORT_URLS = ([urlA],[urlB]) => urlA < urlB ? -1 : 1;
@@ -189,12 +203,23 @@
       });
     });
 
-export default Archivist;
+// logging
+    let logName;
+    let logStream;
 
 // main
   async function collect({chrome_port:port, mode} = {}) {
     const {library_path} = args;
+    const exitHandlers = [];
+    process.on('exit', runHandlers);
+    process.on('beforeExit', runHandlers);
+    process.on('SIGUSR2', runHandlers);
     State.connection = State.connection || await connect({port});
+    State.onExit = {
+      addHandler(h) {
+        exitHandlers.push(h);
+      }
+    };
     const {send, on, close} = State.connection;
     //const DELAY = 100; // 500 ?
     Close = close;
@@ -206,6 +231,7 @@ export default Archivist;
     clearSavers();
 
     Mode = mode; 
+    console.log({Mode});
     if ( Mode == 'save' || Mode == 'select' ) {
       requestStage = "Response";
       // in case we get a updateBasePath call before an interval
@@ -225,15 +251,16 @@ export default Archivist;
     }
 
     on("Target.targetInfoChanged", attachToTarget);
-    on("Target.targetInfoChanged", reloadIfNotLive);
     on("Target.targetInfoChanged", updateTargetInfo);
     on("Target.targetInfoChanged", indexURL);
     on("Target.attachedToTarget", installForSession);
+    on("Page.loadEventFired", reloadIfNotLive);
     on("Fetch.requestPaused", cacheRequest);
     on("Runtime.consoleAPICalled", handleMessage);
 
     await send("Target.setDiscoverTargets", {discover:true});
     await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
+    await send("Security.setIgnoreCertificateErrors", {ignore:true});
     await send("Fetch.enable", {
       patterns: [
         {
@@ -246,13 +273,26 @@ export default Archivist;
     const {targetInfos:targets} = await send("Target.getTargets", {});
     const pageTargets = targets.filter(({type}) => type == 'page').map(targetInfo => ({targetInfo}));
     await Promise.all(pageTargets.map(attachToTarget));
-    await Promise.all(pageTargets.map(reloadIfNotLive));
+    sleep(5000).then(() => Promise.all(pageTargets.map(reloadIfNotLive)));
 
     State.bookmarkObserver = State.bookmarkObserver || startObservingBookmarkChanges();
 
     Status.loaded = true;
 
     return Status.loaded;
+
+    function runHandlers(reason) {
+      console.log('before exit running', exitHandlers, reason);
+      while(exitHandlers.length) {
+        const h = exitHandlers.shift();
+        try {
+          h();
+        } catch(e) {
+          console.warn(`Error in exit handler`, h, e);
+        }
+      }
+      process.exit(0);
+    }
 
     function handleMessage(args) {
       const {type, args:[{value:strVal}]} = args;
@@ -278,7 +318,7 @@ export default Archivist;
               } break;
           }
         } catch(e) {
-          DEBUG && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
+          DEBUG.verboseSlow && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
         } 
       }
     }
@@ -287,7 +327,7 @@ export default Archivist;
       const {sessionId} = install;
       if ( ! State.ConfirmedInstalls.has(sessionId) ) {
         State.ConfirmedInstalls.add(sessionId);
-        DEBUG && console.log({confirmedInstall:install});
+        DEBUG.verboseSlow && console.log({confirmedInstall:install});
       }
     }
 
@@ -298,15 +338,15 @@ export default Archivist;
         const latestTargetInfo = clone(await untilHas(Targets, sessionId));
         if ( titleChange ) {
           const {currentTitle} = titleChange;
-          DEBUG && console.log('Received titleChange', titleChange);
+          DEBUG.verboseSlow && console.log('Received titleChange', titleChange);
           latestTargetInfo.title = currentTitle;
           Targets.set(sessionId, latestTargetInfo);
-          DEBUG && console.log('Updated stored target info', latestTargetInfo);
+          DEBUG.verboseSlow && console.log('Updated stored target info', latestTargetInfo);
         } else {
-          DEBUG && console.log('Received textChange', textChange);
+          DEBUG.verboseSlow && console.log('Received textChange', textChange);
         }
         if ( ! dontCache(latestTargetInfo) ) {
-          DEBUG && console.log(
+          DEBUG.verboseSlow && console.log(
             `Will reindex because we were told ${titleChange ? 'title' : 'text'} content maybe changed.`, 
             data
           );
@@ -318,15 +358,15 @@ export default Archivist;
     function updateTargetInfo({targetInfo}) {
       if ( targetInfo.type === 'page' ) {
         const sessionId = State.Sessions.get(targetInfo.targetId); 
-        DEBUG && console.log('Updating target info', targetInfo, sessionId);
+        DEBUG.verboseSlow && console.log('Updating target info', targetInfo, sessionId);
         if ( sessionId ) {
           const existingTargetInfo = Targets.get(sessionId);
           // if we have an existing target info for this URL and have saved an updated title
-          DEBUG && console.log('Existing target info', existingTargetInfo);
+          DEBUG.verboseSlow && console.log('Existing target info', existingTargetInfo);
           if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
             // keep that title (because targetInfo does not reflect the latest title)
             if ( existingTargetInfo.title !== existingTargetInfo.url ) {
-              DEBUG && console.log('Setting title to existing', existingTargetInfo);
+              DEBUG.verboseSlow && console.log('Setting title to existing', existingTargetInfo);
               targetInfo.title = existingTargetInfo.title;
             }
           }
@@ -335,15 +375,19 @@ export default Archivist;
       }
     }
 
-    async function reloadIfNotLive({targetInfo}) {
+    async function reloadIfNotLive({targetInfo, sessionId} = {}) {
       if ( Mode == 'serve' ) return; 
-      if ( neverCache(targetInfo.url) ) return;
+      if ( !targetInfo && !!sessionId ) {
+        targetInfo = Targets.get(sessionId);
+        console.log(targetInfo);
+      }
+      if ( neverCache(targetInfo?.url) ) return;
       const {attached, type} = targetInfo;
       if ( attached && type == 'page' ) {
         const {url, targetId} = targetInfo;
         const sessionId = State.Sessions.get(targetId);
         if ( !!sessionId && !State.ConfirmedInstalls.has(sessionId) ) {
-          DEBUG && console.log({
+          DEBUG.verboseSlow && console.log({
             reloadingAsNotConfirmedInstalled:{
               url, 
               sessionId
@@ -384,7 +428,7 @@ export default Archivist;
 
       if ( installUneeded ) return;
 
-      DEBUG && console.log("installForSession running on target " + targetId);
+      DEBUG.verboseSlow && console.log("installForSession running on target " + targetId);
 
       State.Sessions.set(targetId, sessionId);
       Targets.set(sessionId, clone(targetInfo));
@@ -406,12 +450,12 @@ export default Archivist;
           worldName: "Context-22120-Indexing"
         }, sessionId);
 
-        DEBUG && console.log("Just request install", targetId, url);
+        DEBUG.verboseSlow && console.log("Just request install", targetId, url);
       }
 
       State.Installations.add(sessionId);
 
-      DEBUG && console.log('Installed sessionId', sessionId);
+      DEBUG.verboseSlow && console.log('Installed sessionId', sessionId);
       if ( Mode == 'save' ) {
         indexURL({targetInfo});
       }
@@ -428,17 +472,25 @@ export default Archivist;
       if ( info.url.startsWith('chrome') ) return;
       if ( dontCache(info) ) return;
 
-      DEBUG && console.log('Index URL called', info);
+      DEBUG.verboseSlow && console.log('Index URL', info);
+
+      DEBUG.verboseSlow && console.log('Index URL called', info);
 
       if ( State.Indexing.has(info.targetId) ) return;
       State.Indexing.add(info.targetId);
 
       if ( ! sessionId ) {
-        sessionId = await untilHas(State.Sessions, info.targetId);
+        sessionId = await untilHas(
+          State.Sessions, info.targetId, 
+          {timeout: State.crawling && State.crawlTimeout}
+        );
       }
 
       if ( !State.Installations.has(sessionId) ) {
-        await untilHas(State.Installations, sessionId);
+        await untilHas(
+          State.Installations, sessionId, 
+          {timeout: State.crawling && State.crawlTimeout}
+        );
       }
 
       send("DOMSnapshot.enable", {}, sessionId);
@@ -449,6 +501,89 @@ export default Archivist;
         computedStyles: [],
       }, sessionId);
       const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
+
+      if ( State.crawling ) {
+        const has = await untilTrue(() => State.CrawlData.has(info.targetId));
+
+        const {url} = Targets.get(sessionId);
+        if ( ! dontCache({url}) ) {
+          if ( has ) {
+            const {depth,links} = State.CrawlData.get(info.targetId);
+            DEBUG.verboseSlow && console.log(info, {depth,links});
+
+            const {result:{value:{title,links:crawlLinks}}} = await send("Runtime.evaluate", {
+              expression: `(function () { 
+                return {
+                  links: Array.from(
+                    document.querySelectorAll('a[href].titlelink')
+                  ).map(a => a.href),
+                  title: document.title
+                };
+              }())`,
+              returnByValue: true
+            }, sessionId);
+
+            if ( (depth + 1) <= State.crawlDepth ) {
+              links.length = 0;
+              links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+            }
+            if ( logStream ) {
+              console.log(`Writing ${links.length} entries to ${logName}`);
+              logStream.cork();
+              links.forEach(url => {
+                logStream.write(`${url}\n`);
+              });
+              logStream.uncork();
+            }
+            console.log(`Just crawled: ${title} (${info.url})`);
+          }
+
+          if ( ! State.titles ) {
+            State.titles = new Map();
+            State.onExit.addHandler(() => {
+              fs.writeFileSync(
+                path.resolve('.', `titles-${(new Date).toISOString()}.txt`), 
+                JSON.stringify([...State.titles.entries()], null, 2) + '\n'
+              );
+            });
+          }
+
+          const {result:{value:data}} = await send("Runtime.evaluate", 
+            {
+              expression: `(function () {
+                return {
+                  url: document.location.href,
+                  title: document.title,
+                };
+              }())`,
+              returnByValue: true
+            }, 
+            sessionId
+          );
+
+          State.titles.set(data.url, data.title);
+          console.log(`Saved ${State.titles.size} titles`);
+
+          if ( State.program && ! dontCache(info) ) {
+            const targetInfo = info;
+            const fs = Fs;
+            const path = Path;
+            try {
+              await sleep(500);
+              await eval(`(async () => {
+                try {
+                  ${State.program}
+                } catch(e) {
+                  console.warn('Error in program', e, State.program);
+                }
+              })();`);
+              await sleep(500);
+            } catch(e) {
+              console.warn(`Error evaluate program`, e);
+            }
+          }
+        }
+      }
 
       const {title, url} = Targets.get(sessionId);
       let id, ndx_id;
@@ -484,60 +619,17 @@ export default Archivist;
         doc.contentSignature = contentSignature;
         fuzzy.add(doc);
         State.Docs.set(url, doc);
-        DEBUG && console.log({updateFuzz: {doc,url}});
+        DEBUG.verboseSlow && console.log({updateFuzz: {doc,url}});
       }
 
-      DEBUG && console.log("NDX updated", doc.ndx_id);
+      DEBUG.verboseSlow && console.log("NDX updated", doc.ndx_id);
 
       UpdatedKeys.add(url);
 
-      DEBUG && console.log({id: doc.id, title, url, indexed: true});
+      DEBUG.verboseSlow && console.log({id: doc.id, title, url, indexed: true});
 
       State.Indexing.delete(info.targetId);
-    }
-
-    function processDoc({documents, strings}) {
-      /* 
-        Info
-        Implementation Notes 
-
-        1. Code uses spec at: 
-          https://chromedevtools.github.io/devtools-protocol/tot/DOMSnapshot/#type-NodeTreeSnapshot
-
-        2. Note that so far the below will NOT produce text for and therefore we will NOT
-        index textarea or input elements. We can access those by using the textValue and
-        inputValue array properties of the doc, if we want to implement that.
-      */
-         
-      const texts = [];
-      for( const doc of documents) {
-        const textIndices = doc.nodes.nodeType.reduce((Indices, type, index) => {
-          if ( type === TEXT_NODE ) {
-            const parentIndex = doc.nodes.parentIndex[index];
-            const forbiddenParent = parentIndex >= 0 && 
-              FORBIDDEN_TEXT_PARENT.has(strings[
-                doc.nodes.nodeName[
-                  parentIndex
-                ]
-              ])
-            if ( ! forbiddenParent ) {
-              Indices.push(index);
-            }
-          }
-          return Indices;
-        }, []);
-        textIndices.forEach(index => {
-          const stringsIndex = doc.nodes.nodeValue[index];
-          if ( stringsIndex >= 0 ) {
-            const text = strings[stringsIndex];
-            texts.push(text);
-          }
-        });
-      }
-
-      const pageText = texts.filter(t => t.trim()).join(' ');
-      DEBUG && console.log('Page text>>>', pageText);
-      return pageText;
+      State.CrawlIndexing.delete(info.targetId);
     }
 
     async function attachToTarget({targetInfo}) {
@@ -564,7 +656,7 @@ export default Archivist;
       const isFont = resourceType == "Font";
 
       if ( dontCache(request) ) {
-        DEBUG && console.log("Not caching", request.url);
+        DEBUG.verboseSlow && console.log("Not caching", request.url);
         return send("Fetch.continueRequest", {requestId});
       }
       const key = serializeRequestKey(request);
@@ -572,13 +664,13 @@ export default Archivist;
         if ( State.Cache.has(key) ) {
           let {body, responseCode, responseHeaders} = await getResponseData(State.Cache.get(key));
           responseCode = responseCode || 200;
-          //DEBUG && console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
-          DEBUG && console.log("Fulfilling", key, responseCode, body.slice(0,140));
+          //DEBUG.verboseSlow && console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
+          DEBUG.verboseSlow && console.log("Fulfilling", key, responseCode, body.slice(0,140));
           await send("Fetch.fulfillRequest", {
             requestId, body, responseCode, responseHeaders
           });
         } else {
-          DEBUG && console.log("Sending cache stub", key);
+          DEBUG.verboseSlow && console.log("Sending cache stub", key);
           await send("Fetch.fulfillRequest", {
             requestId, ...UNCACHED
           });
@@ -589,7 +681,7 @@ export default Archivist;
           const rootFrameURL = getRootFrameURL(frameId);
           const frameDescendsFromBookmarkedURLFrame = hasBookmark(rootFrameURL);
           saveIt = frameDescendsFromBookmarkedURLFrame;
-          DEBUG && console.log({rootFrameURL, frameId, mode, saveIt});
+          DEBUG.verboseSlow && console.log({rootFrameURL, frameId, mode, saveIt});
         } else if ( Mode == 'save' ) {
           saveIt = true;
         }
@@ -605,7 +697,7 @@ export default Archivist;
             const responsePath = await saveResponseData(key, request.url, response);
             State.Cache.set(key, responsePath);
           } else {
-            DEBUG && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
+            DEBUG.verboseSlow && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
             response.body = '';
           }
           //await sleep(DELAY);
@@ -653,14 +745,6 @@ export default Archivist;
       return targetInfo.type !== 'page';
     }
 
-    function dontCache(request) {
-      if ( ! request.url ) return true;
-      if ( neverCache(request.url) ) return true;
-      if ( Mode == 'select' && ! hasBookmark(request.url) ) return true;
-      const url = new URL(request.url);
-      return NEVER_CACHE.has(url.origin) || (State.No && State.No.test(url.host));
-    }
-
     async function getResponseData(path) {
       try {
         return JSON.parse(await Fs.promises.readFile(path));
@@ -706,15 +790,17 @@ export default Archivist;
     }
 
     async function startObservingBookmarkChanges() {
+      console.info("Not observing");
+      return;
       for await ( const change of bookmarkChanges() ) {
         if ( Mode == 'select' ) {
           switch(change.type) {
             case 'new': {
-                DEBUG && console.log(change);
+                DEBUG.verboseSlow && console.log(change);
                 archiveAndIndexURL(change.url);
               } break;
             case 'delete': {
-                DEBUG && console.log(change);
+                DEBUG.verboseSlow && console.log(change);
                 deleteFromIndexAndSearch(change.url);
               } break;
             default: {
@@ -724,37 +810,65 @@ export default Archivist;
         }
       }
     }
-
-    async function archiveAndIndexURL(url) {
-      if ( Mode !== 'select' ) {
-        throw new TypeError(`archiveAndIndexURL can only be used in "select" (Bookmark) mode.`);
-      }
-      if ( ! dontCache({url}) ) {
-        const {targetInfos:targs} = await send("Target.getTargets", {});
-        const targets = new Map(targs.map(({url, ...rest}) => [url, {url, ...rest}]));
-        if ( targets.has(url) ) {
-          const targetInfo = targets.get(url);
-          const sessionId = State.Sessions.get(targetInfo.targetId);
-          DEBUG && console.log(
-            "Reloading to archive and index in select (Bookmark) mode", 
-            url
-          );
-          send("Page.stopLoading", {}, sessionId);
-          await send("Page.reload", {}, sessionId);
-        }
-      } else {
-        DEBUG && console.warn(
-          `archiveAndIndexURL called in mode ${
-            Mode
-           } for URL ${
-            url
-           } but that URL is not in our Bookmarks list.`
-        );
-      }
-    }
   }
 
 // helpers
+  function neverCache(url) {
+    return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
+  }
+
+  function dontCache(request) {
+    if ( ! request.url ) return true;
+    if ( neverCache(request.url) ) return true;
+    if ( Mode == 'select' && ! hasBookmark(request.url) ) return true;
+    const url = new URL(request.url);
+    return NEVER_CACHE.has(url.origin) || !!(State.No && State.No.test(url.host));
+  }
+
+  function processDoc({documents, strings}) {
+    /* 
+      Info
+      Implementation Notes 
+
+      1. Code uses spec at: 
+        https://chromedevtools.github.io/devtools-protocol/tot/DOMSnapshot/#type-NodeTreeSnapshot
+
+      2. Note that so far the below will NOT produce text for and therefore we will NOT
+      index textarea or input elements. We can access those by using the textValue and
+      inputValue array properties of the doc, if we want to implement that.
+    */
+       
+    const texts = [];
+    for( const doc of documents) {
+      const textIndices = doc.nodes.nodeType.reduce((Indices, type, index) => {
+        if ( type === TEXT_NODE ) {
+          const parentIndex = doc.nodes.parentIndex[index];
+          const forbiddenParent = parentIndex >= 0 && 
+            FORBIDDEN_TEXT_PARENT.has(strings[
+              doc.nodes.nodeName[
+                parentIndex
+              ]
+            ])
+          if ( ! forbiddenParent ) {
+            Indices.push(index);
+          }
+        }
+        return Indices;
+      }, []);
+      textIndices.forEach(index => {
+        const stringsIndex = doc.nodes.nodeValue[index];
+        if ( stringsIndex >= 0 ) {
+          const text = strings[stringsIndex];
+          texts.push(text);
+        }
+      });
+    }
+
+    const pageText = texts.filter(t => t.trim()).join(' ');
+    DEBUG.verboseSlow && console.log('Page text>>>', pageText);
+    return pageText;
+  }
+
   async function isReady() {
     return await untilHas(Status, 'loaded');
   }
@@ -769,7 +883,7 @@ export default Archivist;
       }));
     }
     State.Fuzzy = fuzzy = new Fuzzy({source: [...State.Docs.values()], keys: FUZZ_OPTS.keys});
-    DEBUG && console.log('Fuzzy loaded');
+    DEBUG.verboseSlow && console.log('Fuzzy loaded');
   }
 
   function getContentSig(doc) { 
@@ -783,12 +897,13 @@ export default Archivist;
   function saveFuzzy(basePath) {
     const docs = [...State.Docs.values()]
       .map(({url, title, content, id}) => ({url, title, content, id}));
+    if ( docs.length === 0 ) return;
     const path = getFuzzyPath(basePath);
     Fs.writeFileSync(
       path,
       JSON.stringify(docs, null, 2)
     );
-    DEBUG && console.log(`Wrote fuzzy to ${path}`);
+    DEBUG.verboseSlow && console.log(`Wrote fuzzy to ${path}`);
   }
 
   function clearSavers() {
@@ -838,7 +953,7 @@ export default Archivist;
           Flex.import(dirEnt.name, JSON.parse(content));
         }
       });
-      DEBUG && console.log('Flex loaded');
+      DEBUG.verboseSlow && console.log('Flex loaded');
     } catch(e) {
       console.warn(e+'');
       someError = true;
@@ -912,18 +1027,18 @@ export default Archivist;
     Id = Math.round(State.Index.size / 2) + 3;
     NDXId = State.Index.has(NDX_ID_KEY) ? State.Index.get(NDX_ID_KEY) + 1003000 : (Id + 1000000);
     if ( !Number.isInteger(NDXId) ) NDXId = Id;
-    DEBUG && console.log({firstFreeId: Id, firstFreeNDXId: NDXId});
+    DEBUG.verboseSlow && console.log({firstFreeId: Id, firstFreeNDXId: NDXId});
 
     State.SavedCacheFilePath = cacheFile;
     State.SavedIndexFilePath = indexFile;
     State.SavedFTSIndexDirPath = ftsDir;
-    DEBUG && console.log(`Loaded cache key file ${cacheFile}`);
-    DEBUG && console.log(`Loaded index file ${indexFile}`);
-    DEBUG && console.log(`Need to load FTS index dir ${ftsDir}`);
+    DEBUG.verboseSlow && console.log(`Loaded cache key file ${cacheFile}`);
+    DEBUG.verboseSlow && console.log(`Loaded index file ${indexFile}`);
+    DEBUG.verboseSlow && console.log(`Need to load FTS index dir ${ftsDir}`);
 
     try {
       if ( !Fs.existsSync(NO_FILE()) ) {
-        DEBUG && console.log(`The 'No file' (${NO_FILE()}) does not exist, ignoring...`); 
+        DEBUG.verboseSlow && console.log(`The 'No file' (${NO_FILE()}) does not exist, ignoring...`); 
         State.No = null;
       } else {
         State.No = new RegExp(JSON.parse(Fs.readFileSync(NO_FILE))
@@ -934,7 +1049,7 @@ export default Archivist;
         );
       }
     } catch(e) {
-      DEBUG && console.warn('Error compiling regex from No file', e);
+      DEBUG.verboseSlow && console.warn('Error compiling regex from No file', e);
       State.No = null;
     }
   }
@@ -961,7 +1076,7 @@ export default Archivist;
     saveFiles({forceSave:true});
     Mode = mode;
     await collect({chrome_port:args.chrome_port, mode});
-    DEBUG && console.log('Mode changed', Mode);
+    DEBUG.verboseSlow && console.log('Mode changed', Mode);
   }
 
   function getDetails(id) {
@@ -977,7 +1092,7 @@ export default Archivist;
     }
     Object.assign(fuzzy.options, HIGHLIGHT_OPTIONS_FUZZY);
     const hl = fuzzy.highlight(doc); 
-    DEBUG && console.log(query, hl, maxLength);
+    DEBUG.verboseSlow && console.log(query, hl, maxLength);
     return hl;
   }
 
@@ -998,27 +1113,29 @@ export default Archivist;
   }
 
   async function afterPathChanged() { 
-    DEBUG && console.log({libraryPathChange:args.library_path()});
+    DEBUG.verboseSlow && console.log({libraryPathChange:args.library_path()});
     saveFiles({useState:true, forceSave:true});
     // reloads from new path and updates Saved FilePaths
     await loadFiles();
   }
 
   function saveCache(path) {
-    //DEBUG && console.log("Writing to", path || CACHE_FILE());
+    //DEBUG.verboseSlow && console.log("Writing to", path || CACHE_FILE());
+    if ( State.Cache.size === 0 ) return;
     Fs.writeFileSync(path || CACHE_FILE(), JSON.stringify([...State.Cache.entries()],null,2));
   }
 
   function saveIndex(path) {
     if ( State.saveInProgress || Mode == 'serve' ) return;
+    if ( State.Index.size === 0 ) return;
     State.saveInProgress = true;
 
     clearTimeout(State.indexSaver);
 
-    DEBUG && console.log(
+    DEBUG.verboseSlow && console.log(
       `INDEXLOG: Writing Index (size: ${State.Index.size}) to`, path || INDEX_FILE()
     );
-    //DEBUG && console.log([...State.Index.entries()].sort(SORT_URLS));
+    //DEBUG.verboseSlow && console.log([...State.Index.entries()].sort(SORT_URLS));
     Fs.writeFileSync(
       path || INDEX_FILE(), 
       JSON.stringify([...State.Index.entries()].sort(SORT_URLS),null,2)
@@ -1033,7 +1150,7 @@ export default Archivist;
     const idx = JSON.parse(Fs.readFileSync(INDEX_FILE()))
       .filter(([key]) => typeof key === 'string' && !hiddenKey(key))
       .sort(([,{date:a}], [,{date:b}]) => b-a);
-    DEBUG && console.log(idx);
+    DEBUG.verboseSlow && console.log(idx);
     return idx;
   }
 
@@ -1088,12 +1205,12 @@ export default Archivist;
   }
 
   function combineResults({flex,ndx,fuzz}) {
-    DEBUG && console.log({flex,ndx,fuzz});
+    DEBUG.verboseSlow && console.log({flex,ndx,fuzz});
     const score = {};
     flex.forEach(countRank(score));
     ndx.forEach(countRank(score));
     fuzz.forEach(countRank(score));
-    DEBUG && console.log(score);
+    DEBUG.verboseSlow && console.log(score);
   
     const results = [...Object.values(score)].map(obj => {
       try {
@@ -1102,12 +1219,12 @@ export default Archivist;
         return obj;
       } catch(e) {
         console.log({obj, index:State.Index, e, ndx, flex, fuzz});
-        throw e;
+        return obj;
       }
     });
     results.sort(({score:scoreA}, {score:scoreB}) => scoreB-scoreA);
-    DEBUG && console.log(results);
-    const resultIds = results.map(({id}) => id);
+    DEBUG.verboseSlow && console.log(results);
+    const resultIds = results.map(({id}) => id).filter(v => !!v);
     return resultIds;
   }
 
@@ -1137,11 +1254,11 @@ export default Archivist;
 
     clearTimeout(State.ftsIndexSaver);
 
-    DEBUG && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
+    DEBUG.verboseSlow && console.log("Writing FTS index to", path || FTS_INDEX_DIR());
     const dir = path || FTS_INDEX_DIR();
 
     if ( forceSave || UpdatedKeys.size ) {
-      DEBUG && console.log(`${UpdatedKeys.size} keys updated since last write`);
+      DEBUG.verboseSlow && console.log(`${UpdatedKeys.size} keys updated since last write`);
       const flexBase = getFlexBase(dir);
       Flex.export((key, data) => {
         key = key.split('.').pop();
@@ -1154,12 +1271,12 @@ export default Archivist;
           console.error('Error writing full text search index', e);
         }
       });
-      DEBUG && console.log(`Wrote Flex to ${flexBase}`);
+      DEBUG.verboseSlow && console.log(`Wrote Flex to ${flexBase}`);
       NDX_FTSIndex.save(dir);
       saveFuzzy(dir);
       UpdatedKeys.clear();
     } else {
-      DEBUG && console.log("No FTS keys updated, no writes needed this time.");
+      DEBUG.verboseSlow && console.log("No FTS keys updated, no writes needed this time.");
     }
 
     State.ftsIndexSaver = setTimeout(saveFTS, 31001);
@@ -1167,10 +1284,10 @@ export default Archivist;
   }
 
   function shutdown(then) {
-    DEBUG && console.log(`Archivist shutting down...`);  
+    DEBUG.verboseSlow && console.log(`Archivist shutting down...`);  
     saveFiles({forceSave:true});
     Close && Close();
-    DEBUG && console.log(`Archivist shut down.`);
+    DEBUG.verboseSlow && console.log(`Archivist shut down.`);
     return then && then();
   }
 
@@ -1245,14 +1362,14 @@ export default Archivist;
           path,
           objStr
         );
-        DEBUG && console.log("Write NDX to ", path);
+        DEBUG.verboseSlow && console.log("Write NDX to ", path);
       },
       load: newIndex => {
         retVal.index = newIndex;
       }
     };
 
-    DEBUG && console.log('ndx setup', {retVal});
+    DEBUG.verboseSlow && console.log('ndx setup', {retVal});
     return retVal;
 
     function maybeClean(doIt = false) {
@@ -1268,7 +1385,7 @@ export default Archivist;
       const index = fromSerializable(JSON.parse(indexContent));
       ndxFTSIndex.load(index);
     }
-    DEBUG && console.log('NDX loaded');
+    DEBUG.verboseSlow && console.log('NDX loaded');
   }
 
   function toNDXDoc({id, url, title, pageText}) {
@@ -1302,19 +1419,21 @@ export default Archivist;
     }
   }
 
-  async function untilHas(thing, key) {
+  async function untilHas(thing, key, {timeout: timeout = false} = {}) {
     if ( thing instanceof Map ) {
       if ( thing.has(key) ) {
         return thing.get(key);
       } else {
         let resolve;
         const pr = new Promise(res => resolve = res);
+        const then = Date.now();
         const checker = setInterval(() => {
-          if ( thing.has(key) ) {
+          const now = Date.now();
+          if ( thing.has(key) || (timeout && (now-then) >= timeout) ) {
             clearInterval(checker);
             resolve(thing.get(key));
           } else {
-            DEBUG && console.log(thing, "not have", key);
+            DEBUG.verboseSlow && console.log(thing, "not have", key);
           }
         }, CHECK_INTERVAL);
 
@@ -1326,12 +1445,14 @@ export default Archivist;
       } else {
         let resolve;
         const pr = new Promise(res => resolve = res);
+        const then = Date.now();
         const checker = setInterval(() => {
-          if ( thing.has(key) ) {
+          const now = Date.now();
+          if ( thing.has(key) || (timeout && (now-then) >= timeout) ) {
             clearInterval(checker);
             resolve(true);
           } else {
-            DEBUG && console.log(thing, "not have", key);
+            DEBUG.verboseSlow && console.log(thing, "not have", key);
           }
         }, CHECK_INTERVAL);
 
@@ -1343,12 +1464,14 @@ export default Archivist;
       } else {
         let resolve;
         const pr = new Promise(res => resolve = res);
+        const then = Date.now();
         const checker = setInterval(() => {
-          if ( thing[key] ) {
+          const now = Date.now();
+          if ( thing[key] || (timeout && (now-then) >= timeout) ) {
             clearInterval(checker);
             resolve(true);
           } else {
-            DEBUG && console.log(thing, "not have", key);
+            DEBUG.verboseSlow && console.log(thing, "not have", key);
           }
         }, CHECK_INTERVAL);
 
@@ -1379,7 +1502,7 @@ export default Archivist;
       parent: State.FrameNodes.get(parentFrameId)
     };
 
-    DEBUG && console.log({observedFrame});
+    DEBUG.verboseSlow && console.log({observedFrame});
 
     State.FrameNodes.set(node.id, node);
 
@@ -1400,7 +1523,7 @@ export default Archivist;
     const url = urlFragment?.startsWith(rawUrl.slice(0,4)) ? urlFragment : rawUrl;
     let frameNode = State.FrameNodes.get(frameId);
 
-    DEBUG && console.log({frameNavigated});
+    DEBUG.verboseSlow && console.log({frameNavigated});
 
     if ( ! frameNode ) {
       // Note
@@ -1473,7 +1596,7 @@ export default Archivist;
   function getRootFrameURL(frameId) {
     let frameNode = State.FrameNodes.get(frameId);
     if ( ! frameNode ) {
-      DEBUG && console.warn(new TypeError(
+      DEBUG.verboseSlow && console.warn(new TypeError(
         `Sanity check failed: frameId ${
           frameId
         } is not in our FrameNodes data, which currently has ${
@@ -1495,4 +1618,290 @@ export default Archivist;
       frameNode = frameNode.parent;
     }
     return frameNode.url;
+  }
+
+// crawling
+  async function archiveAndIndexURL(url, {
+      crawl, 
+      createIfMissing:createIfMissing = false, 
+      timeout, 
+      depth, 
+      TargetId,
+      program,
+    } = {}) {
+      DEBUG.verboseSlow && console.log('ArchiveAndIndex', url, {crawl, createIfMissing, timeout, depth, TargetId, program});
+      if ( Mode == 'serve' ) {
+        throw new TypeError(`archiveAndIndexURL can not be used in 'serve' mode.`);
+      }
+      if ( program ) {
+        State.program = program;
+      }
+      let targetId = TargetId;
+      let sessionId;
+      if ( ! dontCache({url}) ) {
+        const {send, on, close} = State.connection;
+        const {targetInfos:targs} = await send("Target.getTargets", {});
+        const targets = targs.reduce((M,T) => {
+          M.set(T.url, T);
+          M.set(T.targetId, T);
+          return M;
+        }, new Map);
+        DEBUG.verboseSlow && console.log('Targets', targets);
+        if ( targets.has(url) || targets.has(targetId) ) {
+          DEBUG.verboseSlow && console.log('We have target', url, targetId);
+          const targetInfo = targets.get(url) || targets.get(targetId);
+          ({targetId} = targetInfo);
+          if ( crawl && ! State.CrawlData.has(targetId) ) {
+            State.CrawlIndexing.add(targetId)
+            State.CrawlData.set(targetId, {depth, links:[]});
+            if ( State.visited.has(url) ) {
+              return [];
+            } else {
+              State.visited.add(url);
+            }
+          }
+          sessionId = State.Sessions.get(targetId);
+          DEBUG.verboseSlow && console.log(
+            "Reloading to archive and index in select (Bookmark) mode", 
+            url
+          );
+          if ( State.program && ! dontCache(targetInfo) ) {
+            const fs = Fs;
+            const path = Path;
+            try {
+              await sleep(500);
+              await eval(`(async () => {
+                try {
+                  ${State.program}
+                } catch(e) {
+                  console.warn('Error in program', e, State.program);
+                }
+              })();`);
+              await sleep(500);
+            } catch(e) {
+              console.warn(`Error evaluate program`, e);
+            }
+          }
+
+          await untilTrue(async () => {
+            const {result:{value:loaded}} = await send("Runtime.evaluate", {
+              expression: `(function () {
+                return document.readyState === 'complete'; 
+              }())`,
+              returnByValue: true
+            }, sessionId);
+            DEBUG.verboseSlow && console.log({loaded, targetInfo});
+            return loaded;
+          });
+          //send("Page.stopLoading", {}, sessionId);
+          send("Page.reload", {}, sessionId);
+          if ( crawl ) {
+            let resolve;
+            const pageLoaded = new Promise(res => resolve = res).then(() => sleep(1000));
+            {
+              on("Page.loadEventFired", resolve);
+              //console.log(targets, targetId, targets.get(targetId));
+              const {result:{value:loaded}} = await send("Runtime.evaluate", {
+                expression: `(function () {
+                  return document.readyState === 'complete'; 
+                }())`,
+                returnByValue: true
+              }, sessionId);
+              if ( loaded ) {
+                resolve(true);
+              }
+            }
+            let notifyStable;
+            const pageHTMLStabilized = new Promise(res => notifyStable = res);
+            setTimeout(async () => {
+              const timeout = MAX_TIME_PER_PAGE / 4;
+              const checkDurationMsecs = 1618;
+              const maxChecks = timeout / checkDurationMsecs;
+              let lastSize = 0;
+              let checkCounts = 1;
+              let countStableSizeIterations = 0;
+              const minStableSizeIterations = 3;
+
+              while(checkCounts++ <= maxChecks) {
+                const flatDoc = await send("DOMSnapshot.captureSnapshot", {
+                  computedStyles: [],
+                }, sessionId);
+                const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
+                const currentSize = pageText.length;
+
+                if(lastSize != 0 && currentSize == lastSize) 
+                  countStableSizeIterations++;
+                else 
+                  countStableSizeIterations = 0; //reset the counter
+
+                if(countStableSizeIterations >= minStableSizeIterations) {
+                  notifyStable(true);
+                }
+
+                lastSize = currentSize;
+                await sleep(checkDurationMsecs);
+              }
+
+              notifyStable(false);
+            }, 0);
+
+            await pageLoaded;
+            
+            if ( State.program && ! dontCache(targetInfo) ) {
+              const fs = Fs;
+              const path = Path;
+              try {
+                await sleep(500);
+                await eval(`(async () => {
+                  try {
+                    ${State.program}
+                  } catch(e) {
+                    console.warn('Error in program', e, State.program);
+                  }
+                })();`);
+                await sleep(500);
+              } catch(e) {
+                console.warn(`Error evaluate program`, e);
+              }
+            }
+
+            await Promise.race([
+              await Promise.all([
+                pageHTMLStabilized,
+                untilTrue(() => !State.CrawlIndexing.has(targetId), timeout/5, timeout),
+                sleep(State.minPageCrawlTime || MIN_TIME_PER_PAGE)
+              ]),
+              sleep(State.maxPageCrawlTime || MAX_TIME_PER_PAGE)
+            ]);
+
+            console.log(`Closing page ${url}, at target ${targetId}`);
+
+            await send("Target.closeTarget", {targetId});
+            State.CrawlTargets.delete(targetId);
+          }
+        } else if ( createIfMissing ) {
+          DEBUG.verboseSlow && console.log('We create target', url);
+          try {
+            targetId = null;
+            ({targetId} = await send("Target.createTarget", {
+              url: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}/redirector.html?url=${
+                encodeURIComponent(url)
+              }`
+            }));
+          } catch(e) {
+            console.warn("Error creating new tab for url", url, e);
+            return;
+          }
+          if ( crawl && ! State.CrawlData.has(targetId) ) {
+            State.CrawlTargets.add(targetId);
+            State.CrawlIndexing.add(targetId);
+            State.CrawlData.set(targetId, {depth, links:[]});
+          }
+          return archiveAndIndexURL(url, {
+            crawl, timeout, depth, createIfMissing: false, /* prevent redirect loops */
+            TargetId: targetId,
+            program,
+          });
+        }
+      } else {
+        DEBUG.verboseSlow && console.warn(
+          `archiveAndIndexURL called in mode ${
+            Mode
+           } for URL ${
+            url
+           } but that URL is not in our Bookmarks list.`
+        );
+      }
+      if ( crawl && State.CrawlData.has(targetId) ) {
+        const {links} = State.CrawlData.get(targetId);
+        console.log({targetId,links});
+        State.CrawlData.delete(targetId);
+        return links;
+      } else {
+        return [];
+      }
+  }
+
+  export async function startCrawl({
+    urls, timeout, depth, saveToFile: saveToFile = false,
+    batchSize,
+    minPageCrawlTime, 
+    maxPageCrawlTime,
+    program,
+  } = {}) {
+    if ( State.crawling ) {
+      console.log('Already crawling...');
+      return;
+    }
+    if ( saveToFile ) {
+      logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
+      logStream = Fs.createWriteStream(logName, {flags:'as+'});
+    }
+    console.log('StartCrawl', {urls, timeout, depth, batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime, program});
+    State.crawling = true;
+    State.crawlDepth = depth;
+    State.crawlTimeout = timeout;
+    State.visited = new Set();
+    Object.assign(State,{
+      batchSize,
+      minPageCrawlTime,
+      maxPageCrawlTime
+    });
+    const batch_sz = State.batchSize || BATCH_SIZE;
+    let totalBytes = 0;
+    setTimeout(async () => {
+      try {
+        while(urls.length >= batch_sz) {
+          const jobs = [];
+          const batch = urls.splice(urls.length-batch_sz,batch_sz);
+          console.log({urls, batch});
+          for( let i = 0; i < batch_sz; i++ ) {
+            const {depth,url} = batch.shift();
+            if ( url.startsWith('https://news.ycombinator') ) {
+              await sleep(1618);
+            }
+            const pr = archiveAndIndexURL(
+              url, 
+              {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1, program}
+            );
+            jobs.push(pr);
+          }
+          const links = (await Promise.all(jobs)).flat().filter(({url}) => !Q.has(url));
+          if ( links.length ) {
+            urls.push(...links);
+            links.forEach(({url}) => Q.add(url)); 
+          }
+        }
+        while(urls.length) {
+          const {depth,url} = urls.pop();
+          if ( url.startsWith('https://news.ycombinator') ) {
+            await sleep(1618);
+          }
+          const links = (await archiveAndIndexURL(
+            url, 
+            {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1, program}
+          )).filter(({url}) => !Q.has(url));
+          console.log(links, Q);
+          if ( links.length ) {
+            urls.push(...links);
+            links.forEach(({url}) => Q.add(url)); 
+          }
+        }
+      } catch(e) {
+        console.warn(e);
+        throw new RichError({status:500, message: e.message});
+      } finally {
+        await untilTrue(() => State.CrawlData.size === 0 && State.CrawlTargets.size === 0, -1)
+        State.crawling = false;
+        State.crawlDepth = false;
+        State.crawlTimeout = false;
+        State.visited = false;
+        if ( saveToFile ) {
+          logStream.close();
+          totalBytes = logStream.bytesWritten;
+          console.log(`Wrote ${totalBytes} bytes of URLs to ${logName}`);
+        }
+        console.log(`Crawl finished.`);
+      }
+    }, 0);
   }

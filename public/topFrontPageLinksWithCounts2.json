@@ -1,0 +1,74 @@
+[
+  {
+    "url": "http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation",
+    "realUrl": "http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/",
+    "title": "Polygonal Map Generation for Games",
+    "count": "2"
+  },
+  {
+    "url": "https://crypto.stanford.edu/~blynn/rop",
+    "realUrl": "https://crypto.stanford.edu/~blynn/asm/rop.html",
+    "title": "ASM - 64-bit Linux Return-Oriented Programming",
+    "count": "2"
+  },
+  {
+    "url": "http://www-cs-students.stanford.edu/~blynn/gitmagic",
+    "realUrl": "http://www-cs-students.stanford.edu/~blynn/gitmagic/",
+    "title": "Git Magic - Preface",
+    "count": "2"
+  },
+  {
+    "url": "http://www.cs.cmu.edu/~chuck/lennapg",
+    "realUrl": "http://www.charlesrosenberg.com/",
+    "title": "** Home Page for Charles Rosenberg **",
+    "count": "2"
+  },
+  {
+    "url": "http://www-cs-faculty.stanford.edu/~knuth/news.html",
+    "realUrl": "https://www-cs-faculty.stanford.edu/~knuth/news.html",
+    "title": "Knuth: Recent News",
+    "count": "4"
+  },
+  {
+    "url": "https://plato.stanford.edu/entries/computer-science",
+    "realUrl": "https://plato.stanford.edu/entries/computer-science/",
+    "title": "The Philosophy of Computer Science (Stanford Encyclopedia of Philosophy)",
+    "count": "3"
+  },
+  {
+    "url": "http://sloan.stanford.edu/mousesite/1968Demo.html",
+    "realUrl": "https://web.stanford.edu/dept/SUL/library/extra4/sloan/mousesite/1968Demo.html",
+    "title": "Access forbidden : Stanford University",
+    "count": "2"
+  },
+  {
+    "url": "http://crypto.stanford.edu/sjcl",
+    "realUrl": "https://crypto.stanford.edu/sjcl/",
+    "title": "SJCL: a Javascript crypto library",
+    "count": "2"
+  },
+  {
+    "url": "https://crypto.stanford.edu/PwdHash",
+    "realUrl": "https://crypto.stanford.edu/PwdHash/",
+    "title": "PwdHash",
+    "count": "2"
+  },
+  {
+    "url": "http://www.pdl.cmu.edu/mailinglists/ips/mail/msg00133.html",
+    "realUrl": "https://www.pdl.cmu.edu/mailinglists/ips/mail/msg00133.html",
+    "title": "Fwd: TCP in 30 instructions (Was Re: Karl Auerbach: Re: Storage over Eth",
+    "count": "2"
+  },
+  {
+    "url": "http://tools.ietf.org/html/rfc7258",
+    "realUrl": "https://www.rfc-editor.org/rfc/rfc7258",
+    "title": "RFC 7258: Pervasive Monitoring Is an Attack",
+    "count": "2"
+  },
+  {
+    "url": "http://tools.ietf.org/html/rfc1925",
+    "realUrl": "https://www.rfc-editor.org/rfc/rfc1925",
+    "title": "RFC 1925: The Twelve Networking Truths",
+    "count": "2"
+  }
+]
