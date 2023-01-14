@@ -1,3 +1,8 @@
+import fs from 'fs';
+import ChildProcess from 'child_process';
+
+import ChromeLauncher from 'chrome-launcher';
+
 import {DEBUG, sleep, NO_SANDBOX} from './common.js';
 
 import Archivist from './archivist.js';
@@ -30,7 +35,7 @@ const KILL_ON = {
   linux: 'pkill -15 chrome',
 };
 
-let quitting, ChildProcess;
+let quitting;
 
 start();
 
@@ -44,8 +49,7 @@ async function start() {
   process.on('SIGTERM', cleanup);
 
   console.log(`Importing dependencies...`);
-  const fs = await import('fs');
-  const {launch:ChromeLaunch} = await import('chrome-launcher');
+  const {launch:ChromeLaunch} = ChromeLauncher;
 
   await killChrome();
 
@@ -83,10 +87,6 @@ async function killChrome(wait = true) {
   try {
     if ( process.platform in KILL_ON ) {
       console.log(`Attempting to shut running chrome...`);
-      if ( ! ChildProcess ) {
-        const {default:child_process} = await import('child_process');
-        ChildProcess = child_process;
-      }
       const [err] = (await new Promise(
         res => ChildProcess.exec(KILL_ON[process.platform], (...a) => res(a))
       ));

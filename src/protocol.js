@@ -1,6 +1,6 @@
 import Ws from 'ws';
 import Fetch from 'node-fetch';
-import {SHOW_FETCH, DEBUG, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
+import {untilTrue, SHOW_FETCH, DEBUG, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
 
 const ROOT_SESSION = "browser";
 const MESSAGES = new Map();
@@ -8,7 +8,18 @@ const MESSAGES = new Map();
 export async function connect({port:port = 9222} = {}) {
   let webSocketDebuggerUrl, socket;
   try {
-    ({webSocketDebuggerUrl} = await Fetch(`http://localhost:${port}/json/version`).then(r => r.json()));
+    await untilTrue(async () => {
+      let result = false;
+      try {
+        const {webSocketDebuggerUrl} = await Fetch(`http://127.0.0.1:${port}/json/version`).then(r => r.json());
+        if ( webSocketDebuggerUrl ) {
+          result = true;
+        }
+      } finally {
+        return result; 
+      }
+    });
+    ({webSocketDebuggerUrl} = await Fetch(`http://127.0.0.1:${port}/json/version`).then(r => r.json()));
     socket = new Ws(webSocketDebuggerUrl);
   } catch(e) {
     console.log("Error communicating with browser", e);
