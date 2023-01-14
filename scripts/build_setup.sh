@@ -1,25 +1,22 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-#echo "Installing nexe and upx..."
-echo "Installing pkg..."
+source $HOME/.nvm/nvm.sh
 
+echo "Making build directories..."
+
+mkdir -p dist/
 mkdir -p bin/
 mkdir -p build/
 
-pkg -v || npm i -g pkg
+echo "Setting node to lts/*..."
+nvm use --lts
 
-#curl -L -o upx.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz
-#tar -xJf upx.tar.xz
-#rm upx.tar.xz
-#sudo cp upx-3.96-amd64_linux/upx /usr/local/bin
-#rm -rf upx-3.96-amd64_linux
+echo "Installing pkg..."
 
-#./scripts/dl-node.sh
+which pkg || npm i -g pkg
 
-# upx packing does not work with pkg
-#cd ~/.pkg-cache/v3.2/
-#chmod +x *
-#upx * || :
+echo "Installing esbuild..."
+npm install --save-exact esbuild
 
 echo "Done"
 
