@@ -31,7 +31,8 @@
   "pkg": {
     "scripts": "build/**/*.js",
     "assets": [
-      "public/**/*"
+      "public/**/*",
+      "build/vendor/**/*"
     ],
     "outputPath": "bin"
   },

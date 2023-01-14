@@ -6,4 +6,5 @@
 echo "#!/usr/bin/env node" > build/diskernet.cjs
 cat build/out.cjs >> build/diskernet.cjs
 chmod +x build/diskernet.cjs
+cp -r node_modules/ps-list-commonjs/vendor build/
 
