@@ -8,6 +8,7 @@
 <p>
   View <a href=/archive_index.html>the index</a>
 </p>
+<!--
 <form method=POST action=/crawl>
   <fieldset>
     <legend>Crawl and Index</legend>
@@ -142,6 +143,7 @@
       </script>
   </fieldset>
 </form>
+-->
 <form method=GET action=/search>
   <fieldset class=search>
     <legend>Search your archive</legend>
@@ -182,6 +184,10 @@
         async function showCurrentMode() {
           const mode = await fetch('/mode').then(r => r.text());
           console.log({mode});
+          if ( ! mode ) {
+            setTimeout(showCurrentMode, 300);
+            return;
+          }
           form.notification.value = "";
           form.querySelector(`[name="mode"][value="${mode}"]`).checked = true;
         }
