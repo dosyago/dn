@@ -1,0 +1,25 @@
+- complete snippet generation
+  - sometimes we are not getting any segments. In that case we should just show the first part of the file. 
+  - improve trigram segmenter: lower max segment length, increase fore and aft context
+- Index.json is randomly getting clobbered sometimes. Investigate and fix. Important because this breaks the whole archive.
+  - No idea what's causing this after an small investigation. But I've added a log on saveIndex to see when it writes.
+- publish button
+  - way to selectively add (bookmark mode) 
+  - way to remove (all modes) items from index
+- save trigram index to disk
+- let's not reindex unless we have changed contentSignature
+- let's not write FTS indexes unless we have changed them since last time (UpdatedKeys)
+- result paging
+- We need to not open other localhosts if we already have one open
+- We need to reload on localhost 22120 if we open with that
+  - throttle how often this can occur per URL
+- search improvements
+  - use different min score options for different sources (noticed URL not match meghan highlight for hello mag even tho query got megan and did match and highlight queen in url)
+  - get snippets earlier (before rendering in lib server) and use to add to signal
+  - if we have multiple query terms (multiple determined by some form of tokenization) then try to show all terms present in the snippet. even tho one term may be higher scoring. Should we do multiple passes of ukkonen distance one for whole query and one for each term? This will be easier / faster with trigrams I guess. Basically we want snippet to be a relevant summary that provides signal.
+  - Another way to improve snippet highlight is to 'revert back' the highlighted text, and calculate their match/ukkonen on the query term. So e.g. if we get q:'israle beverly', hl:['beverly', 'beverly'], it's good overlap, but if we get hl:['is it really'] even tho that might score ok for israle, it's not a good match. so can we 'score that back' if we go match('is it really', 'israel') and see it is low, so we exclude it?
+  - try an exact match on the query term if possible for highlight. first one.
+  - we could also add signal from the highlighting to just in time alter the order (e.g. 'hell wiki' search brings google search to top rank, but the Hell wikipedia page has more highlight visible)
+  - Create instant search (or at least instant queries (so search over previous queries -- not results necessarily))
+  - an error in Full text search can corrupt the index and make it unrecoverable...we need to guard against this
+    - this is still happening. sometimes the index is not saved, even on a normal error free restart. unknown why. 

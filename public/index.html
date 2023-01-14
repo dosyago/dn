@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Your HTML Library</title>
+<link rel=stylesheet href=/style.css>
+<header>
+  <h1><a href=/>22120</a> &mdash; Internet Offline Library</h1>
+</header>
+<p>
+  View <a href=/archive_index.html>the index</a>
+</p>
+<!--
+<form method=POST action=/crawl>
+  <fieldset>
+    <legend>Crawl and Index</legend>
+    <p>
+      Crawl and index a list of links. 
+      <br>
+      <small>This will open 1 link at a time, and index it when it has loaded.</small>
+    <p>
+      <label>
+        Links
+        <br>
+        <textarea class=long name=links>
+          https://cnn.com
+          https://bloomberg.com
+          https://microsoft.com
+          https://dosyago.com
+          https://intel.com
+        </textarea>
+        <br>
+        <small>List format is 1 link per line.</small>
+      </label>
+    </p>
+    <details open>
+      <summary>Advanced settings</summary>
+      <p>
+        <label>
+          Timeout
+          <br>
+          <input required name=timeout
+            type=number min=1 max=300 value=3.6 step=0.1> <span class=units>seconds</span>
+          <br>
+          <small>Seconds to wait for each page to load before indexing.</small>
+        </label>
+      <p>
+      <label>
+        Depth
+        <br>
+        <input required name=depth 
+          type=number min=1 max=20 value=1 step=1> <span class=units>clicks</span>
+      </label>
+      <br>
+      <section class=small>
+        <strong>Value guide</strong>
+        <ol>
+          <li>Only each link.
+          <li>Plus anything 1 click from the link.
+          <li>Plus anything 2 clicks from the link.
+        </ol>
+        <em>And so on&hellip;</em>
+      </section>
+      <p>
+        <label>
+          Min Page Crawl Time
+          <br>
+          <input name=minPageCrawlTime
+            type=number min=1 max=60 value=20> <span class=units>seconds</span>
+          <br>
+          <small>Seconds to wait for each page to load before indexing.</small>
+        </label>
+      <p>
+      <p>
+        <label>
+          Max Page Crawl Time
+          <br>
+          <input name=maxPageCrawlTime
+            type=number min=3 max=120 value=30> <span class=units>seconds</span>
+          <br>
+          <small>Max time to allow for each page.</small>
+        </label>
+      <p>
+      <p>
+        <label>
+          Batch size
+          <br>
+          <input name=batchSize
+            type=number min=1 max=32 value=2> <span class=units>tabs</span>
+          <br>
+          <small>Number of concurrent tabs.</small>
+        </label>
+      <p>
+      <p>
+        <label>
+          <input name=saveToFile
+            type=checkbox checked>
+            Save the harvested URLs to a file
+        </label>
+      <p>
+      <p>
+        <label>
+          <span class=text>Program to run on every page</span>
+          <br>
+          <textarea class=long rows=9 name=program>
+            if ( ! State.titles ) {
+              State.titles = new Map();
+              State.onExit.addHandler(() => {
+                fs.writeFileSync(
+                  path.resolve('.', `titles-${(new Date).toISOString()}.txt`), 
+                  JSON.stringify([...State.titles.entries()], null, 2) + '\n'
+                );
+              });
+            }
+            const {result:{value:data}} = await send("Runtime.evaluate", 
+              {
+                expression: `(function () {
+                  return {
+                    url: document.location.href,
+                    title: document.title,
+                  };
+                }())`,
+                returnByValue: true
+              }, 
+              sessionId
+            );
+            State.titles.set(data.url, data.title);
+            console.log(`Saved ${State.titles.size} titles`);
+          </textarea>
+        </label>
+      </p>
+    </details>
+    <p>
+      <button>Crawl</button>
+      <script>
+        {
+          const button = document.currentScript.previousElementSibling;
+          let disabled = false;
+          button.addEventListener('click', click => {
+            if ( disabled ) return click.preventDefault(); 
+            disabled = true;
+            setTimeout(() => button.disabled = true, 0);
+          });
+        }
+      </script>
+  </fieldset>
+</form>
+-->
+<form method=GET action=/search>
+  <fieldset class=search>
+    <legend>Search your archive</legend>
+    <input class=search type=search name=query placeholder="search your library">
+    <button>Search</button>
+  </fieldset>
+</form>
+<form method=POST action=/mode>
+  <fieldset>
+    <legend>Save or Serve: Mode Control</legend>
+    <p>
+      Control whether pages you browse are <label class=cmd for=save>saved to</label>, or 
+      <label class=cmd for=serve>served from</label> your archive
+      <br>
+      <small><em class=caps>Pro-Tip:</em> Serve pages when you're offline, and it will still feel like you're online</small>
+    <p>
+      <label>
+        <input type=radio name=mode value=save id=save>
+        Save
+      </label>
+      <label>
+        <input type=radio name=mode value=serve id=serve>
+        Serve
+      </label>
+      <label>
+        <input type=radio name=mode value=select id=select>
+        Select (<em>Bookmark mode</em>)
+      </label>
+      <output name=notification>
+    <p>
+      <button>Change mode</button>
+    <script>
+      {
+        const form = document.currentScript.closest('form');
+        form.notification.value = "Getting current mode...";
+        setTimeout(showCurrentMode, 300);
+
+        async function showCurrentMode() {
+          const mode = await fetch('/mode').then(r => r.text());
+          console.log({mode});
+          if ( ! mode ) {
+            setTimeout(showCurrentMode, 300);
+            return;
+          }
+          form.notification.value = "";
+          form.querySelector(`[name="mode"][value="${mode}"]`).checked = true;
+        }
+      }
+    </script>
+  </fieldset>
+</form>
+<form method=POST action=/base_path>
+  <fieldset>
+    <legend id=new_base_path>File system path of archive</legend>
+    <p>
+      Set the path to where your archive folder will go
+      <br>
+      <small>The default is your home directory</small>
+    <p>
+      <label>
+        Base path
+        <input class=long type=text name=base_path placeholder="A folder path...">
+      </label>
+    <p>
+      <button>Change base path</button>
+    <script>
+      {
+        const form = document.currentScript.closest('form');
+        showCurrentLibraryPath();
+
+        form.base_path.onchange = e => {
+          self.target = e.target;
+        }
+        async function showCurrentLibraryPath() {
+          const base_path = await fetch('/base_path').then(r => r.text());
+          form.querySelector(`[name="base_path"]`).value = base_path;
+        }
+      }
+    </script>
+  </fieldset>
+</form>
+<form disabled method=POST action=/publish>
+  <fieldset>
+    <legend>Publish your archive</legend>
+    <p>
+      Publish a search engine from your archive 
+      <br>
+      <small>This will generate a server.zip file that you can unzip and run</small>
+    <p>
+      <button disabled>Publish</button>
+  </fieldset>
+</form>
+<footer>
+  <cite>
+    <a rel=author href=https://github.com/crisdosyago/22120>22120 GitHub</a>
+  </cite>
+</footer>

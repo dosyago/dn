@@ -1,0 +1,101 @@
+
+  :root {
+    font-family: sans-serif;
+    background: lavenderblush;
+  }
+  body {
+    display: table;
+    margin: 0 auto 0 min(10%, 5em);
+    background: white;
+    padding: 0.5em;
+    border-bottom: 1px solid purple;
+    max-width: min(777px, 80%);
+  }
+  header {
+    font-size: smaller;
+    margin-bottom: 3em;  
+  }
+  form {
+    margin-bottom: 2em;
+  }
+  label.cmd {
+    border-bottom: thin solid dodgerblue;
+    cursor: default;
+    font-style: italic;
+  }
+  :is(form, label)[disabled] {
+    color: grey;
+  }
+  em.caps {
+    font-style: normal;
+    font-variant: small-caps;
+  }
+  :is(form:hover, form:active) em.caps {
+    background: yellow;
+  }
+
+  legend {
+    font-weight: 600;
+  }
+  fieldset {
+    border: thin solid transparent;
+  }
+  fieldset.search {
+    display: flex;
+  }
+  button, input, output {
+  }
+  button {
+  }
+  form .long {
+    width: 100%;
+    min-width: 250px;
+  }
+  output {
+    font-size: smaller;
+    color: purple;
+  }
+  h1 {
+    margin: 0;
+  }
+  h2 {
+    margin-top: 0;
+  }
+  small.url {
+    word-break: break-all;
+  }
+  .small {
+    font-size: smaller;
+  }
+
+  label small {
+    font-style: italic;
+    color: darkslategrey;
+  }
+
+  .units {
+    color: grey;
+    font-size: smaller;
+  }
+
+  input[type="number"] {
+    text-align: right;
+  ]
+
+  input.search {
+    flex-grow: 1;
+    padding: 0.25em 0.5em;
+  }
+  input.search, 
+  input.search + button {
+    font-size: 1em;
+  }
+  ol.results {
+    list-style-type: none;
+  }
+  .cent {
+    text-align: center;
+  }
+  .grey {
+    color: grey;
+  }
