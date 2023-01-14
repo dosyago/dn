@@ -1,7 +1,11 @@
 import fs from 'fs';
 import ChildProcess from 'child_process';
+import readline from 'readline';
+import util from 'util';
+import {stdin as input, stdout as output} from 'process';
 
 import ChromeLauncher from 'chrome-launcher';
+import psList from 'ps-list';
 
 import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';
 
@@ -56,7 +60,32 @@ async function start() {
   console.log(`Importing dependencies...`);
   const {launch:ChromeLaunch} = ChromeLauncher;
 
-  await killChrome();
+  let chromeOpen = false;
+
+  const list = await psList();
+
+  chromeOpen = list.some(({name,cmd}) => name.match(/chrome/g) || cmd.match(/chrome/g));
+
+  if ( chromeOpen ) {
+    console.info(`Seems Chrome is open`);
+    if ( DEBUG.askFirst ) {
+      const rl = readline.createInterface({input, output});
+      const question = util.promisify(rl.question).bind(rl);
+      console.info(`\nIf you don't shut down Chrome and restart it under DiskerNet control 
+        you will not be able to save or serve your archives.\n`);
+      const answer = await question("Would you like to shutdown Chrome browser now (y/N) ? ");
+      if ( answer?.match(/^y/i) ) {
+        await killChrome(); 
+      } else {
+        console.log(`OK, not shutting it!\n`);
+        if ( chromeOpen ) {
+          process.exit(0);
+        }
+      }
+    } else {
+      await killChrome(); 
+    }
+  }
 
   console.log(`Removing 22120's existing temporary browser cache if it exists...`);
   if ( fs.existsSync(args.temp_browser_cache()) ) {
