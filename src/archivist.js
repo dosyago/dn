@@ -211,9 +211,9 @@
   async function collect({chrome_port:port, mode} = {}) {
     const {library_path} = args;
     const exitHandlers = [];
-    process.on('exit', runHandlers);
-    process.on('beforeExit', runHandlers);
     process.on('SIGUSR2', runHandlers);
+    process.on('beforeExit', runHandlers);
+    process.on('exit', code => runHandlers(code, 'exit', {exit: true}));
     State.connection = State.connection || await connect({port});
     State.onExit = {
       addHandler(h) {
@@ -281,8 +281,8 @@
 
     return Status.loaded;
 
-    function runHandlers(reason) {
-      console.log('before exit running', exitHandlers, reason);
+    async function runHandlers(reason, err, {exit = false} = {}) {
+      console.log('before exit running', exitHandlers, {reason, err});
       while(exitHandlers.length) {
         const h = exitHandlers.shift();
         try {
@@ -291,7 +291,11 @@
           console.warn(`Error in exit handler`, h, e);
         }
       }
-      process.exit(0);
+      if ( exit ) {
+        console.log(`Exiting in 3 seconds...`);
+        await sleep(3000);
+        process.exit(0);
+      }
     }
 
     function handleMessage(args) {
@@ -541,8 +545,8 @@
           if ( ! State.titles ) {
             State.titles = new Map();
             State.onExit.addHandler(() => {
-              fs.writeFileSync(
-                path.resolve('.', `titles-${(new Date).toISOString()}.txt`), 
+              Fs.writeFileSync(
+                Path.resolve(args.CONFIG_DIR, `titles-${(new Date).toISOString()}.txt`), 
                 JSON.stringify([...State.titles.entries()], null, 2) + '\n'
               );
             });
@@ -1835,7 +1839,7 @@
     }
     if ( saveToFile ) {
       logName = `crawl-${(new Date).toISOString()}.urls.txt`; 
-      logStream = Fs.createWriteStream(logName, {flags:'as+'});
+      logStream = Fs.createWriteStream(Path.resolve(args.CONFIG_DIR, logName), {flags:'as+'});
     }
     console.log('StartCrawl', {urls, timeout, depth, batchSize, saveToFile, minPageCrawlTime, maxPageCrawlTime, program});
     State.crawling = true;

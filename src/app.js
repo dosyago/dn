@@ -42,13 +42,16 @@ start();
 async function start() {
   console.log(`Running in node...`);
 
-  process.on('unhandledrejection', cleanup);
   process.on('error', cleanup);
-  process.on('beforeExit', cleanup);
-  process.on('SIGBREAK', cleanup);
+  process.on('unhandledRejection', cleanup);
+  process.on('uncaughtException', cleanup);
   process.on('SIGHUP', cleanup);
-  process.on('SIGINT', cleanup);
-  process.on('SIGTERM', cleanup);
+  process.on('beforeExit', cleanup);
+  process.on('SIGINT', code => cleanup(code, 'signal', {exit:true}));
+  process.on('SIGTERM', code => cleanup(code, 'signal',  {exit:true}));
+  process.on('SIGQUIT', code => cleanup(code, 'signal',  {exit:true}));
+  process.on('SIGBREAK', code => cleanup(code, 'signal', {exit:true}));
+  process.on('SIGABRT', code => cleanup(code, 'signal',  {exit:true}));
 
   console.log(`Importing dependencies...`);
   const {launch:ChromeLaunch} = ChromeLauncher;
@@ -110,8 +113,8 @@ async function killChrome(wait = true) {
   }
 }
 
-async function cleanup(reason) {
-  console.log(`Cleanup called on reason: ${reason}`);
+async function cleanup(reason, err, {exit = false} = {}) {
+  console.log(`Cleanup called on reason: ${reason}`, err);
 
   if ( quitting ) {
     console.log(`Cleanup already called so not running again.`);
@@ -125,9 +128,11 @@ async function cleanup(reason) {
 
   killChrome(false); 
 
-  console.log(`Take a breath. Everything's done. 22120 is exiting in 3 seconds...`);
+  if ( exit ) {
+    console.log(`Take a breath. Everything's done. DiskerNet is exiting in 3 seconds...`);
 
-  await sleep(3000);
+    await sleep(3000);
 
-  process.exit(0);
+    process.exit(0);
+  }
 } 
