@@ -7,19 +7,21 @@ const mode = process.argv[3] || 'save';
 const chrome_port = process.argv[4] || 9222;
 
 const Pref = {};
-const pref_file = path.resolve(os.homedir(), '.22120.config.json');
+export const CONFIG_DIR = path.resolve(os.homedir(), '.config', 'dosyago', 'DiskerNet');
+fs.mkdirSync(CONFIG_DIR, {recursive:true});
+const pref_file = path.resolve(CONFIG_DIR, 'config.json');
 const cacheId = Math.random();
 
 loadPref();
 
 let BasePath = Pref.BasePath;
-const archive_root = () => path.resolve(BasePath, '22120-arc');
-const no_file = () => path.resolve(archive_root(), 'no.json');
-const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cache' + cacheId);
-const library_path = () => path.resolve(archive_root(), 'public', 'library');
-const cache_file = () => path.resolve(library_path(), 'cache.json');
-const index_file = () => path.resolve(library_path(), 'index.json');
-const fts_index_dir = () => path.resolve(library_path(), 'fts');
+export const archive_root = () => path.resolve(BasePath, '22120-arc');
+export const no_file = () => path.resolve(archive_root(), 'no.json');
+export const temp_browser_cache = () => path.resolve(archive_root(), 'temp-browser-cache' + cacheId);
+export const library_path = () => path.resolve(archive_root(), 'public', 'library');
+export const cache_file = () => path.resolve(library_path(), 'cache.json');
+export const index_file = () => path.resolve(library_path(), 'index.json');
+export const fts_index_dir = () => path.resolve(library_path(), 'fts');
 
 const flex_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'flex');
 const ndx_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'ndx');
@@ -29,7 +31,7 @@ const results_per_page = 10;
 
 console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
 
-updateBasePath(process.argv[5] || Pref.BasePath || os.homedir());
+updateBasePath(process.argv[5] || Pref.BasePath || CONFIG_DIR);
 
 const args = {
   mode,
@@ -50,7 +52,8 @@ const args = {
   ndx_fts_index_dir,
   fuzzy_fts_index_dir,
 
-  results_per_page
+  results_per_page,
+  CONFIG_DIR
 };
 
 export default args;
@@ -126,7 +129,7 @@ function getBasePath() {
   return BasePath;
 }
 
-function loadPref() {
+export function loadPref() {
   if ( fs.existsSync(pref_file) ) {
     try {
       Object.assign(Pref, JSON.parse(fs.readFileSync(pref_file)));
@@ -137,6 +140,7 @@ function loadPref() {
     console.log("Preferences file does not exist. Creating one..."); 
     savePref();
   }
+  return clone(Pref);
 }
 
 function savePref() {
@@ -145,5 +149,9 @@ function savePref() {
   } catch(e) {
     console.warn("Error writing preferences file", pref_file, Pref, e);
   }
+}
+
+function clone(o) {
+  return JSON.parse(JSON.stringify(o));
 }
 

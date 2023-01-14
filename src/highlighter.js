@@ -43,7 +43,7 @@ export function highlight(query, doc, {
   doc2.splice(doc2.length, 0, ...(new Array((chunkSize - doc2.length % chunkSize) % chunkSize)).join(' ').split(''));
   const fragments2 = doc2.reduce(getFragmenter(chunkSize), []);  
   query.toLocaleLowerCase();
-  DEBUG && console.log(fragments);
+  DEBUG.verboseSlow && console.log(fragments);
 
   const scores = [...fragments, ...fragments2].map(fragment => {
     const distance = ukkonen(query, fragment.text.toLocaleLowerCase(), MaxDist);
@@ -65,7 +65,7 @@ export function highlight(query, doc, {
   let result;
 
   if ( highlights.length === 0 ) {
-    DEBUG && console.log('Zero highlights, showing first score', scores[0]);
+    DEBUG.verboseSlow && console.log('Zero highlights, showing first score', scores[0]);
     result = scores.slice(0,1);
   } else {
     let better = Array.from(highlights).slice(0, 10);
@@ -73,7 +73,7 @@ export function highlight(query, doc, {
       const length = Array.from(hl.fragment.text).length;
       let {offset, symbols} = hl.fragment;
       const newText = symbols.slice(Math.max(0,offset - extra), offset).join('') + hl.fragment.text + symbols.slice(offset + length, offset + length + extra).join('');
-      DEBUG && console.log({newText, oldText:hl.fragment.text, p:[Math.max(0,offset-extra), offset, offset+length, offset+length+extra], trueText: symbols.slice(offset, offset+length).join('')});
+      DEBUG.verboseSlow && console.log({newText, oldText:hl.fragment.text, p:[Math.max(0,offset-extra), offset, offset+length, offset+length+extra], trueText: symbols.slice(offset, offset+length).join('')});
       hl.fragment.text = newText;
       const {MaxDist,MinScore,MaxScore} = params(Array.from(newText).length);
       const distance = ukkonen(query, hl.fragment.text.toLocaleLowerCase(), MaxDist);
@@ -83,7 +83,7 @@ export function highlight(query, doc, {
       return hl;
     });
     better.sort(({score:a}, {score:b}) => a-b);
-    DEBUG && console.log(JSON.stringify({better},null,2));
+    DEBUG.verboseSlow && console.log(JSON.stringify({better},null,2));
     result = better.slice(0,3);
   }
 
@@ -107,16 +107,17 @@ export function trilight(query, doc, {
 
   const trigrams = doc.reduce(getFragmenter(ngramSize, {overlap:true}), []);
   const index = trigrams.reduce((idx, frag) => {
-    let counts = idx[frag.text];
+    let counts = idx.get(frag.text);
     if ( ! counts ) {
-      counts = idx[frag.text] = [];
+      counts = [];
+      idx.set(frag.text, counts);
     }
     counts.push(frag.offset);
     return idx;
-  }, {});
+  }, new Map);
   const qtris = query.reduce(getFragmenter(ngramSize, {overlap:true}), []);
   const entries = qtris.reduce((E, {text}, qi) => {
-    const counts = index[text];
+    const counts = index.get(text);
     if ( counts ) {
       counts.forEach(di => {
         const entry = {text, qi, di};
@@ -204,9 +205,9 @@ export function trilight(query, doc, {
       }
     }
     if ( assigned ) {
-      DEBUG && console.log('Assigned ', nextGap, 'to segment', assigned, 'now having length', newSegmentLength);
+      DEBUG.verboseSlow && console.log('Assigned ', nextGap, 'to segment', assigned, 'now having length', newSegmentLength);
     } else {
-      DEBUG && console.log('Gap ', nextGap, `could not be assigned as it would have made an existing 
+      DEBUG.verboseSlow && console.log('Gap ', nextGap, `could not be assigned as it would have made an existing 
         as it would have made an existing segment too long, or it was already too long itself.`
       );
     }
@@ -214,10 +215,10 @@ export function trilight(query, doc, {
   segments.sort(({score:a}, {score:b}) => b-a);
   const textSegments = segments.map(({start,end}) => oDoc.slice(start,end).join(''));
   //console.log(JSON.stringify({gaps}, null, 2));
-  DEBUG && console.log(segments, textSegments);
+  DEBUG.verboseSlow && console.log(segments, textSegments);
 
   if ( textSegments.length === 0 ) {
-    DEBUG && console.log({query, doc, maxLength, ngramSize, maxSegmentSize, 
+    DEBUG.verboseSlow && console.log({query, doc, maxLength, ngramSize, maxSegmentSize, 
       trigrams,
       index,
       entries,

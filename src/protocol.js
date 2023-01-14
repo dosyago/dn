@@ -40,7 +40,7 @@ export async function connect({port:port = 9222} = {}) {
 
   return {
     send,
-    on, ons,
+    on, ons, ona,
     close
   };
   
@@ -59,17 +59,24 @@ export async function connect({port:port = 9222} = {}) {
     const outGoing = JSON.stringify(message);
     MESSAGES.set(key, outGoing);
     socket.send(outGoing);
-    DEBUG && (SHOW_FETCH || !method.startsWith('Fetch')) && console.log("Sent", message);
+    DEBUG.verboseSlow && (SHOW_FETCH || !method.startsWith('Fetch')) && console.log("Sent", message);
     return promise;
   }
 
   async function handle(message) {
+    if ( typeof message !== "string" ) {
+      try {
+        message += '';
+      } catch(e) {
+        message = message.toString();
+      }
+    }
     const stringMessage = message;
     message = JSON.parse(message);
     if ( message.error ) {
-      const showError = DEBUG || !ERROR_CODE_SAFE_TO_IGNORE.has(message.error.code);
+      const showError = DEBUG.protocol || !ERROR_CODE_SAFE_TO_IGNORE.has(message.error.code);
       if ( showError ) {
-        console.warn(message);
+        DEBUG.protocol && console.warn(message);
       }
     }
     const {sessionId} = message;
@@ -80,7 +87,7 @@ export async function connect({port:port = 9222} = {}) {
       const key = `${sessionId||ROOT_SESSION}:${id}`;
       const resolve = Resolvers[key];
       if ( ! resolve ) {
-        console.warn(`No resolver for key`, key, stringMessage.slice(0,140));
+        DEBUG.protocol && console.warn(`No resolver for key`, key, stringMessage.slice(0,140));
       } else {
         Resolvers[key] = undefined;
         try {
@@ -94,7 +101,7 @@ export async function connect({port:port = 9222} = {}) {
           const showError = DEBUG || !ERROR_CODE_SAFE_TO_IGNORE.has(message.error.code);
           if ( showError ) {
             const originalMessage = MESSAGES.get(key);
-            console.warn({originalMessage});
+            DEBUG.protocol && console.warn({originalMessage});
           }
         }
       }
@@ -129,6 +136,20 @@ export async function connect({port:port = 9222} = {}) {
       Handlers[method] = listeners = [];
     }
     listeners.push(handler);
+  }
+
+  function ona(method, handler, sessionId) {
+    let listeners = Handlers[method]; 
+    if ( ! listeners ) {
+      Handlers[method] = listeners = [];
+    }
+    listeners.push(({message}) => {
+      if ( message.sessionId === sessionId ) {
+        handler(message.params);
+      } else {
+        console.log(`No such`, {method, handler, sessionId, message});
+      }
+    });
   }
 
   function close() {
