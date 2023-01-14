@@ -4,6 +4,7 @@ import fs from 'fs';
 import os from 'os';
 
 export const DEBUG = {
+  askFirst: true,
   verboseSlow: false,
   debug: process.env.DEBUG_22120 || false,
   checkPred: false
