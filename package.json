@@ -1,6 +1,6 @@
 {
   "name": "diskernet",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
