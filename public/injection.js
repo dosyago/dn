@@ -10,9 +10,11 @@ export function getInjection({sessionId}) {
       // this script more portable if it were introduced globally as well as robust 
       // against API or behaviour changes of the browser or its remote debugging protocol
       // in future
+  console.log({DEBUG, x: JSON.stringify(DEBUG,null,2)});
   return `
     {
-      const DEBUG = ${DEBUG};
+      const X = 1;
+      const DEBUG = ${JSON.stringify(DEBUG, null, 2)};
       const MIN_CHECK_TEXT = 3000;  // min time between checking documentElement.innerText
       const MIN_NOTIFY = 5000;      // min time between telling controller text maybe changed
       const MAX_NOTIFICATIONS = 13; // max times we will tell controller text maybe changed
