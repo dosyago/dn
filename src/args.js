@@ -7,7 +7,7 @@ const mode = process.argv[3] || 'save';
 const chrome_port = process.argv[4] || 9222;
 
 const Pref = {};
-const CONFIG_DIR = path.resolve(os.homedir(), '.config', 'dosyago', 'DiskerNet');
+export const CONFIG_DIR = path.resolve(os.homedir(), '.config', 'dosyago', 'DiskerNet');
 fs.mkdirSync(CONFIG_DIR, {recursive:true});
 const pref_file = path.resolve(CONFIG_DIR, 'config.json');
 const cacheId = Math.random();
@@ -52,7 +52,8 @@ const args = {
   ndx_fts_index_dir,
   fuzzy_fts_index_dir,
 
-  results_per_page
+  results_per_page,
+  CONFIG_DIR
 };
 
 export default args;
