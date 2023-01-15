@@ -7,3 +7,6 @@ source $HOME/.nvm/nvm.sh
 nvm use --lts
 
 pkg --compress GZip .
+
+codesign -vvvv --timestamp -s "Developer ID Application" --force bin/diskernet-macos
+
