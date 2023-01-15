@@ -2,7 +2,7 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import fs from 'fs';
 import os from 'os';
-import root from './root.cjs';
+import {APP_ROOT as __ROOT} from './root.js';
 
 const DEEB = false;
 
@@ -13,6 +13,10 @@ export const DEBUG = {
   checkPred: false
 }
 export const SHOW_FETCH = false;
+
+if ( DEBUG.debug ) {
+  console.log({APP_ROOT});
+}
 
 // server related
 export const PUBLIC_SERVER = true;
@@ -75,9 +79,7 @@ export const SNIP_CONTEXT = 31;
 
 export const NO_SANDBOX = (process.env.DEBUG_22120 && process.env.SET_22120_NO_SANDBOX) || false;
 
-//export const APP_ROOT = '.';
-export const APP_ROOT = root.APP_ROOT;
-//export const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
+export const APP_ROOT = __ROOT
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
