@@ -68,7 +68,12 @@ async function start({server_port}) {
         throw err;
       } 
       upAt = new Date;
-      say({server_up:{upAt,port}});
+      say({server_up:{upAt,port, 
+        ...(DEBUG.verboseSlow ? {
+          static_site_path: SITE_PATH,
+          app_root: APP_ROOT,
+        } : {})
+      }});
     });
   } catch(e) {
     running = false;
