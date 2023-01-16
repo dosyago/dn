@@ -33,6 +33,10 @@
 
 <p>To get started with DiskerNet, simply download the tool and connect it to your browser. You'll be amazed at how much easier it is to save and organize the things you discover online.</p>
 
+## Latest updates
+
+**We now support local SSL certificates! :lock: :tada:** If you create a directory `$HOME/local-sslcerts` (where $HOME is your user home directory) and place in there `fullchain.pem` and `privkey.pem` created via [`mkcert`](https://github.com/FiloSottile/mkcert) (*ensure you also run `mkcert -install` to add the MkCert CA to your trust store root*), **then** when you start DK we will detect this and run the server over TLS. This means you can connect to your DK dashboard at: https://localhost:22120 which is just **so much cooler** :sunglasses:
+
 <h2>Licensing</h2>
 
 <p>DiskerNet is licensed under the Polyform Strict License 1.0.0. You can purchase a license for different uses below:</p>
