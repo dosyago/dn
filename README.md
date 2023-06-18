@@ -16,7 +16,8 @@ DiskerNet empowers you to be the master archivist of your own internet browsing.
 - **Efficiency**: Find your saved content fast, saving you time for more exploration.
 - **Flexibility**: Share your archive with others or maintain your digital solitude.
 - **Simplicity**: No frills, no fuss. DiskerNet is straightforward to use, requiring no extra tools or plugins.
-
+- **Organization**: Search through everything you've archived with full text search of all archived content. Your own personal search engine.
+  
 ## Latest Updates
 
 **Local SSL Certificates Now Supported!** :lock: :tada: 
