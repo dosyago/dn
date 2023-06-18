@@ -25,10 +25,12 @@ Ensure your DiskerNet server runs over TLS with our support for local SSL certif
 
 ## Licensing
 
-DiskerNet is protected under the Polyform Shield License 1.0. We offer several licensing options for different use cases:
+DiskerNet is protected under the Polyform Shield License 1.0. We offer several licensing options (exemptions) for different use cases:
 
 - **Annual Licensing**: Priced at $29.95 per year per seat. Volume discounts available.
 - **Perpetual Licensing**: Priced at $99.95, version-locked, upgradeable with an annual subscription.
+
+[Purchase a license here.](https://dosyago.com/)
 
 ## Get DiskerNet
 
