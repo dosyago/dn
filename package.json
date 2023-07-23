@@ -1,12 +1,12 @@
 {
   "name": "diskernet",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
   "module": "dist/diskernet.mjs",
   "bin": {
-    "diskernet": "build/diskernet.cjs"
+    "diskernet": "./run.cjs"
   },
   "scripts": {
     "start": "node src/app.js",
