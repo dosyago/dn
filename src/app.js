@@ -143,6 +143,7 @@ async function killChrome(wait = true) {
 }
 
 async function cleanup(reason, err, {exit = false} = {}) {
+  console.log(`Shutting down everything because of an error!`);
   console.log(`Cleanup called on reason: ${reason}`, err);
 
   if ( quitting ) {
