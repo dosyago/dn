@@ -6,7 +6,7 @@
   "main": "src/app.js",
   "module": "dist/diskernet.mjs",
   "bin": {
-    "diskernet": "./run.cjs"
+    "diskernet": "./global-run.cjs"
   },
   "scripts": {
     "start": "node src/app.js",
