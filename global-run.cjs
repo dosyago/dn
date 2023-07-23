@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 
 const os = require('os');
-const path = require('path');
 const { spawn } = require('child_process');
-
-// Checking if node_modules directory exists
 const fs = require('fs');
 const path = require('path');
 
