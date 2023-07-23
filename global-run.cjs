@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const os = require('os');
+const path = require('path');
 const { spawn } = require('child_process');
 
 // Checking if node_modules directory exists
@@ -20,5 +21,5 @@ const memoryAllocation = Math.floor((totalMemory / (1024 * 1024)) * 0.8); // Con
 console.log(`Index can use up to: ${memoryAllocation}MB RAM`);
 
 // Running the application
-spawn('node', [`--max-old-space-size=${memoryAllocation}`, 'build/diskernet.mjs'], { stdio: 'inherit' });
+spawn('node', [`--max-old-space-size=${memoryAllocation}`, path.resolve(__dirname, 'build', 'diskernet.mjs')], { stdio: 'inherit' });
 
