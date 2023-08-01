@@ -53,6 +53,7 @@
     "flexsearch": "^0.7.21",
     "fz-search": "^1.0.0",
     "hasha": "latest",
+    "ipfs-http-client": "^60.0.1",
     "natural": "^5.1.11",
     "ndx": "^1.0.2",
     "ndx-query": "^1.0.1",
