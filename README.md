@@ -48,10 +48,13 @@ or...
 $ git clone https://github.com/crisdosyago/DiskerNet
 $ cd DiskerNet
 $ npm i
+```
 
 ## Contributions!
 
 Welcome! Get involved. :)
+
+```
 $ ./scripts/build_setup.sh
 $ ./scripts/compile.sh
 $ cd bin/
