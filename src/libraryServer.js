@@ -9,8 +9,9 @@ import express from 'express';
 import args from './args.js';
 import {
   GO_SECURE,
+  DEBUG,
   MAX_REAL_URL_LENGTH,
-  MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, DEBUG, 
+  MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, 
   say, sleep, APP_ROOT,
   RichError
 } from './common.js';
@@ -51,7 +52,7 @@ async function start({server_port}) {
         :
           undefined
     };
-    console.log({sec});
+    DEBUG.debugSec && console.log({sec});
     Object.assign(secure_options, sec);
   } catch(e) {
     console.warn(`No certs found so will use insecure no SSL.`);
@@ -115,6 +116,7 @@ function addHandlers() {
     }
     const start = (page-1)*args.results_per_page;
     const results = resultIds.slice(start,start+args.results_per_page).map(docId => Archivist.getDetails(docId))
+    const hasMore = resultIds.length > start+args.results_per_page;
     if ( req.path.endsWith('.json') ) {
       res.end(JSON.stringify({
         results, query
@@ -131,7 +133,7 @@ function addHandlers() {
           .map(segment => Archivist.findOffsets(query, segment))
           .join(' ... ');
       });
-      res.end(SearchResultView({results, query, HL, page}));
+      res.end(SearchResultView({results, query, HL, page, hasMore}));
     }
   });
 
@@ -272,7 +274,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
       ${ edit ? 'Editing ' : ''}
       Your HTML Library
     </title>
-    <link rel=stylesheet href=/style.css>
+    <link rel=stylesheet href=style.css>
     ${ edit ? `
     <script>
       const sleep = ms => new Promise(res => setTimeout(res, ms));
@@ -280,12 +282,12 @@ function IndexView(urls, {edit:edit = false} = {}) {
     </script>
     ` : ''}
     <header>
-      <h1><a href=/>22120</a> &mdash; Archive Index</h1>
+      <h1><a href=/>DiskerNet</a> &mdash; Search and Archive Index</h1>
     </header>
     <form method=GET action=/search style="margin-bottom: 1em;">
       <fieldset class=search>
         <legend>Search your archive</legend>
-        <input class=search type=search name=query placeholder="search your library">
+        <input autofocus class=search type=search name=query placeholder="search your library">
         <button>Search</button>
       </fieldset>
     </form>
@@ -356,7 +358,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
         host = host.replace(/^www./i, '');
         await sleep(200);
         const reallyDelete = confirm(
-          \`\n are you sure you want to delete this \n\n  \${host} \n\n from the internet?\n\`
+          \`\n are you sure you want to delete this \n\n  \${host} \n\n from the ENTIRE internet?!?\n\`
         );
         if ( reallyDelete ) return form.submit();
         link.style.textDecoration = original;
@@ -366,14 +368,14 @@ function IndexView(urls, {edit:edit = false} = {}) {
   `
 }
 
-function SearchResultView({results, query, HL, page}) {
+function SearchResultView({results, query, HL, page, hasMore = false}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
-    <title>${query} - 22120 search results</title>
+    <title>${query} - DiskerNet search results</title>
     <link rel=stylesheet href=/style.css>
     <header>
-      <h1><a href=/>22120</a> &mdash; Search Results</h1>
+      <h1><a href=/>DiskerNet</a> &mdash; Search Results</h1>
     </header>
     <p>
     View <a href=/archive_index.html>your index</a>, or
@@ -381,7 +383,7 @@ function SearchResultView({results, query, HL, page}) {
     <form method=GET action=/search>
       <fieldset class=search>
         <legend>Search again</legend>
-        <input class=search type=search name=query placeholder="search your library" value="${query}">
+        <input autofocus class=search type=search name=query placeholder="search your library" value="${query}">
         <button>Search</button>
       </fieldset>
     </form>
@@ -411,11 +413,11 @@ function SearchResultView({results, query, HL, page}) {
       </a> |` : ''}
       <span class=grey>
         Page ${page}
-      </span>
+      </span>${hasMore ? `
       |
       <a href=/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page+1)}>
         Page ${page+1} &gt;
-      </a>
+      </a>` : ''}
     </p>
   `
 }

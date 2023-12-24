@@ -7,6 +7,7 @@ import {APP_ROOT as __ROOT} from './root.js';
 const DEEB = false;
 
 export const DEBUG = {
+  debugSec: false,
   askFirst: true,
   verboseSlow: process.env.VERBOSE_DEBUG_22120 || DEEB,
   debug: process.env.DEBUG_22120 || DEEB,

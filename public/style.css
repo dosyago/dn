@@ -4,12 +4,12 @@
     background: lavenderblush;
   }
   body {
-    display: table;
     margin: 0 auto 0 min(10%, 5em);
     background: white;
     padding: 0.5em;
     border-bottom: 1px solid purple;
     max-width: min(777px, 80%);
+    overflow-x: hidden;
   }
   header {
     font-size: smaller;
@@ -80,7 +80,7 @@
 
   input[type="number"] {
     text-align: right;
-  ]
+  }
 
   input.search {
     flex-grow: 1;
@@ -98,4 +98,7 @@
   }
   .grey {
     color: grey;
+  }
+  a {
+    word-break: break-word;
   }

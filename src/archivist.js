@@ -1222,7 +1222,8 @@
         obj.id = id;
         return obj;
       } catch(e) {
-        console.log({obj, index:State.Index, e, ndx, flex, fuzz});
+        DEBUG.verboseSlow && console.log({obj, index:State.Index, e, ndx, flex, fuzz});
+        console.error("Error", e);
         return obj;
       }
     });
