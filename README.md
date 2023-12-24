@@ -4,7 +4,7 @@
 ![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)
 ![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)
 ![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)
-![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%202027%202020&edge_flat=false)
+![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%202020&edge_flat=false)
 ![version](https://img.shields.io/npm/v/diskernet)
 ![DiskerNet slogan](https://img.shields.io/badge/%F0%9F%92%BE%20DiskerNet-an%20internet%20on%20yer%20disc-hotpink)
 
