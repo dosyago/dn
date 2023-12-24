@@ -11,4 +11,7 @@ fi
 
 ./scripts/build_only.sh
 
-$PKG --compress GZip .
+pkg --compress GZip .
+
+iconset single ./icons/dk.icns bin/diskernet-macos
+codesign -vvvv --timestamp -s "Developer ID Application" --force bin/diskernet-macos
