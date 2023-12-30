@@ -30,7 +30,7 @@ DiskerNet is protected under the APGL-3.0
 
 ## Get DiskerNet
 
-[Download a release](https://github.com/crisdosyago/Diskernet/releases)
+[Download a release](https://github.com/dosyago/DownloadNet/releases)
 
 or ...
 
@@ -45,14 +45,12 @@ or...
 **Build your own binaries:**
 
 ```sh
-$ git clone https://github.com/crisdosyago/DiskerNet
-$ cd DiskerNet
+$ git clone https://github.com/dosyago/DownloadNet
+$ cd DownloadNet
 $ npm i
 ```
 
-## Contributions!
-
-Welcome! Get involved. :)
+Then:
 
 ```
 $ ./scripts/build_setup.sh
@@ -60,4 +58,9 @@ $ ./scripts/compile.sh
 $ cd bin/
 ```
 
+## Contributions!
+
+Welcome! Get involved. :)
+
+-------
 Navigate your digital world with DiskerNet. Download and start archiving today!
