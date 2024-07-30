@@ -126,7 +126,7 @@ const run = async () => {
   }
 };
 
-const launch = (opts = {}) => {
+const launch = async (opts = {}) => {
   const {
     logLevel = 'silent',
     port,
@@ -136,8 +136,42 @@ const launch = (opts = {}) => {
     ignoreDefaultFlags = true,
   } = opts;
 
-  const browser = 'chrome'; // Default to Chrome, this can be modified as needed
+  const installedBrowsers = getInstalledBrowsers();
+  if (installedBrowsers.length === 0) {
+    console.error('No supported browsers are installed.');
+    return;
+  }
+
+  const answers = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'browser',
+      message: 'Select a browser to launch:',
+      choices: installedBrowsers,
+    },
+    {
+      type: 'input',
+      name: 'url',
+      message: 'Enter the URL to open (optional):',
+    },
+    {
+      type: 'input',
+      name: 'flags',
+      message: 'Enter command line flags (optional, space-separated):',
+    },
+    {
+      type: 'confirm',
+      name: 'ignoreSignal',
+      message: 'Ignore SIGINT signal (Ctrl+C) to keep the browser running?',
+      default: false,
+    },
+  ]);
+
+  const { browser, url, flags: flagString, ignoreSignal } = answers;
+  const flagArray = flagString ? flagString.split(' ') : [];
+
   const flags = [
+    ...flagArray,
     `--remote-debugging-port=${port}`,
     ...chromeFlags,
     userDataDir ? `--user-data-dir=${userDataDir}` : '',

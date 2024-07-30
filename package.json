@@ -16,10 +16,10 @@
     "build-only": "bash ./scripts/build_only.sh",
     "clean": "rm package-lock.json; rm -rf node_modules; rm -rf build/* bin/*",
     "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
-    "test": "nodemon src/app.js",
+    "test": "node --watch src/app.js",
     "inspect": "node --inspect-brk=127.0.0.1:9999 src/app.js",
-    "save": "nodemon src/app.js DownloadNet save",
-    "serve": "nodemon src/app.js DownloadNet serve",
+    "save": "node src/app.js DownloadNet save",
+    "serve": "node src/app.js DownloadNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
     "prepublishOnly": "npm run build-only"
@@ -64,7 +64,6 @@
   },
   "devDependencies": {
     "esbuild": "latest",
-    "eslint": "latest",
-    "nodemon": "latest"
+    "eslint": "latest"
   }
 }

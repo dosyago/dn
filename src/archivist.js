@@ -13,7 +13,7 @@
   import Fs from 'fs';
   import {stdin as input, stdout as output} from 'process';
   import util from 'util';
-  import readline from 'readline';
+  //import readline from 'readline';
 
   // search related
     import FlexSearch from 'flexsearch';
@@ -641,10 +641,10 @@
       const {url} = targetInfo;
       if ( url && targetInfo.type == 'page' ) {
         if ( ! targetInfo.attached ) {
-          const {sessionId} = await send("Target.attachToTarget", {
+          const {sessionId} = (await send("Target.attachToTarget", {
             targetId: targetInfo.targetId,
             flatten: true
-          });
+          }));
           State.Sessions.set(targetInfo.targetId, sessionId);
         }
       }
@@ -826,7 +826,7 @@
 
 // helpers
   function neverCache(url) {
-    return !url || url == "about:blank" || url.matches(/^(?:chrome|vivaldi|brave|edge)/) || NEVER_CACHE.has(url);
+    return !url || url == "about:blank" || url.match(/^(?:chrome|vivaldi|brave|edge)/) || NEVER_CACHE.has(url);
   }
 
   function dontCache(request) {
@@ -986,6 +986,7 @@
     }
 
     if ( someError ) {
+      /*
       const rl = readline.createInterface({input, output});
       const question = util.promisify(rl.question).bind(rl);
       console.warn('Error reading archive file. Your archive directory is corrupted. We will attempt to patch it so you can use it going forward, but because we replace a missing or corrupt index, cache, or full-text search index files with new blank copies, existing resources already indexed and cached may become inaccessible from your new index. A future version of this software should be able to more completely repair your archive directory, reconnecting and re-existing all cached resources and notifying you about and purging from the index any missing resources.\n');
@@ -994,6 +995,7 @@
       console.info('Because this repair as described above is not a perfect solution, we will give you a choice of how to proceed. You have two options: 1) attempt a basic repair that may leave some resources inaccessible from the repaired archive, or 2) do not touch the corrupted archive, but instead create a new fresh blank archive to begin saving to. Which option would you like to proceed with?');
       console.log('1) Basic repair with possible inaccessible pages');
       console.log('2) Leave the corrupt archive untouched, start a new archive');
+      */
       let correctAnswer = false;
       let newBasePath = '';
       while(!correctAnswer) {
