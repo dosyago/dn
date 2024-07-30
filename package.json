@@ -55,9 +55,9 @@
     "fz-search": "latest",
     "inquirer": "latest",
     "natural": "latest",
-    "ndx": "latest",
-    "ndx-query": "latest",
-    "ndx-serializable": "latest",
+    "ndx": "^1.0.2",
+    "ndx-query": "^1.0.1",
+    "ndx-serializable": "^1.0.0",
     "node-fetch": "latest",
     "ukkonen": "latest",
     "ws": "latest"

@@ -21,9 +21,9 @@
     //const {Index: FTSIndex} = require('flexsearch');
     import { 
       createIndex as NDX, 
-      indexAdd as ndx, 
-      indexRemove as removeDocumentFromIndex, 
-      indexVacuum as vacuumIndex 
+      addDocumentToIndex as ndx, 
+      removeDocumentFromIndex, 
+      vacuumIndex 
     } from 'ndx';
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
