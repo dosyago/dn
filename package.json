@@ -1,12 +1,12 @@
 {
-  "name": "diskernet",
+  "name": "downloadnet",
   "version": "3.0.6",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
-  "module": "dist/diskernet.mjs",
+  "module": "dist/downloadnet.mjs",
   "bin": {
-    "diskernet": "./global-run.cjs"
+    "downloadnet": "./global-run.cjs"
   },
   "scripts": {
     "start": "node src/app.js",
@@ -18,15 +18,15 @@
     "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
     "test": "nodemon src/app.js",
     "inspect": "node --inspect-brk=127.0.0.1:9999 src/app.js",
-    "save": "nodemon src/app.js DiskerNet save",
-    "serve": "nodemon src/app.js DiskerNet serve",
+    "save": "nodemon src/app.js DownloadNet save",
+    "serve": "nodemon src/app.js DownloadNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
     "prepublishOnly": "npm run build-only"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/DiskerNet.git"
+    "url": "git+https://github.com/dosyago/DownloadNet.git"
   },
   "pkg": {
     "scripts": "build/**/*.js",
@@ -43,9 +43,9 @@
   "author": "@dosy",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/dosyago/DiskerNet/issues"
+    "url": "https://github.com/dosyago/DownloadNet/issues"
   },
-  "homepage": "https://github.com/dosyago/DiskerNet#readme",
+  "homepage": "https://github.com/dosyago/DownloadNet#readme",
   "dependencies": {
     "@667/ps-list": "latest",
     "@dosyago/rainsum": "latest",

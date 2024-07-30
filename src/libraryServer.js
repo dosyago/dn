@@ -282,7 +282,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
     </script>
     ` : ''}
     <header>
-      <h1><a href=/>DiskerNet</a> &mdash; Search and Archive Index</h1>
+      <h1><a href=/>DownloadNet</a> &mdash; Search and Archive Index</h1>
     </header>
     <form method=GET action=/search style="margin-bottom: 1em;">
       <fieldset class=search>
@@ -372,10 +372,10 @@ function SearchResultView({results, query, HL, page, hasMore = false}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
-    <title>${query} - DiskerNet search results</title>
+    <title>${query} - DownloadNet search results</title>
     <link rel=stylesheet href=/style.css>
     <header>
-      <h1><a href=/>DiskerNet</a> &mdash; Search Results</h1>
+      <h1><a href=/>DownloadNet</a> &mdash; Search Results</h1>
     </header>
     <p>
     View <a href=/archive_index.html>your index</a>, or

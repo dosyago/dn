@@ -13,5 +13,5 @@ fi
 
 pkg --compress GZip .
 
-iconset single ./icons/dk.icns bin/diskernet-macos
-codesign -vvvv --timestamp -s "Developer ID Application" --force bin/diskernet-macos
+iconset single ./icons/dk.icns bin/downloadnet-macos
+codesign -vvvv --timestamp -s "Developer ID Application" --force bin/downloadnet-macos

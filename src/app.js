@@ -71,7 +71,7 @@ async function start() {
     if ( DEBUG.askFirst ) {
       const rl = readline.createInterface({input, output});
       const question = util.promisify(rl.question).bind(rl);
-      console.info(`\nIf you don't shut down Chrome and restart it under DiskerNet control 
+      console.info(`\nIf you don't shut down Chrome and restart it under DownloadNet control 
         you will not be able to save or serve your archives.\n`);
       const answer = await question("Would you like to shutdown Chrome browser now (y/N) ? ");
       if ( answer?.match(/^y/i) ) {
@@ -159,7 +159,7 @@ async function cleanup(reason, err, {exit = false} = {}) {
   killChrome(false); 
 
   if ( exit ) {
-    console.log(`Take a breath. Everything's done. DiskerNet is exiting in 3 seconds...`);
+    console.log(`Take a breath. Everything's done. DownloadNet is exiting in 3 seconds...`);
 
     await sleep(3000);
 

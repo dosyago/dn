@@ -1,8 +1,8 @@
-# :floppy_disk: [DiskerNet](https://github.com/c9fe/22120) [![source lines of code](https://sloc.xyz/github/crisdosyago/Diskernet)](https://sloc.xyz) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (diskernet, since Jan 2022)](https://img.shields.io/npm/dt/diskernet?label=npm%20downloads%20%28diskernet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/diskernet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/crisdosyago/DiskerNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
+# :floppy_disk: [DownloadNet](https://github.com/c9fe/22120) [![source lines of code](https://sloc.xyz/github/crisdosyago/Diskernet)](https://sloc.xyz) [![npm downloads (22120)](https://img.shields.io/npm/dt/archivist1?label=npm%20downloads%20%2822120%29)](https://npmjs.com/package/archivist1) [![npm downloads (downloadnet, since Jan 2022)](https://img.shields.io/npm/dt/downloadnet?label=npm%20downloads%20%28downloadnet%2C%20since%20Jan%202022%29)](https://npmjs.com/package/downloadnet) [![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)](https://GitHub.com/crisdosyago/DownloadNet/releases) [![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%2027%202020&edge_flat=false)](https://hits.seeyoufarm.com) ![version](https://img.shields.io/npm/v/archivist1)
 
 :floppy_disk: - an internet on yer Disk
 
-**DiskerNet** (codename *PROJECT 22120*) is an archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
+**DownloadNet** (codename *PROJECT 22120*) is an archivist browser controller that caches everything you browse, a library server with full text search to serve your archive. 
 
 **Now with full text search over your archive.** 
 
@@ -18,10 +18,10 @@ This feature is just released in version 2 so it will improve over time.
 
 or ...
 
-**Get it on [npm](https://www.npmjs.com/package/diskernet):**
+**Get it on [npm](https://www.npmjs.com/package/downloadnet):**
 
 ```sh
-$ npm i -g diskernet@latest
+$ npm i -g downloadnet@latest
 ```
 
 or...
@@ -29,8 +29,8 @@ or...
 **Build your own binaries:**
 
 ```sh
-$ git clone https://github.com/crisdosyago/DiskerNet
-$ cd DiskerNet
+$ git clone https://github.com/crisdosyago/DownloadNet
+$ cd DownloadNet
 $ npm i 
 $ ./scripts/build_setup.sh
 $ ./scripts/compile.sh
@@ -93,8 +93,8 @@ Save your browsing, then switch off the net and go to `http://localhost:22120` a
 3 ways to get it:
 
 1. Get binary from the [releases page.](https://github.com/c9fe/22120/releases), or
-2. Run with npx: `npx diskernet@latest`, or
-    - `npm i -g diskernet@latest && exlibris`
+2. Run with npx: `npx downloadnet@latest`, or
+    - `npm i -g downloadnet@latest && exlibris`
 3. Clone this repo and run as a Node.JS app: `npm i && npm start` 
 
 <p align=right><small><a href=#toc>Top</a></small></p>
