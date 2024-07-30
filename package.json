@@ -48,11 +48,11 @@
   "homepage": "https://github.com/dosyago/DiskerNet#readme",
   "dependencies": {
     "@667/ps-list": "latest",
+    "@dosyago/rainsum": "latest",
     "chrome-launcher": "latest",
     "express": "latest",
     "flexsearch": "latest",
     "fz-search": "latest",
-    "hasha": "latest",
     "natural": "latest",
     "ndx": "latest",
     "ndx-query": "latest",

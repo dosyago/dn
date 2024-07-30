@@ -5,7 +5,8 @@
     // Source: https://github.com/ndx-search/ndx/blob/cc9ec2780d88918338d4edcfca2d4304af9dc721/LICENSE
   
 // module imports
-  import hasha from 'hasha';
+  import crypto from 'crypto';
+  import { rainbowHash } from '@dosyago/rainsum';
   import {URL} from 'url';
   import Path from 'path';
   import os from 'os';
@@ -183,7 +184,6 @@
   const INDEX_FILE = args.index_file;
   const NO_FILE = args.no_file;
   const TBL = /:\/\//g;
-  const HASH_OPTS = {algorithm: 'sha1'};
   const UNCACHED_BODY = b64('We have not saved this data');
   const UNCACHED_CODE = 404;
   const UNCACHED_HEADERS = [
@@ -771,12 +771,20 @@
         State.Cache.set(origin, originDir);
       }
 
-      const fileName = `${await hasha(key, HASH_OPTS)}.json`;
+      const fileName = `${await sha1(key)}.json`;
 
       const responsePath = Path.resolve(originDir, fileName);
       await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
 
       return responsePath;
+    }
+
+    async function sha1(key) {
+      return crypto.createHash('sha1').update(key).digest('hex');
+    }
+    
+    async function rainbow(key) {
+      return rainbowHash(128, 0, new Uint8Array(Buffer.from(key)));
     }
 
     function serializeRequestKey(request) {
