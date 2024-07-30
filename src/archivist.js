@@ -21,9 +21,9 @@
     //const {Index: FTSIndex} = require('flexsearch');
     import { 
       createIndex as NDX, 
-      addDocumentToIndex as ndx, 
-      removeDocumentFromIndex, 
-      vacuumIndex 
+      indexAdd as ndx, 
+      indexRemove as removeDocumentFromIndex, 
+      indexVacuum as vacuumIndex 
     } from 'ndx';
     import { query as NDXQuery } from 'ndx-query';
     import { toSerializable, fromSerializable } from 'ndx-serializable';
@@ -826,7 +826,7 @@
 
 // helpers
   function neverCache(url) {
-    return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
+    return !url || url == "about:blank" || url.matches(/^(?:chrome|vivaldi|brave|edge)/) || NEVER_CACHE.has(url);
   }
 
   function dontCache(request) {

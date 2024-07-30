@@ -4,7 +4,7 @@ import readline from 'readline';
 import util from 'util';
 import {stdin as input, stdout as output} from 'process';
 
-import ChromeLauncher from 'chrome-launcher';
+import ChromeLauncher from './launcher.js';
 import psList from '@667/ps-list';
 
 import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';

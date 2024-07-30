@@ -53,6 +53,7 @@
     "express": "latest",
     "flexsearch": "latest",
     "fz-search": "latest",
+    "inquirer": "latest",
     "natural": "latest",
     "ndx": "latest",
     "ndx-query": "latest",
