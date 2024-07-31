@@ -16,7 +16,7 @@ export const DEBUG = {
 export const SHOW_FETCH = false;
 
 if ( DEBUG.debug ) {
-  console.log({APP_ROOT});
+  console.log({__ROOT});
 }
 
 // server related

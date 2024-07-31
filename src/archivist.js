@@ -410,6 +410,7 @@
     }
 
     function neverCache(url) {
+      if ( ! url ) return true;
       try {
         url = new URL(url);
         return url?.href == "about:blank" || url?.href?.startsWith('chrome') || NEVER_CACHE.has(url.origin);

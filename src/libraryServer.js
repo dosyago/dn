@@ -1,3 +1,4 @@
+import sea from 'node:sea';
 import http from 'http';
 import https from 'https';
 import fs from 'fs';

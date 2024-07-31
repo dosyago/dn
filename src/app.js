@@ -71,6 +71,7 @@ async function start() {
   const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}];
 
   if ( browserOpen ) {
+    let shutOne = false;
     for( const status of browsers ) {
       const keyName = Object.keys(status)[0];
       if ( !status[keyName] || !status[keyName].length ) continue;
@@ -85,15 +86,16 @@ async function start() {
         const answer = await question(`Would you like to shutdown ${openBrowserCode} browser now (y/N) ? `);
         if ( answer?.match(/^y/i) ) {
           await killBrowser(openBrowserCode); 
+          shutOne = true;
         } else {
           console.log(`OK, not shutting it!\n`);
-          if ( browserOpen ) {
-            process.exit(0);
-          }
         }
       } else {
         await killBrowser(openBrowserCode); 
       }
+    }
+    if ( !shutOne ) {
+      process.exit(0);
     }
   }
 
@@ -118,7 +120,7 @@ async function start() {
     DEBUG.verboseSlow && console.info('Chrome launch error:', e);
     process.exit(1);
   }
-  console.log(`Chrome started.`);
+  console.log(`Browser started.`);
 
   console.log(`Waiting 1 second...`);
   await sleep(1000);
