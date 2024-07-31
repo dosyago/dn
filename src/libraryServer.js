@@ -86,7 +86,9 @@ async function start({server_port}) {
 
 function addHandlers() {
   app.use(express.urlencoded({extended:true, limit: '50mb'}));
-  app.use(express.static(SITE_PATH));
+  if ( !sea.isSea() ) {
+    app.use(express.static(SITE_PATH));
+  }
 
   if ( args.library_path() ) {
     app.use("/library", express.static(args.library_path()))
@@ -251,6 +253,19 @@ function addHandlers() {
       return;
     }
   });
+
+  if ( sea.isSea() ) {
+    app.get('*', async (req, res) => {
+      const path = req.path;
+      const asset = sea.getAsset(path.slice(1)) || sea.getAsset(path.slice(1) +'.html');
+      if ( asset ) {
+        res.type(path.split('.').pop());
+        res.send(asset);
+      } else {
+        res.status(404).send('Not found');
+      }
+    });
+  }
 }
 
 async function stop() {

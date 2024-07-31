@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Variables
-EXE_NAME=$1
-JS_SOURCE_FILE=$2
-OUTPUT_FOLDER=$3
+EXE_NAME="$1"
+JS_SOURCE_FILE="$2"
+OUTPUT_FOLDER="$3"
 
 # Ensure nvm is installed
 if ! command -v nvm &> /dev/null
@@ -24,8 +24,11 @@ cat <<EOF > sea-config.json
   "main": "${JS_SOURCE_FILE}",
   "output": "sea-prep.blob",
   "assets": {
-    "public": "public/**/*",
-    "vendor": "build/vendor/**/*"
+    "index.html": "public/index.html",
+    "top.html": "public/top.html",
+    "style.css": "public/style.css",
+    "injection.js": "public/injection.js",
+    "redirector.html": "public/redirector.html"
   }
 }
 EOF
