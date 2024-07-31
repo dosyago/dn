@@ -13,7 +13,7 @@
   import Fs from 'fs';
   import {stdin as input, stdout as output} from 'process';
   import util from 'util';
-  //import readline from 'readline';
+  import readline from 'readline';
 
   // search related
     import FlexSearch from 'flexsearch';
@@ -176,8 +176,12 @@
     307
   ]);
   const NEVER_CACHE = new Set([
-    `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
-    `http://localhost:${args.chrome_port}`
+    `${GO_SECURE ? 'https://localhost' : 'http://127.0.0.1'}:${args.server_port}`,
+    `http://localhost:${args.chrome_port}`,
+    `http://127.0.0.1:${args.chrome_port}`,
+    `https://127.0.0.1:${args.chrome_port}`,
+    `http://::1:${args.chrome_port}`,
+    `https://::1:${args.chrome_port}`
   ]);
   const SORT_URLS = ([urlA],[urlB]) => urlA < urlB ? -1 : 1;
   const CACHE_FILE = args.cache_file; 
@@ -443,6 +447,7 @@
 
         await send("Runtime.enable", {}, sessionId);
         await send("Page.enable", {}, sessionId);
+        await send("Page.setAdBlockingEnabled", {enabled: true}, sessionId);
         await send("DOMSnapshot.enable", {}, sessionId);
 
         on("Page.frameNavigated", updateFrameNode);
@@ -451,7 +456,8 @@
 
         await send("Page.addScriptToEvaluateOnNewDocument", {
           source: getInjection({sessionId}),
-          worldName: "Context-22120-Indexing"
+          worldName: "Context-22120-Indexing",
+          runImmediately: true
         }, sessionId);
 
         DEBUG.verboseSlow && console.log("Just request install", targetId, url);
@@ -636,16 +642,25 @@
       State.CrawlIndexing.delete(info.targetId);
     }
 
-    async function attachToTarget({targetInfo}) {
+    async function attachToTarget({targetInfo}, retryCount = 0) {
       if ( dontInstall(targetInfo) ) return;
       const {url} = targetInfo;
       if ( url && targetInfo.type == 'page' ) {
-        if ( ! targetInfo.attached ) {
-          const {sessionId} = (await send("Target.attachToTarget", {
-            targetId: targetInfo.targetId,
-            flatten: true
-          }));
-          State.Sessions.set(targetInfo.targetId, sessionId);
+        try {
+          if ( ! targetInfo.attached ) {
+            const {sessionId} = (await send("Target.attachToTarget", {
+              targetId: targetInfo.targetId,
+              flatten: true
+            }));
+            State.Sessions.set(targetInfo.targetId, sessionId);
+          }
+        } catch(e) {
+          console.error(`Attach to target failed`, targetInfo);
+          if ( retryCount < 3 ) {
+            const ms = 1500;
+            DEBUG.verboseSlow && console.log(`Retrying attach in ${ms/1000} seconds...`);
+            setTimeout(() => attachToTarget({targetInfo}, (retryCount || 1) + 1), ms);
+          } 
         }
       }
     }
@@ -661,7 +676,8 @@
 
       if ( dontCache(request) ) {
         DEBUG.verboseSlow && console.log("Not caching", request.url);
-        return send("Fetch.continueRequest", {requestId});
+        send(`Fetch.continue${requestStage}`, {requestId});
+        return;
       }
       const key = serializeRequestKey(request);
       if ( Mode == 'serve' ) {
@@ -724,14 +740,9 @@
             return;
           }
         } 
-        try {
-          await send("Fetch.continueRequest", {
-              requestId,
-            },
-          );
-        } catch(e) {
-          console.warn("Issue with continuing request", e);
-        }
+        send(`Fetch.continue${requestStage}`, {requestId}).catch(
+          e => console.warn("Issue with continuing request", {e, requestStage, requestId})
+        );
       }
     }
 
@@ -986,7 +997,6 @@
     }
 
     if ( someError ) {
-      /*
       const rl = readline.createInterface({input, output});
       const question = util.promisify(rl.question).bind(rl);
       console.warn('Error reading archive file. Your archive directory is corrupted. We will attempt to patch it so you can use it going forward, but because we replace a missing or corrupt index, cache, or full-text search index files with new blank copies, existing resources already indexed and cached may become inaccessible from your new index. A future version of this software should be able to more completely repair your archive directory, reconnecting and re-existing all cached resources and notifying you about and purging from the index any missing resources.\n');
@@ -995,7 +1005,6 @@
       console.info('Because this repair as described above is not a perfect solution, we will give you a choice of how to proceed. You have two options: 1) attempt a basic repair that may leave some resources inaccessible from the repaired archive, or 2) do not touch the corrupted archive, but instead create a new fresh blank archive to begin saving to. Which option would you like to proceed with?');
       console.log('1) Basic repair with possible inaccessible pages');
       console.log('2) Leave the corrupt archive untouched, start a new archive');
-      */
       let correctAnswer = false;
       let newBasePath = '';
       while(!correctAnswer) {
@@ -1799,7 +1808,7 @@
           try {
             targetId = null;
             ({targetId} = await send("Target.createTarget", {
-              url: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}/redirector.html?url=${
+              url: `${GO_SECURE ? 'https://localhost' : 'http://127.0.0.1'}:${args.server_port}/redirector.html?url=${
                 encodeURIComponent(url)
               }`
             }));

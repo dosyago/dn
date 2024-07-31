@@ -9,6 +9,7 @@ import express from 'express';
 import args from './args.js';
 import {
   GO_SECURE,
+  CERT_PATH,
   DEBUG,
   MAX_REAL_URL_LENGTH,
   MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, 
@@ -45,10 +46,10 @@ async function start({server_port}) {
   
   try {
     const sec = {
-      key: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'privkey.pem')),
-      cert: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'fullchain.pem')),
-      ca: fs.existsSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem')) ?
-          fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem'))
+      key: fs.readFileSync(path.resolve(CERT_PATH(), 'privkey.pem')),
+      cert: fs.readFileSync(path.resolve(CERT_PATH(), 'fullchain.pem')),
+      ca: fs.existsSync(path.resolve(CERT_PATH(), 'chain.pem')) ?
+          fs.readFileSync(path.resolve(CERT_PATH(), 'chain.pem'))
         :
           undefined
     };
@@ -123,15 +124,15 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        /*
         r.snippet = '... ' + highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
           .sort(({fragment:{offset:a}}, {fragment:{offset:b}}) => a-b)
           .map(hl => Archivist.findOffsets(query, hl.fragment.text))
           .join(' ... ');
-        */
+        /*
         r.snippet = '... ' + trilight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
           .map(segment => Archivist.findOffsets(query, segment))
           .join(' ... ');
+          */
       });
       res.end(SearchResultView({results, query, HL, page, hasMore}));
     }
@@ -258,10 +259,12 @@ async function stop() {
 
   console.log(`Closing library server...`);
 
-  Server.close(() => {
-    console.log(`Library server closed.`);
-    resolve();
-  });
+  if ( Server ) {
+    Server.close(() => {
+      console.log(`Library server closed.`);
+      resolve();
+    });
+  }
 
   return pr;
 }

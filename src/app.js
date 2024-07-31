@@ -1,6 +1,7 @@
 import fs from 'fs';
 import ChildProcess from 'child_process';
 import util from 'util';
+import readline from 'readline';
 import {stdin as input, stdout as output} from 'process';
 
 import ChromeLauncher from './launcher.js';
@@ -78,14 +79,10 @@ async function start() {
       Browser = openBrowserCode;
       console.info(`Seems ${openBrowserCode} is open`);
       if ( DEBUG.askFirst ) {
-        /*
         const rl = readline.createInterface({input, output});
         const question = util.promisify(rl.question).bind(rl);
-        console.info(`\nIf you don't shut down ${openBrowserCode} and restart it under DownloadNet control 
-          you will not be able to save or serve your archives.\n`);
+        console.info(`\nDo you want to use it for your archiving? The reason we ask is, because if you don't shut down ${openBrowserCode} and restart it under DownloadNet control you will not be able to use it to save or serve your archives.\n`);
         const answer = await question(`Would you like to shutdown ${openBrowserCode} browser now (y/N) ? `);
-        */
-        const answer = 'y';
         if ( answer?.match(/^y/i) ) {
           await killBrowser(openBrowserCode); 
         } else {
