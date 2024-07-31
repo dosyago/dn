@@ -1,6 +1,6 @@
 {
   "name": "downloadnet",
-  "version": "3.0.6",
+  "version": "4.0.0",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "src/app.js",
@@ -27,14 +27,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dosyago/DownloadNet.git"
-  },
-  "pkg": {
-    "scripts": "build/**/*.js",
-    "assets": [
-      "public/**/*",
-      "build/vendor/**/*"
-    ],
-    "outputPath": "bin"
   },
   "keywords": [
     "archivist",
@@ -63,9 +55,9 @@
     "ws": "latest"
   },
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
-    "esbuild": "0.23.0",
-    "eslint": "^9.8.0",
-    "globals": "^15.8.0"
+    "@eslint/js": "latest",
+    "esbuild": "latest",
+    "eslint": "latest",
+    "globals": "latest"
   }
 }
