@@ -166,7 +166,7 @@ async function cleanup(reason, err, {exit = false} = {}) {
 
   LibraryServer.stop();
 
-  killBrowser(Browser, false); 
+  //killBrowser(Browser, false); 
 
   if ( exit ) {
     console.log(`Take a breath. Everything's done. DownloadNet is exiting in 3 seconds...`);

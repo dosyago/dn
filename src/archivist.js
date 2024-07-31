@@ -655,7 +655,7 @@
             State.Sessions.set(targetInfo.targetId, sessionId);
           }
         } catch(e) {
-          console.error(`Attach to target failed`, targetInfo);
+          DEBUG.verboseSlow && console.error(`Attach to target failed`, targetInfo);
           if ( retryCount < 3 ) {
             const ms = 1500;
             DEBUG.verboseSlow && console.log(`Retrying attach in ${ms/1000} seconds...`);

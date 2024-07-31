@@ -56,6 +56,7 @@ import inquirer from 'inquirer';
     }
 
     const command = `"${browserPath}" ${flags.join(' ')} ${url}`;
+    console.log(`Launching ${command}`);
     const childProcess = exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error launching ${browser}: ${error.message}`);
@@ -94,6 +95,7 @@ import inquirer from 'inquirer';
       fullAsk = false,
     } = opts;
 
+    console.log({opts,startingUrl});
     const installedBrowsers = getInstalledBrowsers();
     if (installedBrowsers.length === 0) {
       console.error('No supported browsers are installed.');
@@ -127,7 +129,7 @@ import inquirer from 'inquirer';
       ] : [])
     ]);
 
-    const { browser, url, flags: flagString, ignoreSignal = true } = answers;
+    const { browser, url, flags: flagString, ignoreSignal = (opts.ignoreSignal || true) } = answers;
     const flagArray = flagString ? flagString.split(' ') : [];
 
     const flags = [
@@ -141,7 +143,7 @@ import inquirer from 'inquirer';
     console.log(`Launching browser with log level: ${logLevel}`);
     const browserProcess = launchBrowser(browser, startingUrl, flags);
 
-    if (!opts.ignoreSignal) {
+    if (!ignoreSignal) {
       process.on('SIGINT', () => {
         console.log('\nReceived SIGINT. Killing browser process...');
         killBrowser(browserProcess);
