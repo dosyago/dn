@@ -3,7 +3,7 @@
 unset npm_config_prefix
 source $HOME/.nvm/nvm.sh
 . $HOME/.profile
-nvm use --lts
+nvm use v22
 
 echo "Cleaning old build and dist files..."
 

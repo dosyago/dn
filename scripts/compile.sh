@@ -2,7 +2,7 @@
 
 unset npm_config_prefix
 source $HOME/.nvm/nvm.sh
-nvm use --lts
+nvm use v22
 PKG=$(which pkg)
 if [ -z $PKG ]; then
   npm i -g pkg@latest

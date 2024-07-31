@@ -5,7 +5,7 @@ source $HOME/.nvm/nvm.sh
 . $HOME/.profile
 
 nvm install --lts
-nvm use --lts
+nvm use v22
 
 pkg ./src/hello.js
 

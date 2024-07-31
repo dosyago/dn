@@ -9,7 +9,7 @@
     "downloadnet": "./global-run.cjs"
   },
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node --max-old-space-size=4096 src/app.js",
     "setup": "bash ./scripts/build_setup.sh",
     "build": "echo Ensure you 'npm run setup' first && bash ./scripts/compile.sh",
     "compile": "npm run build",
@@ -63,7 +63,9 @@
     "ws": "latest"
   },
   "devDependencies": {
-    "esbuild": "latest",
-    "eslint": "latest"
+    "@eslint/js": "^9.8.0",
+    "esbuild": "0.23.0",
+    "eslint": "^9.8.0",
+    "globals": "^15.8.0"
   }
 }

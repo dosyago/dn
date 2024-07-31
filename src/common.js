@@ -45,6 +45,7 @@ export const CERT_PATH = () => GO_SECURE ? cert_path : false;
 
 export class RichError extends Error {
   constructor(msg) {
+    super(msg);
     let textMessage;
     try {
       textMessage = JSON.stringify(msg);

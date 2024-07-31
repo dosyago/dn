@@ -9,7 +9,7 @@ mkdir -p bin/
 mkdir -p build/
 
 echo "Setting node to lts/*..."
-nvm use --lts
+nvm use v22
 
 echo "Installing pkg..."
 
