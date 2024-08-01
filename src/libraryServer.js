@@ -273,8 +273,13 @@ function addHandlers() {
         }
       }
       if ( asset ) {
-        res.type(path.split('.').pop());
-        res.send(asset);
+        const type = path.split('.').pop() || 'html';
+        res.type(type);
+        let data = Buffer.from(asset);
+        if ( type == 'html' || type == 'js' || type == 'css' ) {
+          data = data.toString('utf8');
+        } 
+        res.send(data);
       } else {
         res.status(404).send('Not found');
       }

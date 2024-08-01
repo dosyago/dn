@@ -71,6 +71,7 @@ async function start() {
   const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}];
 
   if ( browserOpen ) {
+    const rl = readline.createInterface({input, output});
     let shutOne = false;
     for( const status of browsers ) {
       const keyName = Object.keys(status)[0];
@@ -80,7 +81,6 @@ async function start() {
       Browser = openBrowserCode;
       console.info(`Seems ${openBrowserCode} is open`);
       if ( DEBUG.askFirst ) {
-        const rl = readline.createInterface({input, output});
         const question = util.promisify(rl.question).bind(rl);
         console.info(`\nDo you want to use it for your archiving? The reason we ask is, because if you don't shut down ${openBrowserCode} and restart it under DownloadNet control you will not be able to use it to save or serve your archives.\n`);
         const answer = await question(`Would you like to shutdown ${openBrowserCode} browser now (y/N) ? `);

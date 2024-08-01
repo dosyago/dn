@@ -29,8 +29,6 @@ const fuzzy_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'fuzzy
 
 const results_per_page = 10;
 
-console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
-
 updateBasePath(process.argv[5] || Pref.BasePath || CONFIG_DIR);
 
 const args = {
