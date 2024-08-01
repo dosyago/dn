@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $HOME/.nvm/nvm.sh
+
 # Variables
 EXE_NAME="$1"
 JS_SOURCE_FILE="$2"

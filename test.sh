@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source $HOME/.nvm/nvm.sh
-
 # Variables
 EXE_NAME="$1"
 JS_SOURCE_FILE="$2"
@@ -25,10 +23,8 @@ cat <<EOF > sea-config.json
 {
   "main": "${JS_SOURCE_FILE}",
   "output": "sea-prep.blob",
-  "useCodeCache": true,
   "assets": {
     "index.html": "public/index.html",
-    "favicon.ico": "public/favicon.ico",
     "top.html": "public/top.html",
     "style.css": "public/style.css",
     "injection.js": "public/injection.js",

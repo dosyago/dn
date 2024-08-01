@@ -11,8 +11,15 @@ nvm use v22
 if [[ ! -d "node_modules" ]]; then
   npm i
 fi
-./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/esm/downloadnet.mjs --format=esm --platform=node --minify --analyze
-./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/cjs/out.cjs --platform=node --minify --analyze
+if [[ -n "$NO_MINIFY" ]]; then
+  ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/esm/downloadnet.mjs --format=esm --platform=node --analyze
+  ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/cjs/out.cjs --platform=node --analyze
+else
+  ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/esm/downloadnet.mjs --format=esm --platform=node --minify --analyze
+  ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/cjs/out.cjs --platform=node --minify --analyze
+fi
+echo "const bigR = require('module').createRequire(__dirname); require = bigR;" > build/cjs/dn.cjs
+cat build/cjs/out.cjs >> build/cjs/dn.cjs
 echo "#!/usr/bin/env node" > build/global/downloadnet.cjs
 cat build/cjs/out.cjs >> build/global/downloadnet.cjs
 chmod +x build/global/downloadnet.cjs

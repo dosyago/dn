@@ -155,13 +155,13 @@ async function killBrowser(browser, wait = true) {
 }
 
 async function cleanup(reason, err, {exit = false} = {}) {
-  console.log(`Shutting down everything because of an error!`);
-  console.log(`Cleanup called on reason: ${reason}`, err);
-
   if ( quitting ) {
     console.log(`Cleanup already called so not running again.`);
     return;
   }
+  console.log(`Shutting down everything because of an error!`);
+  console.log(`Cleanup called on reason: ${reason}`, err);
+
   quitting = true;
 
   Archivist.shutdown();
@@ -174,6 +174,7 @@ async function cleanup(reason, err, {exit = false} = {}) {
     console.log(`Take a breath. Everything's done. DownloadNet is exiting in 3 seconds...`);
 
     await sleep(3000);
+    quitting = false;
 
     process.exit(0);
   }

@@ -257,8 +257,21 @@ function addHandlers() {
 
   if ( sea.isSea() ) {
     app.get('*', async (req, res) => {
-      const path = req.path;
-      const asset = sea.getAsset(path.slice(1)) || sea.getAsset(path.slice(1) +'.html');
+      const path = req.path.slice(1);
+      const file = path === '' ? 'index.html' : path;
+      let asset;
+      try {
+        asset = await sea.getAsset(file);
+      } catch(e) {
+        console.warn(e, {file});
+      }
+      if ( ! asset ) {
+        try {
+          asset = await sea.getAsset(file + '.html');
+        } catch(e) {
+          console.warn(e, {file});
+        }
+      }
       if ( asset ) {
         res.type(path.split('.').pop());
         res.send(asset);
