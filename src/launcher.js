@@ -61,11 +61,11 @@ const launchBrowser = (browser, url = '', flags = []) => {
   });
 
   childProcess.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+    console.log(`browser: ${data}`);
   });
 
   childProcess.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
+    console.error(`browser: ${data}`);
   });
 
   childProcess.on('close', (code) => {
