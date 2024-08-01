@@ -34,7 +34,17 @@ nvm use 22
 $seaConfigContent = @"
 {
   "main": "$jsSourceFile",
-  "output": "sea-prep.blob"
+  "output": "sea-prep.blob",
+  "disableExperimentalSEAWarning": true,
+  "useCodeCache": true,
+  "assets": {
+    "index.html": "public/index.html",
+    "favicon.ico": "public/favicon.ico",
+    "top.html": "public/top.html",
+    "style.css": "public/style.css",
+    "injection.js": "public/injection.js",
+    "redirector.html": "public/redirector.html"
+  }
 }
 "@
 $seaConfigContent | Out-File sea-config.json

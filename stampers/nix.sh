@@ -21,7 +21,22 @@ nvm install 22
 nvm use 22
 
 # Create sea-config.json
-echo "{ \"main\": \"${JS_SOURCE_FILE}\", \"output\": \"sea-prep.blob\" }" > sea-config.json
+cat <<EOF > sea-config.json
+{
+  "main": "${JS_SOURCE_FILE}",
+  "output": "sea-prep.blob",
+  "disableExperimentalSEAWarning": true,
+  "useCodeCache": true,
+  "assets": {
+    "index.html": "public/index.html",
+    "favicon.ico": "public/favicon.ico",
+    "top.html": "public/top.html",
+    "style.css": "public/style.css",
+    "injection.js": "public/injection.js",
+    "redirector.html": "public/redirector.html"
+  }
+}
+EOF
 
 # Generate the blob
 node --experimental-sea-config sea-config.json
