@@ -18,6 +18,7 @@ else
   ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/esm/downloadnet.mjs --format=esm --platform=node --minify --analyze
   ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/cjs/out.cjs --platform=node --minify --analyze
 fi
+cp -r public build/
 echo "const bigR = require('module').createRequire(__dirname); require = bigR; process.traceProcessWarnings = true; " > build/cjs/dn.cjs
 # polyfill for process.disableWarning idea as node arg --disableWarning=ExperimentalWarning is likely not accessible in this setup
 #echo "const __orig_emit = process.emit; process.emit = (event, error) => event === 'warning' && error.name === 'ExperimentalWarning' ? false : originalEmit.call(process, event, error);" >> build/cjs/dn.cjs
