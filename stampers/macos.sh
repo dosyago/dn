@@ -25,6 +25,7 @@ cat <<EOF > sea-config.json
 {
   "main": "${JS_SOURCE_FILE}",
   "output": "sea-prep.blob",
+  "disableExperimentalSEAWarning": true,
   "useCodeCache": true,
   "assets": {
     "index.html": "public/index.html",

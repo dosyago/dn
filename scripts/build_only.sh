@@ -18,16 +18,19 @@ else
   ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/esm/downloadnet.mjs --format=esm --platform=node --minify --analyze
   ./node_modules/.bin/esbuild src/app.js --bundle --outfile=build/cjs/out.cjs --platform=node --minify --analyze
 fi
-echo "const bigR = require('module').createRequire(__dirname); require = bigR;" > build/cjs/dn.cjs
+echo "const bigR = require('module').createRequire(__dirname); require = bigR; process.traceProcessWarnings = true; " > build/cjs/dn.cjs
+# polyfill for process.disableWarning idea as node arg --disableWarning=ExperimentalWarning is likely not accessible in this setup
+#echo "const __orig_emit = process.emit; process.emit = (event, error) => event === 'warning' && error.name === 'ExperimentalWarning' ? false : originalEmit.call(process, event, error);" >> build/cjs/dn.cjs
+# although we can use the sea config key disableExperimentalSEAWarning to achieve same 
 cat build/cjs/out.cjs >> build/cjs/dn.cjs
 echo "#!/usr/bin/env node" > build/global/downloadnet.cjs
-cat build/cjs/out.cjs >> build/global/downloadnet.cjs
+cat build/cjs/dn.cjs >> build/global/downloadnet.cjs
 chmod +x build/global/downloadnet.cjs
 if [[ "$OSTYPE" == darwin* ]]; then
-  ./stampers/macos.sh dn build/cjs/out.cjs build/bin/
+  ./stampers/macos.sh dn build/cjs/dn.cjs build/bin/
 elif [[ "$OSTYPE" == win* ]]; then
-  ./stampers/win.sh dn build/cjs/out.cjs build/bin/
+  ./stampers/win.sh dn build/cjs/dn.cjs build/bin/
 else
-  ./stampers/nix.sh build/cjs/out.cjs build/bin/
+  ./stampers/nix.sh build/cjs/dn.cjs build/bin/
 fi
 
