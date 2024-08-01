@@ -18,5 +18,5 @@ const memoryAllocation = Math.floor((totalMemory / (1024 * 1024)) * 0.8); // Con
 console.log(`Index can use up to: ${memoryAllocation}MB RAM`);
 
 // Running the application
-spawn('node', [`--max-old-space-size=${memoryAllocation}`, path.resolve(__dirname, 'build', 'downloadnet.cjs')], { stdio: 'inherit' });
+spawn('node', [`--max-old-space-size=${memoryAllocation}`, path.resolve(__dirname, 'build', 'cjs', 'downloadnet.cjs')], { stdio: 'inherit' });
 
