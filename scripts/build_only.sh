@@ -15,4 +15,11 @@ fi
 echo "#!/usr/bin/env node" > build/global/downloadnet.cjs
 cat build/cjs/out.cjs >> build/global/downloadnet.cjs
 chmod +x build/global/downloadnet.cjs
+if [[ "$OSTYPE" == darwin* ]]; then
+  ./stampers/macos.sh
+elif [[ "$OSTYPE" == win* ]]; then
+  ./stampers/win.sh
+else
+  ./stampers/nix.sh
+fi
 
