@@ -6,23 +6,19 @@
   "main": "global-run.cjs",
   "module": "build/esm/downloadnet.mjs",
   "bin": {
-    "downloadnet": "global-run.cjs"
+    "dn": "global-run.cjs"
   },
   "scripts": {
     "start": "node --max-old-space-size=4096 src/app.js",
-    "setup": "bash ./scripts/build_setup.sh",
-    "build": "echo Ensure you 'npm run setup' first && bash ./scripts/compile.sh",
-    "compile": "npm run build",
-    "build-only": "bash ./scripts/build_only.sh",
-    "clean": "rm package-lock.json; rm -rf node_modules; rm -rf build/* bin/*",
-    "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
+    "build": "bash ./scripts/build_only.sh",
+    "clean": "rm package-lock.json; rm -rf node_modules; rm -rf build/*",
     "test": "node --watch src/app.js",
     "inspect": "node --inspect-brk=127.0.0.1:9999 src/app.js",
     "save": "node src/app.js DownloadNet save",
     "serve": "node src/app.js DownloadNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
-    "prepublishOnly": "npm run build-only"
+    "prepublishOnly": "npm run build; rm -rf build/bin/"
   },
   "repository": {
     "type": "git",
