@@ -5,7 +5,8 @@
     // Source: https://github.com/ndx-search/ndx/blob/cc9ec2780d88918338d4edcfca2d4304af9dc721/LICENSE
   
 // module imports
-  import hasha from 'hasha';
+  import crypto from 'crypto';
+  import { rainbowHash } from '@dosyago/rainsum';
   import {URL} from 'url';
   import Path from 'path';
   import os from 'os';
@@ -175,15 +176,18 @@
     307
   ]);
   const NEVER_CACHE = new Set([
-    `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
-    `http://localhost:${args.chrome_port}`
+    `${GO_SECURE ? 'https://localhost' : 'http://127.0.0.1'}:${args.server_port}`,
+    `http://localhost:${args.chrome_port}`,
+    `http://127.0.0.1:${args.chrome_port}`,
+    `https://127.0.0.1:${args.chrome_port}`,
+    `http://::1:${args.chrome_port}`,
+    `https://::1:${args.chrome_port}`
   ]);
   const SORT_URLS = ([urlA],[urlB]) => urlA < urlB ? -1 : 1;
   const CACHE_FILE = args.cache_file; 
   const INDEX_FILE = args.index_file;
   const NO_FILE = args.no_file;
   const TBL = /:\/\//g;
-  const HASH_OPTS = {algorithm: 'sha1'};
   const UNCACHED_BODY = b64('We have not saved this data');
   const UNCACHED_CODE = 404;
   const UNCACHED_HEADERS = [
@@ -406,6 +410,7 @@
     }
 
     function neverCache(url) {
+      if ( ! url ) return true;
       try {
         url = new URL(url);
         return url?.href == "about:blank" || url?.href?.startsWith('chrome') || NEVER_CACHE.has(url.origin);
@@ -443,6 +448,7 @@
 
         await send("Runtime.enable", {}, sessionId);
         await send("Page.enable", {}, sessionId);
+        await send("Page.setAdBlockingEnabled", {enabled: true}, sessionId);
         await send("DOMSnapshot.enable", {}, sessionId);
 
         on("Page.frameNavigated", updateFrameNode);
@@ -451,7 +457,8 @@
 
         await send("Page.addScriptToEvaluateOnNewDocument", {
           source: getInjection({sessionId}),
-          worldName: "Context-22120-Indexing"
+          worldName: "Context-22120-Indexing",
+          runImmediately: true
         }, sessionId);
 
         DEBUG.verboseSlow && console.log("Just request install", targetId, url);
@@ -636,16 +643,25 @@
       State.CrawlIndexing.delete(info.targetId);
     }
 
-    async function attachToTarget({targetInfo}) {
+    async function attachToTarget({targetInfo}, retryCount = 0) {
       if ( dontInstall(targetInfo) ) return;
       const {url} = targetInfo;
       if ( url && targetInfo.type == 'page' ) {
-        if ( ! targetInfo.attached ) {
-          const {sessionId} = await send("Target.attachToTarget", {
-            targetId: targetInfo.targetId,
-            flatten: true
-          });
-          State.Sessions.set(targetInfo.targetId, sessionId);
+        try {
+          if ( ! targetInfo.attached ) {
+            const {sessionId} = (await send("Target.attachToTarget", {
+              targetId: targetInfo.targetId,
+              flatten: true
+            }));
+            State.Sessions.set(targetInfo.targetId, sessionId);
+          }
+        } catch(e) {
+          DEBUG.verboseSlow && console.error(`Attach to target failed`, targetInfo);
+          if ( retryCount < 3 ) {
+            const ms = 1500;
+            DEBUG.verboseSlow && console.log(`Retrying attach in ${ms/1000} seconds...`);
+            setTimeout(() => attachToTarget({targetInfo}, (retryCount || 1) + 1), ms);
+          } 
         }
       }
     }
@@ -661,7 +677,8 @@
 
       if ( dontCache(request) ) {
         DEBUG.verboseSlow && console.log("Not caching", request.url);
-        return send("Fetch.continueRequest", {requestId});
+        send(`Fetch.continue${requestStage}`, {requestId});
+        return;
       }
       const key = serializeRequestKey(request);
       if ( Mode == 'serve' ) {
@@ -724,14 +741,9 @@
             return;
           }
         } 
-        try {
-          await send("Fetch.continueRequest", {
-              requestId,
-            },
-          );
-        } catch(e) {
-          console.warn("Issue with continuing request", e);
-        }
+        send(`Fetch.continue${requestStage}`, {requestId}).catch(
+          e => console.warn("Issue with continuing request", {e, requestStage, requestId})
+        );
       }
     }
 
@@ -771,12 +783,20 @@
         State.Cache.set(origin, originDir);
       }
 
-      const fileName = `${await hasha(key, HASH_OPTS)}.json`;
+      const fileName = `${await sha1(key)}.json`;
 
       const responsePath = Path.resolve(originDir, fileName);
       await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
 
       return responsePath;
+    }
+
+    async function sha1(key) {
+      return crypto.createHash('sha1').update(key).digest('hex');
+    }
+    
+    async function rainbow(key) {
+      return rainbowHash(128, 0, new Uint8Array(Buffer.from(key)));
     }
 
     function serializeRequestKey(request) {
@@ -818,7 +838,7 @@
 
 // helpers
   function neverCache(url) {
-    return url == "about:blank" || url?.startsWith('chrome') || NEVER_CACHE.has(url);
+    return !url || url == "about:blank" || url.match(/^(?:chrome|vivaldi|brave|edge)/) || NEVER_CACHE.has(url);
   }
 
   function dontCache(request) {
@@ -1789,7 +1809,7 @@
           try {
             targetId = null;
             ({targetId} = await send("Target.createTarget", {
-              url: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}/redirector.html?url=${
+              url: `${GO_SECURE ? 'https://localhost' : 'http://127.0.0.1'}:${args.server_port}/redirector.html?url=${
                 encodeURIComponent(url)
               }`
             }));

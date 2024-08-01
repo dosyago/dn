@@ -1,10 +1,10 @@
 import fs from 'fs';
 import ChildProcess from 'child_process';
-import readline from 'readline';
 import util from 'util';
+import readline from 'readline';
 import {stdin as input, stdout as output} from 'process';
 
-import ChromeLauncher from 'chrome-launcher';
+import ChromeLauncher from './launcher.js';
 import psList from '@667/ps-list';
 
 import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';
@@ -32,12 +32,13 @@ const LAUNCH_OPTS = {
   startingUrl: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
   ignoreDefaultFlags: true
 }
-const KILL_ON = {
-  win32: 'taskkill /IM chrome.exe /F',
-  darwin: 'kill $(pgrep Chrome)',
-  freebsd: 'pkill -15 chrome',
-  linux: 'pkill -15 chrome',
-};
+const KILL_ON = (browser) => ({
+  win32: `taskkill /IM ${browser}.exe /F`,
+  darwin: `kill $(pgrep -i ${browser})`,
+  freebsd: `pkill -15 ${browser}`,
+  linux: `pkill -15 ${browser}`,
+});
+let Browser;
 
 let quitting;
 
@@ -60,30 +61,41 @@ async function start() {
   console.log(`Importing dependencies...`);
   const {launch:ChromeLaunch} = ChromeLauncher;
 
-  let chromeOpen = false;
-
   const list = await psList();
 
-  chromeOpen = list.some(({name,cmd}) => name?.match?.(/chrome/g) || cmd?.match?.(/chrome/g));
+  const chromeOpen = list.filter(({name,cmd}) => name?.match?.(/^(chrome|google chrome)/gi) || cmd?.match?.(/[\/\\]chrome/gi));
+  const vivaldiOpen = list.filter(({name,cmd}) => name?.match?.(/^vivaldi/gi) || cmd?.match?.(/[\/\\]vivaldi/gi));
+  const braveOpen = list.filter(({name,cmd}) => name?.match?.(/^brave/gi) || cmd?.match?.(/[\/\\]brave/gi));
+  const edgeOpen = list.filter(({name,cmd}) => name?.match?.(/^edge/gi) || cmd?.match?.(/[\/\\]edge/gi));
+  const browserOpen = chromeOpen || vivaldiOpen || braveOpen || edgeOpen;
+  const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}];
 
-  if ( chromeOpen ) {
-    console.info(`Seems Chrome is open`);
-    if ( DEBUG.askFirst ) {
-      const rl = readline.createInterface({input, output});
-      const question = util.promisify(rl.question).bind(rl);
-      console.info(`\nIf you don't shut down Chrome and restart it under DiskerNet control 
-        you will not be able to save or serve your archives.\n`);
-      const answer = await question("Would you like to shutdown Chrome browser now (y/N) ? ");
-      if ( answer?.match(/^y/i) ) {
-        await killChrome(); 
-      } else {
-        console.log(`OK, not shutting it!\n`);
-        if ( chromeOpen ) {
-          process.exit(0);
+  if ( browserOpen ) {
+    const rl = readline.createInterface({input, output});
+    let shutOne = false;
+    for( const status of browsers ) {
+      const keyName = Object.keys(status)[0];
+      if ( !status[keyName] || !status[keyName].length ) continue;
+      console.log(status);
+      const openBrowserCode = keyName.replace('Open', '');
+      Browser = openBrowserCode;
+      console.info(`Seems ${openBrowserCode} is open`);
+      if ( DEBUG.askFirst ) {
+        const question = util.promisify(rl.question).bind(rl);
+        console.info(`\nDo you want to use it for your archiving? The reason we ask is, because if you don't shut down ${openBrowserCode} and restart it under DownloadNet control you will not be able to use it to save or serve your archives.\n`);
+        const answer = await question(`Would you like to shutdown ${openBrowserCode} browser now (y/N) ? `);
+        if ( answer?.match(/^y/i) ) {
+          await killBrowser(openBrowserCode); 
+          shutOne = true;
+        } else {
+          console.log(`OK, not shutting it!\n`);
         }
+      } else {
+        await killBrowser(openBrowserCode); 
       }
-    } else {
-      await killChrome(); 
+    }
+    if ( !shutOne ) {
+      process.exit(0);
     }
   }
 
@@ -100,15 +112,15 @@ async function start() {
   console.log(`Waiting 1 second...`);
   await sleep(1000);
 
-  console.log(`Launching chrome...`);
+  console.log(`Launching browser...`);
   try {
     await ChromeLaunch(LAUNCH_OPTS);
   } catch(e) {
-    console.log(`Could not launch chrome.`);
+    console.log(`Could not launch browser.`);
     DEBUG.verboseSlow && console.info('Chrome launch error:', e);
     process.exit(1);
   }
-  console.log(`Chrome started.`);
+  console.log(`Browser started.`);
 
   console.log(`Waiting 1 second...`);
   await sleep(1000);
@@ -117,51 +129,52 @@ async function start() {
   console.log(`System ready.`);
 }
 
-async function killChrome(wait = true) {
+async function killBrowser(browser, wait = true) {
   try {
-    if ( process.platform in KILL_ON ) {
-      console.log(`Attempting to shut running chrome...`);
+    if ( process.platform in KILL_ON(browser) ) {
+      console.log(`Attempting to shut running browser...`);
       const [err] = (await new Promise(
-        res => ChildProcess.exec(KILL_ON[process.platform], (...a) => res(a))
+        res => ChildProcess.exec(KILL_ON(browser)[process.platform], (...a) => res(a))
       ));
       if ( err ) {
-        console.log(`There was no running chrome.`);
-        DEBUG.verboseSlow && console.warn("Error closing existing chrome", err);
+        console.log(`There was no running browser.`);
+        DEBUG.verboseSlow && console.warn("Error closing existing browser", err);
       } else {
-        console.log(`Running chrome shut down.`);
+        console.log(`Running browser shut down.`);
         if ( wait ) {
           console.log(`Waiting 1 second...`);
           await sleep(1000);
         }
       }
     } else {
-      console.warn(`If you have chrome running, you may need to shut it down manually and restart 22120.`);
+      console.warn(`If you have browser running, you may need to shut it down manually and restart 22120.`);
     }
   } catch(e) {
-    console.warn("in kill chrome", e);
+    console.warn("in kill browser", e);
   }
 }
 
 async function cleanup(reason, err, {exit = false} = {}) {
-  console.log(`Shutting down everything because of an error!`);
-  console.log(`Cleanup called on reason: ${reason}`, err);
-
   if ( quitting ) {
     console.log(`Cleanup already called so not running again.`);
     return;
   }
+  console.log(`Shutting down everything because of an error!`);
+  console.log(`Cleanup called on reason: ${reason}`, err);
+
   quitting = true;
 
   Archivist.shutdown();
 
   LibraryServer.stop();
 
-  killChrome(false); 
+  //killBrowser(Browser, false); 
 
   if ( exit ) {
-    console.log(`Take a breath. Everything's done. DiskerNet is exiting in 3 seconds...`);
+    console.log(`Take a breath. Everything's done. DownloadNet is exiting in 3 seconds...`);
 
     await sleep(3000);
+    quitting = false;
 
     process.exit(0);
   }

@@ -1,3 +1,4 @@
+import sea from 'node:sea';
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
@@ -9,6 +10,7 @@ import express from 'express';
 import args from './args.js';
 import {
   GO_SECURE,
+  CERT_PATH,
   DEBUG,
   MAX_REAL_URL_LENGTH,
   MAX_HEAD, MAX_HIGHLIGHTABLE_LENGTH, 
@@ -45,10 +47,10 @@ async function start({server_port}) {
   
   try {
     const sec = {
-      key: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'privkey.pem')),
-      cert: fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'fullchain.pem')),
-      ca: fs.existsSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem')) ?
-          fs.readFileSync(path.resolve(os.homedir(), 'local-sslcerts', 'chain.pem'))
+      key: fs.readFileSync(path.resolve(CERT_PATH(), 'privkey.pem')),
+      cert: fs.readFileSync(path.resolve(CERT_PATH(), 'fullchain.pem')),
+      ca: fs.existsSync(path.resolve(CERT_PATH(), 'chain.pem')) ?
+          fs.readFileSync(path.resolve(CERT_PATH(), 'chain.pem'))
         :
           undefined
     };
@@ -85,7 +87,9 @@ async function start({server_port}) {
 
 function addHandlers() {
   app.use(express.urlencoded({extended:true, limit: '50mb'}));
-  app.use(express.static(SITE_PATH));
+  if ( !sea.isSea() ) {
+    app.use(express.static(SITE_PATH));
+  }
 
   if ( args.library_path() ) {
     app.use("/library", express.static(args.library_path()))
@@ -123,15 +127,15 @@ function addHandlers() {
       }, null, 2));
     } else {
       results.forEach(r => {
-        /*
         r.snippet = '... ' + highlight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
           .sort(({fragment:{offset:a}}, {fragment:{offset:b}}) => a-b)
           .map(hl => Archivist.findOffsets(query, hl.fragment.text))
           .join(' ... ');
-        */
+        /*
         r.snippet = '... ' + trilight(query, r.content, {maxLength:MAX_HIGHLIGHTABLE_LENGTH})
           .map(segment => Archivist.findOffsets(query, segment))
           .join(' ... ');
+          */
       });
       res.end(SearchResultView({results, query, HL, page, hasMore}));
     }
@@ -250,6 +254,37 @@ function addHandlers() {
       return;
     }
   });
+
+  if ( sea.isSea() ) {
+    app.get('*', async (req, res) => {
+      const path = req.path.slice(1);
+      const file = path === '' ? 'index.html' : path;
+      let asset;
+      try {
+        asset = await sea.getAsset(file);
+      } catch(e) {
+        console.warn(e, {file});
+      }
+      if ( ! asset ) {
+        try {
+          asset = await sea.getAsset(file + '.html');
+        } catch(e) {
+          console.warn(e, {file});
+        }
+      }
+      if ( asset ) {
+        const type = path.split('.').pop() || 'html';
+        res.type(type);
+        let data = Buffer.from(asset);
+        if ( type == 'html' || type == 'js' || type == 'css' ) {
+          data = data.toString('utf8');
+        } 
+        res.send(data);
+      } else {
+        res.status(404).send('Not found');
+      }
+    });
+  }
 }
 
 async function stop() {
@@ -258,10 +293,12 @@ async function stop() {
 
   console.log(`Closing library server...`);
 
-  Server.close(() => {
-    console.log(`Library server closed.`);
-    resolve();
-  });
+  if ( Server ) {
+    Server.close(() => {
+      console.log(`Library server closed.`);
+      resolve();
+    });
+  }
 
   return pr;
 }
@@ -282,7 +319,7 @@ function IndexView(urls, {edit:edit = false} = {}) {
     </script>
     ` : ''}
     <header>
-      <h1><a href=/>DiskerNet</a> &mdash; Search and Archive Index</h1>
+      <h1><a href=/>DownloadNet</a> &mdash; Search and Archive Index</h1>
     </header>
     <form method=GET action=/search style="margin-bottom: 1em;">
       <fieldset class=search>
@@ -372,10 +409,10 @@ function SearchResultView({results, query, HL, page, hasMore = false}) {
   return `
     <!DOCTYPE html>
     <meta charset=utf-8>
-    <title>${query} - DiskerNet search results</title>
+    <title>${query} - DownloadNet search results</title>
     <link rel=stylesheet href=/style.css>
     <header>
-      <h1><a href=/>DiskerNet</a> &mdash; Search Results</h1>
+      <h1><a href=/>DownloadNet</a> &mdash; Search Results</h1>
     </header>
     <p>
     View <a href=/archive_index.html>your index</a>, or

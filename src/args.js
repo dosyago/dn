@@ -7,7 +7,7 @@ const mode = process.argv[3] || 'save';
 const chrome_port = process.argv[4] || 9222;
 
 const Pref = {};
-export const CONFIG_DIR = path.resolve(os.homedir(), '.config', 'dosyago', 'DiskerNet');
+export const CONFIG_DIR = path.resolve(os.homedir(), '.config', 'dosyago', 'DownloadNet');
 fs.mkdirSync(CONFIG_DIR, {recursive:true});
 const pref_file = path.resolve(CONFIG_DIR, 'config.json');
 const cacheId = Math.random();
@@ -28,8 +28,6 @@ const ndx_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'ndx');
 const fuzzy_fts_index_dir = base => path.resolve(base || fts_index_dir(), 'fuzzy');
 
 const results_per_page = 10;
-
-console.log(`Args usage: <server_port> <save|serve> <chrome_port> <library_path>`);
 
 updateBasePath(process.argv[5] || Pref.BasePath || CONFIG_DIR);
 

@@ -1,40 +1,28 @@
 {
-  "name": "diskernet",
-  "version": "3.0.6",
+  "name": "downloadnet",
+  "version": "4.0.2",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
-  "main": "src/app.js",
-  "module": "dist/diskernet.mjs",
+  "main": "global-run.cjs",
+  "module": "build/esm/downloadnet.mjs",
   "bin": {
-    "diskernet": "./global-run.cjs"
+    "dn": "global-run.cjs"
   },
   "scripts": {
-    "start": "node src/app.js",
-    "setup": "bash ./scripts/build_setup.sh",
-    "build": "echo Ensure you 'npm run setup' first && bash ./scripts/compile.sh",
-    "compile": "npm run build",
-    "build-only": "bash ./scripts/build_only.sh",
-    "clean": "rm -rf build/* bin/*",
-    "super-clean": "npm run clean || : && rm -rf node_modules || : && rm package-lock.json",
-    "test": "nodemon src/app.js",
+    "start": "node --max-old-space-size=4096 src/app.js",
+    "build": "bash ./scripts/build_only.sh",
+    "clean": "rm package-lock.json; rm -rf node_modules; rm -rf build/*",
+    "test": "node --watch src/app.js",
     "inspect": "node --inspect-brk=127.0.0.1:9999 src/app.js",
-    "save": "nodemon src/app.js DiskerNet save",
-    "serve": "nodemon src/app.js DiskerNet serve",
+    "save": "node src/app.js DownloadNet save",
+    "serve": "node src/app.js DownloadNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
-    "prepublishOnly": "npm run build-only"
+    "prepublishOnly": "npm run build; rm -rf build/bin/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/DiskerNet.git"
-  },
-  "pkg": {
-    "scripts": "build/**/*.js",
-    "assets": [
-      "public/**/*",
-      "build/vendor/**/*"
-    ],
-    "outputPath": "bin"
+    "url": "git+https://github.com/dosyago/DownloadNet.git"
   },
   "keywords": [
     "archivist",
@@ -43,27 +31,29 @@
   "author": "@dosy",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/dosyago/DiskerNet/issues"
+    "url": "https://github.com/dosyago/DownloadNet/issues"
   },
-  "homepage": "https://github.com/dosyago/DiskerNet#readme",
+  "homepage": "https://github.com/dosyago/DownloadNet#readme",
   "dependencies": {
-    "@667/ps-list": "^1.1.3",
+    "@667/ps-list": "latest",
+    "@dosyago/rainsum": "latest",
     "chrome-launcher": "latest",
     "express": "latest",
-    "flexsearch": "^0.7.21",
-    "fz-search": "^1.0.0",
-    "hasha": "latest",
-    "natural": "^5.1.11",
+    "flexsearch": "latest",
+    "fz-search": "latest",
+    "inquirer": "latest",
+    "natural": "latest",
     "ndx": "^1.0.2",
     "ndx-query": "^1.0.1",
     "ndx-serializable": "^1.0.0",
     "node-fetch": "latest",
-    "ukkonen": "^1.4.0",
+    "ukkonen": "latest",
     "ws": "latest"
   },
   "devDependencies": {
-    "esbuild": "0.16.17",
-    "eslint": "^8.4.1",
-    "nodemon": "latest"
+    "@eslint/js": "latest",
+    "esbuild": "0.23.0",
+    "eslint": "latest",
+    "globals": "latest"
   }
 }

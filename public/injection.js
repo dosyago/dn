@@ -42,9 +42,10 @@ export function getInjection({sessionId}) {
           console.log("Installing in top frame...");
           self.startUrl = location.href;
           say({install: { sessionId, startUrl }});
-          await sleep(500);
+          await sleep(1000);
           beginTitleChecks();
-          beginTextNotifications();
+          // start monitoring text changes from 30 seconds after load
+          setTimeout(() => beginTextNotifications(), 30000);
           console.log("Installed.");
         }
 
