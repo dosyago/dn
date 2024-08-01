@@ -40,25 +40,6 @@ Install via **[npm](https://www.npmjs.com/package/downloadnet)**:
 $ npm i -g downloadnet@latest
 ```
 
-or...
-
-**Build your own binaries:**
-
-```sh
-$ git clone https://github.com/dosyago/DownloadNet
-$ cd DownloadNet
-$ npm i
-```
-
-Then:
-
-```
-$ ./scripts/build_setup.sh
-$ ./scripts/compile.sh
-$ cd bin/
-```
-
-## Contributions!
 
 Welcome! Get involved. :)
 
