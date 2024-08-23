@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -x
 source $HOME/.nvm/nvm.sh
 
 rm -rf build
@@ -32,6 +33,6 @@ if [[ "$OSTYPE" == darwin* ]]; then
 elif [[ "$OSTYPE" == win* ]]; then
   ./stampers/win.sh dn build/cjs/dn.cjs build/bin/
 else
-  ./stampers/nix.sh build/cjs/dn.cjs build/bin/
+  ./stampers/nix.sh dn build/cjs/dn.cjs build/bin/
 fi
 
