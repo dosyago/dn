@@ -29,17 +29,6 @@ CHROME_OPTS.push(
     `--headless`
   ] : [ ])
 );
-if ( process.env.DK_HEADLESS ) {
-  console.info(`
-    ============= INFO ==============
-
-      Your browser is running in headless mode so you need to attach a display (like BrowserBox) to it, if you want to interact with it
-      normally.
-
-
-   ==================================
- `);
-}
 const LAUNCH_OPTS = {
   logLevel: DEBUG ? 'verbose' : 'silent',
   port: chrome_port, 
@@ -58,6 +47,7 @@ let Browser;
 
 let quitting = false;
 let startingArchivist = false;
+let electOther = false;
 
 start();
 
@@ -99,7 +89,7 @@ async function start() {
       DEBUG.showList && console.log(status);
       const openBrowserCode = keyName.replace('Open', '');
       Browser = openBrowserCode;
-      console.info(`Seems ${openBrowserCode} is already open`);
+      console.info(`\n\n [ATTENTION!] Seems ${openBrowserCode} is already open.\n\n`);
       if ( DEBUG.askFirst ) {
         const question = util.promisify(rl.question).bind(rl);
         console.info(`\nDo you want to use it for your archiving? The reason we ask is, because if you don't shut down ${openBrowserCode} and restart it under DownloadNet control you will not be able to use it to save or serve your archives.\n\n`);
@@ -115,7 +105,8 @@ async function start() {
       }
     }
     if ( !shutOne ) {
-      process.exit(0);
+      electOther = true;
+      console.log(`Checking if other browsers are installed and available to use...`);
     }
   }
 
@@ -146,6 +137,19 @@ async function start() {
       console.info(`===========INFO===========\n\nLooks like this shutdown happened pretty quickly. Could be because you are running from a terminal without a display?\nIn that case you'll need to connect BrowserBox and run your DownloadNet/DiskerNet/Archivist browser with the headless flag by specifying the environment variable\n\n\t\t"export DK_HEADLESS=true"\n\nAnd also ensure you download BrowserBox and set it up correctly to attach to this headless browser.\n\n==========FIN==============\n`);
     }
     await cleanup('Browser exited', err, {exit:true});
+  });
+  b.on('spawn', () => {
+    if ( process.env.DK_HEADLESS ) {
+      console.info(`
+        ============= INFO ==============
+
+          Your browser is running in headless mode so you need to attach a display (like BrowserBox) to it, if you want to interact with it
+          normally.
+
+
+       ==================================
+     `);
+    }
   });
   
   console.log(`Browser started.`);
