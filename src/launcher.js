@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import inquirer from 'inquirer';
+import {DEBUG} from './common.js';
 
 // regular funcs and data
 const browserPaths = {
@@ -61,15 +62,15 @@ const launchBrowser = (browser, url = '', flags = []) => {
   });
 
   childProcess.stdout.on('data', (data) => {
-    console.log(`browser: ${data}`);
+    DEBUG.showBrowser && console.log(`browser: ${data}`);
   });
 
   childProcess.stderr.on('data', (data) => {
-    console.error(`browser: ${data}`);
+    DEBUG.showBrowser && console.error(`browser: ${data}`);
   });
 
   childProcess.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
+    console.log(`browser process exited with code ${code}`);
   });
 
   childProcess.unref();
@@ -101,7 +102,7 @@ const launch = async (opts = {}) => {
     fullAsk = false,
   } = opts;
 
-  console.log({opts,startingUrl});
+  DEBUG.showBrowser && console.log({opts,startingUrl});
   const installedBrowsers = getInstalledBrowsers();
   if (installedBrowsers.length === 0) {
     console.error('No supported browsers are installed.');

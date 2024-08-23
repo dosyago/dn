@@ -30,7 +30,7 @@ CHROME_OPTS.push(
   ] : [ ])
 );
 const LAUNCH_OPTS = {
-  logLevel: DEBUG ? 'verbose' : 'silent',
+  logLevel: DEBUG.verboseBrowser ? 'verbose' : 'silent',
   port: chrome_port, 
   chromeFlags:CHROME_OPTS, 
   userDataDir:false, 
@@ -127,7 +127,7 @@ async function start() {
   try {
     b = await ChromeLaunch(LAUNCH_OPTS);
   } catch(e) {
-    console.log(`Could not launch browser.`);
+    console.log(`Could not launch browser: ${e}.`);
     DEBUG.verboseSlow && console.info('Chrome launch error:', e);
     process.exit(1);
   }

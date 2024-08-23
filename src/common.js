@@ -7,6 +7,8 @@ import {APP_ROOT as __ROOT} from './root.js';
 const DEEB = false;
 
 export const DEBUG = {
+  showBrowser: false,
+  verboseBrowser: false,
   showList: false,
   showStatus: false,
   debugSec: false,
