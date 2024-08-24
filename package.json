@@ -18,7 +18,7 @@
     "serve": "node src/app.js DownloadNet serve",
     "lint": "watch -n 5 npx eslint .",
     "test-hl": "node src/highlighter.js",
-    "prepublishOnly": "npm run build; rm -rf build/bin/"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
