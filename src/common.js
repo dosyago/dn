@@ -15,6 +15,7 @@ export const DEBUG = {
   askFirst: true,
   verboseSlow: process.env.VERBOSE_DEBUG_22120 || DEEB,
   debug: process.env.DEBUG_22120 || DEEB,
+  verbose: false,
   checkPred: false
 }
 export const SHOW_FETCH = false;

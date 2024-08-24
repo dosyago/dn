@@ -286,7 +286,7 @@
     return Status.loaded;
 
     async function runHandlers(reason, err, {exit = false} = {}) {
-      console.log('before exit running', exitHandlers, {reason, err});
+      debug.verbose && console.log('before exit running', exitHandlers, {reason, err});
       while(exitHandlers.length) {
         const h = exitHandlers.shift();
         try {

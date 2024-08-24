@@ -193,8 +193,8 @@ async function cleanup(reason, err, {exit = false} = {}) {
     console.log(`Cleanup already called so not running again.`);
     return;
   }
-  console.log(`Shutting down everything because of an error!`);
-  console.log(`Cleanup called on reason: ${reason}`, err);
+  console.log(`Shutting down everything...`);
+  DEBUG.verbose && console.log(`Cleanup called on reason: ${reason}`, err);
 
   quitting = true;
 
