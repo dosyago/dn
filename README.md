@@ -3,7 +3,7 @@
 ![source lines of code](https://sloc.xyz/github/crisdosyago/Diskernet)
 ![binary downloads](https://img.shields.io/github/downloads/c9fe/22120/total?label=OS%20binary%20downloads)
 ![visitors+++](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fc9fe%2F22120&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%28today%2Ftotal%29%20visitors%2B%2B%2B%20since%20Oct%202020&edge_flat=false)
-![DownloadNet slogan](https://img.shields.io/badge/%F0%9F%92%BE%20DownloadNet-an%20internet%20on%20yer%20disc-hotpink)
+![DownloadNet slogan](https://img.shields.io/badge/%F0%9F%92%BE%20dn-an%20internet%20on%20yer%20disc-hotpink)
 
 Imagine a world where everything you browse online is saved and accessible, even when you're offline. That's the magic of DownloadNet (dn).
 
