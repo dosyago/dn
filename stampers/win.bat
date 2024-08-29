@@ -20,7 +20,6 @@ echo "SEA Config file: %SEA_CONFIG%"
 
 set /p "user_input=Press enter to continue"
 
-
 :: Ensure output folder exists
 if not exist "%OUTPUT_FOLDER%" mkdir "%OUTPUT_FOLDER%"
 
