@@ -1,6 +1,6 @@
 {
   "name": "downloadnet",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "global-run.cjs",
