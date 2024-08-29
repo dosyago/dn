@@ -11,6 +11,7 @@ if "%~3"=="" (
 set "EXE_NAME=%~1"
 set "JS_SOURCE_FILE=%~2"
 set "OUTPUT_FOLDER=%~3"
+set "SEA_CONFIG=sea-config.json"
 
 :: Ensure output folder exists
 if not exist "%OUTPUT_FOLDER%" mkdir "%OUTPUT_FOLDER%"
