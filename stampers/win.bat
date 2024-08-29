@@ -11,6 +11,15 @@ if "%~3"=="" (
 set "EXE_NAME=%~1"
 set "JS_SOURCE_FILE=%~2"
 set "OUTPUT_FOLDER=%~3"
+set "SEA_CONFIG=sea-config.json"
+
+echo "Exe name: %EXE_NAME%"
+echo "JS source: %JS_SOURCE_FILE%"
+echo "Output folder: %OUTPUT_FOLDER%"
+echo "SEA Config file: %SEA_CONFIG%"
+
+set /p "user_input=Press enter to continue"
+
 
 :: Ensure output folder exists
 if not exist "%OUTPUT_FOLDER%" mkdir "%OUTPUT_FOLDER%"

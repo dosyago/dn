@@ -1,3 +1,5 @@
+*.blob
+.\build\*
 22120-arc
 
 .*.swp

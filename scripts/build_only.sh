@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+#set -x
 source $HOME/.nvm/nvm.sh
 
 rm -rf build
@@ -33,7 +33,7 @@ if [[ "$OSTYPE" == darwin* ]]; then
   ./stampers/macos.sh dn build/cjs/dn.cjs build/bin/
 elif [[ "$(node.exe -p process.platform)" == win* ]]; then
   echo "Using windows builder..." >&2
-  ./stampers/win.bat dn build/cjs/dn.cjs build/bin/
+  ./stampers/win.bat dn-win.exe ./build/cjs/dn.cjs ./build/bin/
 else
   echo "Using linux builder..." >&2
   ./stampers/nix.sh dn build/cjs/dn.cjs build/bin/
