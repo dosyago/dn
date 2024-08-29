@@ -12,7 +12,7 @@ export const DEBUG = {
   showList: false,
   showStatus: false,
   debugSec: false,
-  askFirst: false,
+  askFirst: true,
   verboseSlow: process.env.VERBOSE_DEBUG_22120 || DEEB,
   debug: process.env.DEBUG_22120 || DEEB,
   verbose: false,
