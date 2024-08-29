@@ -1,26 +1,49 @@
 import Ws from 'ws';
-import Fetch from 'node-fetch';
-import {untilTrue, SHOW_FETCH, DEBUG, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
+import {sleep, untilTrue, SHOW_FETCH, DEBUG, ERROR_CODE_SAFE_TO_IGNORE} from './common.js';
 
 const ROOT_SESSION = "browser";
 const MESSAGES = new Map();
 
+const RANDOM_LOCAL = () => [
+  '127.0.0.1',
+  '[::1]',
+  'localhost',
+  '127.0.0.1',
+  '[::1]',
+  'localhost'
+][Math.floor(Math.random()*6)];
+
 export async function connect({port:port = 9222} = {}) {
   let webSocketDebuggerUrl, socket;
+  let url;
   try {
     await untilTrue(async () => {
       let result = false;
       try {
-        const {webSocketDebuggerUrl} = await Fetch(`http://127.0.0.1:${port}/json/version`).then(r => r.json());
+        url = `http://${RANDOM_LOCAL()}:${port}/json/version`;
+        DEBUG.verbose && console.log(`Trying browser at ${url}...`, url);
+        const {webSocketDebuggerUrl} = await Promise.race([
+          fetch(url).then(r => r.json()),
+          (async () => {
+            await sleep(2500);
+            throw new Error(`Connect took too long.`)
+          })(),
+        ]);
         if ( webSocketDebuggerUrl ) {
           result = true;
         }
+      } catch(e) {
+        DEBUG.verbose && console.error('Error while checking browser', e);
       } finally {
         return result; 
       }
     });
-    ({webSocketDebuggerUrl} = await Fetch(`http://127.0.0.1:${port}/json/version`).then(r => r.json()));
+    ({webSocketDebuggerUrl} = await fetch(url).then(r => r.json()));
+    let isOpen = false;
     socket = new Ws(webSocketDebuggerUrl);
+    socket.on('open', () => { isOpen = true });
+    await untilTrue(() => isOpen);
+    DEBUG.verbose && console.log(`Connected to browser`);
   } catch(e) {
     console.log("Error communicating with browser", e);
     process.exit(1);
@@ -31,10 +54,18 @@ export async function connect({port:port = 9222} = {}) {
   socket.on('message', handle);
   let id = 0;
 
-  let resolve;
-  const promise = new Promise(res => resolve = res);
+  let resolve, reject;
+  const promise = new Promise((res, rej) => (resolve = res, reject = rej));
 
-  socket.on('open', () => resolve());
+  switch(socket.readyState) {
+    case Ws.CONNECTING:
+      socket.on('open', () => resolve()); break;
+    case Ws.OPEN:
+      resolve(); break;
+    case Ws.CLOSED:
+    case Ws.CLOSING:
+      reject(); break;
+  }
 
   await promise;
 
