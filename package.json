@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "node --max-old-space-size=4096 src/app.js",
-    "build": "bash ./scripts/build_only.sh",
+    "build": "node exec.js \"./scripts/build_only.sh\"",
     "clean": "rm package-lock.json; rm -rf node_modules; rm -rf build/*",
     "test": "node --watch src/app.js",
     "inspect": "node --inspect-brk=127.0.0.1:9999 src/app.js",
@@ -54,6 +54,7 @@
     "@eslint/js": "latest",
     "esbuild": "0.23.0",
     "eslint": "latest",
-    "globals": "latest"
+    "globals": "latest",
+    "postject": "^1.0.0-alpha.6"
   }
 }

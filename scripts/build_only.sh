@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+#set -x
 source $HOME/.nvm/nvm.sh
 
 rm -rf build
@@ -29,10 +29,16 @@ echo "#!/usr/bin/env node" > build/global/downloadnet.cjs
 cat build/cjs/dn.cjs >> build/global/downloadnet.cjs
 chmod +x build/global/downloadnet.cjs
 if [[ "$OSTYPE" == darwin* ]]; then
+  echo "Using macOS builder..." >&2
   ./stampers/macos.sh dn build/cjs/dn.cjs build/bin/
-elif [[ "$OSTYPE" == win* ]]; then
-  ./stampers/win.sh dn build/cjs/dn.cjs build/bin/
+elif [[ "$(node.exe -p process.platform)" == win* ]]; then
+  echo "Using windows builder..." >&2
+  ./stampers/win.bat dn-win.exe ./build/cjs/dn.cjs ./build/bin/
 else
+  echo "Using linux builder..." >&2
   ./stampers/nix.sh dn build/cjs/dn.cjs build/bin/
 fi
+echo "Done"
+
+read -p "Any key to exit"
 
