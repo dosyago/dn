@@ -213,626 +213,634 @@
 
 // main
   async function collect({chrome_port:port, mode} = {}) {
-    const {library_path} = args;
-    const exitHandlers = [];
-    process.on('beforeExit', runHandlers);
-    process.on('SIGUSR2', code => runHandlers(code, 'SIGUSR2', {exit: true}));
-    process.on('exit', code => runHandlers(code, 'exit', {exit: true}));
-    State.connection = State.connection || await connect({port});
-    State.onExit = {
-      addHandler(h) {
-        exitHandlers.push(h);
-      }
-    };
-    const {send, on, close} = State.connection;
-    //const DELAY = 100; // 500 ?
-    Close = close;
+    try {
+      console.log('Starting collect');
+      const {library_path} = args;
+      const exitHandlers = [];
+      process.on('beforeExit', runHandlers);
+      process.on('SIGUSR2', code => runHandlers(code, 'SIGUSR2', {exit: true}));
+      process.on('exit', code => runHandlers(code, 'exit', {exit: true}));
+      State.connection = State.connection || await connect({port});
+      console.log('Connection established');
+      State.onExit = {
+        addHandler(h) {
+          exitHandlers.push(h);
+        }
+      };
+      const {send, on, close} = State.connection;
+      //const DELAY = 100; // 500 ?
+      Close = close;
 
-    let requestStage;
-    
-    await loadFiles();
+      let requestStage;
+      
+      console.log('Loading files...');
+      await loadFiles();
 
-    clearSavers();
-
-    Mode = mode; 
-    console.log({Mode});
-    if ( Mode == 'save' || Mode == 'select' ) {
-      requestStage = "Response";
-      // in case we get a updateBasePath call before an interval
-      // and we don't clear it in time, leading us to erroneously save the old
-      // cache to the new path, we always used our saved copy
-      State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 17000);
-      // we use timeout because we can trigger this ourself
-      // so in order to not get a race condition (overlapping calls) we ensure 
-      // only 1 call at 1 time
-      State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 11001);
-      State.ftsIndexSaver = setTimeout(() => saveFTS(State.SavedFTSIndexDirPath), 31001);
-    } else if ( Mode == 'serve' ) {
-      requestStage = "Request";
       clearSavers();
-    } else {
-      throw new TypeError(`Must specify mode, and must be one of: save, serve, select`);
-    }
 
-    on("Target.targetInfoChanged", attachToTarget);
-    on("Target.targetInfoChanged", updateTargetInfo);
-    on("Target.targetInfoChanged", indexURL);
-    on("Target.attachedToTarget", installForSession);
-    on("Page.loadEventFired", reloadIfNotLive);
-    on("Fetch.requestPaused", cacheRequest);
-    on("Runtime.consoleAPICalled", handleMessage);
-
-    await send("Target.setDiscoverTargets", {discover:true});
-    await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
-    await send("Security.setIgnoreCertificateErrors", {ignore:true});
-    await send("Fetch.enable", {
-      patterns: [
-        {
-          urlPattern: "http*://*", 
-          requestStage
-        }
-      ], 
-    });
-
-    const {targetInfos:targets} = await send("Target.getTargets", {});
-    const pageTargets = targets.filter(({type}) => type == 'page').map(targetInfo => ({targetInfo}));
-    await Promise.all(pageTargets.map(attachToTarget));
-    sleep(5000).then(() => Promise.all(pageTargets.map(reloadIfNotLive)));
-
-    State.bookmarkObserver = State.bookmarkObserver || startObservingBookmarkChanges();
-
-    Status.loaded = true;
-
-    return Status.loaded;
-
-    async function runHandlers(reason, err, {exit = false} = {}) {
-      debug.verbose && console.log('before exit running', exitHandlers, {reason, err});
-      while(exitHandlers.length) {
-        const h = exitHandlers.shift();
-        try {
-          h();
-        } catch(e) {
-          console.warn(`Error in exit handler`, h, e);
-        }
-      }
-      if ( exit ) {
-        console.log(`Exiting in 3 seconds...`);
-        await sleep(3000);
-        process.exit(0);
-      }
-    }
-
-    function handleMessage(args) {
-      const {type, args:[{value:strVal}]} = args;
-      if ( type == 'info' ) {
-        try {
-          const val = JSON.parse(strVal);
-          // possible messages
-          const {install, titleChange, textChange} = val;
-          switch(true) {
-            case !!install: {
-                confirmInstall({install});
-              } break;
-            case !!titleChange: {
-                reindexOnContentChange({titleChange});
-              } break;
-            case !!textChange: {
-                reindexOnContentChange({textChange});
-              } break;
-            default: {
-                if ( DEBUG ) {
-                  console.warn(`Unknown message`, strVal);
-                }
-              } break;
-          }
-        } catch(e) {
-          DEBUG.verboseSlow && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
-        } 
-      }
-    }
-
-    function confirmInstall({install}) {
-      const {sessionId} = install;
-      if ( ! State.ConfirmedInstalls.has(sessionId) ) {
-        State.ConfirmedInstalls.add(sessionId);
-        DEBUG.verboseSlow && console.log({confirmedInstall:install});
-      }
-    }
-
-    async function reindexOnContentChange({titleChange, textChange}) {
-      const data = titleChange || textChange;
-      if ( data ) {
-        const {sessionId} = data;
-        const latestTargetInfo = clone(await untilHas(Targets, sessionId));
-        if ( titleChange ) {
-          const {currentTitle} = titleChange;
-          DEBUG.verboseSlow && console.log('Received titleChange', titleChange);
-          latestTargetInfo.title = currentTitle;
-          Targets.set(sessionId, latestTargetInfo);
-          DEBUG.verboseSlow && console.log('Updated stored target info', latestTargetInfo);
-        } else {
-          DEBUG.verboseSlow && console.log('Received textChange', textChange);
-        }
-        if ( ! dontCache(latestTargetInfo) ) {
-          DEBUG.verboseSlow && console.log(
-            `Will reindex because we were told ${titleChange ? 'title' : 'text'} content maybe changed.`, 
-            data
-          );
-          indexURL({targetInfo:latestTargetInfo});
-        }
-      }
-    }
-
-    function updateTargetInfo({targetInfo}) {
-      if ( targetInfo.type === 'page' ) {
-        const sessionId = State.Sessions.get(targetInfo.targetId); 
-        DEBUG.verboseSlow && console.log('Updating target info', targetInfo, sessionId);
-        if ( sessionId ) {
-          const existingTargetInfo = Targets.get(sessionId);
-          // if we have an existing target info for this URL and have saved an updated title
-          DEBUG.verboseSlow && console.log('Existing target info', existingTargetInfo);
-          if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
-            // keep that title (because targetInfo does not reflect the latest title)
-            if ( existingTargetInfo.title !== existingTargetInfo.url ) {
-              DEBUG.verboseSlow && console.log('Setting title to existing', existingTargetInfo);
-              targetInfo.title = existingTargetInfo.title;
-            }
-          }
-          Targets.set(sessionId, clone(targetInfo));
-        }
-      }
-    }
-
-    async function reloadIfNotLive({targetInfo, sessionId} = {}) {
-      if ( Mode == 'serve' ) return; 
-      if ( !targetInfo && !!sessionId ) {
-        targetInfo = Targets.get(sessionId);
-        console.log(targetInfo);
-      }
-      if ( neverCache(targetInfo?.url) ) return;
-      const {attached, type} = targetInfo;
-      if ( attached && type == 'page' ) {
-        const {url, targetId} = targetInfo;
-        const sessionId = State.Sessions.get(targetId);
-        if ( !!sessionId && !State.ConfirmedInstalls.has(sessionId) ) {
-          DEBUG.verboseSlow && console.log({
-            reloadingAsNotConfirmedInstalled:{
-              url, 
-              sessionId
-            },
-            confirmedInstalls: State.ConfirmedInstalls
-          });
-          await sleep(600);
-          send("Page.stopLoading", {}, sessionId);
-          send("Page.reload", {}, sessionId);
-        }
-      }
-    }
-
-    function neverCache(url) {
-      if ( ! url ) return true;
-      try {
-        url = new URL(url);
-        return url?.href == "about:blank" || url?.href?.startsWith('chrome') || NEVER_CACHE.has(url.origin);
-      } catch(e) {
-        DEBUG.debug && console.warn('Could not form url', url, e);
-        return true;
-      } 
-    }
-
-    async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
-      if ( waitingForDebugger ) {
-        console.warn(targetInfo);
-        throw new TypeError(`Target not ready for install`);
-      }
-      if ( ! sessionId ) {
-        throw new TypeError(`installForSession needs a sessionId`);
-      }
-
-      const {targetId, url} = targetInfo;
-
-      const installUneeded = dontInstall(targetInfo) ||
-        State.Installations.has(sessionId)
-      ;
-
-      if ( installUneeded ) return;
-
-      DEBUG.verboseSlow && console.log("installForSession running on target " + targetId);
-
-      State.Sessions.set(targetId, sessionId);
-      Targets.set(sessionId, clone(targetInfo));
-
+      Mode = mode; 
+      console.log({Mode});
       if ( Mode == 'save' || Mode == 'select' ) {
-        send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
-        send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
-
-        await send("Runtime.enable", {}, sessionId);
-        await send("Page.enable", {}, sessionId);
-        await send("Page.setAdBlockingEnabled", {enabled: true}, sessionId);
-        await send("DOMSnapshot.enable", {}, sessionId);
-
-        on("Page.frameNavigated", updateFrameNode);
-        on("Page.frameAttached", addFrameNode);
-        // on("Page.frameDetached", updateFrameNodes); // necessary? maybe not 
-
-        await send("Page.addScriptToEvaluateOnNewDocument", {
-          source: getInjection({sessionId}),
-          worldName: "Context-22120-Indexing",
-          runImmediately: true
-        }, sessionId);
-
-        DEBUG.verboseSlow && console.log("Just request install", targetId, url);
-      }
-
-      State.Installations.add(sessionId);
-
-      DEBUG.verboseSlow && console.log('Installed sessionId', sessionId);
-      if ( Mode == 'save' ) {
-        indexURL({targetInfo});
-      }
-    }
-
-    async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
-      if ( waitingForDebugger ) {
-        console.warn(info);
-        throw new TypeError(`Target not ready for install`);
-      }
-      if ( Mode == 'serve' ) return;
-      if ( info.type != 'page' ) return;
-      if ( ! info.url  || info.url == 'about:blank' ) return;
-      if ( info.url.startsWith('chrome') ) return;
-      if ( dontCache(info) ) return;
-
-      DEBUG.verboseSlow && console.log('Index URL', info);
-
-      DEBUG.verboseSlow && console.log('Index URL called', info);
-
-      if ( State.Indexing.has(info.targetId) ) return;
-      State.Indexing.add(info.targetId);
-
-      if ( ! sessionId ) {
-        sessionId = await untilHas(
-          State.Sessions, info.targetId, 
-          {timeout: State.crawling && State.crawlTimeout}
-        );
-      }
-
-      if ( !State.Installations.has(sessionId) ) {
-        await untilHas(
-          State.Installations, sessionId, 
-          {timeout: State.crawling && State.crawlTimeout}
-        );
-      }
-
-      send("DOMSnapshot.enable", {}, sessionId);
-
-      await sleep(500);
-
-      const flatDoc = await send("DOMSnapshot.captureSnapshot", {
-        computedStyles: [],
-      }, sessionId);
-      const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
-
-      if ( State.crawling ) {
-        const has = await untilTrue(() => State.CrawlData.has(info.targetId));
-
-        const {url} = Targets.get(sessionId);
-        if ( ! dontCache({url}) ) {
-          if ( has ) {
-            const {depth,links} = State.CrawlData.get(info.targetId);
-            DEBUG.verboseSlow && console.log(info, {depth,links});
-
-            const {result:{value:{title,links:crawlLinks}}} = await send("Runtime.evaluate", {
-              expression: `(function () { 
-                return {
-                  links: Array.from(
-                    document.querySelectorAll('a[href].titlelink')
-                  ).map(a => a.href),
-                  title: document.title
-                };
-              }())`,
-              returnByValue: true
-            }, sessionId);
-
-            if ( (depth + 1) <= State.crawlDepth ) {
-              links.length = 0;
-              links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
-            }
-            if ( logStream ) {
-              console.log(`Writing ${links.length} entries to ${logName}`);
-              logStream.cork();
-              links.forEach(url => {
-                logStream.write(`${url}\n`);
-              });
-              logStream.uncork();
-            }
-            console.log(`Just crawled: ${title} (${info.url})`);
-          }
-
-          if ( ! State.titles ) {
-            State.titles = new Map();
-            State.onExit.addHandler(() => {
-              Fs.writeFileSync(
-                Path.resolve(args.CONFIG_DIR, `titles-${(new Date).toISOString()}.txt`), 
-                JSON.stringify([...State.titles.entries()], null, 2) + '\n'
-              );
-            });
-          }
-
-          const {result:{value:data}} = await send("Runtime.evaluate", 
-            {
-              expression: `(function () {
-                return {
-                  url: document.location.href,
-                  title: document.title,
-                };
-              }())`,
-              returnByValue: true
-            }, 
-            sessionId
-          );
-
-          State.titles.set(data.url, data.title);
-          console.log(`Saved ${State.titles.size} titles`);
-
-          if ( State.program && ! dontCache(info) ) {
-            const targetInfo = info;
-            const fs = Fs;
-            const path = Path;
-            try {
-              await sleep(500);
-              await eval(`(async () => {
-                try {
-                  ${State.program}
-                } catch(e) {
-                  console.warn('Error in program', e, State.program);
-                }
-              })();`);
-              await sleep(500);
-            } catch(e) {
-              console.warn(`Error evaluate program`, e);
-            }
-          }
-        }
-      }
-
-      const {title, url} = Targets.get(sessionId);
-      let id, ndx_id;
-      if ( State.Index.has(url) ) {
-        ({ndx_id, id} = State.Index.get(url));
+        requestStage = "Response";
+        // in case we get a updateBasePath call before an interval
+        // and we don't clear it in time, leading us to erroneously save the old
+        // cache to the new path, we always used our saved copy
+        State.saver = setInterval(() => saveCache(State.SavedCacheFilePath), 17000);
+        // we use timeout because we can trigger this ourself
+        // so in order to not get a race condition (overlapping calls) we ensure 
+        // only 1 call at 1 time
+        State.indexSaver = setTimeout(() => saveIndex(State.SavedIndexFilePath), 11001);
+        State.ftsIndexSaver = setTimeout(() => saveFTS(State.SavedFTSIndexDirPath), 31001);
+      } else if ( Mode == 'serve' ) {
+        requestStage = "Request";
+        clearSavers();
       } else {
-        Id++;
-        id = Id;
+        throw new TypeError(`Must specify mode, and must be one of: save, serve, select`);
       }
-      const doc = toNDXDoc({id, url, title, pageText});
-      State.Index.set(url, {date:Date.now(),id:doc.id, ndx_id:doc.ndx_id, title});   
-      State.Index.set(doc.id, url);
-      State.Index.set('ndx'+doc.ndx_id, url);
 
-      const contentSignature = getContentSig(doc);
+      on("Target.targetInfoChanged", attachToTarget);
+      on("Target.targetInfoChanged", updateTargetInfo);
+      on("Target.targetInfoChanged", indexURL);
+      on("Target.attachedToTarget", installForSession);
+      on("Page.loadEventFired", reloadIfNotLive);
+      on("Fetch.requestPaused", cacheRequest);
+      on("Runtime.consoleAPICalled", handleMessage);
 
-      //Flex code
-      Flex.update(doc.id, contentSignature);
+      await send("Target.setDiscoverTargets", {discover:true});
+      await send("Target.setAutoAttach", {autoAttach:true, waitForDebuggerOnStart:false, flatten: true});
+      await send("Security.setIgnoreCertificateErrors", {ignore:true});
+      await send("Fetch.enable", {
+        patterns: [
+          {
+            urlPattern: "http*://*", 
+            requestStage
+          }
+        ], 
+      });
 
-      //New NDX code
-      NDX_FTSIndex.update(doc, ndx_id);
+      const {targetInfos:targets} = await send("Target.getTargets", {});
+      DEBUG.debug && console.log({targets});
+      const pageTargets = targets.filter(({type}) => type == 'page').map(targetInfo => ({targetInfo}));
+      await Promise.all(pageTargets.map(attachToTarget));
+      sleep(5000).then(() => Promise.all(pageTargets.map(reloadIfNotLive)));
 
-      // Fuzzy 
-      // eventually we can use this update logic for everyone
-      let updateFuzz = true;
-      if ( State.Docs.has(url) ) {
-        const current = State.Docs.get(url);
-        if ( current.contentSignature === contentSignature ) {
-          updateFuzz = false;
+      State.bookmarkObserver = State.bookmarkObserver || startObservingBookmarkChanges();
+
+      Status.loaded = true;
+
+      return Status.loaded;
+
+      async function runHandlers(reason, err, {exit = false} = {}) {
+        debug.verbose && console.log('before exit running', exitHandlers, {reason, err});
+        while(exitHandlers.length) {
+          const h = exitHandlers.shift();
+          try {
+            h();
+          } catch(e) {
+            console.warn(`Error in exit handler`, h, e);
+          }
+        }
+        if ( exit ) {
+          console.log(`Exiting in 3 seconds...`);
+          await sleep(3000);
+          process.exit(0);
         }
       }
-      if ( updateFuzz ) {
-        doc.contentSignature = contentSignature;
-        fuzzy.add(doc);
-        State.Docs.set(url, doc);
-        DEBUG.verboseSlow && console.log({updateFuzz: {doc,url}});
-      }
 
-      DEBUG.verboseSlow && console.log("NDX updated", doc.ndx_id);
-
-      UpdatedKeys.add(url);
-
-      DEBUG.verboseSlow && console.log({id: doc.id, title, url, indexed: true});
-
-      State.Indexing.delete(info.targetId);
-      State.CrawlIndexing.delete(info.targetId);
-    }
-
-    async function attachToTarget({targetInfo}, retryCount = 0) {
-      if ( dontInstall(targetInfo) ) return;
-      const {url} = targetInfo;
-      if ( url && targetInfo.type == 'page' ) {
-        try {
-          if ( ! targetInfo.attached ) {
-            const {sessionId} = (await send("Target.attachToTarget", {
-              targetId: targetInfo.targetId,
-              flatten: true
-            }));
-            State.Sessions.set(targetInfo.targetId, sessionId);
-          }
-        } catch(e) {
-          DEBUG.verboseSlow && console.error(`Attach to target failed`, targetInfo);
-          if ( retryCount < 3 ) {
-            const ms = 1500;
-            DEBUG.verboseSlow && console.log(`Retrying attach in ${ms/1000} seconds...`);
-            setTimeout(() => attachToTarget({targetInfo}, (retryCount || 1) + 1), ms);
+      function handleMessage(args) {
+        const {type, args:[{value:strVal}]} = args;
+        if ( type == 'info' ) {
+          try {
+            const val = JSON.parse(strVal);
+            // possible messages
+            const {install, titleChange, textChange} = val;
+            switch(true) {
+              case !!install: {
+                  confirmInstall({install});
+                } break;
+              case !!titleChange: {
+                  reindexOnContentChange({titleChange});
+                } break;
+              case !!textChange: {
+                  reindexOnContentChange({textChange});
+                } break;
+              default: {
+                  if ( DEBUG ) {
+                    console.warn(`Unknown message`, strVal);
+                  }
+                } break;
+            }
+          } catch(e) {
+            DEBUG.verboseSlow && console.info('Not the message we expected to confirm install. This is OK.', {originalMessage:args});
           } 
         }
       }
-    }
 
-    async function cacheRequest(pausedRequest) {
-      const {
-        requestId, request, resourceType, 
-        frameId,
-        responseStatusCode, responseHeaders, responseErrorReason
-      } = pausedRequest;
-      const isNavigationRequest = resourceType == "Document";
-      const isFont = resourceType == "Font";
-
-      if ( dontCache(request) ) {
-        DEBUG.verboseSlow && console.log("Not caching", request.url);
-        send(`Fetch.continue${requestStage}`, {requestId});
-        return;
-      }
-      const key = serializeRequestKey(request);
-      if ( Mode == 'serve' ) {
-        if ( State.Cache.has(key) ) {
-          let {body, responseCode, responseHeaders} = await getResponseData(State.Cache.get(key));
-          responseCode = responseCode || 200;
-          //DEBUG.verboseSlow && console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
-          DEBUG.verboseSlow && console.log("Fulfilling", key, responseCode, body.slice(0,140));
-          await send("Fetch.fulfillRequest", {
-            requestId, body, responseCode, responseHeaders
-          });
-        } else {
-          DEBUG.verboseSlow && console.log("Sending cache stub", key);
-          await send("Fetch.fulfillRequest", {
-            requestId, ...UNCACHED
-          });
-        } 
-      } else {
-        let saveIt = false;
-        if ( Mode == 'select' ) {
-          const rootFrameURL = getRootFrameURL(frameId);
-          const frameDescendsFromBookmarkedURLFrame = hasBookmark(rootFrameURL);
-          saveIt = frameDescendsFromBookmarkedURLFrame;
-          DEBUG.verboseSlow && console.log({rootFrameURL, frameId, mode, saveIt});
-        } else if ( Mode == 'save' ) {
-          saveIt = true;
+      function confirmInstall({install}) {
+        const {sessionId} = install;
+        if ( ! State.ConfirmedInstalls.has(sessionId) ) {
+          State.ConfirmedInstalls.add(sessionId);
+          DEBUG.verboseSlow && console.log({confirmedInstall:install});
         }
-        if ( saveIt ) {
-          const response = {key, responseCode: responseStatusCode, responseHeaders};
-          const resp = await getBody({requestId, responseStatusCode});
-          if ( resp ) {
-            let {body, base64Encoded} = resp;
-            if ( ! base64Encoded ) {
-              body = b64(body);
-            }
-            response.body = body;
-            const responsePath = await saveResponseData(key, request.url, response);
-            State.Cache.set(key, responsePath);
+      }
+
+      async function reindexOnContentChange({titleChange, textChange}) {
+        const data = titleChange || textChange;
+        if ( data ) {
+          const {sessionId} = data;
+          const latestTargetInfo = clone(await untilHas(Targets, sessionId));
+          if ( titleChange ) {
+            const {currentTitle} = titleChange;
+            DEBUG.verboseSlow && console.log('Received titleChange', titleChange);
+            latestTargetInfo.title = currentTitle;
+            Targets.set(sessionId, latestTargetInfo);
+            DEBUG.verboseSlow && console.log('Updated stored target info', latestTargetInfo);
           } else {
-            DEBUG.verboseSlow && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
-            response.body = '';
+            DEBUG.verboseSlow && console.log('Received textChange', textChange);
           }
-          //await sleep(DELAY);
-          if ( !isFont && responseErrorReason ) {
-            if ( isNavigationRequest ) {
-              await send("Fetch.fulfillRequest", {
-                  requestId,
-                  responseHeaders: BLOCKED_HEADERS,
-                  responseCode: BLOCKED_CODE,
-                  body: Buffer.from(responseErrorReason).toString("base64"),
-                },
-              );
-            } else {
-              await send("Fetch.failRequest", {
-                  requestId,
-                  errorReason: responseErrorReason
-                },
-              );
+          if ( ! dontCache(latestTargetInfo) ) {
+            DEBUG.verboseSlow && console.log(
+              `Will reindex because we were told ${titleChange ? 'title' : 'text'} content maybe changed.`, 
+              data
+            );
+            indexURL({targetInfo:latestTargetInfo});
+          }
+        }
+      }
+
+      function updateTargetInfo({targetInfo}) {
+        if ( targetInfo.type === 'page' ) {
+          const sessionId = State.Sessions.get(targetInfo.targetId); 
+          DEBUG.verboseSlow && console.log('Updating target info', targetInfo, sessionId);
+          if ( sessionId ) {
+            const existingTargetInfo = Targets.get(sessionId);
+            // if we have an existing target info for this URL and have saved an updated title
+            DEBUG.verboseSlow && console.log('Existing target info', existingTargetInfo);
+            if ( existingTargetInfo && existingTargetInfo.url === targetInfo.url ) {
+              // keep that title (because targetInfo does not reflect the latest title)
+              if ( existingTargetInfo.title !== existingTargetInfo.url ) {
+                DEBUG.verboseSlow && console.log('Setting title to existing', existingTargetInfo);
+                targetInfo.title = existingTargetInfo.title;
+              }
             }
-            return;
+            Targets.set(sessionId, clone(targetInfo));
           }
-        } 
-        send(`Fetch.continue${requestStage}`, {requestId}).catch(
-          e => console.warn("Issue with continuing request", {e, requestStage, requestId})
-        );
+        }
       }
-    }
 
-    async function getBody({requestId, responseStatusCode}) {
-      let resp;
-      if ( ! BODYLESS.has(responseStatusCode) ) {
-        resp = await send("Fetch.getResponseBody", {requestId});
-      } else {
-        resp = {body:'', base64Encoded:true};
+      async function reloadIfNotLive({targetInfo, sessionId} = {}) {
+        if ( Mode == 'serve' ) return; 
+        if ( !targetInfo && !!sessionId ) {
+          targetInfo = Targets.get(sessionId);
+          console.log(targetInfo);
+        }
+        if ( neverCache(targetInfo?.url) ) return;
+        const {attached, type} = targetInfo;
+        if ( attached && type == 'page' ) {
+          const {url, targetId} = targetInfo;
+          const sessionId = State.Sessions.get(targetId);
+          if ( !!sessionId && !State.ConfirmedInstalls.has(sessionId) ) {
+            DEBUG.verboseSlow && console.log({
+              reloadingAsNotConfirmedInstalled:{
+                url, 
+                sessionId
+              },
+              confirmedInstalls: State.ConfirmedInstalls
+            });
+            await sleep(600);
+            send("Page.stopLoading", {}, sessionId);
+            send("Page.reload", {}, sessionId);
+          }
+        }
       }
-      return resp;
-    }
-    
-    function dontInstall(targetInfo) {
-      return targetInfo.type !== 'page';
-    }
 
-    async function getResponseData(path) {
-      try {
-        return JSON.parse(await Fs.promises.readFile(path));
-      } catch(e) {
-        console.warn(`Error with ${path}`, e);
-        return UNCACHED;
-      }
-    }
-
-    async function saveResponseData(key, url, response) {
-      const origin = (new URL(url).origin);
-      let originDir = State.Cache.get(origin);
-      if ( ! originDir ) {
-        originDir = Path.resolve(library_path(), origin.replace(TBL, '_'));
+      function neverCache(url) {
+        if ( ! url ) return true;
         try {
-          await Fs.promises.mkdir(originDir, {recursive:true});
+          url = new URL(url);
+          return url?.href == "about:blank" || url?.href?.startsWith('chrome') || NEVER_CACHE.has(url.origin);
         } catch(e) {
-          console.warn(`Issue with origin directory ${Path.dirname(responsePath)}`, e);
+          DEBUG.debug && console.warn('Could not form url', url, e);
+          return true;
+        } 
+      }
+
+      async function installForSession({sessionId, targetInfo, waitingForDebugger}) {
+        if ( waitingForDebugger ) {
+          console.warn(targetInfo);
+          throw new TypeError(`Target not ready for install`);
         }
-        State.Cache.set(origin, originDir);
+        if ( ! sessionId ) {
+          throw new TypeError(`installForSession needs a sessionId`);
+        }
+
+        const {targetId, url} = targetInfo;
+
+        const installUneeded = dontInstall(targetInfo) ||
+          State.Installations.has(sessionId)
+        ;
+
+        if ( installUneeded ) return;
+
+        DEBUG.verboseSlow && console.log("installForSession running on target " + targetId);
+
+        State.Sessions.set(targetId, sessionId);
+        Targets.set(sessionId, clone(targetInfo));
+
+        if ( Mode == 'save' || Mode == 'select' ) {
+          send("Network.setCacheDisabled", {cacheDisabled:true}, sessionId);
+          send("Network.setBypassServiceWorker", {bypass:true}, sessionId);
+
+          await send("Runtime.enable", {}, sessionId);
+          await send("Page.enable", {}, sessionId);
+          await send("Page.setAdBlockingEnabled", {enabled: true}, sessionId);
+          await send("DOMSnapshot.enable", {}, sessionId);
+
+          on("Page.frameNavigated", updateFrameNode);
+          on("Page.frameAttached", addFrameNode);
+          // on("Page.frameDetached", updateFrameNodes); // necessary? maybe not 
+
+          await send("Page.addScriptToEvaluateOnNewDocument", {
+            source: getInjection({sessionId}),
+            worldName: "Context-22120-Indexing",
+            runImmediately: true
+          }, sessionId);
+
+          DEBUG.verboseSlow && console.log("Just request install", targetId, url);
+        }
+
+        State.Installations.add(sessionId);
+
+        DEBUG.verboseSlow && console.log('Installed sessionId', sessionId);
+        if ( Mode == 'save' ) {
+          indexURL({targetInfo});
+        }
       }
 
-      const fileName = `${await sha1(key)}.json`;
+      async function indexURL({targetInfo:info = {}, sessionId, waitingForDebugger} = {}) {
+        if ( waitingForDebugger ) {
+          console.warn(info);
+          throw new TypeError(`Target not ready for install`);
+        }
+        if ( Mode == 'serve' ) return;
+        if ( info.type != 'page' ) return;
+        if ( ! info.url  || info.url == 'about:blank' ) return;
+        if ( info.url.startsWith('chrome') ) return;
+        if ( dontCache(info) ) return;
 
-      const responsePath = Path.resolve(originDir, fileName);
-      await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
+        DEBUG.verboseSlow && console.log('Index URL', info);
 
-      return responsePath;
-    }
+        DEBUG.verboseSlow && console.log('Index URL called', info);
 
-    async function sha1(key) {
-      return crypto.createHash('sha1').update(key).digest('hex');
-    }
-    
-    async function rainbow(key) {
-      return rainbowHash(128, 0, new Uint8Array(Buffer.from(key)));
-    }
+        if ( State.Indexing.has(info.targetId) ) return;
+        State.Indexing.add(info.targetId);
 
-    function serializeRequestKey(request) {
-      const {url, /*urlFragment,*/ method, /*headers, postData, hasPostData*/} = request;
+        if ( ! sessionId ) {
+          sessionId = await untilHas(
+            State.Sessions, info.targetId, 
+            {timeout: State.crawling && State.crawlTimeout}
+          );
+        }
 
-      /**
-      let sortedHeaders = '';
-      for( const key of Object.keys(headers).sort() ) {
-        sortedHeaders += `${key}:${headers[key]}/`;
+        if ( !State.Installations.has(sessionId) ) {
+          await untilHas(
+            State.Installations, sessionId, 
+            {timeout: State.crawling && State.crawlTimeout}
+          );
+        }
+
+        send("DOMSnapshot.enable", {}, sessionId);
+
+        await sleep(500);
+
+        const flatDoc = await send("DOMSnapshot.captureSnapshot", {
+          computedStyles: [],
+        }, sessionId);
+        const pageText = processDoc(flatDoc).replace(STRIP_CHARS, ' ');
+
+        if ( State.crawling ) {
+          const has = await untilTrue(() => State.CrawlData.has(info.targetId));
+
+          const {url} = Targets.get(sessionId);
+          if ( ! dontCache({url}) ) {
+            if ( has ) {
+              const {depth,links} = State.CrawlData.get(info.targetId);
+              DEBUG.verboseSlow && console.log(info, {depth,links});
+
+              const {result:{value:{title,links:crawlLinks}}} = await send("Runtime.evaluate", {
+                expression: `(function () { 
+                  return {
+                    links: Array.from(
+                      document.querySelectorAll('a[href].titlelink')
+                    ).map(a => a.href),
+                    title: document.title
+                  };
+                }())`,
+                returnByValue: true
+              }, sessionId);
+
+              if ( (depth + 1) <= State.crawlDepth ) {
+                links.length = 0;
+                links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+              }
+              if ( logStream ) {
+                console.log(`Writing ${links.length} entries to ${logName}`);
+                logStream.cork();
+                links.forEach(url => {
+                  logStream.write(`${url}\n`);
+                });
+                logStream.uncork();
+              }
+              console.log(`Just crawled: ${title} (${info.url})`);
+            }
+
+            if ( ! State.titles ) {
+              State.titles = new Map();
+              State.onExit.addHandler(() => {
+                Fs.writeFileSync(
+                  Path.resolve(args.CONFIG_DIR, `titles-${(new Date).toISOString()}.txt`), 
+                  JSON.stringify([...State.titles.entries()], null, 2) + '\n'
+                );
+              });
+            }
+
+            const {result:{value:data}} = await send("Runtime.evaluate", 
+              {
+                expression: `(function () {
+                  return {
+                    url: document.location.href,
+                    title: document.title,
+                  };
+                }())`,
+                returnByValue: true
+              }, 
+              sessionId
+            );
+
+            State.titles.set(data.url, data.title);
+            console.log(`Saved ${State.titles.size} titles`);
+
+            if ( State.program && ! dontCache(info) ) {
+              const targetInfo = info;
+              const fs = Fs;
+              const path = Path;
+              try {
+                await sleep(500);
+                await eval(`(async () => {
+                  try {
+                    ${State.program}
+                  } catch(e) {
+                    console.warn('Error in program', e, State.program);
+                  }
+                })();`);
+                await sleep(500);
+              } catch(e) {
+                console.warn(`Error evaluate program`, e);
+              }
+            }
+          }
+        }
+
+        const {title, url} = Targets.get(sessionId);
+        let id, ndx_id;
+        if ( State.Index.has(url) ) {
+          ({ndx_id, id} = State.Index.get(url));
+        } else {
+          Id++;
+          id = Id;
+        }
+        const doc = toNDXDoc({id, url, title, pageText});
+        State.Index.set(url, {date:Date.now(),id:doc.id, ndx_id:doc.ndx_id, title});   
+        State.Index.set(doc.id, url);
+        State.Index.set('ndx'+doc.ndx_id, url);
+
+        const contentSignature = getContentSig(doc);
+
+        //Flex code
+        Flex.update(doc.id, contentSignature);
+
+        //New NDX code
+        NDX_FTSIndex.update(doc, ndx_id);
+
+        // Fuzzy 
+        // eventually we can use this update logic for everyone
+        let updateFuzz = true;
+        if ( State.Docs.has(url) ) {
+          const current = State.Docs.get(url);
+          if ( current.contentSignature === contentSignature ) {
+            updateFuzz = false;
+          }
+        }
+        if ( updateFuzz ) {
+          doc.contentSignature = contentSignature;
+          fuzzy.add(doc);
+          State.Docs.set(url, doc);
+          DEBUG.verboseSlow && console.log({updateFuzz: {doc,url}});
+        }
+
+        DEBUG.verboseSlow && console.log("NDX updated", doc.ndx_id);
+
+        UpdatedKeys.add(url);
+
+        DEBUG.verboseSlow && console.log({id: doc.id, title, url, indexed: true});
+
+        State.Indexing.delete(info.targetId);
+        State.CrawlIndexing.delete(info.targetId);
       }
-      **/
 
-      return `${method}${url}`;
-      //return `${url}${urlFragment}:${method}:${sortedHeaders}:${postData}:${hasPostData}`;
-    }
-
-    async function startObservingBookmarkChanges() {
-      console.info("Not observing");
-      return;
-      for await ( const change of bookmarkChanges() ) {
-        if ( Mode == 'select' ) {
-          switch(change.type) {
-            case 'new': {
-                DEBUG.verboseSlow && console.log(change);
-                archiveAndIndexURL(change.url);
-              } break;
-            case 'delete': {
-                DEBUG.verboseSlow && console.log(change);
-                deleteFromIndexAndSearch(change.url);
-              } break;
-            default: {
-              console.log(`We don't do anything about this bookmark change, currently`, change);
-            } break;
+      async function attachToTarget({targetInfo}, retryCount = 0) {
+        if ( dontInstall(targetInfo) ) return;
+        const {url} = targetInfo;
+        if ( url && targetInfo.type == 'page' ) {
+          try {
+            if ( ! targetInfo.attached ) {
+              const {sessionId} = (await send("Target.attachToTarget", {
+                targetId: targetInfo.targetId,
+                flatten: true
+              }));
+              State.Sessions.set(targetInfo.targetId, sessionId);
+            }
+          } catch(e) {
+            DEBUG.verboseSlow && console.error(`Attach to target failed`, targetInfo);
+            if ( retryCount < 3 ) {
+              const ms = 1500;
+              DEBUG.verboseSlow && console.log(`Retrying attach in ${ms/1000} seconds...`);
+              setTimeout(() => attachToTarget({targetInfo}, (retryCount || 1) + 1), ms);
+            } 
           }
         }
       }
+
+      async function cacheRequest(pausedRequest) {
+        const {
+          requestId, request, resourceType, 
+          frameId,
+          responseStatusCode, responseHeaders, responseErrorReason
+        } = pausedRequest;
+        const isNavigationRequest = resourceType == "Document";
+        const isFont = resourceType == "Font";
+
+        if ( dontCache(request) ) {
+          DEBUG.verboseSlow && console.log("Not caching", request.url);
+          send(`Fetch.continue${requestStage}`, {requestId});
+          return;
+        }
+        const key = serializeRequestKey(request);
+        if ( Mode == 'serve' ) {
+          if ( State.Cache.has(key) ) {
+            let {body, responseCode, responseHeaders} = await getResponseData(State.Cache.get(key));
+            responseCode = responseCode || 200;
+            //DEBUG.verboseSlow && console.log("Fulfilling", key, responseCode, responseHeaders, body.slice(0,140));
+            DEBUG.verboseSlow && console.log("Fulfilling", key, responseCode, body.slice(0,140));
+            await send("Fetch.fulfillRequest", {
+              requestId, body, responseCode, responseHeaders
+            });
+          } else {
+            DEBUG.verboseSlow && console.log("Sending cache stub", key);
+            await send("Fetch.fulfillRequest", {
+              requestId, ...UNCACHED
+            });
+          } 
+        } else {
+          let saveIt = false;
+          if ( Mode == 'select' ) {
+            const rootFrameURL = getRootFrameURL(frameId);
+            const frameDescendsFromBookmarkedURLFrame = hasBookmark(rootFrameURL);
+            saveIt = frameDescendsFromBookmarkedURLFrame;
+            DEBUG.verboseSlow && console.log({rootFrameURL, frameId, mode, saveIt});
+          } else if ( Mode == 'save' ) {
+            saveIt = true;
+          }
+          if ( saveIt ) {
+            const response = {key, responseCode: responseStatusCode, responseHeaders};
+            const resp = await getBody({requestId, responseStatusCode});
+            if ( resp ) {
+              let {body, base64Encoded} = resp;
+              if ( ! base64Encoded ) {
+                body = b64(body);
+              }
+              response.body = body;
+              const responsePath = await saveResponseData(key, request.url, response);
+              State.Cache.set(key, responsePath);
+            } else {
+              DEBUG.verboseSlow && console.warn("get response body error", key, responseStatusCode, responseHeaders, pausedRequest.responseErrorReason);  
+              response.body = '';
+            }
+            //await sleep(DELAY);
+            if ( !isFont && responseErrorReason ) {
+              if ( isNavigationRequest ) {
+                await send("Fetch.fulfillRequest", {
+                    requestId,
+                    responseHeaders: BLOCKED_HEADERS,
+                    responseCode: BLOCKED_CODE,
+                    body: Buffer.from(responseErrorReason).toString("base64"),
+                  },
+                );
+              } else {
+                await send("Fetch.failRequest", {
+                    requestId,
+                    errorReason: responseErrorReason
+                  },
+                );
+              }
+              return;
+            }
+          } 
+          send(`Fetch.continue${requestStage}`, {requestId}).catch(
+            e => console.warn("Issue with continuing request", {e, requestStage, requestId})
+          );
+        }
+      }
+
+      async function getBody({requestId, responseStatusCode}) {
+        let resp;
+        if ( ! BODYLESS.has(responseStatusCode) ) {
+          resp = await send("Fetch.getResponseBody", {requestId});
+        } else {
+          resp = {body:'', base64Encoded:true};
+        }
+        return resp;
+      }
+      
+      function dontInstall(targetInfo) {
+        return targetInfo.type !== 'page';
+      }
+
+      async function getResponseData(path) {
+        try {
+          return JSON.parse(await Fs.promises.readFile(path));
+        } catch(e) {
+          console.warn(`Error with ${path}`, e);
+          return UNCACHED;
+        }
+      }
+
+      async function saveResponseData(key, url, response) {
+        const origin = (new URL(url).origin);
+        let originDir = State.Cache.get(origin);
+        if ( ! originDir ) {
+          originDir = Path.resolve(library_path(), origin.replace(TBL, '_'));
+          try {
+            await Fs.promises.mkdir(originDir, {recursive:true});
+          } catch(e) {
+            console.warn(`Issue with origin directory ${Path.dirname(responsePath)}`, e);
+          }
+          State.Cache.set(origin, originDir);
+        }
+
+        const fileName = `${await sha1(key)}.json`;
+
+        const responsePath = Path.resolve(originDir, fileName);
+        await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
+
+        return responsePath;
+      }
+
+      async function sha1(key) {
+        return crypto.createHash('sha1').update(key).digest('hex');
+      }
+      
+      async function rainbow(key) {
+        return rainbowHash(128, 0, new Uint8Array(Buffer.from(key)));
+      }
+
+      function serializeRequestKey(request) {
+        const {url, /*urlFragment,*/ method, /*headers, postData, hasPostData*/} = request;
+
+        /**
+        let sortedHeaders = '';
+        for( const key of Object.keys(headers).sort() ) {
+          sortedHeaders += `${key}:${headers[key]}/`;
+        }
+        **/
+
+        return `${method}${url}`;
+        //return `${url}${urlFragment}:${method}:${sortedHeaders}:${postData}:${hasPostData}`;
+      }
+
+      async function startObservingBookmarkChanges() {
+        console.info("Not observing");
+        return;
+        for await ( const change of bookmarkChanges() ) {
+          if ( Mode == 'select' ) {
+            switch(change.type) {
+              case 'new': {
+                  DEBUG.verboseSlow && console.log(change);
+                  archiveAndIndexURL(change.url);
+                } break;
+              case 'delete': {
+                  DEBUG.verboseSlow && console.log(change);
+                  deleteFromIndexAndSearch(change.url);
+                } break;
+              default: {
+                console.log(`We don't do anything about this bookmark change, currently`, change);
+              } break;
+            }
+          }
+        }
+      }
+    } catch(e) {
+      console.error('Error while collect', e);
     }
   }
 
@@ -894,7 +902,7 @@
   }
 
   async function isReady() {
-    return await untilHas(Status, 'loaded');
+    return await untilTrue(() => Status.loaded);
   }
 
   async function loadFuzzy({fromMemOnly: fromMemOnly = false} = {}) {
