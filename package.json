@@ -54,6 +54,7 @@
     "@eslint/js": "latest",
     "esbuild": "0.23.0",
     "eslint": "latest",
-    "globals": "latest"
+    "globals": "latest",
+    "postject": "^1.0.0-alpha.6"
   }
 }

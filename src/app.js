@@ -38,7 +38,7 @@ const LAUNCH_OPTS = {
   ignoreDefaultFlags: true
 }
 const KILL_ON = (browser) => ({
-  win32: `taskkill /IM ${browser}.exe /F`,
+  win32: `taskkill /IM ${browser} /F`,
   darwin: `kill $(pgrep -i ${browser})`,
   freebsd: `pkill -15 ${browser}`,
   linux: `pkill -15 ${browser}`,
@@ -65,17 +65,17 @@ async function start() {
   process.on('SIGBREAK', code => cleanup(code, 'signal', {exit:true}));
   process.on('SIGABRT', code => cleanup(code, 'signal',  {exit:true}));
 
-  console.log(`Importing dependencies...`);
+  console.log(`Checking browsers...`);
   const {launch:ChromeLaunch} = ChromeLauncher;
 
   const list = await psList();
 
   DEBUG.showList && console.log({list});
 
-  const chromeOpen = list.find(({name,cmd}) => name?.match?.(/^(chrome|google chrome)/gi) || cmd?.match?.(/[\/\\]chrome/gi));
+  const chromeOpen = list.find(({name,cmd}) => name?.match?.(/^(chrome|google chrome|google-chrome)/gi) || cmd?.match?.(/[\/\\]chrome/gi));
   const vivaldiOpen = list.find(({name,cmd}) => name?.match?.(/^vivaldi/gi) || cmd?.match?.(/[\/\\]vivaldi/gi));
   const braveOpen = list.find(({name,cmd}) => name?.match?.(/^brave/gi) || cmd?.match?.(/[\/\\]brave/gi));
-  const edgeOpen = list.find(({name,cmd}) => name?.match?.(/^edge/gi) || cmd?.match?.(/[\/\\]edge/gi));
+  const edgeOpen = list.find(({name,cmd}) => name?.match?.(/^(edge|msedge)/gi) || cmd?.match?.(/[\/\\](msedge|edge)/gi));
   const browserOpen = chromeOpen || vivaldiOpen || braveOpen || edgeOpen;
   const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}];
   DEBUG.showList && console.log({browserOpen, browsers});
@@ -88,20 +88,20 @@ async function start() {
       if ( !status[keyName] ) continue;
       DEBUG.showList && console.log(status);
       const openBrowserCode = keyName.replace('Open', '');
-      Browser = openBrowserCode;
+      Browser = status[keyName].name;
       console.info(`\n\n [ATTENTION!] Seems ${openBrowserCode} is already open.\n\n`);
       if ( DEBUG.askFirst ) {
         const question = util.promisify(rl.question).bind(rl);
         console.info(`\nDo you want to use it for your archiving? The reason we ask is, because if you don't shut down ${openBrowserCode} and restart it under DownloadNet control you will not be able to use it to save or serve your archives.\n\n`);
         const answer = await question(`Would you like to shutdown ${openBrowserCode} browser now (y/N) ? `);
         if ( answer?.match(/^y/i) ) {
-          await killBrowser(openBrowserCode); 
+          await killBrowser(Browser); 
           shutOne = true;
         } else {
           console.log(`OK, not shutting it!\n`);
         }
       } else {
-        await killBrowser(openBrowserCode); 
+        await killBrowser(Browser); 
       }
     }
     if ( !shutOne ) {
