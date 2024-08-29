@@ -177,6 +177,7 @@
   ]);
   const NEVER_CACHE = new Set([
     `${GO_SECURE ? 'https://localhost' : 'http://127.0.0.1'}:${args.server_port}`,
+    `http://localhost:${args.server_port}`,
     `http://localhost:${args.chrome_port}`,
     `http://127.0.0.1:${args.chrome_port}`,
     `https://127.0.0.1:${args.chrome_port}`,
@@ -776,29 +777,39 @@
       }
 
       async function saveResponseData(key, url, response) {
-        const origin = (new URL(url).origin);
-        let originDir = State.Cache.get(origin);
-        originDir = originDir.replace(TBL, '_');
-        if ( ! originDir ) {
-          originDir = Path.resolve(library_path(), origin.replace(TBL, '_'));
-          try {
-            Fs.mkdirSync(originDir, {recursive:true});
-          } catch(e) {
-            console.warn(`Issue with origin directory ${originDir}`, e);
-          }
-          State.Cache.set(origin, originDir);
-        }
-
-        const fileName = `${await sha1(key)}.json`;
-
-        const responsePath = Path.resolve(originDir, fileName);
         try {
-          await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
-        } catch(e) {
-          console.warn(`Issue with origin directory or file: ${responsePath}`, e);
-        }
+          const origin = (new URL(url).origin);
+          let originDir = State.Cache.get(origin);
+          if ( ! originDir ) {
+            originDir = Path.resolve(library_path(), origin.replace(TBL, '_'));
+            try {
+              Fs.mkdirSync(originDir, {recursive:true});
+            } catch(e) {
+              console.warn(`Issue with origin directory ${originDir}`, e);
+            }
+            State.Cache.set(origin, originDir);
+          } else {
+            if ( originDir.includes(':\\\\') ) {
+              originDir = originDir.split(/:\\\\/, 2);
+              originDir[1] = originDir[1]?.replace?.(TBL, '_');
+              originDir = originDir.join(':\\\\');
+            }
+          }
 
-        return responsePath;
+          const fileName = `${await sha1(key)}.json`;
+
+          const responsePath = Path.resolve(originDir, fileName);
+          try {
+            await Fs.promises.writeFile(responsePath, JSON.stringify(response,null,2));
+          } catch(e) {
+            console.warn(`Issue with origin directory or file: ${responsePath}`, e);
+          }
+
+          return responsePath;
+        } catch(e) {
+          console.warn(`Could not save response data`, e);
+          return '';
+        }
       }
 
       async function sha1(key) {
