@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
+import { readFile } from 'fs/promises';
 import https from 'node:https';
 
 // Constants
@@ -109,34 +110,96 @@ async function installOnMacOS(browserName) {
 
 async function installOnLinux(browserName) {
   try {
-    if (browserName === 'chrome') {
-      await execPromise('wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -');
-      await execPromise(`sudo sh -c 'echo "deb [arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'}] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'`);
-      await execPromise('sudo apt-get update && sudo apt-get install -y google-chrome-stable');
-      return '/usr/bin/google-chrome';
-    } else if (browserName === 'brave') {
-      await execPromise('sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg');
-      await execPromise(`echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'}] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list`);
-      await execPromise('sudo apt update && sudo apt install -y brave-browser');
-      return '/usr/bin/brave-browser';
-    } else if (browserName === 'vivaldi') {
-      await execPromise('wget -qO- https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo apt-key add -');
-      await execPromise(`sudo add-apt-repository "deb [arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'}] https://repo.vivaldi.com/archive/deb/ stable main"`);
-      await execPromise('sudo apt update && sudo apt install -y vivaldi-stable');
-      return '/usr/bin/vivaldi';
-    } else if (browserName === 'edge') {
-      await execPromise('curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg');
-      await execPromise('sudo mv microsoft.gpg /usr/share/keyrings/microsoft-archive-keyring.gpg');
-      await execPromise(`sudo sh -c 'echo "deb [arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'} signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'`);
-      await execPromise('sudo apt update && sudo apt install -y microsoft-edge-stable');
-      return '/usr/bin/microsoft-edge';
-    } else if (browserName === 'chromium') {
-      await execPromise('sudo apt update && sudo apt install -y chromium-browser');
-      return '/usr/bin/chromium-browser';
+    const distro = await getLinuxDistro();
+    if (distro === 'debian') {
+      return await installOnDebian(browserName);
+    } else if (distro === 'fedora') {
+      return await installOnFedora(browserName);
+    } else {
+      throw new Error(`Unsupported Linux distribution: ${distro}`);
     }
   } catch (error) {
     console.error(`Linux install failed: ${error.message}`);
     throw error;
+  }
+}
+
+async function installOnDebian(browserName) {
+  if (browserName === 'chrome') {
+    await execPromise('wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -');
+    await execPromise(`sudo sh -c 'echo "deb [arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'}] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'`);
+    await execPromise('sudo apt-get update && sudo apt-get install -y google-chrome-stable');
+    return '/usr/bin/google-chrome';
+  } else if (browserName === 'brave') {
+    await execPromise('sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg');
+    await execPromise(`echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'}] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list`);
+    await execPromise('sudo apt update && sudo apt install -y brave-browser');
+    return '/usr/bin/brave-browser';
+  } else if (browserName === 'vivaldi') {
+    await execPromise('wget -qO- https://repo.vivaldi.com/archive/linux_signing_key.pub | sudo apt-key add -');
+    await execPromise(`sudo add-apt-repository "deb [arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'}] https://repo.vivaldi.com/archive/deb/ stable main"`);
+    await execPromise('sudo apt update && sudo apt install -y vivaldi-stable');
+    return '/usr/bin/vivaldi';
+  } else if (browserName === 'edge') {
+    await execPromise('curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg');
+    await execPromise('sudo mv microsoft.gpg /usr/share/keyrings/microsoft-archive-keyring.gpg');
+    await execPromise(`sudo sh -c 'echo "deb [arch=${ARCH === 'arm64' ? 'arm64' : 'amd64'} signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'`);
+    await execPromise('sudo apt update && sudo apt install -y microsoft-edge-stable');
+    return '/usr/bin/microsoft-edge';
+  } else if (browserName === 'chromium') {
+    await execPromise('sudo apt update && sudo apt install -y chromium-browser');
+    return '/usr/bin/chromium-browser';
+  }
+}
+
+async function installOnFedora(browserName) {
+  if (browserName === 'chrome') {
+    await execPromise('sudo dnf config-manager --add-repo https://dl.google.com/linux/chrome/rpm/stable/x86_64');
+    await execPromise('sudo rpm --import https://dl.google.com/linux/linux_signing_key.pub');
+    await execPromise('sudo dnf install -y google-chrome-stable');
+    return '/usr/bin/google-chrome';
+  } else if (browserName === 'brave') {
+    await execPromise('sudo dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/');
+    await execPromise('sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc');
+    await execPromise('sudo dnf install -y brave-browser');
+    return '/usr/bin/brave-browser';
+  } else if (browserName === 'vivaldi') {
+    await execPromise('sudo dnf config-manager --add-repo https://repo.vivaldi.com/archive/vivaldi-fedora.repo');
+    await execPromise('sudo dnf install -y vivaldi-stable');
+    return '/usr/bin/vivaldi';
+  } else if (browserName === 'edge') {
+    await execPromise('sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc');
+    await execPromise('sudo dnf config-manager --add-repo https://packages.microsoft.com/yumrepos/edge');
+    await execPromise('sudo dnf install -y microsoft-edge-stable');
+    return '/usr/bin/microsoft-edge';
+  } else if (browserName === 'chromium') {
+    await execPromise('sudo dnf install -y chromium');
+    return '/usr/bin/chromium-browser';
+  }
+}
+
+async function getLinuxDistro() {
+  try {
+    const osRelease = await readFile('/etc/os-release', 'utf8');
+    const lines = osRelease.split('\n');
+    const releaseInfo = {};
+    for (const line of lines) {
+      const [key, value] = line.split('=');
+      if (key && value) {
+        releaseInfo[key] = value.replace(/"/g, '');
+      }
+    }
+
+    if (releaseInfo.ID === 'fedora' || releaseInfo.ID_LIKE?.includes('fedora')) {
+      return 'fedora';
+    } else if (releaseInfo.ID === 'debian' || releaseInfo.ID === 'ubuntu' || releaseInfo.ID_LIKE?.includes('debian')) {
+      return 'debian';
+    } else {
+      return releaseInfo.ID || 'unknown';
+    }
+  } catch (error) {
+    console.error(`Failed to read /etc/os-release: ${error.message}`);
+    return 'unknown';
   }
 }
 
@@ -151,11 +214,10 @@ async function downloadBinary(url, outputPath) {
   await pipeline(response.body, createWriteStream(outputPath));
 }
 
-function getDownloadUrl(browserName, platform, arch) {
+function getDownloadUrl(browserNameэ, platform, arch) {
   const urls = {
     chrome: {
-      win32: { x64: 'https://dl.google.com/chrome/install/ChromeSetup.exe', arm64: 'https://dl.google.com/chrome/install/ChromeSetup.exe' },
-      darwin: { x64: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg', arm64: 'https://dl.google.com/chrome/mac/arm64/googlechrome.dmg' },
+      win32: { x64: 'https:// Angstrom, darwin: { x64: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg', arm64: 'https://dl.google.com/chrome/mac/arm64/googlechrome.dmg' },
       linux: { x64: 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', arm64: 'https://dl.google.com/linux/direct/google-chrome-stable_current_arm64.deb' }
     },
     brave: {
@@ -165,7 +227,7 @@ function getDownloadUrl(browserName, platform, arch) {
     },
     vivaldi: {
       win32: { x64: 'https://downloads.vivaldi.com/stable/Vivaldi_Setup.exe', arm64: 'https://downloads.vivaldi.com/stable/Vivaldi_Setup.exe' },
-      darwin: { x64: 'https://downloads.vivaldi.com/stable/Vivaldi.dmg', arm64: 'https://downloads.vivaldi.com/stable/Vivaldi.dmg' },
+      darwin: { x64: 'https://downloads.vivaldi.com/stable/V composé, arm64: 'https://downloads.vivaldi.com/stable/Vivaldi.dmg' },
       linux: { x64: 'https://downloads.vivaldi.com/stable/vivaldi-stable_amd64.deb', arm64: 'https://downloads.vivaldi.com/stable/vivaldi-stable_arm64.deb' }
     },
     edge: {
