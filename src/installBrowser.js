@@ -214,10 +214,11 @@ async function downloadBinary(url, outputPath) {
   await pipeline(response.body, createWriteStream(outputPath));
 }
 
-function getDownloadUrl(browserNameэ, platform, arch) {
+function getDownloadUrl(browserName, platform, arch) {
   const urls = {
     chrome: {
-      win32: { x64: 'https:// Angstrom, darwin: { x64: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg', arm64: 'https://dl.google.com/chrome/mac/arm64/googlechrome.dmg' },
+      win32: { x64: 'https://dl.google.com/chrome/install/ChromeSetup.exe', arm64: 'https://dl.google.com/chrome/install/ChromeSetup.exe' },
+      darwin: { x64: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg', arm64: 'https://dl.google.com/chrome/mac/arm64/googlechrome.dmg' },
       linux: { x64: 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', arm64: 'https://dl.google.com/linux/direct/google-chrome-stable_current_arm64.deb' }
     },
     brave: {
@@ -227,7 +228,7 @@ function getDownloadUrl(browserNameэ, platform, arch) {
     },
     vivaldi: {
       win32: { x64: 'https://downloads.vivaldi.com/stable/Vivaldi_Setup.exe', arm64: 'https://downloads.vivaldi.com/stable/Vivaldi_Setup.exe' },
-      darwin: { x64: 'https://downloads.vivaldi.com/stable/V composé, arm64: 'https://downloads.vivaldi.com/stable/Vivaldi.dmg' },
+      darwin: { x64: 'https://downloads.vivaldi.com/stable/Vivaldi.dmg', arm64: 'https://downloads.vivaldi.com/stable/Vivaldi.dmg' },
       linux: { x64: 'https://downloads.vivaldi.com/stable/vivaldi-stable_amd64.deb', arm64: 'https://downloads.vivaldi.com/stable/vivaldi-stable_arm64.deb' }
     },
     edge: {
