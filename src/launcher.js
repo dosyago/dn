@@ -1,10 +1,14 @@
-﻿import { spawn } from 'child_process';
+﻿import { spawn, exec } from 'child_process';
+import { promisify } from 'util';
 import fs from 'fs';
 import os from 'os';
 import inquirer from 'inquirer';
-import {DEBUG} from './common.js';
+import { installBrowser } from './installBrowser.mjs';
+import { DEBUG } from './common.js';
 
-// regular funcs and data
+// Constants
+const execPromise = promisify(exec);
+
 const browserPaths = {
   chrome: {
     win32: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -26,34 +30,90 @@ const browserPaths = {
     darwin: '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
     linux: '/usr/bin/microsoft-edge',
   },
+  chromium: {
+    win32: 'C:\\Program Files\\Chromium\\chromium.exe',
+    darwin: '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    linux: '/usr/bin/chromium-browser',
+  },
 };
 
+// Logic
+// None; functions are exported or called in run()
+
+// Functions
 const getBrowserPath = (browser) => {
   const platform = os.platform();
-  return browserPaths[browser][platform];
+  return browserPaths[browser]?.[platform] || null;
 };
 
-const isBrowserInstalled = (browserPath) => {
+const isBrowserInstalled = async (browser) => {
+  const browserPath = getBrowserPath(browser);
+  if (!browserPath) return false;
+
   try {
-    fs.statSync(browserPath);
+    await fs.promises.stat(browserPath);
     return true;
-  } catch (err) {
+  } catch {
+    // Fallback: Try system command to locate binary
+    try {
+      const cmd = os.platform() === 'win32' ? `where ${browser}` : `which ${browser}`;
+      const { stdout } = await execPromise(cmd);
+      const foundPath = stdout.trim();
+      if (foundPath && foundPath !== browserPath) {
+        // Update browserPaths with discovered path
+        browserPaths[browser][os.platform()] = foundPath;
+        return true;
+      }
+    } catch {
+      return false;
+    }
     return false;
   }
 };
 
-const getInstalledBrowsers = () => {
-  return Object.keys(browserPaths).filter((browser) => {
-    const browserPath = getBrowserPath(browser);
-    return isBrowserInstalled(browserPath);
-  });
+const getInstalledBrowsers = async () => {
+  const browsers = Object.keys(browserPaths);
+  const installed = [];
+  for (const browser of browsers) {
+    if (await isBrowserInstalled(browser)) {
+      installed.push(browser);
+    }
+  }
+
+  if (installed.length === 0) {
+    console.log('No supported browsers detected. Let’s install one.');
+    const { browserToInstall } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'browserToInstall',
+        message: 'Select a browser to install:',
+        choices: browsers,
+      },
+    ]);
+
+    try {
+      const installedPath = await installBrowser(browserToInstall);
+      browserPaths[browserToInstall][os.platform()] = installedPath;
+      installed.push(browserToInstall);
+      console.log(`Successfully installed ${browserToInstall}.`);
+    } catch (error) {
+      if (error.message.includes('Homebrew is not installed')) {
+        console.error(error.message);
+        return [];
+      }
+      console.error(`Failed to install ${browserToInstall}: ${error.message}`);
+      return [];
+    }
+  }
+
+  return installed;
 };
 
 const launchBrowser = (browser, url = '', flags = []) => {
   const browserPath = getBrowserPath(browser);
   if (!browserPath) {
     console.error(`Browser path for ${browser} not found.`);
-    return;
+    return null;
   }
 
   const childProcess = spawn(browserPath, [...flags, url], {
@@ -88,9 +148,9 @@ const killBrowser = (browserProcess) => {
   console.log('Browser process killed.');
 };
 
-const isSpecialUrl = (url) => /^chrome|vivaldi|brave|edge/.test(url);
+const isSpecialUrl = (url) => /^chrome|vivaldi|brave|edge|chromium/.test(url);
 
-// api facade for parity with ChromeLaunch
+// API facade for parity with ChromeLaunch
 const launch = async (opts = {}) => {
   const {
     logLevel = 'silent',
@@ -102,11 +162,11 @@ const launch = async (opts = {}) => {
     fullAsk = false,
   } = opts;
 
-  DEBUG.showBrowser && console.log({opts,startingUrl});
-  const installedBrowsers = getInstalledBrowsers();
+  DEBUG.showBrowser && console.log({ opts, startingUrl });
+  const installedBrowsers = await getInstalledBrowsers();
   if (installedBrowsers.length === 0) {
-    console.error('No supported browsers are installed.');
-    return;
+    console.error('No supported browsers are available.');
+    return null;
   }
 
   const answers = await inquirer.prompt([
@@ -116,27 +176,29 @@ const launch = async (opts = {}) => {
       message: 'Select a browser to launch:',
       choices: installedBrowsers,
     },
-    ...(fullAsk ? [
-    {
-      type: 'input',
-      name: 'url',
-      message: 'Enter the URL to open (optional):',
-    },
-    {
-      type: 'input',
-      name: 'flags',
-      message: 'Enter command line flags (optional, space-separated):',
-    },
-    {
-      type: 'confirm',
-      name: 'ignoreSignal',
-      message: 'Ignore SIGINT signal (Ctrl+C) to keep the browser running?',
-      default: false,
-    },
-    ] : [])
+    ...(fullAsk
+      ? [
+          {
+            type: 'input',
+            name: 'url',
+            message: 'Enter the URL to open (optional):',
+          },
+          {
+            type: 'input',
+            name: 'flags',
+            message: 'Enter command line flags (optional, space-separated):',
+          },
+          {
+            type: 'confirm',
+            name: 'ignoreSignal',
+            message: 'Ignore SIGINT signal (Ctrl+C) to keep the browser running?',
+            default: false,
+          },
+        ]
+      : []),
   ]);
 
-  const { browser, url, flags: flagString, ignoreSignal = (opts.ignoreSignal || true) } = answers;
+  const { browser, url, flags: flagString, ignoreSignal = opts.ignoreSignal || true } = answers;
   const flagArray = flagString ? flagString.split(' ') : [];
 
   const flags = [
@@ -148,7 +210,7 @@ const launch = async (opts = {}) => {
   ].filter(Boolean);
 
   console.log(`Launching browser with log level: ${logLevel}`);
-  const browserProcess = launchBrowser(browser, startingUrl, flags);
+  const browserProcess = launchBrowser(browser, startingUrl || url, flags);
 
   if (!ignoreSignal) {
     process.on('SIGINT', () => {
@@ -161,15 +223,11 @@ const launch = async (opts = {}) => {
   return browserProcess;
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  run();
-}
-
-// helper
+// Helper
 const run = async () => {
-  const installedBrowsers = getInstalledBrowsers();
+  const installedBrowsers = await getInstalledBrowsers();
   if (installedBrowsers.length === 0) {
-    console.error('No supported browsers are installed.');
+    console.error('No supported browsers are available.');
     return;
   }
 
@@ -211,6 +269,11 @@ const run = async () => {
   }
 };
 
+// CLI entry point
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run();
+}
+
 export default {
   getBrowserPath,
   isBrowserInstalled,
@@ -221,4 +284,3 @@ export default {
   run,
   launch,
 };
-
