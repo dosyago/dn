@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import fs from 'fs';
 import os from 'os';
 import inquirer from 'inquirer';
-import { installBrowser } from './installBrowser.mjs';
+import { installBrowser } from './installBrowser.js';
 import { DEBUG } from './common.js';
 
 // Constants
