@@ -400,8 +400,8 @@ function PageLayout({ title, content, currentNav, layoutType = 'default' }) { //
             </ul>
           </nav>
         </header>
-        <main class="${layoutType === 'sidebar' ? 'page-with-sidebar' : ''}"> {/* Apply class for sidebar layout */}
-          ${content} {/* Content will now include sidebar + main area if layoutType is 'sidebar' */}
+        <main class="${layoutType === 'sidebar' ? 'page-with-sidebar' : ''}"> 
+          ${content} 
         </main>
         <footer class="site-footer">
           <p>© ${new Date().getFullYear()} DownloadNet. Server up since: ${upAt ? upAt.toLocaleString() : 'N/A'}.</p>
