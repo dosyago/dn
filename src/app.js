@@ -309,7 +309,7 @@ async function start() {
     // Only add "Relaunch" if not already offered as "Connect" OR always offer both?
     // Original code implies offering both, which gives user choice.
     menuOptions.push({
-      text: `Relaunch ${b.name} (to enable remote debugging)`,
+      text: `Relaunch ${b.name} (to enable archiving)`,
       value: { action: 'relaunch', browser: b }
     });
   });
@@ -374,7 +374,7 @@ async function start() {
   if (uniqueMenuOptions.filter(opt => opt.value && opt.value.action !== 'exit_only' && opt.value.action !== 'shutdown_all_and_exit').length > 0 ||
       uniqueMenuOptions.some(opt => opt.value && opt.value.action === 'shutdown_all_and_exit')) { // Check if any actionable options exist (besides plain exit)
     action = await promptUser(
-      'Select a browser to use for archiving (remote debugging required):',
+      'Select a browser to use for archiving:',
       uniqueMenuOptions
     );
   } else {
@@ -415,7 +415,7 @@ async function start() {
     // browserToUse is already set
   } else if (action.action === 'relaunch') {
     console.log(chalk.cyan(`\n\n [ATTENTION!] Seems ${browserToUse.name} is already open.\n\n`));
-    console.log(chalk.cyan(`Relaunching ${browserToUse.name} to ensure remote debugging is enabled...`));
+    console.log(chalk.cyan(`Relaunching ${browserToUse.name} to ensure archiving is enabled...`));
     // killBrowser expects the browser name (e.g., "Chrome")
     await killBrowser(browserToUse.name);
     // After killing, we proceed to launch it as a new instance
