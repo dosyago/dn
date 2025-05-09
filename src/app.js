@@ -342,7 +342,7 @@ async function cleanup(reason, err, { exit = false } = {}) {
 
   console.log(chalk.cyan(`Shutting down...`));
   DEBUG.verbose && console.log(chalk.yellow(`Cleanup reason: ${reason}`, err));
-  console.log({quitting,exit,reason,err}, (new Error).stack);
+  DEBUG.verbose && console.log({quitting,exit,reason,err}, (new Error).stack);
 
   Archivist.shutdown();
   LibraryServer.stop();
