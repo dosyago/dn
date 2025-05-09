@@ -76,6 +76,13 @@ const KILL_ON = browser => ({
   linux: `pkill -15 ${browser}`
 });
 
+let quitting;
+
+// Start the application
+start().catch(async err => {
+  await cleanup('Startup error', err, { exit: true });
+});
+
 // Prompt user with inquirer
 async function promptUser(question, options) {
   const choices = options.map((opt, i) => ({
@@ -115,7 +122,7 @@ async function detectInstalledBrowsers() {
 }
 
 // Check if a browser is connectable via RDP
-async function isConnectable(browser) {
+async function checkIsConnectable(browser) {
   const hosts = ['localhost', '127.0.0.1', '::1'];
   for (const host of hosts) {
     try {
@@ -145,7 +152,7 @@ async function detectBrowsers() {
       name?.match?.(browser.pattern) || cmd?.match?.(browser.cmdPattern)
     );
     const isRunning = !!proc;
-    const isConnectable = isRunning && await isConnectable(browser);
+    const isConnectable = isRunning && await checkIsConnectable(browser);
     const isInstalled = installed.some(b => b.name === browser.name);
     return { ...browser, isRunning, isConnectable, isInstalled, proc };
   }));
@@ -202,6 +209,7 @@ async function start() {
   ];
   for (const signal of signals) {
     process.on(signal, async (errOrCode) => {
+      console.log('what', errOrCode, (new Error).stack);
       const reason = typeof errOrCode === 'string' ? errOrCode : `Received ${signal}`;
       const err = errOrCode instanceof Error ? errOrCode : null;
       await cleanup(reason, err, { exit: true });
@@ -214,7 +222,7 @@ async function start() {
   const connectable = browserStatus.filter(b => b.isConnectable);
 
   // Step 2: Prompt user based on browser status
-  console.log(chalk.blue.bold(`\n**Browser Status:**`));
+  console.log(chalk.blue.bold(`\nBrowser Status:`));
   console.log(chalk.cyan(`Installed: ${installed.map(b => b.name).join(', ') || 'None'}`));
   console.log(chalk.cyan(`Running: ${running.map(b => b.name).join(', ') || 'None'}`));
   console.log(chalk.cyan(`Connectable: ${connectable.map(b => b.name).join(', ') || 'None'}`));
@@ -345,8 +353,3 @@ async function cleanup(reason, err, { exit = false } = {}) {
     process.exit(0);
   }
 }
-
-// Start the application
-start().catch(async err => {
-  await cleanup('Startup error', err, { exit: true });
-});
