@@ -49,17 +49,14 @@ function PageLayout({ title, content, currentNav, layoutType = 'default' }) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${title} - DownloadNet</title>
       <link rel="stylesheet" href="/style.css">
-      {/* Favicon: Using the one from your provided code, ensure it's correct */}
       <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
     </head>
     <body>
       <div class="container">
         <header class="site-header">
-          {/* Root link now effectively goes to View Index (via redirect) */}
           <h1><a href="/">DownloadNet</a></h1>
           <nav class="main-nav">
             <ul>
-              {/* Order changed, "View Index" is primary, "Crawl & Settings" points to /settings */}
               <li><a href="/archive_index.html" class="${currentNav === 'index' ? 'active' : ''}">View Index</a></li>
               <li><a href="/search" class="${currentNav === 'search' ? 'active' : ''}">Search Archive</a></li>
               <li><a href="/settings" class="${currentNav === 'settings' ? 'active' : ''}">Crawl & Settings</a></li>
@@ -70,7 +67,6 @@ function PageLayout({ title, content, currentNav, layoutType = 'default' }) {
           ${content}
         </main>
         <footer class="site-footer">
-          {/* Corrected copyright symbol and ensured upAt is handled */}
           <p>© ${new Date().getFullYear()} DownloadNet. Server up since: ${upAt ? upAt.toLocaleString() : 'N/A'}.</p>
         </footer>
       </div>
@@ -436,8 +432,6 @@ function MainApplicationView() {
     </aside>
 
     <div class="main-content-area">
-      {/* The h2 page-title is now part of the PageLayout for consistency, or you can add one here if specific */}
-      
       <section id="crawl-form" aria-labelledby="crawl-form-legend" class="active-section">
         <form method="POST" action="/crawl">
           <fieldset>
@@ -510,8 +504,7 @@ function MainApplicationView() {
           </fieldset>
         </form>
       </section>
-    </div> {/* End .main-content-area */}
-
+    </div> 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const sidebarLinks = document.querySelectorAll('.sidebar-nav a[data-section]');
