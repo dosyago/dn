@@ -38,42 +38,6 @@ const protocol = GO_SECURE ? https : http;
 
 export default LibraryServer;
 
-// Helper to generate common page structure
-function PageLayout({ title, content, currentNav }) {
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${title} - DownloadNet</title>
-      <link rel="stylesheet" href="/style.css">
-      <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
-    </head>
-    <body>
-      <div class="container">
-        <header class="site-header">
-          <h1><a href="/">DownloadNet</a></h1>
-          <nav class="main-nav">
-            <ul>
-              <li><a href="/" class="${currentNav === 'home' ? 'active' : ''}">Crawl & Settings</a></li>
-              <li><a href="/search" class="${currentNav === 'search' ? 'active' : ''}">Search Archive</a></li>
-              <li><a href="/archive_index.html" class="${currentNav === 'index' ? 'active' : ''}">View Index</a></li>
-            </ul>
-          </nav>
-        </header>
-        <main>
-          ${content}
-        </main>
-        <footer class="site-footer">
-          <p>© ${new Date().getFullYear()} DownloadNet. Server up since: ${upAt ? upAt.toLocaleString() : 'N/A'}.</p>
-        </footer>
-      </div>
-    </body>
-    </html>
-  `;
-}
-
 async function start({server_port}) {
   if ( running ) {
     DEBUG.verboseSlow && console.warn(`Attempting to start server when it is not closed. Exiting start()...`);
@@ -133,7 +97,6 @@ async function start({server_port}) {
     process.exit(1);
   }
 }
-
 
 function addHandlers() {
   app.use(express.urlencoded({extended:true, limit: '50mb'}));
@@ -414,128 +377,227 @@ async function stop() {
   return pr;
 }
 
-// --- Main Application View ---
+function PageLayout({ title, content, currentNav, layoutType = 'default' }) { // Added layoutType
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title} - DownloadNet</title>
+      <link rel="stylesheet" href="/style.css">
+      <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
+    </head>
+    <body>
+      <div class="container">
+        <header class="site-header">
+          <h1><a href="/">DownloadNet</a></h1>
+          <nav class="main-nav">
+            <ul>
+              <li><a href="/" class="${currentNav === 'home' ? 'active' : ''}">Crawl & Settings</a></li>
+              <li><a href="/search" class="${currentNav === 'search' ? 'active' : ''}">Search Archive</a></li>
+              <li><a href="/archive_index.html" class="${currentNav === 'index' ? 'active' : ''}">View Index</a></li>
+            </ul>
+          </nav>
+        </header>
+        <main class="${layoutType === 'sidebar' ? 'page-with-sidebar' : ''}"> {/* Apply class for sidebar layout */}
+          ${content} {/* Content will now include sidebar + main area if layoutType is 'sidebar' */}
+        </main>
+        <footer class="site-footer">
+          <p>© ${new Date().getFullYear()} DownloadNet. Server up since: ${upAt ? upAt.toLocaleString() : 'N/A'}.</p>
+        </footer>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 function MainApplicationView() {
   const currentBasePath = args.getBasePath();
   const currentMode = Archivist.getMode();
 
+  // This 'content' will be placed inside the <main class="page-with-sidebar"> element
   const content = `
-    <h2 class="page-title">Crawl & Application Settings</h2>
+    <aside class="page-sidebar">
+      <h3>Settings Sections</h3>
+      <nav class="sidebar-nav" aria-label="Settings sections">
+        <ul>
+          <li><a href="#crawl-form" data-section="crawl-form">New Crawl</a></li>
+          <li><a href="#mode-settings" data-section="mode-settings">Archivist Mode</a></li>
+          <li><a href="#base-path-settings" data-section="base-path-settings">Library Base Path</a></li>
+        </ul>
+      </nav>
+    </aside>
 
-    <section id="crawl-form" aria-labelledby="crawl-form-legend">
-      <form method="POST" action="/crawl">
-        <fieldset>
-          <legend id="crawl-form-legend">Start a New Crawl</legend>
-          <div class="form-group">
-            <label for="links">Enter URLs (one per line):</label>
-            <textarea id="links" name="links" rows="5" required placeholder="https://example.com\nhttps://another.example.org"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="depth">Crawl Depth:</label>
-            <input type="number" id="depth" name="depth" value="1" min="0" required>
-            <small>0 for current page only, 1 for one level of links, etc.</small>
-          </div>
-          <div class="form-group">
-            <label for="timeout">Page Load Timeout (seconds):</label>
-            <input type="number" id="timeout" name="timeout" value="30" min="1" step="0.1" required>
-          </div>
-          <div class="form-group">
-            <label for="minPageCrawlTime">Min Page Crawl Time (seconds):</label>
-            <input type="number" id="minPageCrawlTime" name="minPageCrawlTime" value="1" min="0" step="1" required>
-          </div>
-          <div class="form-group">
-            <label for="maxPageCrawlTime">Max Page Crawl Time (seconds):</label>
-            <input type="number" id="maxPageCrawlTime" name="maxPageCrawlTime" value="60" min="1" step="1" required>
-          </div>
-          <div class="form-group">
-            <label for="batchSize">Batch Size (pages per batch):</label>
-            <input type="number" id="batchSize" name="batchSize" value="5" min="1" required>
-          </div>
-          <div class="form-group">
-            <label for="program">Crawl Program (optional):</label>
-            <input type="text" id="program" name="program" placeholder="e.g., my_custom_script.js">
-          </div>
-          <div class="form-group" style="display: flex; align-items: center;">
-            <input type="checkbox" id="saveToFile" name="saveToFile" value="true" checked style="width: auto; margin-right: var(--spacing-sm);">
-            <label for="saveToFile" style="display: inline-block; margin-bottom: 0; font-weight: normal;">Save to File (MHTML)</label>
-          </div>
-          <button type="submit">Start Crawl</button>
-        </fieldset>
-      </form>
-    </section>
+    <div class="main-content-area">
+      <h2 class="page-title" style="display: none;" id="main-content-title">Crawl & Application Settings</h2>
 
-    <section id="mode-settings" aria-labelledby="mode-settings-legend">
-      <form method="POST" action="/mode">
-        <fieldset>
-          <legend id="mode-settings-legend">Archivist Mode</legend>
-          <div class="form-group">
-            <label for="mode">Current Mode: <strong>${currentMode}</strong>. Select new mode:</label>
-            <select id="mode" name="mode">
-              <option value="record" ${currentMode === 'record' ? 'selected' : ''}>Record Mode</option>
-              <option value="replay" ${currentMode === 'replay' ? 'selected' : ''}>Replay Mode</option>
-              <option value="live" ${currentMode === 'live' ? 'selected' : ''}>Live Mode</option>
-            </select>
-          </div>
-          <button type="submit">Set Mode</button>
-        </fieldset>
-      </form>
-    </section>
+      <section id="crawl-form" aria-labelledby="crawl-form-legend" class="active-section"> {/* Default active section */}
+        <form method="POST" action="/crawl">
+          <fieldset>
+            <legend id="crawl-form-legend">Start a New Crawl</legend>
+            <div class="form-group">
+              <label for="links">Enter URLs (one per line):</label>
+              <textarea id="links" name="links" rows="5" required placeholder="https://example.com\nhttps://another.example.org"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="depth">Crawl Depth:</label>
+              <input type="number" id="depth" name="depth" value="1" min="0" required>
+              <small>0 for current page only, 1 for one level of links, etc.</small>
+            </div>
+            <div class="form-group">
+              <label for="timeout">Page Load Timeout (seconds):</label>
+              <input type="number" id="timeout" name="timeout" value="30" min="1" step="0.1" required>
+            </div>
+            <div class="form-group">
+              <label for="minPageCrawlTime">Min Page Crawl Time (seconds):</label>
+              <input type="number" id="minPageCrawlTime" name="minPageCrawlTime" value="1" min="0" step="1" required>
+            </div>
+            <div class="form-group">
+              <label for="maxPageCrawlTime">Max Page Crawl Time (seconds):</label>
+              <input type="number" id="maxPageCrawlTime" name="maxPageCrawlTime" value="60" min="1" step="1" required>
+            </div>
+            <div class="form-group">
+              <label for="batchSize">Batch Size (pages per batch):</label>
+              <input type="number" id="batchSize" name="batchSize" value="5" min="1" required>
+            </div>
+            <div class="form-group">
+              <label for="program">Crawl Program (optional):</label>
+              <input type="text" id="program" name="program" placeholder="e.g., my_custom_script.js">
+            </div>
+            <div class="form-group" style="display: flex; align-items: center;">
+              <input type="checkbox" id="saveToFile" name="saveToFile" value="true" checked style="width: auto; margin-right: var(--spacing-sm);">
+              <label for="saveToFile" style="display: inline-block; margin-bottom: 0; font-weight: normal;">Save to File (MHTML)</label>
+            </div>
+            <button type="submit">Start Crawl</button>
+          </fieldset>
+        </form>
+      </section>
 
-    <section id="base-path-settings" aria-labelledby="base-path-settings-legend">
-      <form method="POST" action="/base_path">
-        <fieldset>
-          <legend id="base-path-settings-legend">Library Base Path</legend>
-          <div class="form-group">
-            <label for="base_path">Current Path: <code>${currentBasePath}</code>. Enter new path:</label>
-            <input type="text" id="base_path" name="base_path" value="${currentBasePath}" required>
-            <small>Set the root directory for storing archives. Server will restart if changed.</small>
-          </div>
-          <button type="submit">Update Base Path</button>
-        </fieldset>
-      </form>
-    </section>
+      <section id="mode-settings" aria-labelledby="mode-settings-legend">
+        <form method="POST" action="/mode">
+          <fieldset>
+            <legend id="mode-settings-legend">Archivist Mode</legend>
+            <div class="form-group">
+              <label for="mode">Current Mode: <strong>${currentMode}</strong>. Select new mode:</label>
+              <select id="mode" name="mode">
+                <option value="record" ${currentMode === 'record' ? 'selected' : ''}>Record Mode</option>
+                <option value="replay" ${currentMode === 'replay' ? 'selected' : ''}>Replay Mode</option>
+                <option value="live" ${currentMode === 'live' ? 'selected' : ''}>Live Mode</option>
+              </select>
+            </div>
+            <button type="submit">Set Mode</button>
+          </fieldset>
+        </form>
+      </section>
+
+      <section id="base-path-settings" aria-labelledby="base-path-settings-legend">
+        <form method="POST" action="/base_path">
+          <fieldset>
+            <legend id="base-path-settings-legend">Library Base Path</legend>
+            <div class="form-group">
+              <label for="base_path">Current Path: <code>${currentBasePath}</code>. Enter new path:</label>
+              <input type="text" id="base_path" name="base_path" value="${currentBasePath}" required>
+              <small>Set the root directory for storing archives. Server will restart if changed.</small>
+            </div>
+            <button type="submit">Update Base Path</button>
+          </fieldset>
+        </form>
+      </section>
+    </div> {/* End .main-content-area */}
+
     <script>
-      (function() {
-        // Handle query param errors for forms
+      document.addEventListener('DOMContentLoaded', () => {
+        const sidebarLinks = document.querySelectorAll('.sidebar-nav a[data-section]');
+        const contentSections = document.querySelectorAll('.main-content-area > section');
+        const mainContentTitle = document.getElementById('main-content-title'); // Optional: update a title
+
+        function setActiveSection(sectionId) {
+          let sectionFound = false;
+          sidebarLinks.forEach(link => {
+            if (link.dataset.section === sectionId) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+
+          contentSections.forEach(section => {
+            if (section.id === sectionId) {
+              section.classList.add('active-section');
+              sectionFound = true;
+              // Optional: Update a dynamic title for the main content area
+              // const legend = section.querySelector('legend');
+              // if (mainContentTitle && legend) mainContentTitle.textContent = legend.textContent;
+            } else {
+              section.classList.remove('active-section');
+            }
+          });
+          // If no sectionId matched (e.g. bad hash), default to the first one
+          if (!sectionFound && contentSections.length > 0) {
+             contentSections[0].classList.add('active-section');
+             if(sidebarLinks.length > 0) sidebarLinks[0].classList.add('active');
+          }
+        }
+
+        sidebarLinks.forEach(link => {
+          link.addEventListener('click', (event) => {
+            // event.preventDefault(); // Prevent default if href is just "#"
+            const sectionId = event.currentTarget.dataset.section;
+            setActiveSection(sectionId);
+            // Update hash without causing page jump if possible, or let default href="#sectionId" work
+            if (history.pushState) {
+                 history.pushState(null, null, '#' + sectionId);
+            } else {
+                 window.location.hash = sectionId;
+            }
+          });
+        });
+
+        // Handle initial load based on URL hash or error param
         const urlParams = new URLSearchParams(window.location.search);
         const generalError = urlParams.get('error');
-        const targetSectionId = window.location.hash.substring(1); // e.g., "crawl-form"
+        let initialSectionId = window.location.hash.substring(1); // e.g., "crawl-form"
 
-        if (generalError && targetSectionId) {
-          const targetSection = document.getElementById(targetSectionId);
+        if (generalError && initialSectionId) {
+          const targetSection = document.getElementById(initialSectionId);
           if (targetSection) {
             const errorDiv = document.createElement('div');
-            errorDiv.className = 'form-error-message'; // Add a class for styling if needed
-            errorDiv.style.color = 'var(--color-danger)';
-            errorDiv.style.backgroundColor = 'var(--color-surface)'; // Or a light red
-            errorDiv.style.border = '1px solid var(--color-danger)';
-            errorDiv.style.padding = 'var(--spacing-md)';
-            errorDiv.style.marginBottom = 'var(--spacing-md)';
-            errorDiv.style.borderRadius = 'var(--border-radius)';
+            errorDiv.className = 'form-error-message';
             errorDiv.textContent = 'Error: ' + decodeURIComponent(generalError);
-            targetSection.insertBefore(errorDiv, targetSection.firstChild);
-          }
-        }
-        // Smooth scroll to hash if present
-        if (window.location.hash) {
-          try {
-            const targetElement = document.querySelector(window.location.hash);
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Insert error before the fieldset within the form of the target section
+            const formInErrorSection = targetSection.querySelector('form');
+            if (formInErrorSection) {
+                formInErrorSection.insertBefore(errorDiv, formInErrorSection.firstChild);
+            } else { // Fallback if no form, insert into section
+                targetSection.insertBefore(errorDiv, targetSection.firstChild);
             }
-          } catch (e) {
-            // Invalid selector in hash, ignore
-            console.warn('Invalid hash for scrolling:', window.location.hash);
           }
         }
-      })();
+
+        if (!initialSectionId && sidebarLinks.length > 0) {
+            initialSectionId = sidebarLinks[0].dataset.section; // Default to first section
+        }
+        setActiveSection(initialSectionId);
+
+        // If there's a hash, try to scroll to it smoothly after a tiny delay for rendering
+        if (window.location.hash) {
+          setTimeout(() => {
+            try {
+              const targetElement = document.querySelector(window.location.hash);
+              if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            } catch (e) { console.warn('Invalid hash for scrolling:', window.location.hash); }
+          }, 100);
+        }
+      });
     </script>
   `;
-  return PageLayout({ title: 'Crawl & Settings', content, currentNav: 'home' });
+  // Use layoutType: 'sidebar' for this specific view
+  return PageLayout({ title: 'Crawl & Settings', content, currentNav: 'home', layoutType: 'sidebar' });
 }
 
-
-// --- IndexView ---
 function IndexView(urls, {edit = false} = {}) {
   const pageTitle = edit ? 'Edit Your HTML Library Index' : 'Your HTML Library Index';
   const content = `
