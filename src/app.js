@@ -58,7 +58,7 @@ async function start() {
   process.on('unhandledRejection', cleanup);
   process.on('uncaughtException', cleanup);
   process.on('SIGHUP', cleanup);
-  process.on('beforeExit', cleanup);
+  process.on('beforeExit', code => cleanup(code, 'signal', {exit:true}));
   process.on('SIGINT', code => cleanup(code, 'signal', {exit:true}));
   process.on('SIGTERM', code => cleanup(code, 'signal',  {exit:true}));
   process.on('SIGQUIT', code => cleanup(code, 'signal',  {exit:true}));
