@@ -26,7 +26,7 @@ const BROWSERS = [
     name: 'Chromium',
     pattern: /^chromium/i,
     cmdPattern: /[\/\\]chromium/i,
-    exec: { win32: 'chrome.exe', darwin: 'Chromium', linux: 'chromium', freebsd: 'chromium' },
+    exec: { win32: 'chrome.exe', darwin: 'Chromium', linux: 'chromium-browser', freebsd: 'chromium' },
     package: { linux: 'chromium-browser', darwin: 'https://www.chromium.org/getting-involved/download-chromium/', win32: 'https://www.chromium.org/getting-involved/download-chromium/', freebsd: 'chromium' }
   },
   {
@@ -334,6 +334,7 @@ async function cleanup(reason, err, { exit = false } = {}) {
 
   console.log(chalk.cyan(`Shutting down...`));
   DEBUG.verbose && console.log(chalk.yellow(`Cleanup reason: ${reason}`, err));
+  console.log({quitting,exit,reason,err}, (new Error).stack);
 
   Archivist.shutdown();
   LibraryServer.stop();
