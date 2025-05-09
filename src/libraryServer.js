@@ -432,7 +432,7 @@ function MainApplicationView() {
     <div class="main-content-area">
       <h2 class="page-title" style="display: none;" id="main-content-title">Crawl & Application Settings</h2>
 
-      <section id="crawl-form" aria-labelledby="crawl-form-legend" class="active-section"> {/* Default active section */}
+      <section id="crawl-form" aria-labelledby="crawl-form-legend" class="active-section">
         <form method="POST" action="/crawl">
           <fieldset>
             <legend id="crawl-form-legend">Start a New Crawl</legend>
@@ -504,7 +504,7 @@ function MainApplicationView() {
           </fieldset>
         </form>
       </section>
-    </div> {/* End .main-content-area */}
+    </div> 
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
