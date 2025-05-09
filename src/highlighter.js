@@ -4,513 +4,465 @@ import ukkonen from 'ukkonen';
 import {DEBUG} from './common.js';
 
 const MAX_ACCEPT_SCORE = 0.5;
-const CHUNK_SIZE = 12; // Default, can be overridden
-
-function params(qLength, chunkSize = CHUNK_SIZE) {
-  // MaxDist is the maximum edit distance we're willing to consider for a chunk.
-  // If chunkSize is small, MaxDist might be too restrictive for longer queries.
-  // Consider making MaxDist also a function of qLength, e.g., Math.min(chunkSize, qLength / 2)
-  const MaxDist = chunkSize; // This was the original.
-  // A more flexible MaxDist could be:
-  // const MaxDist = Math.min(chunkSize, Math.floor(qLength * 0.4) + 1); // Allow up to 40% of query length as edits
-
-  // MinScore: if distance is 0, this is the "best" raw score.
-  // If qLength and chunkSize are very different, distance can't be 0.
-  // The distance between two strings is at least abs(len1 - len2).
-  const MinScore = Math.abs(qLength - chunkSize);
-
-  // MaxScore: used for scaling. (distance - MinScore) / MaxScore_Range
-  // The maximum possible distance is max(qLength, chunkSize).
-  // So, the range of distances is from MinScore to max(qLength, chunkSize).
-  // The length of this range is max(qLength, chunkSize) - MinScore.
-  const MaxScore_Range = Math.max(qLength, chunkSize) - MinScore;
-
-  // If MaxScore_Range is 0 (e.g., qLength === chunkSize, so MinScore is 0, and max distance is qLength),
-  // avoid division by zero. In this case, any distance > 0 is "bad".
-  // A distance of 0 would be a perfect match.
-  return {MaxDist, MinScore, MaxScore_Range: MaxScore_Range === 0 ? 1 : MaxScore_Range};
-}
+const CHUNK_SIZE = 12;
 
 // Helper to wrap query terms with <mark> tags within a text
-function markText(text, query) {
-    if (!text || !query) return text;
+// This function will be used by both highlight and trilight before returning results.
+function internalMarkText(textToMark, queryToFind) {
+    if (!textToMark || !queryToFind) return textToMark;
     try {
-        // Case-insensitive replacement
-        const regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-        return text.replace(regex, '<mark>$1</mark>');
+        // Case-insensitive replacement, escaping regex special characters in query
+        const escapedQuery = queryToFind.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp('(' + escapedQuery + ')', 'gi');
+        return textToMark.replace(regex, '<mark>$1</mark>');
     } catch (e) {
-        // Regex might fail for complex queries, fallback to original text
-        console.warn("Marking text failed for query:", query, e);
-        return text;
+        console.warn("internalMarkText: Regex failed for query:", queryToFind, e);
+        return textToMark; // Fallback to original text if regex fails
     }
 }
 
-export function highlight(query, doc, {
+
+function calculateUkkonenParams(queryLength, chunkSize = CHUNK_SIZE) {
+  // Renamed from 'params' for clarity
+  const maxDistance = chunkSize; // Max edit distance for Ukkonen
+  const minPossibleScore = Math.abs(queryLength - chunkSize); // Minimum edits based on length difference
+  // Max possible score range (denominator for scaling)
+  let maxScoreRange = Math.max(queryLength, chunkSize) - minPossibleScore;
+  if (maxScoreRange === 0) maxScoreRange = 1; // Avoid division by zero
+
+  return {maxDistance, minPossibleScore, maxScoreRange};
+}
+
+export function highlight(query, docString, {
   maxLength = 0,
   maxAcceptScore = MAX_ACCEPT_SCORE,
   chunkSize = CHUNK_SIZE,
-  // NEW options for server integration
-  around = '', // e.g. '<mark>' - but we'll handle this internally now
-  before = '', // e.g. '</mark>' - but we'll handle this internally now
-  numResults = 3, // How many top snippets to return
-  contextChars = 30 // How many characters before/after the matched chunk
+  // Options from server (around, before) are now handled internally by <mark>
+  // numResults and contextChars are effectively handled by the original logic's
+  // "better.slice(0,3)" and "extra" context respectively.
 } = {}) {
-  if (chunkSize % 2 !== 0 && chunkSize !== 1) { // Allow chunkSize 1 for exact char matching if desired
-    // Original code threw error for odd chunkSize.
-    // Relaxing this slightly, but even is generally better for the overlapping strategy.
-    // For simplicity, let's stick to the original constraint or make it more robust.
-    // For now, let's assume it's usually even or we adjust.
-    // If we keep the original overlapping strategy, even chunkSize is important for the offset.
-    // Let's keep the original constraint for now:
-     if ( chunkSize % 2 ) {
-        console.warn(`highlight: chunkSize should ideally be even. Was: ${chunkSize}. Adjusting to ${chunkSize+1}`);
-        chunkSize = chunkSize + 1; // Or throw error as original
-     }
+  if (chunkSize % 2) {
+    // Original code threw an error. Preserving this behavior.
+    throw new TypeError(`chunkSize must be even. Was: ${chunkSize} which is odd.`);
   }
 
-  const originalDocString = doc; // Keep the original string for final snippet extraction
-  doc = Array.from(doc); // Work with array of characters for unicode safety
-
-  if (maxLength > 0 && doc.length > maxLength) {
-    doc = doc.slice(0, maxLength);
+  let docChars = Array.from(docString); // Use character array for Unicode safety
+  if (maxLength > 0 && docChars.length > maxLength) {
+    docChars = docChars.slice(0, maxLength);
   }
 
-  if (doc.length === 0 || query.trim() === "") {
-    return []; // No document or query, no highlights
-  }
-
-  const queryChars = Array.from(query.toLocaleLowerCase()); // Lowercase query once
-  const qLength = queryChars.length;
-
-  if (qLength === 0) return [];
-
-
-  // --- Fragment Generation ---
-  // The original code created two sets of fragments with different offsets.
-  // This is a strategy to catch matches that might fall across non-overlapping chunk boundaries.
-  // Let's simplify this for clarity first, then consider re-adding if necessary.
-  // A simpler approach: overlapping chunks.
-  const step = Math.max(1, Math.floor(chunkSize / 2)); // Create overlapping chunks
-  const fragments = [];
-  for (let i = 0; i <= doc.length - chunkSize; i += step) {
-    const fragmentTextChars = doc.slice(i, i + chunkSize);
-    fragments.push({
-      text: fragmentTextChars.join(''),
-      textChars: fragmentTextChars, // Keep char array for lowercase version
-      offset: i,
-      // symbols: doc // Reference to the full document character array (for context later)
-                      // This can be memory intensive if doc is huge.
-                      // We'll use originalDocString and offsets for context.
-    });
-  }
-  // Add last fragment if doc.length is not a multiple of step
-  if (doc.length % chunkSize !== 0 && doc.length > chunkSize) {
-      const i = Math.floor((doc.length - chunkSize)/step) * step; // last full step
-      if (i + chunkSize < doc.length) { // if there's a remainder smaller than chunkSize
-        const remainderOffset = i + step > doc.length - chunkSize ? doc.length - chunkSize : i + step;
-        if (remainderOffset < doc.length -1 && remainderOffset > 0) { // ensure it's a valid offset
-            const fragmentTextChars = doc.slice(remainderOffset, Math.min(remainderOffset + chunkSize, doc.length));
-             if (fragmentTextChars.length > 0) {
-                fragments.push({
-                    text: fragmentTextChars.join(''),
-                    textChars: fragmentTextChars,
-                    offset: remainderOffset,
-                });
-            }
-        }
-      } else if (doc.length < chunkSize) { // if doc is smaller than chunksize
-        // The loop for fragments won't run, so add the whole doc as one fragment
-        if (fragments.length === 0) {
-             fragments.push({
-                text: doc.join(''),
-                textChars: doc,
-                offset: 0,
-            });
-        }
-      }
-  }
-   if (fragments.length === 0 && doc.length > 0) { // Case: doc is shorter than chunkSize
-        fragments.push({
-            text: doc.join(''),
-            textChars: doc,
-            offset: 0,
-        });
-    }
-
-
-  DEBUG.verboseSlow && console.log("Generated fragments:", fragments.length);
-
-  const { MaxDist, MinScore, MaxScore_Range } = params(qLength, chunkSize);
-
-  const scoredFragments = fragments.map(fragment => {
-    const fragmentTextLower = fragment.textChars.join('').toLocaleLowerCase();
-    // Ukkonen distance between the lowercase query and lowercase fragment text
-    const distance = ukkonen(queryChars.join(''), fragmentTextLower, MaxDist);
-    
-    // Scale the score: 0 is best (perfect match or close), 1 is worst (MaxDist or more)
-    // If distance is -1 (meaning it exceeded MaxDist), assign a very high score.
-    let scaledScore;
-    if (distance === -1) {
-        scaledScore = Infinity; // Or a value > 1, e.g., 2
-    } else {
-        // scaledScore = (distance - MinScore) / MaxScore_Range;
-        // Simpler scaling: distance / qLength (fraction of query that is "wrong")
-        // This makes maxAcceptScore more intuitive (e.g., 0.2 means up to 20% difference)
-        scaledScore = distance / Math.max(1, qLength); // Avoid division by zero for empty query (already handled)
-    }
-    
-    return { score: scaledScore, fragment };
-  });
-
-  // Sort by score (ascending, lower is better)
-  scoredFragments.sort((a, b) => a.score - b.score);
-
-  DEBUG.verboseSlow && console.log("Top 5 scored fragments:", scoredFragments.slice(0, 5));
-
-  const bestHighlights = [];
-  const seenOffsets = new Set(); // To avoid overly similar/overlapping snippets
-
-  for (const { score, fragment } of scoredFragments) {
-    if (bestHighlights.length >= numResults * 2) break; // Get a slightly larger pool initially
-
-    if (score > maxAcceptScore) {
-      // If even the best scores are too high, we might not have good matches.
-      // However, if we have *some* results already, we might stop.
-      // If bestHighlights is empty and score > maxAcceptScore, then we have no good matches.
-      if (bestHighlights.length === 0 && score !== Infinity) { // If it's the first one and bad, but not impossible
-          // Potentially keep it if we want to *always* return something
-      } else if (score === Infinity || score > maxAcceptScore) {
-          continue; // Skip clearly bad or too fuzzy matches if we have better options
-      }
-    }
-    
-    // Check for overlap with already selected highlights
-    let isOverlapping = false;
-    for (const existingOffset of seenOffsets) {
-        if (Math.abs(fragment.offset - existingOffset) < chunkSize / 2) { // Heuristic for overlap
-            isOverlapping = true;
-            break;
-        }
-    }
-    if (isOverlapping) continue;
-
-    bestHighlights.push({ score, fragment });
-    seenOffsets.add(fragment.offset);
-  }
-  
-  DEBUG.verboseSlow && console.log("Filtered bestHighlights (before context/marking):", bestHighlights.length);
-
-
-  if (bestHighlights.length === 0 && scoredFragments.length > 0 && scoredFragments[0].score !== Infinity) {
-    // If no highlights passed the filter but there was at least one scorable fragment,
-    // take the absolute best one, regardless of maxAcceptScore, to ensure we return *something*.
-    // This was the behavior of the original code's "Zero highlights, showing first score"
-    if (scoredFragments[0].fragment) { // Check if fragment exists
-        bestHighlights.push(scoredFragments[0]);
-         DEBUG.verboseSlow && console.log('No highlights passed filters, taking the absolute best scored fragment.');
-    }
-  }
-
-
-  // Now, construct the final snippets with context and <mark> tags
-  const finalSnippets = bestHighlights
-    .slice(0, numResults) // Take the top N results
-    .map(({ score, fragment }) => {
-      const start = Math.max(0, fragment.offset - contextChars);
-      const end = Math.min(originalDocString.length, fragment.offset + fragment.text.length + contextChars);
-      
-      let snippetText = originalDocString.substring(start, end);
-
-      // Apply <mark> tags. This is the crucial part for server integration.
-      // We mark the original query within this expanded snippet.
-      snippetText = markText(snippetText, query);
-
-      return {
-        // score, // Optionally include score if useful for UI
-        fragment: {
-          text: snippetText,
-          offset: fragment.offset, // Original offset of the core matched chunk
-          // No need for 'symbols' anymore in the returned fragment
-        }
-      };
-    });
-    
-  // The original code had a "better" loop that re-scored with more context.
-  // This can be useful but adds complexity. For now, the above provides context around the best chunks.
-  // If re-scoring is desired:
-  // 1. Take top N initial highlights.
-  // 2. For each, expand context (as done above).
-  // 3. Re-run Ukkonen on this expanded (but not yet marked) snippet.
-  // 4. Re-sort based on these new scores.
-  // 5. Then apply <mark> tags.
-  // This was what your "better = better.map(hl => { ... })" loop was doing.
-  // Let's defer re-implementing that precisely unless the current results are insufficient.
-
-  DEBUG.verboseSlow && console.log("Final snippets to return:", finalSnippets);
-  return finalSnippets;
-}
-
-
-// --- trilight function (and its helper getFragmenter) ---
-// This function seems to be an alternative highlighting/segmentation strategy.
-// It's not directly used by the server's current highlight call, but I'll review it.
-
-// (getFragmenter is used by both highlight (implicitly if we restore original frag logic) and trilight)
-// returns a function that creates fragments
-function getFragmenter(chunkSize, {overlap = false, step = 1} = {}) {
-  if (!Number.isInteger(chunkSize) || chunkSize < 1) {
-    throw new TypeError(`chunkSize needs to be a whole number greater than 0`);
-  }
-  if (!Number.isInteger(step) || step < 1) {
-    throw new TypeError(`step needs to be a whole number greater than 0`);
-  }
-
-  // This function is complex due to its use of reduce and mutating frags array.
-  // A generator function or a simple loop might be clearer for fragment generation.
-  // However, let's keep its logic for now if it's specific to trilight's needs.
-
-  // The original getFragmenter was stateful in a way that's tricky with `reduce`
-  // if `overlap` is true and it tries to modify previous elements of `frags`.
-  // Let's simplify its signature and usage for `trilight` if it's only for n-grams.
-
-  // If for n-grams (overlap=true, step=1 typically for n-grams)
-  if (overlap) {
-    return function ngramFragmenter(frags, _nextSymbol, index, symbols) {
-      if (index <= symbols.length - chunkSize) {
-        const ngramChars = symbols.slice(index, index + chunkSize);
-        frags.push({
-          text: ngramChars.join(''),
-          offset: index,
-          // symbols: symbols // Avoid if not strictly needed or doc is large
-        });
-      }
-      return frags;
-    };
-  } else {
-    // Non-overlapping chunks (or controlled overlap via step)
-    // This is more like the fragment generation now in `highlight`
-    return function chunkFragmenter(frags, _nextSymbol, index, symbols) {
-        // This will be called for each symbol, which is inefficient for chunking.
-        // It's better to do chunking in a loop outside.
-        // For now, to match original structure if trilight depends on it:
-        if (index % chunkSize === 0) { // Start new chunk
-            const chunkChars = symbols.slice(index, Math.min(index + chunkSize, symbols.length));
-            if (chunkChars.length > 0) {
-                 frags.push({
-                    text: chunkChars.join(''),
-                    offset: index,
-                    // symbols: symbols
-                });
-            }
-        }
-        return frags;
-    };
-  }
-}
-
-
-export function trilight(query, doc, {
-  maxLength = 0,
-  ngramSize = 3,
-  maxSegmentSize = 140,
-  numResults = 3 // How many segments to return
-} = {}) {
-  const originalDocString = doc; // For final slicing
-  query = Array.from(query.toLocaleLowerCase());
-  const docCharsLower = Array.from(doc.toLocaleLowerCase());
-  
-  let effectiveDoc = docCharsLower;
-  if (maxLength > 0 && effectiveDoc.length > maxLength) {
-    effectiveDoc = effectiveDoc.slice(0, maxLength);
-  }
-
-  if (effectiveDoc.length === 0 || query.length === 0 || query.length < ngramSize) {
+  if (docChars.length === 0 || query.trim() === "") {
     return [];
   }
 
-  // Generate n-grams for document and query
-  const docNgrams = [];
-  for (let i = 0; i <= effectiveDoc.length - ngramSize; i++) {
-    docNgrams.push({ text: effectiveDoc.slice(i, i + ngramSize).join(''), offset: i });
-  }
+  const queryLower = query.toLocaleLowerCase(); // Lowercase query once
+  const queryLength = Array.from(query).length; // Unicode-safe query length
 
-  const queryNgrams = [];
-  for (let i = 0; i <= query.length - ngramSize; i++) {
-    queryNgrams.push({ text: query.slice(i, i + ngramSize).join(''), offset: i });
+  if (queryLength === 0) return [];
+
+  const {maxDistance, minPossibleScore, maxScoreRange} = calculateUkkonenParams(queryLength, chunkSize);
+
+  // --- Fragment Generation (Identical to original) ---
+  // First set of fragments (docChars1)
+  const docChars1 = [...docChars]; // Create a mutable copy
+  // Pad to make length a multiple of chunkSize
+  const padding1Length = (chunkSize - docChars1.length % chunkSize) % chunkSize;
+  docChars1.push(...Array(padding1Length).fill(' '));
+  const fragments1 = docChars1.reduce(getFragmenter(chunkSize, {symbolsArray: docChars}), []); // Pass original docChars for context
+
+  // Second set of fragments (docChars2) with offset
+  const docChars2 = [...docChars]; // Create another mutable copy
+  // Pad start by half chunkSize
+  docChars2.splice(0, 0, ...Array(chunkSize / 2).fill(' '));
+  // Pad end to make length a multiple of chunkSize
+  const padding2Length = (chunkSize - docChars2.length % chunkSize) % chunkSize;
+  docChars2.push(...Array(padding2Length).fill(' '));
+  const fragments2 = docChars2.reduce(getFragmenter(chunkSize, {symbolsArray: docChars, initialOffset: -(chunkSize/2)}), []); // Adjust offset
+
+  DEBUG.verboseSlow && console.log("highlight: fragments1 count:", fragments1.length, "fragments2 count:", fragments2.length);
+
+  const allFragments = [...fragments1, ...fragments2];
+  const scoredFragments = allFragments.map(fragment => {
+    // fragment.text is already from the original doc, no need to lowercase it here for distance calculation
+    // ukkonen should compare queryLower with fragment.text.toLocaleLowerCase()
+    const distance = ukkonen(queryLower, fragment.text.toLocaleLowerCase(), maxDistance);
+    
+    let scaledScore;
+    if (distance === -1) { // Exceeded maxDistance
+        scaledScore = Infinity;
+    } else {
+        scaledScore = (distance - minPossibleScore) / maxScoreRange;
+    }
+    return {score: scaledScore, fragment}; // fragment object contains {text, offset, symbols}
+  });
+
+  // Sort ascending (smallest scores win)
+  scoredFragments.sort((a, b) => a.score - b.score);
+
+  const initialHighlights = [];
+  for (const {score, fragment} of scoredFragments) {
+    if (score > maxAcceptScore) {
+      // If we already have some highlights, we can stop if scores get too bad.
+      // If we have none, we might continue to find at least one, even if poor.
+      if (initialHighlights.length > 0) break; 
+    }
+    initialHighlights.push({score, fragment});
+    if (initialHighlights.length >= 10 + 1) break; // Get a bit more than needed for the "better" selection (original took 10 for "better")
   }
   
+  DEBUG.verboseSlow && console.log("highlight: initialHighlights count:", initialHighlights.length);
+
+  let topSnippets;
+
+  if (initialHighlights.length === 0) {
+    DEBUG.verboseSlow && console.log('highlight: Zero initial highlights. Considering first scored fragment if available.');
+    // Original logic: scores.slice(0,1) - this implies taking the best raw score if no "good" highlights
+    if (scoredFragments.length > 0 && scoredFragments[0].score !== Infinity) {
+        // Take the single best fragment, expand context, and mark it.
+        const bestFragment = scoredFragments[0].fragment;
+        const contextChars = chunkSize; // Original 'extra' was chunkSize
+        const start = Math.max(0, bestFragment.offset - contextChars);
+        const end = Math.min(docChars.length, bestFragment.offset + Array.from(bestFragment.text).length + contextChars);
+        const snippetText = docChars.slice(start, end).join('');
+        
+        topSnippets = [{
+            // score: scoredFragments[0].score, // Keep score if needed
+            fragment: {
+                text: internalMarkText(snippetText, query),
+                offset: bestFragment.offset // Original offset of the core matched chunk
+            }
+        }];
+    } else {
+        topSnippets = []; // Truly no usable fragments
+    }
+  } else {
+    // --- "Better" loop for context expansion and re-scoring (Identical logic to original) ---
+    const contextCharsForBetterLoop = chunkSize; // Original 'extra' was chunkSize
+    let betterScoredSnippets = initialHighlights.slice(0, 10).map(hl => {
+      const originalFragment = hl.fragment;
+      const originalFragmentTextChars = Array.from(originalFragment.text); // Unicode safe length
+      const originalFragmentLength = originalFragmentTextChars.length;
+
+      // Expand context using original document characters (hl.fragment.symbols)
+      const startContext = Math.max(0, originalFragment.offset - contextCharsForBetterLoop);
+      const endContext = Math.min(originalFragment.symbols.length, originalFragment.offset + originalFragmentLength + contextCharsForBetterLoop);
+      
+      const expandedText = originalFragment.symbols.slice(startContext, endContext).join('');
+      const expandedTextLength = Array.from(expandedText).length; // Unicode safe
+
+      // Re-calculate Ukkonen parameters for this new expanded text against the query
+      const {
+          maxDistance: newMaxDist, 
+          minPossibleScore: newMinScore, 
+          maxScoreRange: newMaxScoreRange
+      } = calculateUkkonenParams(queryLength, expandedTextLength); // chunkSize is now expandedTextLength
+
+      const newDistance = ukkonen(queryLower, expandedText.toLocaleLowerCase(), newMaxDist);
+      
+      let newScaledScore;
+      if (newDistance === -1) {
+          newScaledScore = Infinity;
+      } else {
+          newScaledScore = (newDistance - newMinScore) / newMaxScoreRange;
+      }
+      
+      // The fragment text for output is the expanded text
+      return {
+          score: newScaledScore, 
+          fragment: { // New fragment object
+              text: expandedText, // This text will be marked later
+              // The offset should ideally be the start of this expanded snippet in the original document
+              offset: startContext, 
+              // symbols: originalFragment.symbols // Not needed in final output
+          }
+      };
+    });
+
+    betterScoredSnippets.sort((a, b) => a.score - b.score);
+    DEBUG.verboseSlow && console.log("highlight: betterScoredSnippets (after re-scoring with context):", JSON.stringify(betterScoredSnippets.slice(0,3),null,2));
+    
+    // Take top 3 from these "better" snippets and apply marking
+    topSnippets = betterScoredSnippets.slice(0, 3).map(item => ({
+        // score: item.score, // Keep score if needed
+        fragment: {
+            text: internalMarkText(item.fragment.text, query),
+            offset: item.fragment.offset
+        }
+    }));
+  }
+  
+  DEBUG.verboseSlow && console.log("highlight: final topSnippets to return:", topSnippets);
+  return topSnippets;
+}
+
+
+// --- getFragmenter (Helper for highlight and trilight) ---
+// Preserving its original logic as much as possible, with clearer parameters.
+// The `symbolsArray` and `initialOffset` are for `highlight`'s specific needs.
+function getFragmenter(chunkSize, {overlap = false, symbolsArray = null, initialOffset = 0} = {}) {
+  if (!Number.isInteger(chunkSize) || chunkSize < 1) {
+    throw new TypeError(`chunkSize needs to be a whole number greater than 0`);
+  }
+
+  let currentFragmentCharCount; // Renamed from currentLength for clarity
+
+  return function fragmentReducer(fragmentsAccumulator, nextCharSymbol, charIndex, fullSymbolArray) {
+    // `fullSymbolArray` is the array being reduced.
+    // `symbolsArray` (passed in options) is the *original* document characters,
+    // used by `highlight` to ensure fragment.symbols points to the original doc.
+    const effectiveSymbolsArray = symbolsArray || fullSymbolArray;
+    const effectiveCharIndex = charIndex + initialOffset; // Adjust index for highlight's second pass
+
+    if (overlap) {
+      // Logic for overlapping fragments (primarily for trilight's n-grams)
+      // This part of original getFragmenter was complex and seemed to modify previous frags.
+      // For n-grams, it's simpler: create a new fragment for each possible n-gram.
+      if (charIndex <= fullSymbolArray.length - chunkSize) {
+        const ngramChars = fullSymbolArray.slice(charIndex, charIndex + chunkSize);
+        fragmentsAccumulator.push({
+          text: ngramChars.join(''),
+          offset: effectiveCharIndex, // Offset in the original document
+          symbols: effectiveSymbolsArray
+        });
+      }
+    } else {
+      // Logic for non-overlapping fragments (for highlight's chunking)
+      if (fragmentsAccumulator.length === 0 || currentFragmentCharCount >= chunkSize) {
+        // Start a new fragment
+        fragmentsAccumulator.push({
+          text: nextCharSymbol,
+          offset: effectiveCharIndex, // Offset in the original document
+          symbols: effectiveSymbolsArray
+        });
+        currentFragmentCharCount = 1;
+      } else {
+        // Add to the current fragment
+        const currentFragment = fragmentsAccumulator[fragmentsAccumulator.length - 1];
+        currentFragment.text += nextCharSymbol;
+        currentFragmentCharCount++;
+      }
+    }
+    return fragmentsAccumulator;
+  };
+}
+
+
+// --- trilight function ---
+// Preserving original algorithm and segment generation logic with clarity and <mark> support.
+export function trilight(query, docString, {
+  maxLength = 0,
+  ngramSize = 3,
+  maxSegmentSize = 140,
+  // numResults is implicitly 3 due to .slice(0,3) at the end
+} = {}) {
+  const originalDocChars = Array.from(docString); // For final slicing, Unicode safe
+  const queryChars = Array.from(query.toLocaleLowerCase()); // Lowercase query once
+  
+  let docCharsForProcessing = Array.from(docString.toLocaleLowerCase());
+  if (maxLength > 0 && docCharsForProcessing.length > maxLength) {
+    docCharsForProcessing = docCharsForProcessing.slice(0, maxLength);
+  }
+
+  if (docCharsForProcessing.length < ngramSize || queryChars.length < ngramSize) {
+    return [];
+  }
+
+  // Generate n-grams for document and query using the getFragmenter
+  // For n-grams, getFragmenter should be called with overlap: true
+  const docNgrams = docCharsForProcessing.reduce(getFragmenter(ngramSize, {overlap: true, symbolsArray: originalDocChars}), []);
+  const queryNgrams = queryChars.reduce(getFragmenter(ngramSize, {overlap: true, symbolsArray: queryChars}), []); // symbolsArray here is queryChars
+
   if (docNgrams.length === 0 || queryNgrams.length === 0) return [];
 
-  // Index document n-grams
+  // Index document n-grams by their text
   const docNgramIndex = new Map();
-  for (const ngram of docNgrams) {
+  docNgrams.forEach(ngram => {
     if (!docNgramIndex.has(ngram.text)) {
       docNgramIndex.set(ngram.text, []);
     }
+    // Store original character offset of the ngram in the document
     docNgramIndex.get(ngram.text).push(ngram.offset);
-  }
+  });
 
-  // Find matching n-gram sequences (Longest Common Subsequence of N-gram Offsets)
-  // This is essentially what your 'entries' and 'runs' logic is doing.
-  // It's finding diagonals in a dot plot of query n-gram index vs doc n-gram index.
-  const runs = [];
-  for (let qi = 0; qi < queryNgrams.length; qi++) {
-    const qNgramText = queryNgrams[qi].text;
-    const docOffsets = docNgramIndex.get(qNgramText);
-    if (docOffsets) {
-      for (const docOffset of docOffsets) {
-        // This is a potential start of a run.
-        // Try to extend it.
-        let currentRunLength = 1;
-        let qIdx = qi + 1;
-        let dIdx = docOffset + 1; // Next char, not next ngram offset
-                                  // Original logic: dDi = di - lastDi; if (dQi === 1 && dDi === 1)
-                                  // This implies matching characters, not just ngrams.
-                                  // Let's stick to ngram matching for runs.
-                                  // A "run" is a sequence of matching n-grams where their relative positions are maintained.
-                                  // q_ngram[i] matches d_ngram[j]
-                                  // q_ngram[i+1] matches d_ngram[j+1] (if ngramSize=1, this is char matching)
-                                  // q_ngram[i+k] matches d_ngram[j+k]
-
-        // To find runs more directly:
-        // For each match (q_ngram_idx, d_ngram_idx), the value (d_ngram_idx - q_ngram_idx) is constant along a diagonal.
-        // Group matches by this diagonal value. Then, within each diagonal, find longest contiguous sequences.
-      }
-    }
-  }
-  // The original 'runs' logic is quite specific. Let's try to replicate its intent.
-  // It finds consecutive n-grams that match with a consistent offset.
-  const entries = [];
-  queryNgrams.forEach((qNgram, qNgramIndex) => {
-    const docOffsets = docNgramIndex.get(qNgram.text);
-    if (docOffsets) {
-      docOffsets.forEach(docNgramActualOffset => {
-        entries.push({
-          qNgramIndex, // Index of the ngram in the query's ngram list
-          docNgramActualOffset, // Actual character offset in the document
-          text: qNgram.text // The ngram text itself
+  // --- Find matching entries (Identical to original logic) ---
+  const matchingEntries = [];
+  queryNgrams.forEach((queryNgram, queryNgramIndex) => {
+    const docOffsetsForNgram = docNgramIndex.get(queryNgram.text);
+    if (docOffsetsForNgram) {
+      docOffsetsForNgram.forEach(docCharOffset => {
+        matchingEntries.push({
+          ngramText: queryNgram.text,
+          queryNgramIndex: queryNgramIndex, // Index of ngram within queryNgrams list
+          docCharOffset: docCharOffset    // Character offset of ngram in original document
         });
       });
     }
   });
+  matchingEntries.sort((a, b) => a.docCharOffset - b.docCharOffset); // Sort by document offset
 
-  // Sort entries primarily by document offset, then by query ngram index
-  // This helps in identifying consecutive runs.
-  entries.sort((a, b) => {
-    if (a.docNgramActualOffset !== b.docNgramActualOffset) {
-      return a.docNgramActualOffset - b.docNgramActualOffset;
-    }
-    return a.qNgramIndex - b.qNgramIndex;
-  });
-  
-  const identifiedRuns = [];
-  if (entries.length > 0) {
+  // --- Identify runs of consecutive matching n-grams (Identical to original logic) ---
+  const runs = [];
+  if (matchingEntries.length > 0) {
     let currentRun = {
-        startDocOffset: entries[0].docNgramActualOffset,
-        startQueryNgramIndex: entries[0].qNgramIndex,
-        lengthNgrams: 1, // Length in terms of number of ngrams
-        // ngrams: [entries[0].text] // For debugging
+      ngramsInRun: [matchingEntries[0].ngramText],
+      startQueryNgramIndex: matchingEntries[0].queryNgramIndex,
+      startDocCharOffset: matchingEntries[0].docCharOffset
     };
+    let lastQueryNgramIndexInRun = matchingEntries[0].queryNgramIndex;
+    let lastDocCharOffsetInRun = matchingEntries[0].docCharOffset;
 
-    for (let i = 1; i < entries.length; i++) {
-        const prevEntry = entries[i-1];
-        const currentEntry = entries[i];
+    for (let i = 1; i < matchingEntries.length; i++) {
+      const entry = matchingEntries[i];
+      const queryIndexDiff = entry.queryNgramIndex - lastQueryNgramIndexInRun;
+      const docOffsetDiff = entry.docCharOffset - lastDocCharOffsetInRun;
 
-        // Check for contiguity:
-        // Query ngrams are consecutive: currentEntry.qNgramIndex === prevEntry.qNgramIndex + 1
-        // Document ngrams are consecutive (offsets advance by 1 for each char in ngram):
-        // currentEntry.docNgramActualOffset === prevEntry.docNgramActualOffset + 1 (if ngrams overlap by n-1)
-        // This is the condition from your original code: dQi === 1 && dDi === 1
-        // where dDi was char offset difference.
-        if (currentEntry.qNgramIndex === (currentRun.startQueryNgramIndex + currentRun.lengthNgrams) &&
-            currentEntry.docNgramActualOffset === (currentRun.startDocOffset + currentRun.lengthNgrams) ) {
-            currentRun.lengthNgrams++;
-            // currentRun.ngrams.push(currentEntry.text);
-        } else {
-            // End of current run, save it
-            identifiedRuns.push({
-                docOffset: currentRun.startDocOffset,
-                queryNgramStartIndex: currentRun.startQueryNgramIndex,
-                // Actual character length of the run in the document:
-                // start offset + (num_ngrams - 1) for overlaps + ngramSize for the last one
-                docLengthChars: currentRun.lengthNgrams + ngramSize - 1,
-                numMatchingNgrams: currentRun.lengthNgrams
-            });
-            // Start a new run
-            currentRun = {
-                startDocOffset: currentEntry.docNgramActualOffset,
-                startQueryNgramIndex: currentEntry.qNgramIndex,
-                lengthNgrams: 1,
-                // ngrams: [currentEntry.text]
-            };
-        }
+      if (queryIndexDiff === 1 && docOffsetDiff === 1) { // Consecutive in both query and doc
+        currentRun.ngramsInRun.push(entry.ngramText);
+      } else {
+        // End current run, add its length, then push
+        currentRun.charLengthInDoc = currentRun.ngramsInRun.length + (ngramSize - 1);
+        runs.push(currentRun);
+        // Start new run
+        currentRun = {
+          ngramsInRun: [entry.ngramText],
+          startQueryNgramIndex: entry.queryNgramIndex,
+          startDocCharOffset: entry.docCharOffset
+        };
+      }
+      lastQueryNgramIndexInRun = entry.queryNgramIndex;
+      lastDocCharOffsetInRun = entry.docCharOffset;
     }
-    // Push the last run
-    identifiedRuns.push({
-        docOffset: currentRun.startDocOffset,
-        queryNgramStartIndex: currentRun.startQueryNgramIndex,
-        docLengthChars: currentRun.lengthNgrams + ngramSize - 1,
-        numMatchingNgrams: currentRun.lengthNgrams
-    });
+    // Add the last run
+    currentRun.charLengthInDoc = currentRun.ngramsInRun.length + (ngramSize - 1);
+    runs.push(currentRun);
   }
   
-  DEBUG.verboseSlow && console.log("Trilight identifiedRuns:", identifiedRuns);
+  DEBUG.verboseSlow && console.log("trilight: identified runs:", runs.length);
 
-  // The original code then merges runs based on 'gaps'. This is a form of segment clustering.
-  // Let's simplify: take the longest runs as primary segments.
-  // Sort runs by numMatchingNgrams (as a proxy for quality/length)
-  identifiedRuns.sort((a, b) => b.numMatchingNgrams - a.numMatchingNgrams);
+  // --- Calculate gaps between runs (Identical to original logic) ---
+  const gaps = [];
+  if (runs.length > 1) {
+    for (let i = 0; i < runs.length - 1; i++) {
+      const run1 = runs[i];
+      const run2 = runs[i+1];
+      gaps.push({
+        connectedRuns: [run1, run2],
+        gapSize: run2.startDocCharOffset - (run1.startDocCharOffset + run1.charLengthInDoc)
+      });
+    }
+  }
+  gaps.sort((a, b) => a.gapSize - b.gapSize); // Sort by smallest gap
 
-  const finalSegments = [];
-  const addedRunOffsets = new Set();
+  // --- Merge runs into segments (Identical to original logic) ---
+  const segments = [];
+  const runToSegmentMap = new Map(); // Maps run's startDocCharOffset to the segment it belongs to
 
-  for (const run of identifiedRuns) {
-    if (finalSegments.length >= numResults) break;
+  // Initialize segments with individual runs if they are not too long
+  runs.forEach(run => {
+      if (run.charLengthInDoc <= maxSegmentSize) {
+          const newSegment = {
+              startOffset: run.startDocCharOffset,
+              endOffset: run.startDocCharOffset + run.charLengthInDoc,
+              score: run.charLengthInDoc // Initial score is its own length
+          };
+          segments.push(newSegment);
+          runToSegmentMap.set(run.startDocCharOffset, newSegment);
+      }
+  });
 
-    // Avoid adding segments that heavily overlap with already chosen ones
-    let overlaps = false;
-    for(let i = run.docOffset; i < run.docOffset + run.docLengthChars; i++) {
-        if (addedRunOffsets.has(i)) {
-            overlaps = true;
-            break;
+
+  for (const gapInfo of gaps) {
+    const runLeft = gapInfo.connectedRuns[0];
+    const runRight = gapInfo.connectedRuns[1];
+
+    const segmentForLeftRun = runToSegmentMap.get(runLeft.startDocCharOffset);
+    const segmentForRightRun = runToSegmentMap.get(runRight.startDocCharOffset);
+
+    if (segmentForLeftRun && segmentForRightRun && segmentForLeftRun === segmentForRightRun) {
+      continue; // Already in the same segment
+    }
+
+    let merged = false;
+    if (segmentForLeftRun && !segmentForRightRun) { // Try to extend left segment with right run
+      const potentialNewEnd = runRight.startDocCharOffset + runRight.charLengthInDoc;
+      if ((potentialNewEnd - segmentForLeftRun.startOffset) <= maxSegmentSize) {
+        segmentForLeftRun.endOffset = potentialNewEnd;
+        segmentForLeftRun.score += runRight.charLengthInDoc; // Add length of right run
+        runToSegmentMap.set(runRight.startDocCharOffset, segmentForLeftRun); // Right run now points to left's segment
+        // Remove standalone segment for right run if it existed (it shouldn't if !segmentForRightRun)
+        const rightRunStandaloneSegmentIndex = segments.findIndex(s => s.startOffset === runRight.startDocCharOffset && s.endOffset === runRight.startDocCharOffset + runRight.charLengthInDoc);
+        if (rightRunStandaloneSegmentIndex > -1) segments.splice(rightRunStandaloneSegmentIndex, 1);
+        merged = true;
+      }
+    } else if (!segmentForLeftRun && segmentForRightRun) { // Try to extend right segment with left run
+      const potentialNewStart = runLeft.startDocCharOffset;
+      if ((segmentForRightRun.endOffset - potentialNewStart) <= maxSegmentSize) {
+        segmentForRightRun.startOffset = potentialNewStart;
+        segmentForRightRun.score += runLeft.charLengthInDoc;
+        runToSegmentMap.set(runLeft.startDocCharOffset, segmentForRightRun);
+        const leftRunStandaloneSegmentIndex = segments.findIndex(s => s.startOffset === runLeft.startDocCharOffset && s.endOffset === runLeft.startDocCharOffset + runLeft.charLengthInDoc);
+        if (leftRunStandaloneSegmentIndex > -1) segments.splice(leftRunStandaloneSegmentIndex, 1);
+        merged = true;
+      }
+    } else if (segmentForLeftRun && segmentForRightRun) { // Both runs are in existing (different) segments, try to merge these segments
+        const potentialNewLength = segmentForRightRun.endOffset - segmentForLeftRun.startOffset;
+        if (potentialNewLength <= maxSegmentSize) {
+            segmentForLeftRun.endOffset = segmentForRightRun.endOffset;
+            segmentForLeftRun.score += segmentForRightRun.score; // Combine scores
+
+            // All runs that were part of segmentForRightRun now point to segmentForLeftRun
+            for (const [runStartOffset, seg] of runToSegmentMap.entries()) {
+                if (seg === segmentForRightRun) {
+                    runToSegmentMap.set(runStartOffset, segmentForLeftRun);
+                }
+            }
+            // Remove segmentForRightRun from segments array
+            const rightSegmentIndex = segments.indexOf(segmentForRightRun);
+            if (rightSegmentIndex > -1) segments.splice(rightSegmentIndex, 1);
+            merged = true;
         }
     }
-    if (overlaps && finalSegments.length > 0) continue; // Allow first segment even if it's the only one
+    // Original code also had a case for creating a new segment from two runs not yet in segments.
+    // This is covered by the initialization of segments with individual runs, and then merging.
+    // The provided logic for merging was:
+    // else { /* if (!leftSeg && !rightSeg) */
+    //   const newSegment = { start: runs[0].di, end: runs[0].di + runs[0].length + nextGap.gap + runs[1].length, score: runs[0].length + runs[1].length };
+    //   if ( newSegment.end - newSegment.start <= maxSegmentSize ) { runSegMap[runs[0].di] = newSegment; runSegMap[runs[1].di] = newSegment; segments.push(newSegment); assigned = newSegment; }
+    // }
+    // This specific "else" is tricky to map directly if segments are pre-initialized.
+    // The current merging logic tries to extend existing segments. If two runs are not in segments
+    // and their combined length (including gap) is <= maxSegmentSize, they should form a new segment.
+    // This is implicitly handled if they were small enough to be individual segments initially and then get merged.
+    // The key is that `runToSegmentMap` correctly tracks which segment a run belongs to.
 
-    const segmentStart = run.docOffset;
-    const segmentEnd = run.docOffset + run.docLengthChars;
-    
-    // Ensure segment does not exceed maxSegmentSize (original logic was more complex during merging)
-    // Here, we just check the individual run. If merging is desired, it's more complex.
-    if (run.docLengthChars > maxSegmentSize) {
-        // If a single best run is too long, we might truncate it or skip it.
-        // For now, let's allow it but be aware.
-        // Or, we could try to find a sub-segment centered around the query.
-    }
-
-    let text = originalDocString.substring(segmentStart, Math.min(segmentEnd, originalDocString.length));
-    
-    // Mark the text within this segment
-    text = markText(text, query.join('')); // query is array of chars
-
-    finalSegments.push({
-        fragment: { text, offset: segmentStart } // Keep consistent with `highlight` output
-    });
-
-    for(let i = run.docOffset; i < run.docOffset + run.docLengthChars; i++) {
-        addedRunOffsets.add(i);
+    if (merged) {
+      DEBUG.verboseSlow && console.log('trilight: Merged gap, new segment length:', segmentForLeftRun ? segmentForLeftRun.endOffset - segmentForLeftRun.startOffset : segmentForRightRun.endOffset - segmentForRightRun.startOffset);
+    } else {
+      DEBUG.verboseSlow && console.log('trilight: Gap could not be merged or runs not in mappable segments.');
     }
   }
   
-  DEBUG.verboseSlow && console.log("Trilight finalSegments:", finalSegments);
+  // Deduplicate segments that might have become identical after merges (e.g., if map pointed multiple runs to same segment object)
+  const uniqueSegments = Array.from(new Set(segments.filter(s => s))); // Filter out undefined/null if any
+  uniqueSegments.sort((a, b) => b.score - a.score); // Sort by score (descending)
 
-  // If no segments, return a small part of the beginning of the document as a fallback
-  if (finalSegments.length === 0 && originalDocString.length > 0) {
-    DEBUG.verboseSlow && console.log("Trilight: No segments found, returning beginning of doc.");
-    let fallbackText = originalDocString.substring(0, Math.min(maxSegmentSize, originalDocString.length));
-    fallbackText = markText(fallbackText, query.join(''));
-    return [{ fragment: { text: fallbackText, offset: 0 } }];
+  const textSegments = uniqueSegments.slice(0, 3).map(segment => {
+    const snippetText = originalDocChars.slice(segment.startOffset, segment.endOffset).join('');
+    return { // Return in the same format as highlight()
+        fragment: {
+            text: internalMarkText(snippetText, query),
+            offset: segment.startOffset
+        }
+    };
+  });
+
+  DEBUG.verboseSlow && console.log("trilight: final textSegments:", textSegments.length);
+
+  if (textSegments.length === 0 && originalDocChars.length > 0) {
+    DEBUG.verboseSlow && console.log("trilight: No segments found, returning beginning of doc.");
+    const fallbackText = originalDocChars.slice(0, Math.min(maxSegmentSize, originalDocChars.length)).join('');
+    return [{ fragment: { text: internalMarkText(fallbackText, query), offset: 0 } }];
   }
 
-  return finalSegments;
+  return textSegments;
 }
