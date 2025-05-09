@@ -1,217 +1,264 @@
-import fs from 'fs';
-import ChildProcess from 'child_process';
-import util from 'util';
+import fs from 'fs/promises';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import readline from 'readline';
-import {stdin as input, stdout as output} from 'process';
+import { stdin as input, stdout as output } from 'process';
 
 import ChromeLauncher from './launcher.js';
 import psList from '@667/ps-list';
 
-import {DEBUG, sleep, NO_SANDBOX, GO_SECURE} from './common.js';
-
-import {Archivist} from './archivist.js';
+import { DEBUG, sleep, NO_SANDBOX, GO_SECURE } from './common.js';
+import { Archivist } from './archivist.js';
 import LibraryServer from './libraryServer.js';
 import args from './args.js';
 
-const {server_port, mode, chrome_port} = args;
-const CHROME_OPTS = !NO_SANDBOX ? [
-  /*'--restore-last-session',*/
-  `--disk-cache-dir=${args.temp_browser_cache()}`,
-  `--aggressive-cache-discard`
-] : [
-  /*'--restore-last-session',*/
+const { server_port, mode, chrome_port } = args;
+const execAsync = promisify(exec);
+
+// Browser definitions
+const BROWSERS = [
+  { name: 'Chrome', pattern: /^(chrome|google chrome|google-chrome)/i, cmdPattern: /[\/\\]chrome/i },
+  { name: 'Chromium', pattern: /^chromium/i, cmdPattern: /[\/\\]chromium/i },
+  { name: 'Vivaldi', pattern: /^vivaldi/i, cmdPattern: /[\/\\]vivaldi/i },
+  { name: 'Brave', pattern: /^brave/i, cmdPattern: /[\/\\]brave/i },
+  { name: 'Edge', pattern: /^(edge|msedge)/i, cmdPattern: /[\/\\](msedge|edge)/i }
+];
+
+// Chrome launch options
+const chromeFlags = [
   `--disk-cache-dir=${args.temp_browser_cache()}`,
   `--aggressive-cache-discard`,
-  '--no-sandbox',
+  ...(!NO_SANDBOX ? [] : ['--no-sandbox']),
+  ...(process.env.DK_HEADLESS ? ['--headless'] : [])
 ];
-CHROME_OPTS.push(
-  ...(process.env.DK_HEADLESS ? [
-    `--headless`
-  ] : [ ])
-);
 const LAUNCH_OPTS = {
   logLevel: DEBUG.verboseBrowser ? 'verbose' : 'silent',
-  port: chrome_port, 
-  chromeFlags:CHROME_OPTS, 
-  userDataDir:false, 
-  startingUrl: `${GO_SECURE ? 'https' : 'http'}://localhost:${args.server_port}`,
+  port: chrome_port,
+  chromeFlags,
+  userDataDir: false,
+  startingUrl: `${GO_SECURE ? 'https' : 'http'}://localhost:${server_port}`,
   ignoreDefaultFlags: true
-}
+};
+
+// Platform-specific kill commands
 const KILL_ON = (browser) => ({
   win32: `taskkill /IM ${browser} /F`,
   darwin: `kill $(pgrep -i ${browser})`,
   freebsd: `pkill -15 ${browser}`,
-  linux: `pkill -15 ${browser}`,
+  linux: `pkill -15 ${browser}`
 });
-let Browser;
 
-let quitting = false;
-let startingArchivist = false;
-let electOther = false;
+// Prompt user with options
+async function promptUser(question, options) {
+  const rl = readline.createInterface({ input, output });
+  try {
+    console.log(`\n${question}`);
+    options.forEach((opt, i) => console.log(`${i + 1}. ${opt.text}`));
+    const answer = await new Promise(resolve => rl.question('Enter your choice (number, or Enter for default): ', resolve));
+    const choice = parseInt(answer) - 1;
+    return options[choice]?.value || options.find(opt => opt.default)?.value || null;
+  } finally {
+    rl.close();
+  }
+}
 
-start();
+// Detect browser status (running and connectable)
+async function detectBrowsers() {
+  const processes = await psList();
+  DEBUG.showList && console.log({ processes });
 
+  const browserStatus = BROWSERS.map(browser => {
+    const proc = processes.find(({ name, cmd }) =>
+      name?.match?.(browser.pattern) || cmd?.match?.(browser.cmdPattern)
+    );
+    const isRunning = !!proc;
+    const isConnectable = isRunning && proc.cmd.includes(`--remote-debugging-port=${chrome_port}`);
+    return { ...browser, isRunning, isConnectable, proc };
+  });
+
+  // Simulate installed browsers (all defined browsers for now)
+  const installed = browserStatus; // In reality, check with `which` or `where`
+  const running = browserStatus.filter(b => b.isRunning);
+  return { installed, running };
+}
+
+// Kill a browser process
+async function killBrowser(browserName) {
+  if (!(process.platform in KILL_ON(browserName))) {
+    console.warn(`Platform ${process.platform} not supported for killing ${browserName}. Please close it manually.`);
+    return;
+  }
+
+  try {
+    console.log(`Shutting down ${browserName}...`);
+    const { stderr } = await execAsync(KILL_ON(browserName)[process.platform]);
+    if (stderr) {
+      console.log(`No running ${browserName} found.`);
+      DEBUG.verboseSlow && console.warn(`Error closing ${browserName}: ${stderr}`);
+    } else {
+      console.log(`${browserName} shut down.`);
+      await sleep(1000);
+    }
+  } catch (e) {
+    console.warn(`Error shutting down ${browserName}: ${e.message}`);
+  }
+}
+
+// Clean up temporary cache
+async function cleanTempCache() {
+  const tempDir = args.temp_browser_cache();
+  try {
+    if (await fs.access(tempDir).then(() => true).catch(() => false)) {
+      console.log(`Deleting temporary browser cache (${tempDir})...`);
+      await fs.rm(tempDir, { recursive: true });
+      console.log(`Deleted.`);
+    }
+  } catch (e) {
+    console.warn(`Error deleting temporary cache: ${e.message}`);
+  }
+}
+
+// Main startup function
 async function start() {
-  console.log(`Running in node...`);
+  console.log(`Starting DownloadNet...`);
+  let quitting = false;
 
-  process.on('error', cleanup);
-  process.on('unhandledRejection', cleanup);
-  process.on('uncaughtException', cleanup);
-  process.on('SIGHUP', cleanup);
-  process.on('beforeExit', code => cleanup(code, 'signal', {exit:true}));
-  process.on('SIGINT', code => cleanup(code, 'signal', {exit:true}));
-  process.on('SIGTERM', code => cleanup(code, 'signal',  {exit:true}));
-  process.on('SIGQUIT', code => cleanup(code, 'signal',  {exit:true}));
-  process.on('SIGBREAK', code => cleanup(code, 'signal', {exit:true}));
-  process.on('SIGABRT', code => cleanup(code, 'signal',  {exit:true}));
+  // Set up cleanup handlers
+  for (const signal of ['error', 'unhandledRejection', 'uncaughtException', 'SIGHUP']) {
+    process.on(signal, async (err) => await cleanup(err.message || signal, err));
+  }
+  for (const signal of ['beforeExit', 'SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGBREAK', 'SIGABRT']) {
+    process.on(signal, async (code) => await cleanup(`Received ${signal}`, null, { exit: true }));
+  }
 
+  // Step 1: Detect browser status
   console.log(`Checking browsers...`);
-  const {launch:ChromeLaunch} = ChromeLauncher;
+  const { installed, running } = await detectBrowsers();
+  const connectable = running.filter(b => b.isConnectable);
 
-  const list = await psList();
+  // Step 2: Prompt user based on browser status
+  console.log(`\n**Browser Status:**`);
+  console.log(`Installed: ${installed.map(b => b.name).join(', ') || 'None'}`);
+  console.log(`Running: ${running.map(b => b.name).join(', ') || 'None'}`);
+  console.log(`Connectable: ${connectable.map(b => b.name).join(', ') || 'None'}`);
 
-  DEBUG.showList && console.log({list});
+  let browserAction = null;
+  if (connectable.length > 0 || running.length > 0 || installed.length > 0) {
+    const options = [];
+    connectable.forEach(b =>
+      options.push({
+        text: `Use running ${b.name} (already open and connectable)`,
+        value: { action: 'connect', browser: b },
+        default: true
+      })
+    );
+    running.forEach(b =>
+      options.push({
+        text: `Relaunch ${b.name} (to enable remote debugging)`,
+        value: { action: 'relaunch', browser: b }
+      })
+    );
+    installed.forEach(b =>
+      options.push({
+        text: `Launch ${b.name} (new instance)`,
+        value: { action: 'launch', browser: b }
+      })
+    );
+    options.push({ text: 'Exit', value: null });
 
-  const chromeOpen = list.find(({name,cmd}) => name?.match?.(/^(chrome|google chrome|google-chrome)/gi) || cmd?.match?.(/[\/\\]chrome/gi));
-  const chromiumOpen = list.find(({name,cmd}) => name?.match?.(/^(chromium)/gi) || cmd?.match?.(/[\/\\]chromium/gi));
-  const vivaldiOpen = list.find(({name,cmd}) => name?.match?.(/^vivaldi/gi) || cmd?.match?.(/[\/\\]vivaldi/gi));
-  const braveOpen = list.find(({name,cmd}) => name?.match?.(/^brave/gi) || cmd?.match?.(/[\/\\]brave/gi));
-  const edgeOpen = list.find(({name,cmd}) => name?.match?.(/^(edge|msedge)/gi) || cmd?.match?.(/[\/\\](msedge|edge)/gi));
-  const browserOpen = chromeOpen || vivaldiOpen || braveOpen || edgeOpen || chromiumOpen;
-  const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}, {chromiumOpen}];
-  DEBUG.showList && console.log({browserOpen, browsers});
-
-  if ( browserOpen ) {
-    const rl = readline.createInterface({input, output});
-    let shutOne = false;
-    for( const status of browsers ) {
-      const keyName = Object.keys(status)[0];
-      if ( !status[keyName] ) continue;
-      // check browser is connectable via HTTP on port chrome_port, and if it is say "${openBrowserCode} is already open and ready for archiving. Do you want to use it? if not connectable just proceed to relaunch prompt. if  answer is 'no', continue, if answer is 'yes' break out of the loop and short-circuit the 'select' a browser to use prompt (as we already have an answer)
-      DEBUG.showList && console.log(status);
-      const openBrowserCode = keyName.replace('Open', '');
-      Browser = status[keyName].name;
-      console.info(`\n\n [ATTENTION!] Seems ${openBrowserCode} is already open, but we need to relaunch it to use it.\n\n`);
-      if ( DEBUG.askFirst ) {
-        const question = util.promisify(rl.question).bind(rl);
-        console.info(`\nDo you want to use it for your archiving? The reason we ask is, if you don't relaunch you will not be able to use it to save or serve your archives.\n\n`);
-        const answer = await question(`Would you like to relaunch ${openBrowserCode} browser now (y/N) ? `);
-        if ( answer?.match(/^y/i) ) {
-          await killBrowser(Browser); 
-          shutOne = true;
-        } else {
-          console.log(`OK, not relaunching!\n`);
-        }
-      } else {
-        await killBrowser(Browser); 
-      }
-    }
-    if ( !shutOne ) {
-      electOther = true;
-      console.log(`Checking if other browsers are installed and available to use...`);
-    }
+    browserAction = await promptUser(
+      'Select a browser to use for archiving (remote debugging required):',
+      options
+    );
+  } else {
+    console.log('No supported browsers detected. Please install Chrome or a compatible browser.');
+    await cleanup('No browsers available', null, { exit: true });
+    return;
   }
 
-  console.log(`Removing 22120's existing temporary browser cache if it exists...`);
-  if ( fs.existsSync(args.temp_browser_cache()) ) {
-    console.log(`Temp browser cache directory (${args.temp_browser_cache()}) exists, deleting...`);
-    fs.rmdirSync(args.temp_browser_cache(), {recursive:true});
-    console.log(`Deleted.`);
+  if (!browserAction) {
+    console.log('Exiting...');
+    await cleanup('User chose to exit', null, { exit: true });
+    return;
   }
+
+  // Step 3: Handle user choice
+  let browser;
+  if (browserAction.action === 'connect') {
+    console.log(`Connecting to running ${browserAction.browser.name}...`);
+    browser = browserAction.browser;
+    // No need to launch; browser is already running and connectable
+  } else if (browserAction.action === 'relaunch') {
+    await killBrowser(browserAction.browser.name);
+    browserAction = { action: 'launch', browser: browserAction.browser };
+  }
+
+  // Step 4: Clean temporary cache
+  await cleanTempCache();
+
+  // Step 5: Start library server
   console.log(`Launching library server...`);
-  await LibraryServer.start({server_port});
+  await LibraryServer.start({ server_port });
   console.log(`Library server started.`);
 
-  console.log(`Waiting 1 seconds...`);
-  await sleep(1000);
-  console.log(`Launching browser...`);
-  let b;
-  try {
-    b = await ChromeLaunch(LAUNCH_OPTS);
-  } catch(e) {
-    console.log(`Could not launch browser: ${e}.`);
-    DEBUG.verboseSlow && console.info('Chrome launch error:', e);
-    process.exit(1);
+  // Step 6: Launch browser if needed
+  if (browserAction.action === 'launch') {
+    console.log(`Launching ${browserAction.browser.name}...`);
+    try {
+      browser = await ChromeLauncher.launch(LAUNCH_OPTS);
+      browser.on('exit', async err => {
+        console.log('Browser shutting down. Exiting...');
+        await cleanup('Browser exited', err, { exit: true });
+      });
+      browser.on('spawn', () => {
+        if (process.env.DK_HEADLESS) {
+          console.info(`
+            ============= INFO ==============
+            Browser running in headless mode. Attach a display (e.g., BrowserBox) to interact.
+            ==================================
+          `);
+        }
+      });
+      console.log(`Browser started.`);
+      await sleep(2000);
+    } catch (e) {
+      console.error(`Failed to launch browser: ${e.message}`);
+      DEBUG.verboseSlow && console.info('Chrome launch error:', e);
+      await cleanup('Browser launch failed', e, { exit: true });
+      return;
+    }
   }
-  b.on('exit', async err => {
-    console.log('Browser shutting down. Will exit...');
-    if ( ! startingArchivist ) {
-      console.info(`===========INFO===========\n\nLooks like this shutdown happened pretty quickly. Could be because you are running from a terminal without a display?\nIn that case you'll need to connect BrowserBox and run your DownloadNet/DiskerNet/Archivist browser with the headless flag by specifying the environment variable\n\n\t\t"export DK_HEADLESS=true"\n\nAnd also ensure you download BrowserBox and set it up correctly to attach to this headless browser.\n\n==========FIN==============\n`);
-    }
-    await cleanup('Browser exited', err, {exit:true});
-  });
-  b.on('spawn', () => {
-    if ( process.env.DK_HEADLESS ) {
-      console.info(`
-        ============= INFO ==============
 
-          Your browser is running in headless mode so you need to attach a display (like BrowserBox) to it, if you want to interact with it
-          normally.
+  if (quitting) return;
 
-
-       ==================================
-     `);
-    }
-  });
-  
-  console.log(`Browser started.`);
-  console.log(`Waiting 2 seconds...`);
-  await sleep(2000);
-
-  if ( quitting ) return;
-  startingArchivist = true;
-  console.log(`Launching archivist and connecting to browser...`);
-  await Archivist.collect({chrome_port, mode});
+  // Step 7: Start archivist
+  console.log(`Connecting archivist to browser...`);
+  await Archivist.collect({ chrome_port, mode });
   console.log(`System ready.`);
 }
 
-async function killBrowser(browser, wait = true) {
-  try {
-    if ( process.platform in KILL_ON(browser) ) {
-      console.log(`Attempting to shut running browser ${browser}...`);
-      const [err] = (await new Promise(
-        res => ChildProcess.exec(KILL_ON(browser)[process.platform], (...a) => res(a))
-      ));
-      if ( err ) {
-        console.log(`There was no running browser.`);
-        DEBUG.verboseSlow && console.warn("Error closing existing browser", err);
-      } else {
-        console.log(`Running browser shut down.`);
-        if ( wait ) {
-          console.log(`Waiting 1 second...`);
-          await sleep(1000);
-        }
-      }
-    } else {
-      console.warn(`If you have browser running, you may need to shut it down manually and restart 22120.`);
-    }
-  } catch(e) {
-    console.warn("in kill browser", e);
+// Cleanup function
+async function cleanup(reason, err, { exit = false } = {}) {
+  if (quitting) {
+    console.log(`Cleanup already called, skipping...`);
+    return;
+  }
+  quitting = true;
+
+  console.log(`Shutting down...`);
+  DEBUG.verbose && console.log(`Cleanup reason: ${reason}`, err);
+
+  Archivist.shutdown();
+  LibraryServer.stop();
+
+  if (exit) {
+    console.log(`Exiting in 3 seconds...`);
+    await sleep(3000);
+    process.exit(0);
   }
 }
 
-async function cleanup(reason, err, {exit = false} = {}) {
-  if ( quitting ) {
-    console.log(`Cleanup already called so not running again.`);
-    return;
-  }
-  console.log(`Shutting down everything...`);
-  DEBUG.verbose && console.log(`Cleanup called on reason: ${reason}`, err);
-
-  quitting = true;
-
-  Archivist.shutdown();
-
-  LibraryServer.stop();
-
-  //killBrowser(Browser, false); 
-
-  if ( exit ) {
-    console.log(`Take a breath. Everything's done. DownloadNet is exiting in 3 seconds...`);
-
-    await sleep(3000);
-    quitting = false;
-
-    process.exit(0);
-  }
-} 
+// Start the application
+start().catch(async err => {
+  await cleanup('Startup error', err, { exit: true });
+});
