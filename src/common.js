@@ -4,11 +4,11 @@ import fs from 'fs';
 import os from 'os';
 import {APP_ROOT as __ROOT} from './root.js';
 
-const DEEB = false;
+const DEEB = process.env.DEBUG_22120_VERBOSE || false;
 
 export const DEBUG = {
   showBrowser: false,
-  verboseBrowser: false,
+  verboseBrowser: true,
   showList: false,
   showStatus: false,
   debugSec: false,
