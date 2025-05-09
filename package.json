@@ -37,6 +37,7 @@
   "dependencies": {
     "@667/ps-list": "latest",
     "@dosyago/rainsum": "latest",
+    "chalk": "latest",
     "chrome-launcher": "latest",
     "express": "latest",
     "flexsearch": "latest",
@@ -46,7 +47,6 @@
     "ndx": "^1.0.2",
     "ndx-query": "^1.0.1",
     "ndx-serializable": "^1.0.0",
-    "node-fetch": "latest",
     "ukkonen": "latest",
     "ws": "latest"
   },
