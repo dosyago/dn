@@ -34,13 +34,13 @@ const BROWSERS = [
     name: 'Chromium',
     pattern: /^chromium/i,
     cmdPattern: /[\/\\]chromium/i,
-    exec: { win32: 'chrome.exe', darwin: 'Chromium', linux: 'chromium', freebsd: 'chromium' },
+    exec: { win32: 'chrome.exe', darwin: 'Chromium', linux: 'chromium-browser', freebsd: 'chromium' },
     package: { linux: 'chromium-browser', darwin: 'https://www.chromium.org/getting-involved/download-chromium/', win32: 'https://www.chromium.org/getting-involved/download-chromium/', freebsd: 'chromium' },
     paths: [
       '/Applications/Chromium.app/Contents/MacOS/Chromium',
       'C:\\Program Files\\Chromium\\Application\\chrome.exe',
-      '/usr/bin/chromium',
-      '/usr/local/bin/chromium'
+      '/usr/bin/chromium-browser',
+      '/usr/local/bin/chromium-browser'
     ]
   },
   {
