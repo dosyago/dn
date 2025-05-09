@@ -209,7 +209,7 @@ async function start() {
   ];
   for (const signal of signals) {
     process.on(signal, async (errOrCode) => {
-      console.log('what', errOrCode, (new Error).stack);
+      DEBUG.verbose && console.log('what', errOrCode, (new Error).stack);
       const reason = typeof errOrCode === 'string' ? errOrCode : `Received ${signal}`;
       const err = errOrCode instanceof Error ? errOrCode : null;
       await cleanup(reason, err, { exit: true });
