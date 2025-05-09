@@ -4,7 +4,7 @@ import fs from 'fs';
 import os from 'os';
 import {APP_ROOT as __ROOT} from './root.js';
 
-const DEEB = process.env.DEBUG_22120_VERBOSE || true;
+const DEEB = process.env.DEBUG_22120_VERBOSE || false;
 
 export const DEBUG = {
   showBrowser: false,

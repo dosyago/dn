@@ -1,8 +1,7 @@
 import fs from 'fs/promises';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import readline from 'readline';
-import { stdin as input, stdout as output } from 'process';
+import inquirer from 'inquirer';
 
 import ChromeLauncher from './launcher.js';
 import psList from '@667/ps-list';
@@ -41,25 +40,32 @@ const LAUNCH_OPTS = {
 };
 
 // Platform-specific kill commands
-const KILL_ON = (browser) => ({
+const KILL_ON = browser => ({
   win32: `taskkill /IM ${browser} /F`,
   darwin: `kill $(pgrep -i ${browser})`,
   freebsd: `pkill -15 ${browser}`,
   linux: `pkill -15 ${browser}`
 });
 
-// Prompt user with options
+// Prompt user with inquirer
 async function promptUser(question, options) {
-  const rl = readline.createInterface({ input, output });
-  try {
-    console.log(`\n${question}`);
-    options.forEach((opt, i) => console.log(`${i + 1}. ${opt.text}`));
-    const answer = await new Promise(resolve => rl.question('Enter your choice (number, or Enter for default): ', resolve));
-    const choice = parseInt(answer) - 1;
-    return options[choice]?.value || options.find(opt => opt.default)?.value || null;
-  } finally {
-    rl.close();
-  }
+  const choices = options.map((opt, i) => ({
+    name: `${i + 1}. ${opt.text}`,
+    value: opt.value
+  }));
+  const defaultChoice = options.find(opt => opt.default)?.value || options[0].value;
+
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: question,
+      choices,
+      default: defaultChoice
+    }
+  ]);
+
+  return choice;
 }
 
 // Detect browser status (running and connectable)
@@ -76,8 +82,7 @@ async function detectBrowsers() {
     return { ...browser, isRunning, isConnectable, proc };
   });
 
-  // Simulate installed browsers (all defined browsers for now)
-  const installed = browserStatus; // In reality, check with `which` or `where`
+  const installed = browserStatus; // Simulated: assumes all defined browsers are installed
   const running = browserStatus.filter(b => b.isRunning);
   return { installed, running };
 }
@@ -124,11 +129,16 @@ async function start() {
   let quitting = false;
 
   // Set up cleanup handlers
-  for (const signal of ['error', 'unhandledRejection', 'uncaughtException', 'SIGHUP']) {
-    process.on(signal, async (err) => await cleanup(err.message || signal, err));
-  }
-  for (const signal of ['beforeExit', 'SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGBREAK', 'SIGABRT']) {
-    process.on(signal, async (code) => await cleanup(`Received ${signal}`, null, { exit: true }));
+  const signals = [
+    'error', 'unhandledRejection', 'uncaughtException', 'SIGHUP',
+    'beforeExit', 'SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGBREAK', 'SIGABRT'
+  ];
+  for (const signal of signals) {
+    process.on(signal, async (errOrCode) => {
+      const reason = typeof errOrCode === 'string' ? errOrCode : `Received ${signal}`;
+      const err = errOrCode instanceof Error ? errOrCode : null;
+      await cleanup(reason, err, { exit: true });
+    });
   }
 
   // Step 1: Detect browser status
@@ -142,31 +152,26 @@ async function start() {
   console.log(`Running: ${running.map(b => b.name).join(', ') || 'None'}`);
   console.log(`Connectable: ${connectable.map(b => b.name).join(', ') || 'None'}`);
 
-  let browserAction = null;
+  let action = null;
   if (connectable.length > 0 || running.length > 0 || installed.length > 0) {
-    const options = [];
-    connectable.forEach(b =>
-      options.push({
+    const options = [
+      ...connectable.map(b => ({
         text: `Use running ${b.name} (already open and connectable)`,
         value: { action: 'connect', browser: b },
         default: true
-      })
-    );
-    running.forEach(b =>
-      options.push({
+      })),
+      ...running.map(b => ({
         text: `Relaunch ${b.name} (to enable remote debugging)`,
         value: { action: 'relaunch', browser: b }
-      })
-    );
-    installed.forEach(b =>
-      options.push({
+      })),
+      ...installed.map(b => ({
         text: `Launch ${b.name} (new instance)`,
         value: { action: 'launch', browser: b }
-      })
-    );
-    options.push({ text: 'Exit', value: null });
+      })),
+      { text: 'Exit', value: null }
+    ];
 
-    browserAction = await promptUser(
+    action = await promptUser(
       'Select a browser to use for archiving (remote debugging required):',
       options
     );
@@ -176,7 +181,7 @@ async function start() {
     return;
   }
 
-  if (!browserAction) {
+  if (!action) {
     console.log('Exiting...');
     await cleanup('User chose to exit', null, { exit: true });
     return;
@@ -184,13 +189,12 @@ async function start() {
 
   // Step 3: Handle user choice
   let browser;
-  if (browserAction.action === 'connect') {
-    console.log(`Connecting to running ${browserAction.browser.name}...`);
-    browser = browserAction.browser;
-    // No need to launch; browser is already running and connectable
-  } else if (browserAction.action === 'relaunch') {
-    await killBrowser(browserAction.browser.name);
-    browserAction = { action: 'launch', browser: browserAction.browser };
+  if (action.action === 'connect') {
+    console.log(`Connecting to running ${action.browser.name}...`);
+    browser = action.browser;
+  } else if (action.action === 'relaunch') {
+    await killBrowser(action.browser.name);
+    action = { action: 'launch', browser: action.browser };
   }
 
   // Step 4: Clean temporary cache
@@ -202,8 +206,8 @@ async function start() {
   console.log(`Library server started.`);
 
   // Step 6: Launch browser if needed
-  if (browserAction.action === 'launch') {
-    console.log(`Launching ${browserAction.browser.name}...`);
+  if (action.action === 'launch') {
+    console.log(`Launching ${action.browser.name}...`);
     try {
       browser = await ChromeLauncher.launch(LAUNCH_OPTS);
       browser.on('exit', async err => {
