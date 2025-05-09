@@ -73,11 +73,12 @@ async function start() {
   DEBUG.showList && console.log({list});
 
   const chromeOpen = list.find(({name,cmd}) => name?.match?.(/^(chrome|google chrome|google-chrome)/gi) || cmd?.match?.(/[\/\\]chrome/gi));
+  const chromiumOpen = list.find(({name,cmd}) => name?.match?.(/^(chromium)/gi) || cmd?.match?.(/[\/\\]chromium/gi));
   const vivaldiOpen = list.find(({name,cmd}) => name?.match?.(/^vivaldi/gi) || cmd?.match?.(/[\/\\]vivaldi/gi));
   const braveOpen = list.find(({name,cmd}) => name?.match?.(/^brave/gi) || cmd?.match?.(/[\/\\]brave/gi));
   const edgeOpen = list.find(({name,cmd}) => name?.match?.(/^(edge|msedge)/gi) || cmd?.match?.(/[\/\\](msedge|edge)/gi));
-  const browserOpen = chromeOpen || vivaldiOpen || braveOpen || edgeOpen;
-  const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}];
+  const browserOpen = chromeOpen || vivaldiOpen || braveOpen || edgeOpen || chromiumOpen;
+  const browsers = [{chromeOpen}, {vivaldiOpen}, {braveOpen}, {edgeOpen}, {chromiumOpen}];
   DEBUG.showList && console.log({browserOpen, browsers});
 
   if ( browserOpen ) {
@@ -86,19 +87,20 @@ async function start() {
     for( const status of browsers ) {
       const keyName = Object.keys(status)[0];
       if ( !status[keyName] ) continue;
+      // check browser is connectable via HTTP on port chrome_port, and if it is say "${openBrowserCode} is already open and ready for archiving. Do you want to use it? if not connectable just proceed to relaunch prompt. if  answer is 'no', continue, if answer is 'yes' break out of the loop and short-circuit the 'select' a browser to use prompt (as we already have an answer)
       DEBUG.showList && console.log(status);
       const openBrowserCode = keyName.replace('Open', '');
       Browser = status[keyName].name;
-      console.info(`\n\n [ATTENTION!] Seems ${openBrowserCode} is already open.\n\n`);
+      console.info(`\n\n [ATTENTION!] Seems ${openBrowserCode} is already open, but we need to relaunch it to use it.\n\n`);
       if ( DEBUG.askFirst ) {
         const question = util.promisify(rl.question).bind(rl);
-        console.info(`\nDo you want to use it for your archiving? The reason we ask is, because if you don't shut down ${openBrowserCode} and restart it under DownloadNet control you will not be able to use it to save or serve your archives.\n\n`);
-        const answer = await question(`Would you like to shutdown ${openBrowserCode} browser now (y/N) ? `);
+        console.info(`\nDo you want to use it for your archiving? The reason we ask is, if you don't relaunch you will not be able to use it to save or serve your archives.\n\n`);
+        const answer = await question(`Would you like to relaunch ${openBrowserCode} browser now (y/N) ? `);
         if ( answer?.match(/^y/i) ) {
           await killBrowser(Browser); 
           shutOne = true;
         } else {
-          console.log(`OK, not shutting it!\n`);
+          console.log(`OK, not relaunching!\n`);
         }
       } else {
         await killBrowser(Browser); 
@@ -166,7 +168,7 @@ async function start() {
 async function killBrowser(browser, wait = true) {
   try {
     if ( process.platform in KILL_ON(browser) ) {
-      console.log(`Attempting to shut running browser...`);
+      console.log(`Attempting to shut running browser ${browser}...`);
       const [err] = (await new Promise(
         res => ChildProcess.exec(KILL_ON(browser)[process.platform], (...a) => res(a))
       ));
