@@ -270,7 +270,7 @@ async function start() {
     console.log(chalk.cyan(`Connecting to running ${action.browser.name}...`));
     browser = action.browser;
   } else if (action.action === 'relaunch') {
-    await killBrowser(action.browser.name);
+    await killBrowser(action.browser.exec[process.platform]);
     action = { action: 'launch', browser: action.browser };
   } else if (action.action === 'install') {
     console.log(chalk.red(`\n${action.browser.name} is not installed. Please install it to proceed.`));
