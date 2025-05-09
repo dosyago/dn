@@ -38,6 +38,48 @@ const protocol = GO_SECURE ? https : http;
 
 export default LibraryServer;
 
+// --- PageLayout Helper ---
+// (Incorporates changes for new default page and /settings path)
+function PageLayout({ title, content, currentNav, layoutType = 'default' }) {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title} - DownloadNet</title>
+      <link rel="stylesheet" href="/style.css">
+      {/* Favicon: Using the one from your provided code, ensure it's correct */}
+      <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
+    </head>
+    <body>
+      <div class="container">
+        <header class="site-header">
+          {/* Root link now effectively goes to View Index (via redirect) */}
+          <h1><a href="/">DownloadNet</a></h1>
+          <nav class="main-nav">
+            <ul>
+              {/* Order changed, "View Index" is primary, "Crawl & Settings" points to /settings */}
+              <li><a href="/archive_index.html" class="${currentNav === 'index' ? 'active' : ''}">View Index</a></li>
+              <li><a href="/search" class="${currentNav === 'search' ? 'active' : ''}">Search Archive</a></li>
+              <li><a href="/settings" class="${currentNav === 'settings' ? 'active' : ''}">Crawl & Settings</a></li>
+            </ul>
+          </nav>
+        </header>
+        <main class="${layoutType === 'sidebar' ? 'page-with-sidebar' : ''}">
+          ${content}
+        </main>
+        <footer class="site-footer">
+          {/* Corrected copyright symbol and ensured upAt is handled */}
+          <p>© ${new Date().getFullYear()} DownloadNet. Server up since: ${upAt ? upAt.toLocaleString() : 'N/A'}.</p>
+        </footer>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+
 async function start({server_port}) {
   if ( running ) {
     DEBUG.verboseSlow && console.warn(`Attempting to start server when it is not closed. Exiting start()...`);
@@ -45,13 +87,14 @@ async function start({server_port}) {
   }
   running = true;
   
-  if (GO_SECURE) { // Only attempt to load certs if GO_SECURE is true
+  if (GO_SECURE) {
     try {
+      const certPathDir = CERT_PATH(); // Call once
       const sec = {
-        key: fs.readFileSync(path.resolve(CERT_PATH(), 'privkey.pem')),
-        cert: fs.readFileSync(path.resolve(CERT_PATH(), 'fullchain.pem')),
-        ca: fs.existsSync(path.resolve(CERT_PATH(), 'chain.pem')) ?
-            fs.readFileSync(path.resolve(CERT_PATH(), 'chain.pem'))
+        key: fs.readFileSync(path.resolve(certPathDir, 'privkey.pem')),
+        cert: fs.readFileSync(path.resolve(certPathDir, 'fullchain.pem')),
+        ca: fs.existsSync(path.resolve(certPathDir, 'chain.pem')) ?
+            fs.readFileSync(path.resolve(certPathDir, 'chain.pem'))
           :
             undefined
       };
@@ -59,14 +102,12 @@ async function start({server_port}) {
       Object.assign(secure_options, sec);
     } catch(e) {
       console.warn(`GO_SECURE is true, but SSL certs not found or unreadable at ${CERT_PATH()}. Will attempt to use insecure HTTP. Error: ${e.message}`);
-      // Do not clear GO_SECURE, let protocol selection handle it based on available certs
     }
   }
 
-
   try {
     port = server_port;
-    addHandlers(); // Call this before creating server
+    addHandlers();
     const useSecureServer = GO_SECURE && secure_options.key && secure_options.cert;
     const selectedProtocol = useSecureServer ? https : http;
 
@@ -78,9 +119,9 @@ async function start({server_port}) {
     Server = server.listen(Number(port), err => {
       if ( err ) { 
         running = false;
-        throw err; // This will be caught by the outer try-catch
+        throw err;
       } 
-      upAt = new Date(); // Ensure upAt is set here
+      upAt = new Date();
       say({server_up:{
         upAt,
         port,
@@ -98,10 +139,10 @@ async function start({server_port}) {
   }
 }
 
+// --- addHandlers function with routing changes ---
 function addHandlers() {
   app.use(express.urlencoded({extended:true, limit: '50mb'}));
   
-  // Serve static files (like style.css) from SITE_PATH (e.g., public/)
   if ( !sea.isSea() ) {
     app.use(express.static(SITE_PATH));
   }
@@ -110,8 +151,14 @@ function addHandlers() {
     app.use("/library", express.static(args.library_path()))
   }
 
-  // Main Application View for root
+  // --- Root path now redirects to View Index ---
   app.get('/', (req, res) => {
+    res.redirect('/archive_index.html');
+  });
+
+  // --- New path for Crawl & Settings page ---
+  app.get('/settings', (req, res) => {
+    // MainApplicationView now uses currentNav: 'settings'
     res.send(MainApplicationView());
   });
   
@@ -121,6 +168,7 @@ function addHandlers() {
     let page = req.query.page;
 
     if (!oquery || typeof oquery !== 'string' || oquery.trim() === "") {
+      // SearchResultView uses currentNav: 'search'
       return res.send(SearchResultView({results:[], query:'', HL:new Map, page:1, hasMore: false}));
     }
     oquery = oquery.trim();
@@ -132,12 +180,11 @@ function addHandlers() {
     }
 
     let resultIds, query, HL;
-    // Cache stores all result IDs for a query. Pagination is done on these IDs.
     if ( SearchCache.has(oquery) ) {
       ({query, resultIds, HL} = SearchCache.get(oquery));
     } else {
       ({query, results:resultIds, HL} = await Archivist.search(oquery));
-      SearchCache.set(oquery, {query, resultIds, HL}); // Cache all IDs
+      SearchCache.set(oquery, {query, resultIds, HL});
     }
 
     const startIdx = (page-1)*args.results_per_page;
@@ -150,23 +197,19 @@ function addHandlers() {
     } else {
       results.forEach(r => {
         if (r && r.content) {
-          // IMPORTANT: Assumes your `highlight` function can take `around` and `before` options
-          // to wrap matches with <mark> and </mark> respectively.
-          // Or, modify your highlight function to return HTML with <mark> tags.
-          // Example: highlight(query, text, { wrapper: '<mark>$1</mark>' })
-          // The current CSS expects <mark> for highlighted terms.
           r.snippet = '... ' + highlight(query, r.content, {
               maxLength: MAX_HIGHLIGHTABLE_LENGTH, 
-              around: '<mark>', // Opening tag
-              before: '</mark>' // Closing tag
+              around: '<mark>',
+              before: '</mark>'
             })
             .sort(({fragment:{offset:a}}, {fragment:{offset:b}}) => a-b)
-            .map(hl => hl.fragment.text) // Assumes fragment.text now contains the <mark>ed string
+            .map(hl => hl.fragment.text)
             .join(' ... ');
         } else {
           r.snippet = 'Content not available for snippet.';
         }
       });
+      // SearchResultView uses currentNav: 'search'
       res.send(SearchResultView({results, query, HL, page, hasMore}));
     }
   });
@@ -178,12 +221,14 @@ function addHandlers() {
   app.get('/archive_index.html', async (req, res) => {
     Archivist.saveIndex();
     const index = Archivist.getIndex();
+    // IndexView uses currentNav: 'index'
     res.send(IndexView(index, {edit:false}));
   });
 
   app.get('/edit_index.html', async (req, res) => {
     Archivist.saveIndex();
     const index = Archivist.getIndex();
+    // IndexView uses currentNav: 'index'
     res.send(IndexView(index, {edit:true}));
   });
 
@@ -200,7 +245,8 @@ function addHandlers() {
     if (mode && typeof mode === 'string' && ['record', 'replay', 'live'].includes(mode)) {
         Archivist.changeMode(mode);
     }
-    res.redirect('/#mode-settings');
+    // Redirect to /settings page with hash
+    res.redirect('/settings#mode-settings');
   });
 
   app.get('/base_path', async (req, res) => {
@@ -210,7 +256,8 @@ function addHandlers() {
   app.post('/base_path', async (req, res) => {
     const {base_path} = req.body;
     if (typeof base_path !== 'string') {
-        return res.redirect(`/?error=${encodeURIComponent('Invalid base_path provided.')}#base-path-settings`);
+        // Redirect to /settings page with error and hash
+        return res.redirect(`/settings?error=${encodeURIComponent('Invalid base_path provided.')}#base-path-settings`);
     }
     const change = args.updateBasePath(base_path, {before: [
       () => Archivist.beforePathChanged(base_path)
@@ -222,19 +269,20 @@ function addHandlers() {
         Server.close(async () => {
           running = false;
           console.log(`Server closed for base_path change.`);
-          console.log(`Waiting 50ms...`);
           await sleep(50);
-          start({server_port:port}); // Restart server
+          start({server_port:port});
           console.log(`Server restarting with new base_path.`);
         });
-      } else { // Server might not be running if initial setup failed then user tries to set path
+      } else {
           console.log(`Server was not running. Attempting to start with new base_path.`);
           await sleep(50);
           start({server_port:port});
       }
-      res.redirect('/#base-path-settings');
+      // Redirect to /settings page with hash
+      res.redirect('/settings#base-path-settings');
     } else {
-      res.redirect('/#base-path-settings');
+      // Redirect to /settings page with hash
+      res.redirect('/settings#base-path-settings');
     }
   });
 
@@ -246,11 +294,11 @@ function addHandlers() {
         program,
       } = req.body;
 
-      const oTimeout = timeout; // For logging
+      const oTimeout = timeout;
       timeout = Math.round(parseFloat(timeout)*1000);
       depth = Math.round(parseInt(depth));
       batchSize = Math.round(parseInt(batchSize));
-      saveToFile = !!(saveToFile && saveToFile !== 'false'); // Ensure boolean, handles 'true'/'false' strings
+      saveToFile = !!(saveToFile && saveToFile !== 'false');
       minPageCrawlTime = Math.round(parseInt(minPageCrawlTime)*1000);
       maxPageCrawlTime = Math.round(parseInt(maxPageCrawlTime)*1000);
 
@@ -287,7 +335,8 @@ function addHandlers() {
       }).catch(crawlError => {
           console.error("Error during background crawl process:", crawlError);
       });
-      res.redirect('/#crawl-form'); // Redirect immediately
+      // Redirect to /settings page with hash
+      res.redirect('/settings#crawl-form');
     } catch(e) {
       let errorMessage = 'An unexpected error occurred during crawl setup.';
       if ( e instanceof RichError ) { 
@@ -299,15 +348,15 @@ function addHandlers() {
       } else {
         console.warn(e);
       }
-      return res.redirect(`/?error=${encodeURIComponent(errorMessage)}#crawl-form`);
+      // Redirect to /settings page with error and hash
+      return res.redirect(`/settings?error=${encodeURIComponent(errorMessage)}#crawl-form`);
     }
   });
 
-  // SEA asset serving (should be last for catch-all)
   if ( sea.isSea() ) {
     app.get('*', async (req, res) => {
       const requestedPath = req.path.slice(1);
-      const file = requestedPath === '' ? 'index.html' : requestedPath;
+      const file = requestedPath === '' ? 'index.html' : requestedPath; // Should be archive_index.html due to root redirect
       
       if (file === 'style.css') {
         try {
@@ -326,8 +375,8 @@ function addHandlers() {
         if (!file.endsWith('.html')) {
             try {
                 asset = await sea.getAsset(file + '.html');
-            } catch (e2) { /* console.warn(`Asset not found in SEA: ${file} or ${file + '.html'}`); */ }
-        } else { /* console.warn(`Asset not found in SEA: ${file}`); */ }
+            } catch (e2) { /* console.warn for debugging */ }
+        } else { /* console.warn for debugging */ }
       }
 
       if ( asset ) {
@@ -339,10 +388,11 @@ function addHandlers() {
         } 
         res.send(data);
       } else {
-        if (file === 'index.html' && requestedPath === '') {
-            // This should be handled by app.get('/') now. If it reaches here, it's an issue.
-            console.error("Error: SEA handler reached for root path, but app.get('/') should have handled it.");
-            res.status(500).send("Server configuration error for root path in SEA environment.");
+        // If root path ('') falls through, it means /archive_index.html wasn't found in SEA
+        // or another specific handler like /settings wasn't found.
+        if (requestedPath === '' || file === 'archive_index.html' || file === 'settings') {
+            console.error(`Error: SEA handler reached for a primary path (${file}), but it should have been handled or found.`);
+            res.status(404).send(`Primary application asset not found in SEA: ${file}`);
         } else {
             res.status(404).send(`Asset not found in SEA: ${file}`);
         }
@@ -354,69 +404,25 @@ function addHandlers() {
 async function stop() {
   let resolve;
   const pr = new Promise(res => resolve = res);
-
   console.log(`Closing library server...`);
-
   if ( Server ) {
     Server.close((err) => {
-      if (err) {
-        console.error("Error closing library server:", err);
-      } else {
-        console.log(`Library server closed.`);
-      }
-      running = false;
-      Server = null; // Clear server instance
-      resolve();
+      if (err) console.error("Error closing library server:", err);
+      else console.log(`Library server closed.`);
+      running = false; Server = null; resolve();
     });
   } else {
     console.log(`Library server was not running or already closed.`);
-    running = false;
-    resolve();
+    running = false; resolve();
   }
-
   return pr;
 }
 
-function PageLayout({ title, content, currentNav, layoutType = 'default' }) { // Added layoutType
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${title} - DownloadNet</title>
-      <link rel="stylesheet" href="/style.css">
-      <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💾</text></svg>">
-    </head>
-    <body>
-      <div class="container">
-        <header class="site-header">
-          <h1><a href="/">DownloadNet</a></h1>
-          <nav class="main-nav">
-            <ul>
-              <li><a href="/" class="${currentNav === 'home' ? 'active' : ''}">Crawl & Settings</a></li>
-              <li><a href="/search" class="${currentNav === 'search' ? 'active' : ''}">Search Archive</a></li>
-              <li><a href="/archive_index.html" class="${currentNav === 'index' ? 'active' : ''}">View Index</a></li>
-            </ul>
-          </nav>
-        </header>
-        <main class="${layoutType === 'sidebar' ? 'page-with-sidebar' : ''}"> 
-          ${content} 
-        </main>
-        <footer class="site-footer">
-          <p>© ${new Date().getFullYear()} DownloadNet. Server up since: ${upAt ? upAt.toLocaleString() : 'N/A'}.</p>
-        </footer>
-      </div>
-    </body>
-    </html>
-  `;
-}
-
+// --- MainApplicationView (for /settings page) ---
 function MainApplicationView() {
   const currentBasePath = args.getBasePath();
   const currentMode = Archivist.getMode();
 
-  // This 'content' will be placed inside the <main class="page-with-sidebar"> element
   const content = `
     <aside class="page-sidebar">
       <h3>Settings Sections</h3>
@@ -430,8 +436,8 @@ function MainApplicationView() {
     </aside>
 
     <div class="main-content-area">
-      <h2 class="page-title" style="display: none;" id="main-content-title">Crawl & Application Settings</h2>
-
+      {/* The h2 page-title is now part of the PageLayout for consistency, or you can add one here if specific */}
+      
       <section id="crawl-form" aria-labelledby="crawl-form-legend" class="active-section">
         <form method="POST" action="/crawl">
           <fieldset>
@@ -504,36 +510,23 @@ function MainApplicationView() {
           </fieldset>
         </form>
       </section>
-    </div> 
+    </div> {/* End .main-content-area */}
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const sidebarLinks = document.querySelectorAll('.sidebar-nav a[data-section]');
         const contentSections = document.querySelectorAll('.main-content-area > section');
-        const mainContentTitle = document.getElementById('main-content-title'); // Optional: update a title
-
+        
         function setActiveSection(sectionId) {
           let sectionFound = false;
           sidebarLinks.forEach(link => {
-            if (link.dataset.section === sectionId) {
-              link.classList.add('active');
-            } else {
-              link.classList.remove('active');
-            }
+            link.classList.toggle('active', link.dataset.section === sectionId);
           });
-
           contentSections.forEach(section => {
-            if (section.id === sectionId) {
-              section.classList.add('active-section');
-              sectionFound = true;
-              // Optional: Update a dynamic title for the main content area
-              // const legend = section.querySelector('legend');
-              // if (mainContentTitle && legend) mainContentTitle.textContent = legend.textContent;
-            } else {
-              section.classList.remove('active-section');
-            }
+            const isActive = section.id === sectionId;
+            section.classList.toggle('active-section', isActive);
+            if (isActive) sectionFound = true;
           });
-          // If no sectionId matched (e.g. bad hash), default to the first one
           if (!sectionFound && contentSections.length > 0) {
              contentSections[0].classList.add('active-section');
              if(sidebarLinks.length > 0) sidebarLinks[0].classList.add('active');
@@ -542,10 +535,8 @@ function MainApplicationView() {
 
         sidebarLinks.forEach(link => {
           link.addEventListener('click', (event) => {
-            // event.preventDefault(); // Prevent default if href is just "#"
             const sectionId = event.currentTarget.dataset.section;
             setActiveSection(sectionId);
-            // Update hash without causing page jump if possible, or let default href="#sectionId" work
             if (history.pushState) {
                  history.pushState(null, null, '#' + sectionId);
             } else {
@@ -554,10 +545,9 @@ function MainApplicationView() {
           });
         });
 
-        // Handle initial load based on URL hash or error param
         const urlParams = new URLSearchParams(window.location.search);
         const generalError = urlParams.get('error');
-        let initialSectionId = window.location.hash.substring(1); // e.g., "crawl-form"
+        let initialSectionId = window.location.hash.substring(1);
 
         if (generalError && initialSectionId) {
           const targetSection = document.getElementById(initialSectionId);
@@ -565,22 +555,20 @@ function MainApplicationView() {
             const errorDiv = document.createElement('div');
             errorDiv.className = 'form-error-message';
             errorDiv.textContent = 'Error: ' + decodeURIComponent(generalError);
-            // Insert error before the fieldset within the form of the target section
             const formInErrorSection = targetSection.querySelector('form');
             if (formInErrorSection) {
                 formInErrorSection.insertBefore(errorDiv, formInErrorSection.firstChild);
-            } else { // Fallback if no form, insert into section
+            } else {
                 targetSection.insertBefore(errorDiv, targetSection.firstChild);
             }
           }
         }
-
+        
         if (!initialSectionId && sidebarLinks.length > 0) {
-            initialSectionId = sidebarLinks[0].dataset.section; // Default to first section
+            initialSectionId = sidebarLinks[0].dataset.section;
         }
         setActiveSection(initialSectionId);
 
-        // If there's a hash, try to scroll to it smoothly after a tiny delay for rendering
         if (window.location.hash) {
           setTimeout(() => {
             try {
@@ -594,10 +582,12 @@ function MainApplicationView() {
       });
     </script>
   `;
-  // Use layoutType: 'sidebar' for this specific view
-  return PageLayout({ title: 'Crawl & Settings', content, currentNav: 'home', layoutType: 'sidebar' });
+  // Use layoutType: 'sidebar' and currentNav: 'settings' for this specific view
+  return PageLayout({ title: 'Crawl & Settings', content, currentNav: 'settings', layoutType: 'sidebar' });
 }
 
+
+// --- IndexView ---
 function IndexView(urls, {edit = false} = {}) {
   const pageTitle = edit ? 'Edit Your HTML Library Index' : 'Your HTML Library Index';
   const content = `
@@ -677,6 +667,7 @@ function IndexView(urls, {edit = false} = {}) {
     </script>
     ` : ''}
   `;
+  // Uses default layout and currentNav: 'index'
   return PageLayout({ title: pageTitle, content, currentNav: 'index' });
 }
 
@@ -739,5 +730,6 @@ function SearchResultView({results, query, HL, page, hasMore = false}) {
     </nav>
     ` : ''}
   `;
+  // Uses default layout and currentNav: 'search'
   return PageLayout({ title: `Search: ${query || 'Archive'}`, content, currentNav: 'search' });
 }
