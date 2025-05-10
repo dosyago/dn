@@ -138,10 +138,6 @@ async function start({server_port}) {
 // --- addHandlers function with routing changes ---
 function addHandlers() {
   app.use(express.urlencoded({extended:true, limit: '50mb'}));
-  
-  if ( !sea.isSea() ) {
-    app.use(express.static(SITE_PATH));
-  }
 
   if ( args.library_path() ) {
     app.use("/library", express.static(args.library_path()))
@@ -349,12 +345,13 @@ function addHandlers() {
     }
   });
 
-  if ( sea.isSea() ) {
-    app.get('*', async (req, res) => {
-      const requestedPath = req.path.slice(1);
-      const file = requestedPath === '' ? 'index.html' : requestedPath; // Should be archive_index.html due to root redirect
-      
-      if (file === 'style.css') {
+  app.get(/^\/.*/, async (req, res) => {
+    const requestedPath = (req?.params?.path || req.path).slice(1);
+    DEBUG.verbose && console.log({requestedPath});
+    const file = requestedPath === '' ? 'index.html' : requestedPath; // Should be archive_index.html due to root redirect
+    
+    if (file === 'style.css') {
+      if ( sea.isSea() ) {
         try {
             const asset = await sea.getAsset('style.css');
             res.type('css').send(Buffer.from(asset));
@@ -363,8 +360,10 @@ function addHandlers() {
             console.warn(`Failed to load style.css from SEA:`, e);
         }
       }
+    }
 
-      let asset;
+    let asset;
+    if ( sea.isSea() ) {
       try {
         asset = await sea.getAsset(file);
       } catch(e) {
@@ -374,27 +373,29 @@ function addHandlers() {
             } catch (e2) { /* console.warn for debugging */ }
         } else { /* console.warn for debugging */ }
       }
+    } else {
+      asset = fs.readFileSync(path.resolve(SITE_PATH, file));
+    }
 
-      if ( asset ) {
-        const type = path.extname(file).slice(1) || 'html';
-        res.type(type);
-        let data = Buffer.from(asset);
-        if (['html', 'js', 'css', 'json', 'txt', 'xml', 'svg'].includes(type)) {
-          data = data.toString('utf8');
-        } 
-        res.send(data);
+    if ( asset ) {
+      const type = path.extname(file).slice(1) || 'html';
+      res.type(type);
+      let data = Buffer.from(asset);
+      if (['html', 'js', 'css', 'json', 'txt', 'xml', 'svg'].includes(type)) {
+        data = data.toString('utf8');
+      } 
+      res.send(data);
+    } else {
+      // If root path ('') falls through, it means /archive_index.html wasn't found in SEA
+      // or another specific handler like /settings wasn't found.
+      if (requestedPath === '' || file === 'archive_index.html' || file === 'settings') {
+          console.error(`Error: SEA handler reached for a primary path (${file}), but it should have been handled or found.`);
+          res.status(404).send(`Primary application asset not found in SEA: ${file}`);
       } else {
-        // If root path ('') falls through, it means /archive_index.html wasn't found in SEA
-        // or another specific handler like /settings wasn't found.
-        if (requestedPath === '' || file === 'archive_index.html' || file === 'settings') {
-            console.error(`Error: SEA handler reached for a primary path (${file}), but it should have been handled or found.`);
-            res.status(404).send(`Primary application asset not found in SEA: ${file}`);
-        } else {
-            res.status(404).send(`Asset not found in SEA: ${file}`);
-        }
+          res.status(404).send(`Asset not found in SEA: ${file}`);
       }
-    });
-  }
+    }
+  });
 }
 
 async function stop() {
