@@ -12,53 +12,64 @@ param (
     [string]$ClientSecret,
     [string]$TenantId,
 
-    # --- NEW: Signature Metadata ---
-    [string]$SignatureDescription = "DownloadNet - offline full-text search archive of the web for you.",
-    [string]$SignatureUrl = "https://github.com/DO-SAY-GO/dn",
-
-    # --- NEW: Version Info Metadata ---
+    # --- Version Info Metadata ---
     [string]$CompanyName = "DOSAYGO",
     [string]$ProductName = "DownloadNet",
     [string]$FileDescription = "Offline full-text search archive of what you browse",
     [string]$FileVersion = "4.5.1.0",
-    [string]$ProductVersion = "4.5.1.0"
+    [string]$ProductVersion = "4.5.1.0",
+
+    # --- Signature Metadata ---
+    [string]$SignatureDescription = "DownloadNet - offline full-text search archive of the web for you.",
+    [string]$SignatureUrl = "https://github.com/DO-SAY-GO/dn"
 )
 
-# --- Function to check/install rcedit via winget ---
-function Ensure-RceditInstalled {
-    $rceditPath = "$env:ProgramFiles\rcedit\rcedit.exe"
-    $isInstalled = Get-Command "rcedit" -ErrorAction SilentlyContinue
+# --- Function to check/install resedit-cli via npm ---
+function Ensure-ReseditInstalled {
+    $isInstalled = Get-Command "resedit" -ErrorAction SilentlyContinue
 
     if (-not $isInstalled) {
-        Write-Host "rcedit not found. Attempting to install with winget..." -ForegroundColor Yellow
-        winget install --id ElectronCommunity.rcedit -e --silent
+        Write-Host "resedit-cli not found. Attempting to install with npm..." -ForegroundColor Yellow
+        npm i -g resedit-cli
         if ($LASTEXITCODE -ne 0) {
-            Write-Error "Failed to install rcedit using winget. Please install it manually or check winget availability."
+            Write-Error "Failed to install resedit-cli using npm. Ensure npm is installed and accessible."
             exit 1
         }
-        $env:Path += ";$env:ProgramFiles\rcedit"
+        # Refresh PATH to include newly installed resedit-cli
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "Machine")
     } else {
-        Write-Host "rcedit is already installed." -ForegroundColor Green
+        Write-Host "resedit-cli is already installed." -ForegroundColor Green
     }
 }
 
-# --- Call rcedit to update version metadata ---
+# --- Call resedit-cli to update version metadata ---
 function Set-VersionMetadata {
-    Ensure-RceditInstalled
+    Ensure-ReseditInstalled
 
-    Write-Host "Setting executable metadata using rcedit..." -ForegroundColor Yellow
-    & rcedit "$ExePath" `
-        --set-version-string "CompanyName" "$CompanyName" `
-        --set-version-string "ProductName" "$ProductName" `
-        --set-version-string "FileDescription" "$FileDescription" `
-        --set-file-version "$FileVersion" `
-        --set-product-version "$ProductVersion"
+    Write-Host "Setting executable metadata using resedit-cli..." -ForegroundColor Yellow
+    $tempOutput = "$ExePath.tmp.exe"
+    $reseditArgs = @(
+        "--in", "`"$ExePath`"",
+        "--out", "`"$tempOutput`"",
+        "--company-name", "`"$CompanyName`"",
+        "--product-name", "`"$ProductName`"",
+        "--file-description", "`"$FileDescription`"",
+        "--file-version", "`"$FileVersion`"",
+        "--product-version", "`"$ProductVersion`""
+    )
+
+    $reseditCommand = "resedit $reseditArgs"
+    Write-Verbose "Executing: $reseditCommand"
+    Invoke-Expression $reseditCommand
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "rcedit failed to apply version metadata."
+        Write-Error "resedit-cli failed to apply version metadata."
+        if (Test-Path $tempOutput) { Remove-Item $tempOutput -Force }
         exit 1
     }
 
+    # Replace original file with updated one
+    Move-Item -Path $tempOutput -Destination $ExePath -Force
     Write-Host "Version metadata applied successfully." -ForegroundColor Green
 }
 
@@ -71,7 +82,7 @@ $TimestampServer = "http://timestamp.digicert.com"
 $AzureSignToolExe = "AzureSignTool.exe" # Assumes in PATH
 $SignToolExe = "signtool.exe"           # Assumes in PATH
 
-# --- Original Script's Flow (with minor adaptations for parameter names) ---
+# --- Original Script's Flow (unchanged) ---
 
 function Show-Usage {
     Write-Host "Usage: .\sign_windows_downloadnet_configurable_metadata.ps1 -ExePath <path> -KeyVaultName <kv-name> [-SubscriptionId <sub-id>] [-ResourceGroup <rg>] [-CertificateName <cert-name>] [-AppId <id> -ClientSecret <secret> -TenantId <tenant>] [-SignatureDescription <desc>] [-SignatureUrl <url>]"
@@ -140,7 +151,7 @@ if (-not $AppId) {
     Write-Host "Key Vault access policy set successfully." -ForegroundColor Green
 }
 
-# --- MODIFIED: Construct AzureSignTool command with metadata flags ---
+# --- Construct AzureSignTool command with metadata flags ---
 $signToolBaseArgs = @(
     "sign",
     "-kvu", "`"$KeyVaultUrl`"",
@@ -174,7 +185,6 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Executable signed successfully by AzureSignTool." -ForegroundColor Green
 $signOutput | Write-Host
-
 
 Write-Host "Verifying the signature using $SignToolExe..." -ForegroundColor Yellow
 $verifyCommand = "$SignToolExe verify /pa `"$ExePath`""
