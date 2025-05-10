@@ -532,7 +532,7 @@
                 expression: `(function () { 
                   return {
                     links: Array.from(
-                      document.querySelectorAll('a[href].titlelink')
+                      document.querySelectorAll('a[href]')
                     ).map(a => a.href),
                     title: document.title
                   };
@@ -540,9 +540,11 @@
                 returnByValue: true
               }, sessionId);
 
-              if ( (depth + 1) <= State.crawlDepth ) {
+              const shouldCrawl = depth <= State.crawlDepth;
+
+              if ( shouldCrawl ) {
                 links.length = 0;
-                links.push(...crawlLinks.map(url => ({url,depth:depth+1})));
+                links.push(...crawlLinks.filter(url => url.startsWith('http')).map(url => ({url,depth:depth+1})));
               }
               if ( logStream ) {
                 console.log(`Writing ${links.length} entries to ${logName}`);
@@ -1906,9 +1908,6 @@
           console.log({urls, batch});
           for( let i = 0; i < batch_sz; i++ ) {
             const {depth,url} = batch.shift();
-            if ( url.startsWith('https://news.ycombinator') ) {
-              await sleep(1618);
-            }
             const pr = archiveAndIndexURL(
               url, 
               {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1, program}
@@ -1923,9 +1922,6 @@
         }
         while(urls.length) {
           const {depth,url} = urls.pop();
-          if ( url.startsWith('https://news.ycombinator') ) {
-            await sleep(1618);
-          }
           const links = (await archiveAndIndexURL(
             url, 
             {crawl: true, depth, timeout, createIfMissing:true, getLinks: depth >= 1, program}

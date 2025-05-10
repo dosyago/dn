@@ -1,0 +1,12 @@
+Crawl fixes
+
+- make batch size work
+- ensure no more than tab from any domain per batch (so that between loads timeouts are enforced)
+- save crawl in a "running crawls page"
+- be able to pause a crawl and restart it (should be simple), and crawl state persisted to disk.
+
+Add license key
+
+- 15 minutes then shutdown
+- no free eval license key 
+- license is 69 per seat per year
