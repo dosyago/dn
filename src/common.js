@@ -27,7 +27,7 @@ if ( DEBUG.debug ) {
 }
 
 // server related
-export const PUBLIC_SERVER = ;
+export const PUBLIC_SERVER = true;
 
 // crawl related
 export const MIN_TIME_PER_PAGE = 10000;
