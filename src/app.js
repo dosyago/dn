@@ -198,7 +198,7 @@ async function checkIsConnectable(browser) {
 // Detect browser status (running and connectable)
 async function detectBrowsers() {
   const processes = await psList();
-  (DEBUG.verbose || DEBUG.showList) && console.log({ processes });
+  (DEBUG.verbose || DEBUG.showList) && console.log(JSON.stringify({ processes },null,2));
 
   const installedBrowsers = await detectInstalledBrowsers();
   const browserStatus = await Promise.all(BROWSERS.map(async browserDef => {
