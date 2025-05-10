@@ -28,4 +28,12 @@ Future
 
 - consider other mitigations if these are ineffective (watermark in archvies, other limitations, closed source / more advanced features unlocked, etc)
 
+-----
+
+
+Ultimate Goal
+
+- stable across releases (binaries, npm, can add to winget/choco in future)
+- revenue
+
 
