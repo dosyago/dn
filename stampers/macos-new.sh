@@ -175,12 +175,12 @@ if [ "$ELIGIBLE_FOR_NOTARIZATION" = true ]; then
     fi
     echo "---------------------------------------------------------------------"
     if [ -t 0 ]; then 
-        read -r -p "Did the application '$EXE_NAME_ARG' run correctly during your test? (y/N): " USER_CONFIRM_SUCCESS
+        read -r -p "Do you want to proceed with notarization for '$EXE_NAME_ARG' ? (y/N): " USER_CONFIRM_SUCCESS
         if [[ "$USER_CONFIRM_SUCCESS" =~ ^[Yy]$ ]]; then
             echo "INFO: User confirmed successful execution."
             PROCEED_WITH_NOTARIZATION_USER_CONFIRMED="yes"
         else
-            echo "INFO: User indicated the test run was not successful. Notarization will be skipped."
+            echo "INFO: Person indicated a preference to skip notarization."
         fi
     else 
         echo "WARNING: Non-interactive environment. Cannot get user confirmation for test run." >&2
