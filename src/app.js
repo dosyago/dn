@@ -180,14 +180,14 @@ async function checkIsConnectable(browser) {
   for (const host of hosts) {
     try {
       const url = `http://${host}:${chrome_port}/json/version`;
-      const response = await fetch(url, { timeout: 500 });
-      if (response.status === 200) {
+      console.log(`Testing`, url);
+      const response = await fetch(url);
+      if (response.ok) {
         const data = await response.json();
-        // Check if the browser name from RDP matches the expected browser
-        // This helps ensure we're connecting to the right type of browser
-        if (data.Browser && browser.pattern.test(data.Browser)) {
-          return true;
-        }
+        if ( data.Browser ) {
+          const browserShortName = data.Browser.split(/\//)[0];
+          if ( browserShortName.slice(0,2) == browser.name.slice(0,2) ) return true;
+        } 
       }
     } catch (e) {
       DEBUG.verboseSlow && console.warn(chalk.yellow(`RDP check failed for ${browser.name} on ${host}:${chrome_port}: ${e.message}`));
