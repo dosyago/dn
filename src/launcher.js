@@ -117,6 +117,8 @@ const launchBrowser = (browser, url = '', flags = []) => {
     return null;
   }
 
+  DEBUG.verbose && console.log({flags, url, browser});
+
   const childProcess = spawn(browserPath, [...flags, url], {
     detached: true,
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -211,6 +213,7 @@ const launch = async (opts = {}) => {
   ].filter(Boolean);
 
   console.log(`Launching browser with log level: ${logLevel}`);
+  const browserExec = BrowserDef.find(def => def.name === browser).exec[process.platform];
   const browserProcess = launchBrowser(browser, startingUrl || url, flags);
 
   if (!ignoreSignal) {
