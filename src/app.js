@@ -358,7 +358,11 @@ async function start() {
   const connectable = browserStatus.filter(b => b.isConnectable && b.isInstalled);
 
   console.log(chalk.blue.bold(`\nBrowser Status:`));
-  console.log(chalk.cyan(`  Installed: ${installed.map(b => `${b.name} (at ${b.foundPath || 'path not confirmed'})`).join(', ') || 'None'}`));
+  if ( DEBUG.verbose ) {
+    console.log(chalk.cyan(`  Installed: ${installed.map(b => `${b.name} (at ${b.foundPath || 'path not confirmed'})`).join(', ') || 'None'}`));
+  } else {
+    console.log(chalk.cyan(`  Installed: ${installed.map(b => `${b.name}`).join(', ') || 'None'}`));
+  }
   console.log(chalk.cyan(`  Running:   ${running.map(b => b.name).join(', ') || 'None'}`));
   console.log(chalk.cyan(`  Connectable: ${connectable.map(b => b.name).join(', ') || 'None'}`));
 
