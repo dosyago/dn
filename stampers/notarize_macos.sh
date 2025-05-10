@@ -6,7 +6,7 @@
 # Usage
 usage() {
     echo "Usage: $0 --binary <path> --keychain-profile <profile> --bundle-id <id> --version <version> --installer-cert <installer-cert-name>"
-    echo "Example: $0 --binary ./bin/dn-macos --keychain-profile cris-notarization-profile --bundle-id com.DOSAYGO.DownloadNet --version 4.5.1 --installer-cert 'Developer ID Installer: DOSAYGO"
+    echo "Example: $0 --binary ./bin/dn-macos --keychain-profile notarization-profile --bundle-id com.DOSAYGO.DownloadNet --version 4.5.1 --installer-cert 'Developer ID Installer: DOSAYGO"
     exit 1
 }
 
