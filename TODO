@@ -1,3 +1,7 @@
+Dev
+
+- add cross plat node exec.js for scripts
+
 Crawl fixes
 
 - make batch size work

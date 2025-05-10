@@ -70,8 +70,8 @@ const BROWSERS = [
   },
   {
     name: 'Edge',
-    pattern: /^(edge|msedge)/i,
-    cmdPattern: /[\/\\](msedge|edge)/i,
+    pattern: /^(microsoft edge|microsoft\-edge|msedge)/i,
+    cmdPattern: /[\/\\](msedge|microsoft edge|microsoft\-edge)/i,
     exec: { win32: 'msedge.exe', darwin: 'Microsoft Edge', linux: 'microsoft-edge', freebsd: 'edge' },
     package: { linux: 'microsoft-edge-stable', darwin: 'https://www.microsoft.com/edge', win32: 'https://www.microsoft.com/edge', freebsd: 'edge' },
     paths: [
@@ -198,7 +198,7 @@ async function checkIsConnectable(browser) {
 // Detect browser status (running and connectable)
 async function detectBrowsers() {
   const processes = await psList();
-  DEBUG.showList && console.log(chalk.cyan({ processes }));
+  (DEBUG.verbose || DEBUG.showList) && console.log({ processes });
 
   const installedBrowsers = await detectInstalledBrowsers();
   const browserStatus = await Promise.all(BROWSERS.map(async browserDef => {

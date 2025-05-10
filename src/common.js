@@ -6,7 +6,7 @@ import { root } from './root.js';
 
 const { APP_ROOT: __ROOT } = root;
 
-const DEEB = process.env.DEBUG_22120_VERBOSE || false;
+const DEEB = process.env.DEBUG_22120_VERBOSE || true;
 
 export const DEBUG = {
   showBrowser: false,
@@ -17,7 +17,7 @@ export const DEBUG = {
   askFirst: true,
   verboseSlow: process.env.VERBOSE_DEBUG_22120 || DEEB,
   debug: process.env.DEBUG_22120 || DEEB,
-  verbose: false,
+  verbose: DEEB || process.env.VERBOSE_DEBUG_22120 || process.env.DEBUG_22120,
   checkPred: false,
 }
 export const SHOW_FETCH = false;

@@ -158,7 +158,7 @@ function addHandlers() {
     res.send(MainApplicationView());
   });
   
-  app.get('/search(.json)?', async (req, res) => {
+  app.get(['/search', '/search.json'], async (req, res) => {
     await Archivist.isReady();
     let {query:oquery} = req.query;
     let page = req.query.page;

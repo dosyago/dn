@@ -1,6 +1,6 @@
 {
   "name": "downloadnet",
-  "version": "4.2.6",
+  "version": "4.5.0",
   "type": "module",
   "description": "Library server and an archivist browser controller.",
   "main": "global-run.cjs",
@@ -29,7 +29,6 @@
     "library"
   ],
   "author": "@dosy",
-  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/dosyago/DownloadNet/issues"
   },
