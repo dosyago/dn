@@ -503,7 +503,9 @@ async function start() {
     
     const browserArgsForLaunch = [
         ...BASE_CHROME_FLAGS, // Includes remote debugging port
-        `--user-data-dir="${path.resolve(os.homedir(), '.config', 'dosaygo', 'DN-Profile')}"`,
+        //`--user-data-dir=${path.resolve(os.homedir(), '.config', 'dosaygo', 'DN-Profile')}`,
+        //`--user-data-dir=/Users/cris/Library/Application\ Support/Google/Chrome/Profile\ 4`,
+        `--user-data-dir=/Users/cris/.config/dosaygo`,
         // Add any browser-specific flags if needed, e.g. based on browserToUse.name
         // For now, assuming BASE_CHROME_FLAGS are generic enough for Chromium-based ones
         `${GO_SECURE ? 'https' : 'http'}://localhost:${server_port}` // Starting URL

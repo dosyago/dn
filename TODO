@@ -30,6 +30,7 @@ Marketing
 
 Future
 
+- UX to select an existing Chrome profile from standard locations. Ident via Google Profile Picture.png and then copy to a $USER_DATA_DIR/Default directory (rsync or robocopy maybe) and pass --user-data-dir=$USER_DATA_DIR for it to just work as of chrome 136 anyway. 
 - consider other mitigations if these are ineffective (watermark in archvies, other limitations, closed source / more advanced features unlocked, etc)
 
 -----

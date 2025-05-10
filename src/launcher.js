@@ -31,13 +31,13 @@ function launch(executablePath, browserArgs = [], options = {}) {
       console.error(`launcher.js: Failed to start browser process for ${executablePath}: ${err.message}`);
     });
 
-    if (DEBUG.showBrowser || DEBUG.verboseBrowser) {
+    if (DEBUG.verboseBrowser) {
       const browserName = executablePath.split(/[/\\]/).pop();
       browserProcess.stdout.on('data', (data) => {
-        process.stdout.write(`[BROWSER STDOUT - ${browserName}]: ${data}`);
+        DEBUG.verbose && process.stdout.write(`[BROWSER STDOUT - ${browserName}]: ${data}`);
       });
       browserProcess.stderr.on('data', (data) => {
-        process.stderr.write(`[BROWSER STDERR - ${browserName}]: ${data}`);
+        DEBUG.verbose && process.stderr.write(`[BROWSER STDERR - ${browserName}]: ${data}`);
       });
     }
     

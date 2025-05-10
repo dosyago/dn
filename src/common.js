@@ -10,7 +10,7 @@ const DEEB = process.env.DEBUG_22120_VERBOSE || false;
 
 export const DEBUG = {
   showBrowser: false,
-  verboseBrowser: true,
+  verboseBrowser: false,
   showList: false,
   showStatus: false,
   debugSec: false,
