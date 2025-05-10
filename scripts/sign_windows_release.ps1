@@ -1,227 +1,162 @@
-# sign_windows_downloadnet.ps1
-# PowerShell script to sign the DownloadNet Windows executable using Azure Sign Tool.
+# sign_windows_downloadnet_configurable_metadata.ps1
+# PowerShell script to sign an executable using Azure Sign Tool.
+# Adapted to allow easy configuration of DownloadNet-specific signature metadata.
 
-[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')] # Added ConfirmImpact
 param (
-    [Parameter(Mandatory=$true, HelpMessage="Path to the DownloadNet executable to sign (e.g., .\build\bin\dn-win.exe)")]
+    [Parameter(Mandatory=$true, HelpMessage="Path to the executable to sign (e.g., .\build\bin\dn-win.exe)")]
     [string]$ExePath,
 
-    [Parameter(Mandatory=$true, HelpMessage="Azure Key Vault name (e.g., MyDownloadNetKeyVault)")]
+    [Parameter(Mandatory=$true, HelpMessage="Azure Key Vault name")]
     [string]$KeyVaultName,
 
-    [Parameter(Mandatory=$false, HelpMessage="Certificate name in Key Vault. If not provided, the first available certificate will be used.")]
-    [string]$CertificateName, # Now optional
-
-    [Parameter(Mandatory=$false, HelpMessage="Azure subscription ID. If not provided, the script will attempt to use the currently active subscription.")]
+    [Parameter(Mandatory=$false, HelpMessage="Azure subscription ID. If not provided, the active subscription will be used.")]
     [string]$SubscriptionId,
 
-    [Parameter(Mandatory=$false, HelpMessage="Azure resource group name where the Key Vault resides. If not provided, it will be fetched from the Key Vault details.")]
+    [Parameter(Mandatory=$false, HelpMessage="Azure resource group name. If not provided, it will be fetched from the Key Vault.")]
     [string]$ResourceGroup,
 
-    [Parameter(Mandatory=$false, HelpMessage="Service principal application (client) ID. If not provided, interactive login or managed identity will be attempted by AzureSignTool.")]
+    [Parameter(Mandatory=$false, HelpMessage="Certificate name in Key Vault. If not provided, available certificates will be listed, and the first one used.")]
+    [string]$CertificateName,
+
+    [Parameter(Mandatory=$false, HelpMessage="Service principal appId (client ID). If not provided, a new SPN named 'CodeSigningSP' will be created.")]
     [string]$AppId,
 
-    [Parameter(Mandatory=$false, HelpMessage="Service principal client secret. Required if AppId is provided.")]
-    [string]$ClientSecret,
+    [Parameter(Mandatory=$false, HelpMessage="Service principal password (client secret). Required if AppId is provided.")]
+    [string]$ClientSecret, # Renamed from Password
 
-    [Parameter(Mandatory=$false, HelpMessage="Azure Active Directory tenant ID. Required if AppId is provided.")]
-    [string]$TenantId
+    [Parameter(Mandatory=$false, HelpMessage="Tenant ID. Required if AppId is provided.")]
+    [string]$TenantId, # Renamed from Tenant
+
+    # --- NEW: Parameters for DownloadNet Specific Signature Metadata ---
+    [Parameter(Mandatory=$false, HelpMessage="Description to embed in the signature.")]
+    [string]$SignatureDescription = "DownloadNet Application", # Default for DownloadNet
+
+    [Parameter(Mandatory=$false, HelpMessage="URL for more information to embed in the signature.")]
+    [string]$SignatureUrl = "https://example.com/downloadnet" # Default for DownloadNet - REPLACE WITH ACTUAL URL
 )
 
-# --- Configuration ---
-$ProjectName = "DownloadNet"
+# --- Configuration (Defaults from original script) ---
+$DefaultSPNName = "CodeSigningSP" # Original SPN name
 $TimestampServer = "http://timestamp.digicert.com"
-$AzureSignToolPath = "AzureSignTool.exe" # Assumes it's in PATH
-$SignToolExePath = "signtool.exe"       # Assumes it's in PATH
+$AzureSignToolExe = "AzureSignTool.exe" # Assumes in PATH
+$SignToolExe = "signtool.exe"           # Assumes in PATH
 
-# --- Helper Functions ---
+# --- Original Script's Flow (with minor adaptations for parameter names) ---
+
 function Show-Usage {
-    Write-Warning "Usage: .\sign_windows_downloadnet.ps1 -ExePath <path-to-exe> -KeyVaultName <kv-name> [-CertificateName <cert-name>] [-SubscriptionId <sub-id>] [-ResourceGroup <rg-name>] [-AppId <app-id> -ClientSecret <secret> -TenantId <tenant-id>]"
+    Write-Host "Usage: .\sign_windows_downloadnet_configurable_metadata.ps1 -ExePath <path> -KeyVaultName <kv-name> [-SubscriptionId <sub-id>] [-ResourceGroup <rg>] [-CertificateName <cert-name>] [-AppId <id> -ClientSecret <secret> -TenantId <tenant>] [-SignatureDescription <desc>] [-SignatureUrl <url>]"
     exit 1
 }
 
-function Invoke-AzCli {
-    param (
-        [string]$Command,
-        [switch]$AllowNonJsonOutput # Switch to allow commands that don't output JSON
-    )
-    Write-Verbose "Executing Azure CLI command: az $Command"
-    $output = Invoke-Expression "az $Command" # Capture all output
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "Azure CLI command failed: az $Command"
-        Write-Error "Raw Output: $output"
-        throw "Azure CLI command failed."
-    }
-    if ($AllowNonJsonOutput) {
-        return $output # Return raw output if non-JSON is expected
-    }
-    # Attempt to convert from JSON, handle errors gracefully
-    $jsonData = $null
-    try {
-        $jsonData = $output | ConvertFrom-Json -ErrorAction Stop
-    } catch {
-        Write-Warning "Output from 'az $Command' was not valid JSON or was empty. Raw output: $output"
-        # Depending on the command, this might be acceptable or an error.
-        # For commands expected to return JSON, this indicates an issue.
-    }
-    return $jsonData
+if (-not $ExePath -or -not $KeyVaultName) { Show-Usage }
+if ($AppId -and (-not $ClientSecret -or -not $TenantId)) { Write-Error "Error: If -AppId is provided, -ClientSecret and -TenantId must also be provided."; Show-Usage }
+if (-not (Test-Path $ExePath -PathType Leaf)) { Write-Error "Error: Executable not found at path: $ExePath"; exit 1 }
+
+if (-not $SubscriptionId) {
+    Write-Host "Fetching the active Azure subscription..."
+    $subscriptionOutput = az account show | ConvertFrom-Json -ErrorAction SilentlyContinue
+    if ($LASTEXITCODE -ne 0 -or !$subscriptionOutput.id) { Write-Error "Error: Failed to retrieve active subscription. Ensure 'az' CLI is installed and you are logged in with 'az login'."; exit 1 }
+    $SubscriptionId = $subscriptionOutput.id
+    Write-Host "Using active subscription ID: $SubscriptionId"
 }
 
-# --- Parameter Validation ---
-if (-not (Test-Path $ExePath -PathType Leaf)) {
-    Write-Error "Executable not found or is not a file at path: $ExePath"
-    Show-Usage
+Write-Host "Setting active subscription to: $SubscriptionId"
+az account set --subscription $SubscriptionId
+if ($LASTEXITCODE -ne 0) { Write-Error "Error: Failed to set active subscription."; exit 1 }
+
+Write-Host "Fetching Key Vault details for: $KeyVaultName"
+$keyVaultOutput = az keyvault show --name $KeyVaultName --subscription $SubscriptionId | ConvertFrom-Json -ErrorAction SilentlyContinue
+if ($LASTEXITCODE -ne 0 -or !$keyVaultOutput.properties.vaultUri) { Write-Error "Error: Failed to retrieve Key Vault details."; exit 1 }
+$KeyVaultUrl = $keyVaultOutput.properties.vaultUri
+Write-Host "Key Vault URL: $KeyVaultUrl"
+
+if (-not $ResourceGroup) {
+    $ResourceGroup = $keyVaultOutput.resourceGroup
+    if (-not $ResourceGroup) { Write-Error "Error: Could not retrieve resource group from Key Vault details."; exit 1 }
+    Write-Host "Using resource group from Key Vault: $ResourceGroup"
 }
 
-if ($AppId -and (-not $ClientSecret -or -not $TenantId)) {
-    Write-Error "If -AppId is provided, -ClientSecret and -TenantId must also be provided."
-    Show-Usage
+if (-not $CertificateName) {
+    Write-Host "CertificateName not provided. Fetching available certificates in Key Vault: $KeyVaultName"
+    $certListOutput = az keyvault certificate list --vault-name $KeyVaultName | ConvertFrom-Json -ErrorAction SilentlyContinue
+    if ($LASTEXITCODE -ne 0 -or !$certListOutput) { Write-Error "Error: Failed to list certificates in Key Vault, or no certificates found."; exit 1 }
+    $certificates = @($certListOutput)
+    if ($certificates.Count -eq 0) { Write-Error "Error: No certificates found in Key Vault: $KeyVaultName"; exit 1 }
+    Write-Host "Available certificates:"
+    $certificates | ForEach-Object { Write-Host "  - $($_.name)" }
+    $CertificateName = $certificates[0].name
+    Write-Host "Using first available certificate: $CertificateName" -ForegroundColor Green
 }
 
-# --- Main Script Logic ---
-try {
-    Write-Host "Starting code signing process for $ProjectName executable: $ExePath" -ForegroundColor Cyan
+if (-not $AppId) {
+    Write-Host "Service Principal AppId not provided. Creating a new service principal named '$DefaultSPNName'..."
+    $scope = "/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.KeyVault/vaults/$KeyVaultName"
+    # Using "Contributor" role as in the original script.
+    # For production, consider least privilege (e.g., custom role with only cert get & key sign).
+    $spnOutput = az ad sp create-for-rbac --name $DefaultSPNName --role Contributor --scopes $scope | ConvertFrom-Json -ErrorAction SilentlyContinue
+    if ($LASTEXITCODE -ne 0 -or !$spnOutput.appId) { Write-Error "Error: Failed to create service principal."; exit 1 }
+    $AppId = $spnOutput.appId
+    $ClientSecret = $spnOutput.password
+    $TenantId = $spnOutput.tenant
+    Write-Host "Service principal '$DefaultSPNName' created successfully." -ForegroundColor Green
+    Write-Host "AppId   : $AppId"
+    Write-Host "Secret  : $ClientSecret (Note: This secret is shown only once. Store it securely.)"
+    Write-Host "TenantId: $TenantId"
 
-    # 1. Set/Get Azure Subscription
-    if ($SubscriptionId) {
-        Write-Host "Setting active Azure subscription to: $SubscriptionId"
-        Invoke-AzCli "account set --subscription `"$SubscriptionId`"" -AllowNonJsonOutput # account set might not return JSON
-    } else {
-        Write-Host "Fetching current active Azure subscription..."
-        $currentSub = Invoke-AzCli "account show"
-        $SubscriptionId = $currentSub.id
-        if (-not $SubscriptionId) { throw "Failed to retrieve active subscription. Ensure you are logged in with 'az login'." }
-        Write-Host "Using active subscription: $($currentSub.name) ($SubscriptionId)"
-    }
+    # Grant permissions using set-policy as in the original script
+    Write-Host "Setting Key Vault access policy for SPN '$AppId'..."
+    az keyvault set-policy --name $KeyVaultName --spn $AppId --key-permissions sign --certificate-permissions get
+    if ($LASTEXITCODE -ne 0) { Write-Error "Error: Failed to set Key Vault policy."; exit 1 }
+    Write-Host "Key Vault access policy set successfully." -ForegroundColor Green
+}
 
-    # 2. Fetch Key Vault Details
-    Write-Host "Fetching Key Vault details for: $KeyVaultName"
-    $keyVaultDetails = Invoke-AzCli "keyvault show --name `"$KeyVaultName`" --subscription `"$SubscriptionId`""
-    $KeyVaultUrl = $keyVaultDetails.properties.vaultUri
-    if (-not $KeyVaultUrl) { throw "Failed to retrieve Key Vault URL." }
-    Write-Host "Key Vault URL: $KeyVaultUrl"
+# --- MODIFIED: Construct AzureSignTool command with metadata flags ---
+$signToolBaseArgs = @(
+    "sign",
+    "-kvu", "`"$KeyVaultUrl`"",
+    "-kvi", "`"$AppId`"",
+    "-kvs", "`"$ClientSecret`"", # ClientSecret might contain special characters
+    "-kvt", "`"$TenantId`"",
+    "-kvc", "`"$CertificateName`"",
+    "-tr", "`"$TimestampServer`""
+)
+# Add description if provided
+if ($SignatureDescription) {
+    $signToolBaseArgs += "-d", "`"$SignatureDescription`""
+}
+# Add description URL if provided
+if ($SignatureUrl) {
+    $signToolBaseArgs += "-du", "`"$SignatureUrl`""
+}
+# Add verbose flag and executable path
+$signToolBaseArgs += "-v", "`"$ExePath`""
 
-    if (-not $ResourceGroup) {
-        $ResourceGroup = $keyVaultDetails.resourceGroup
-        if (-not $ResourceGroup) { throw "Could not retrieve resource group from Key Vault details." }
-        Write-Host "Using resource group from Key Vault: $ResourceGroup"
-    } else {
-        Write-Host "Using provided resource group: $ResourceGroup"
-    }
+$signCommand = "$AzureSignToolExe $($signToolBaseArgs -join ' ')"
 
-    # 3. Fetch Certificate Name if not provided
-    if (-not $CertificateName) {
-        Write-Host "CertificateName not provided. Fetching available certificates in Key Vault: $KeyVaultName"
-        $certListOutput = Invoke-AzCli "keyvault certificate list --vault-name `"$KeyVaultName`""
-        
-        if ($LASTEXITCODE -ne 0 -or -not $certListOutput) { # Check $LASTEXITCODE as Invoke-AzCli might not throw for empty JSON list
-            throw "Failed to list certificates in Key Vault, or no certificates found."
-        }
-        
-        # Ensure $certListOutput is an array, even if only one cert is returned
-        $certificates = @($certListOutput)
+Write-Host "Signing the executable: $ExePath (Cert: $CertificateName, KV: $KeyVaultName)" -ForegroundColor Yellow
+Write-Verbose "Executing: $signCommand"
+$signOutput = Invoke-Expression $signCommand
 
-        if ($certificates.Count -eq 0) {
-            throw "No certificates found in Key Vault: $KeyVaultName"
-        }
-
-        Write-Host "Available certificates:"
-        $certificates | ForEach-Object { Write-Host "  - $($_.name) (ID: $($_.id))" }
-        
-        $CertificateName = $certificates[0].name # Use the name of the first certificate
-        Write-Host "Using first available certificate: $CertificateName" -ForegroundColor Green
-        Write-Host "To use a different certificate, specify it with the -CertificateName parameter."
-    } else {
-        Write-Host "Using provided certificate name: $CertificateName"
-    }
-
-
-    # 4. Construct AzureSignTool command
-    $signToolArgs = @(
-        "sign",
-        "-kvu", $KeyVaultUrl,
-        "-kvc", $CertificateName,
-        "-tr", $TimestampServer,
-        "-v", # Verbose output from AzureSignTool
-        "`"$ExePath`"" 
-    )
-
-    if ($AppId) {
-        $signToolArgs += @("-kvi", $AppId, "-kvs", $ClientSecret, "-kvt", $TenantId)
-        Write-Host "Using Service Principal for authentication."
-    } else {
-        Write-Host "Using interactive login or managed identity for AzureSignTool authentication."
-    }
-    
-    # 5. Sign the Executable
-    if ($PSCmdlet.ShouldProcess($ExePath, "Sign with AzureSignTool (Cert: $CertificateName, KV: $KeyVaultName)")) {
-        Write-Host "Attempting to sign the executable..." -ForegroundColor Yellow
-        Write-Verbose "Executing: $AzureSignToolPath $($signToolArgs -join ' ')" # For verbose output
-        
-        $logDir = Join-Path -Path $PSScriptRoot -ChildPath "signing_logs"
-        New-Item -ItemType Directory -Path $logDir -ErrorAction SilentlyContinue
-        $stdoutLogPath = Join-Path -Path $logDir -ChildPath "azuresigntool_stdout.log"
-        $stderrLogPath = Join-Path -Path $logDir -ChildPath "azuresigntool_stderr.log"
-
-        $process = Start-Process -FilePath $AzureSignToolPath -ArgumentList $signToolArgs -Wait -NoNewWindow -PassThru -RedirectStandardOutput $stdoutLogPath -RedirectStandardError $stderrLogPath
-        
-        $stdoutLog = Get-Content $stdoutLogPath -Raw -ErrorAction SilentlyContinue
-        $stderrLog = Get-Content $stderrLogPath -Raw -ErrorAction SilentlyContinue
-
-        Write-Verbose "AzureSignTool STDOUT: $stdoutLog"
-        if ($stderrLog) { Write-Warning "AzureSignTool STDERR: $stderrLog" }
-
-        if ($process.ExitCode -ne 0) {
-            Write-Error "AzureSignTool failed with exit code $($process.ExitCode)."
-            Write-Error "Check logs: $stdoutLogPath and $stderrLogPath"
-            throw "Signing failed."
-        }
-        Write-Host "Executable signed successfully by AzureSignTool." -ForegroundColor Green
-    } else {
-        Write-Warning "Signing operation skipped due to -WhatIf or user cancellation."
-        exit # Exit if -WhatIf was used or user cancelled
-    }
-
-
-    # 6. Verify the Signature
-    if ($PSCmdlet.ShouldProcess($ExePath, "Verify signature with signtool.exe")) {
-        Write-Host "Verifying the signature using signtool.exe..." -ForegroundColor Yellow
-        $verifyArgs = @("verify", "/pa", "`"$ExePath`"")
-        
-        Write-Verbose "Executing: $SignToolExePath $($verifyArgs -join ' ')"
-        $verifyStdoutLogPath = Join-Path -Path $logDir -ChildPath "signtool_verify_stdout.log"
-        $verifyStderrLogPath = Join-Path -Path $logDir -ChildPath "signtool_verify_stderr.log"
-
-        $verifyProcess = Start-Process -FilePath $SignToolExePath -ArgumentList $verifyArgs -Wait -NoNewWindow -PassThru -RedirectStandardOutput $verifyStdoutLogPath -RedirectStandardError $verifyStderrLogPath
-
-        $verifyStdoutLog = Get-Content $verifyStdoutLogPath -Raw -ErrorAction SilentlyContinue
-        $verifyStderrLog = Get-Content $verifyStderrLogPath -Raw -ErrorAction SilentlyContinue
-        
-        Write-Verbose "signtool.exe STDOUT: $verifyStdoutLog"
-        if ($verifyStderrLog) { Write-Warning "signtool.exe STDERR: $verifyStderrLog" }
-
-        if ($verifyProcess.ExitCode -ne 0) {
-            Write-Error "Signature verification failed with signtool.exe. Exit code: $($verifyProcess.ExitCode)."
-            Write-Error "Check logs: $verifyStdoutLogPath and $verifyStderrLogPath"
-            throw "Signature verification failed."
-        }
-
-        Write-Host "Signature verified successfully." -ForegroundColor Green
-        Write-Host "signtool.exe output (first few lines from log):"
-        Get-Content $verifyStdoutLogPath | Select-Object -First 5 | Write-Host
-    } else {
-        Write-Warning "Signature verification skipped due to -WhatIf or user cancellation."
-    }
-
-} catch {
-    Write-Error "An error occurred during the signing process: $($_.Exception.Message)"
-    if ($_.ScriptStackTrace) { Write-Error "Stack Trace: $($_.ScriptStackTrace)" }
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Error: Failed to sign the executable with AzureSignTool. Exit code: $LASTEXITCODE"
+    Write-Error "AzureSignTool Output: $signOutput"
     exit 1
-} finally {
-    # Optional: Advise on log files instead of auto-deleting
-    if (Test-Path $logDir) {
-        Write-Host "Log files are available in: $logDir" -ForegroundColor Gray
-    }
 }
+Write-Host "Executable signed successfully by AzureSignTool." -ForegroundColor Green
+$signOutput | Write-Host
 
-Write-Host "$ProjectName signing process completed." -ForegroundColor Green
+
+Write-Host "Verifying the signature using $SignToolExe..." -ForegroundColor Yellow
+$verifyCommand = "$SignToolExe verify /pa `"$ExePath`""
+Write-Verbose "Executing: $verifyCommand"
+$verifyOutput = Invoke-Expression $verifyCommand
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Error: Signature verification failed with $SignToolExe. Exit code: $LASTEXITCODE"
+    Write-Error "$SignToolExe Output: $verifyOutput"
+    exit 1
+}
+Write-Host "Signature verified successfully by $SignToolExe." -ForegroundColor Green
+$verifyOutput | Write-Host
+
+Write-Host "Signing process completed." -ForegroundColor Green
