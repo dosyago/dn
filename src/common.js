@@ -6,7 +6,7 @@ import { root } from './root.js';
 
 const { APP_ROOT: __ROOT } = root;
 
-const DEEB = process.env.DEBUG_22120_VERBOSE || true;
+const DEEB = process.env.DEBUG_22120_VERBOSE || false;
 
 export const DEBUG = {
   showBrowser: false,
@@ -27,7 +27,7 @@ if ( DEBUG.debug ) {
 }
 
 // server related
-export const PUBLIC_SERVER = true;
+export const PUBLIC_SERVER = ;
 
 // crawl related
 export const MIN_TIME_PER_PAGE = 10000;

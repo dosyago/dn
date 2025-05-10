@@ -203,7 +203,7 @@ async function detectBrowsers() {
   const installedBrowsers = await detectInstalledBrowsers();
   const browserStatus = await Promise.all(BROWSERS.map(async browserDef => {
     const proc = processes.find(({ name, cmd }) =>
-      name?.match?.(browserDef.pattern) || cmd?.match?.(browserDef.cmdPattern)
+      name?.match?.(new RegExp(browserDef.exec[process.platform], 'i'))
     );
     const isRunning = !!proc;
     // Only check connectable if it's the type of browser we're looking for and it's running
