@@ -1,7 +1,7 @@
 import path from 'path';
 import url from 'url';
 
-let root;
+let mod;
 let esm = false;
 
 try {
@@ -11,12 +11,18 @@ try {
 }
 
 if ( ! esm ) {
-  root = require('./root.cjs').APP_ROOT;
+  mod = require('./root.cjs');
 } else {
-  root = path.dirname(url.fileURLToPath(import.meta.url));
+  const file = url.fileURLToPath(import.meta.url);
+  const dir = path.dirname(file);
+  mod = {
+    dir,
+    file,
+    APP_ROOT: dir
+  };
 }
 
 //console.log({root});
 
-export const APP_ROOT = root;
+export const root = mod;
 

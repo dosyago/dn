@@ -1,0 +1,42 @@
+Ultimate Goal
+
+- stable across releases (binaries, npm, can add to winget/choco in future)
+- revenue
+
+----
+
+Releases
+
+- macos signed
+- win signed
+- linux 
+- release per arch where relevant as well
+
+Future
+
+  - UX to select an existing Chrome profile from standard locations. Ident via Google Profile Picture.png and then copy to a $USER_DATA_DIR/Default directory (rsync or robocopy maybe) and pass --user-data-dir=$USER_DATA_DIR for it to just work as of chrome 136 anyway. 
+  - consider other mitigations if these are ineffective (watermark in archvies, other limitations, closed source / more advanced features unlocked, etc)
+    - More future tasks:
+      Marketing
+
+      - /download-net page on dosaygo.com
+
+      Crawl fixes
+
+      - make batch size work
+      - ensure no more than tab from any domain per batch (so that between loads timeouts are enforced)
+      - save crawl in a "running crawls page"
+      - be able to pause a crawl and restart it (should be simple), and crawl state persisted to disk.
+
+      Add product key
+
+      - product key section in crawl and settings
+      - 15 minutes then shutdown
+      - no free eval license key 
+      - license is 69 per seat per year
+      - plumbing for the backend
+
+      Dev
+
+      - add cross plat node exec.js for scripts
+

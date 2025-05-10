@@ -28,7 +28,6 @@ cat <<EOF > sea-config.json
   "disableExperimentalSEAWarning": true,
   "useCodeCache": true,
   "assets": {
-    "index.html": "public/index.html",
     "favicon.ico": "public/favicon.ico",
     "top.html": "public/top.html",
     "style.css": "public/style.css",

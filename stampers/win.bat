@@ -31,7 +31,6 @@ echo   "output": "sea-prep.blob",
 echo   "disableExperimentalSEAWarning": true, 
 echo   "useCodeCache": true, 
 echo   "assets": { 
-echo     "index.html": "public/index.html", 
 echo     "favicon.ico": "public/favicon.ico", 
 echo     "top.html": "public/top.html", 
 echo     "style.css": "public/style.css", 
@@ -48,7 +47,7 @@ node --experimental-sea-config "%OUTPUT_FOLDER%\%SEA_CONFIG%"
 node -e "require('fs').copyFileSync(process.execPath, '%OUTPUT_FOLDER%\%EXE_NAME%')"
 
 :: Optionally, remove signature from the binary (use signtool if necessary, or skip this step)
-signtool remove /s "%OUTPUT_FOLDER%\%EXE_NAME%"
+signtool.exe remove /s "%OUTPUT_FOLDER%\%EXE_NAME%"
 
 :: Inject the blob into the copied binary
 npx postject "%OUTPUT_FOLDER%\%EXE_NAME%" NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2

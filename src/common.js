@@ -2,9 +2,11 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import fs from 'fs';
 import os from 'os';
-import {APP_ROOT as __ROOT} from './root.js';
+import { root } from './root.js';
 
-const DEEB = false;
+const { APP_ROOT: __ROOT } = root;
+
+const DEEB = process.env.DEBUG_22120_VERBOSE || false;
 
 export const DEBUG = {
   showBrowser: false,
@@ -15,7 +17,7 @@ export const DEBUG = {
   askFirst: true,
   verboseSlow: process.env.VERBOSE_DEBUG_22120 || DEEB,
   debug: process.env.DEBUG_22120 || DEEB,
-  verbose: false,
+  verbose: DEEB || process.env.VERBOSE_DEBUG_22120 || process.env.DEBUG_22120,
   checkPred: false,
 }
 export const SHOW_FETCH = false;
@@ -90,7 +92,7 @@ export const SNIP_CONTEXT = 31;
 
 export const NO_SANDBOX = (process.env.DEBUG_22120 && process.env.SET_22120_NO_SANDBOX) || false;
 
-export const APP_ROOT = __ROOT
+export const APP_ROOT = __ROOT;
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 
