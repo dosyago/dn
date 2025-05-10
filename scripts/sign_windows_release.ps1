@@ -1,39 +1,69 @@
-# sign_windows_downloadnet_configurable_metadata.ps1
-# PowerShell script to sign an executable using Azure Sign Tool.
-# Adapted to allow easy configuration of DownloadNet-specific signature metadata.
-
 param (
-    [Parameter(Mandatory=$true, HelpMessage="Path to the executable to sign (e.g., .\build\bin\dn-win.exe)")]
+    [Parameter(Mandatory=$true)]
     [string]$ExePath,
 
-    [Parameter(Mandatory=$true, HelpMessage="Azure Key Vault name")]
+    [Parameter(Mandatory=$true)]
     [string]$KeyVaultName,
 
-    [Parameter(Mandatory=$false, HelpMessage="Azure subscription ID. If not provided, the active subscription will be used.")]
     [string]$SubscriptionId,
-
-    [Parameter(Mandatory=$false, HelpMessage="Azure resource group name. If not provided, it will be fetched from the Key Vault.")]
     [string]$ResourceGroup,
-
-    [Parameter(Mandatory=$false, HelpMessage="Certificate name in Key Vault. If not provided, available certificates will be listed, and the first one used.")]
     [string]$CertificateName,
-
-    [Parameter(Mandatory=$false, HelpMessage="Service principal appId (client ID). If not provided, a new SPN named 'CodeSigningSP' will be created.")]
     [string]$AppId,
+    [string]$ClientSecret,
+    [string]$TenantId,
 
-    [Parameter(Mandatory=$false, HelpMessage="Service principal password (client secret). Required if AppId is provided.")]
-    [string]$ClientSecret, # Renamed from Password
+    # --- NEW: Signature Metadata ---
+    [string]$SignatureDescription = "DownloadNet - offline full-text search archive of the web for you.",
+    [string]$SignatureUrl = "https://github.com/DO-SAY-GO/dn",
 
-    [Parameter(Mandatory=$false, HelpMessage="Tenant ID. Required if AppId is provided.")]
-    [string]$TenantId, # Renamed from Tenant
-
-    # --- NEW: Parameters for DownloadNet Specific Signature Metadata ---
-    [Parameter(Mandatory=$false, HelpMessage="Description to embed in the signature.")]
-    [string]$SignatureDescription = "DownloadNet - offline full-text search archive of the web for you.", # Default for DownloadNet
-
-    [Parameter(Mandatory=$false, HelpMessage="URL for more information to embed in the signature.")]
-    [string]$SignatureUrl = "https://github.com/DO-SAY-GO/dn" # Default for DownloadNet - REPLACE WITH ACTUAL URL
+    # --- NEW: Version Info Metadata ---
+    [string]$CompanyName = "DOSAYGO",
+    [string]$ProductName = "DownloadNet",
+    [string]$FileDescription = "Offline full-text search archive of what you browse",
+    [string]$FileVersion = "4.5.1.0",
+    [string]$ProductVersion = "4.5.1.0"
 )
+
+# --- Function to check/install rcedit via winget ---
+function Ensure-RceditInstalled {
+    $rceditPath = "$env:ProgramFiles\rcedit\rcedit.exe"
+    $isInstalled = Get-Command "rcedit" -ErrorAction SilentlyContinue
+
+    if (-not $isInstalled) {
+        Write-Host "rcedit not found. Attempting to install with winget..." -ForegroundColor Yellow
+        winget install --id ElectronCommunity.rcedit -e --silent
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Failed to install rcedit using winget. Please install it manually or check winget availability."
+            exit 1
+        }
+        $env:Path += ";$env:ProgramFiles\rcedit"
+    } else {
+        Write-Host "rcedit is already installed." -ForegroundColor Green
+    }
+}
+
+# --- Call rcedit to update version metadata ---
+function Set-VersionMetadata {
+    Ensure-RceditInstalled
+
+    Write-Host "Setting executable metadata using rcedit..." -ForegroundColor Yellow
+    & rcedit "$ExePath" `
+        --set-version-string "CompanyName" "$CompanyName" `
+        --set-version-string "ProductName" "$ProductName" `
+        --set-version-string "FileDescription" "$FileDescription" `
+        --set-file-version "$FileVersion" `
+        --set-product-version "$ProductVersion"
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "rcedit failed to apply version metadata."
+        exit 1
+    }
+
+    Write-Host "Version metadata applied successfully." -ForegroundColor Green
+}
+
+# --- RUN METADATA SETTING STEP FIRST ---
+Set-VersionMetadata
 
 # --- Configuration (Defaults from original script) ---
 $DefaultSPNName = "CodeSigningSP" # Original SPN name
