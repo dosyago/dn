@@ -5,10 +5,39 @@
 set -e
 # set -x 
 
+# --- Configuration & Variables ---
 DEFAULT_NODE_VERSION="22"
-MACOS_APP_BUNDLE_ID="com.DOSAYGO.DownloadNet"
+MACOS_APP_BUNDLE_ID="com.DOSAYGO.DownloadNet" # Your registered Bundle ID
 ENTITLEMENTS_FILE_PATH="scripts/downloadnet-entitlements.xml" 
-NOTARIZE_SCRIPT_PATH="./stampers/notarize_macos.sh" # Adjust if needed
+NOTARIZE_SCRIPT_PATH="./stampers/notarize_macos.sh" # Path to your notarization script
+
+# --- NEW: Check for Notarization Environment Variables ---
+CAN_ATTEMPT_NOTARIZATION=true
+echo "INFO: Checking for notarization prerequisites..." >&2
+if [ -z "$API_KEY_ID" ]; then
+  echo "WARNING: Environment variable API_KEY_ID is not set. Notarization will be skipped." >&2
+  CAN_ATTEMPT_NOTARIZATION=false
+fi
+if [ -z "$API_KEY_ISSUER_ID" ]; then
+  echo "WARNING: Environment variable API_KEY_ISSUER_ID is not set. Notarization will be skipped." >&2
+  CAN_ATTEMPT_NOTARIZATION=false
+fi
+if [ -z "$API_KEY_P8_PATH" ]; then
+  echo "WARNING: Environment variable API_KEY_P8_PATH is not set. Notarization will be skipped." >&2
+  CAN_ATTEMPT_NOTARIZATION=false
+elif [ ! -f "$API_KEY_P8_PATH" ]; then # Also check if the path points to an actual file
+  echo "WARNING: API Key .p8 file not found at path specified by API_KEY_P8_PATH: '$API_KEY_P8_PATH'. Notarization will be skipped." >&2
+  CAN_ATTEMPT_NOTARIZATION=false
+fi
+
+if [ "$CAN_ATTEMPT_NOTARIZATION" = true ]; then
+    echo "INFO: Notarization environment variables appear to be set." >&2
+else
+    echo "INFO: One or more required environment variables for notarization are missing or invalid." >&2
+    echo "      To enable notarization, please set: API_KEY_ID, API_KEY_ISSUER_ID, API_KEY_P8_PATH." >&2
+fi
+echo "-----------------------------------------------------" >&2
+
 
 # --- Helper Functions (source_nvm, find_developer_id_identities - keep as is) ---
 source_nvm() {
@@ -115,81 +144,95 @@ echo "INFO: Assessing with spctl for $TEMP_EXE_PATH..." >&2
 spctl_output=$(spctl --assess --type execute --verbose "$TEMP_EXE_PATH" 2>&1) || true
 echo "$spctl_output"
 
-CAN_NOTARIZE=false
-if [[ "$SELECTED_SIGNING_IDENTITY" != "-" && ("$spctl_output" == *"source=Unnotarized Developer ID"* || "$spctl_output" == *"rejected"*) ]]; then
-    echo "INFO: App signed with Developer ID. Eligible for notarization." >&2
-    CAN_NOTARIZE=true
-elif [[ "$SELECTED_SIGNING_IDENTITY" == "-" && "$spctl_output" == *": accepted"* ]]; then
-    echo "INFO: App is ad-hoc signed and accepted locally. Notarization is not applicable." >&2
-elif [[ "$SELECTED_SIGNING_IDENTITY" != "-" && "$spctl_output" == *": accepted"* && ("$spctl_output" == *"source=Notarized Developer ID"* || "$spctl_output" == *"source=Apple notarization"*) ]]; then
+APP_SIGNED_WITH_DEV_ID=false
+if [ "$SELECTED_SIGNING_IDENTITY" != "-" ]; then
+    APP_SIGNED_WITH_DEV_ID=true
+fi
+
+ELIGIBLE_FOR_NOTARIZATION=false
+if [ "$APP_SIGNED_WITH_DEV_ID" = true ] && [[ "$spctl_output" == *"source=Unnotarized Developer ID"* || "$spctl_output" == *"rejected"* ]]; then
+    echo "INFO: App signed with Developer ID and appears unnotarized. Eligible for notarization attempt." >&2
+    ELIGIBLE_FOR_NOTARIZATION=true
+elif [ "$APP_SIGNED_WITH_DEV_ID" = true ] && [[ "$spctl_output" == *": accepted"* && ("$spctl_output" == *"source=Notarized Developer ID"* || "$spctl_output" == *"source=Apple notarization"*) ]]; then
     echo "INFO: App appears to be already signed with Developer ID and notarized." >&2
+elif [ "$SELECTED_SIGNING_IDENTITY" == "-" ]; then
+    echo "INFO: App is ad-hoc signed. Notarization is not applicable." >&2
 else
     echo "WARNING: App status is unclear or not suitable for notarization based on spctl assessment." >&2
 fi
 
-PROCEED_WITH_NOTARIZATION="no"
-if [ "$CAN_NOTARIZE" = true ]; then
+PROCEED_WITH_NOTARIZATION_USER_CONFIRMED="no"
+if [ "$ELIGIBLE_FOR_NOTARIZATION" = true ]; then
     echo "---------------------------------------------------------------------"
     echo "TESTING EXECUTABLE: The application '$TEMP_EXE_PATH' will now run in the foreground."
-    echo "Please interact with it to verify its basic functionality (e.g., menu appears, can select exit)."
+    echo "Please interact with it to verify its basic functionality."
     echo "Once you are done testing and have exited the application (or used Ctrl+C), "
-    echo "this script will ask for your confirmation."
+    echo "this script will ask for your confirmation to notarize."
     echo "---------------------------------------------------------------------"
-    
-    # Make the temporary executable runnable by the current user
     chmod +x "$TEMP_EXE_PATH"
-
-    # Run the application in the foreground. The script will pause here.
-    # The user needs to manually exit the application or Ctrl+C it.
     if ! "$TEMP_EXE_PATH"; then
         echo "WARNING: Application exited with a non-zero status during test run." >&2
-        # This doesn't necessarily mean it failed for the user's visual check,
-        # but it's worth noting. For an Inquirer app, Ctrl+C often results in non-zero.
     fi
-    
-    # After the application exits (or is Ctrl+C'd), ask the user.
     echo "---------------------------------------------------------------------"
-    if [ -t 0 ]; then # Check if running in an interactive terminal
+    if [ -t 0 ]; then 
         read -r -p "Did the application '$EXE_NAME_ARG' run correctly during your test? (y/N): " USER_CONFIRM_SUCCESS
         if [[ "$USER_CONFIRM_SUCCESS" =~ ^[Yy]$ ]]; then
             echo "INFO: User confirmed successful execution."
-            PROCEED_WITH_NOTARIZATION="yes"
+            PROCEED_WITH_NOTARIZATION_USER_CONFIRMED="yes"
         else
             echo "INFO: User indicated the test run was not successful. Notarization will be skipped."
-            PROCEED_WITH_NOTARIZATION="no"
         fi
-    else # Non-interactive (CI) - this part is tricky for interactive apps
+    else 
         echo "WARNING: Non-interactive environment. Cannot get user confirmation for test run." >&2
-        echo "         Skipping notarization. For CI, implement automated tests or always notarize." >&2
-        PROCEED_WITH_NOTARIZATION="no" # Default to no for CI without specific automated tests
+        echo "         To notarize in CI, ensure MACOS_CODESIGN_IDENTITY_DOWNLOADNET is set and notarization env vars are present." >&2
+        echo "         And consider adding an automated test or always notarizing if Dev ID signed." >&2
     fi
 fi
 
 
 # Step 8: Conditional Notarization and Finalization
 echo "[Step 8/8] Conditional Notarization and Finalization..." >&2
-if [ "$PROCEED_WITH_NOTARIZATION" = "yes" ]; then
+FINAL_NOTARIZATION_DECISION="no"
+
+if [ "$ELIGIBLE_FOR_NOTARIZATION" = true ] && [ "$PROCEED_WITH_NOTARIZATION_USER_CONFIRMED" = "yes" ] && [ "$CAN_ATTEMPT_NOTARIZATION" = true ]; then
     if [ -x "$NOTARIZE_SCRIPT_PATH" ]; then
         echo "INFO: Proceeding to notarization for $TEMP_EXE_PATH..." >&2
+        # Pass the temporary executable path and bundle ID to the notarization script
         if "$NOTARIZE_SCRIPT_PATH" "$TEMP_EXE_PATH" "$MACOS_APP_BUNDLE_ID"; then
-            echo "INFO: Notarization process completed successfully for $TEMP_EXE_PATH." >&2
+            echo "INFO: Notarization process reported success for $TEMP_EXE_PATH." >&2
+            FINAL_NOTARIZATION_DECISION="yes" # Assume success from script
         else
-            echo "ERROR: Notarization process failed for $TEMP_EXE_PATH." >&2
+            echo "ERROR: Notarization process reported failure for $TEMP_EXE_PATH." >&2
+            # Notarization script should output details. The main build might still succeed but app won't be notarized.
         fi
     else
-        echo "WARNING: Notarization script $NOTARIZE_SCRIPT_PATH not found or not executable. Skipping notarization." >&2
+        echo "WARNING: Notarization script $NOTARIZE_SCRIPT_PATH not found or not executable. Skipping actual notarization." >&2
+        echo "         (CAN_ATTEMPT_NOTARIZATION was true, but script is missing)" >&2
     fi
-else
-    if [ "$CAN_NOTARIZE" = true ]; then # Only print this if notarization was an option
-         echo "INFO: Notarization skipped based on test run outcome or user choice." >&2
+elif [ "$ELIGIBLE_FOR_NOTARIZATION" = true ]; then # Eligible, but user said no or env vars missing
+    if [ "$CAN_ATTEMPT_NOTARIZATION" = false ]; then
+        echo "INFO: Notarization skipped because required environment variables (API_KEY_ID, etc.) are not set." >&2
+    elif [ "$PROCEED_WITH_NOTARIZATION_USER_CONFIRMED" = "no" ]; then
+        echo "INFO: Notarization skipped based on test run outcome or user choice." >&2
     fi
 fi
+
 
 FINAL_EXE_PATH="$OUTPUT_FOLDER_ARG/$EXE_NAME_ARG"
 echo "INFO: Moving $TEMP_EXE_PATH to $FINAL_EXE_PATH..." >&2
 mv "$TEMP_EXE_PATH" "$FINAL_EXE_PATH" || { echo "ERROR: Failed to move executable."; exit 1; }
+
 echo "INFO: Cleaning up temporary files..." >&2
 rm -f sea-config.json sea-prep.blob
+
 echo "--- DownloadNet macOS SEA Stamping & Signing Complete ---" >&2
 echo "SUCCESS: Executable created at: $FINAL_EXE_PATH" >&2
-# ... (final status message about notarization)
+if [ "$FINAL_NOTARIZATION_DECISION" = "yes" ]; then
+    echo "INFO: The executable should be notarized."
+elif [ "$ELIGIBLE_FOR_NOTARIZATION" = true ]; then # Was eligible but didn't get notarized for some reason
+    echo "WARNING: The executable is signed with Developer ID but was NOT notarized."
+elif [ "$SELECTED_SIGNING_IDENTITY" == "-" ]; then
+    echo "INFO: The executable is ad-hoc signed (not for distribution, notarization not applicable)."
+else
+    echo "INFO: Notarization was not attempted or was not applicable for other reasons."
+fi
