@@ -6,7 +6,7 @@ import { root } from './root.js';
 
 const { APP_ROOT: __ROOT } = root;
 
-const DEEB = process.env.DEBUG_22120_VERBOSE || true;
+const DEEB = process.env.DEBUG_22120_VERBOSE || false;
 
 export const DEBUG = {
   showBrowser: false,
