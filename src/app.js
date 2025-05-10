@@ -2,7 +2,6 @@ import fs from 'fs/promises';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import inquirer from 'inquirer';
-import fetch from 'node-fetch';
 import chalk from 'chalk';
 import ChromeLauncher from './launcher.js';
 import psList from '@667/ps-list';
@@ -180,7 +179,7 @@ async function checkIsConnectable(browser) {
   for (const host of hosts) {
     try {
       const url = `http://${host}:${chrome_port}/json/version`;
-      console.log(`Testing`, url);
+      DEBUG.verbose && console.log(`Testing`, url);
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();

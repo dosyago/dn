@@ -5,6 +5,7 @@ import os from 'os';
 import inquirer from 'inquirer';
 import { installBrowser } from './installBrowser.js';
 import { DEBUG } from './common.js';
+import { root } from './root.js';
 
 // Constants
 const execPromise = promisify(exec);
@@ -270,7 +271,7 @@ const run = async () => {
 };
 
 // CLI entry point
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (root.file === process.argv[1]) {
   run();
 }
 

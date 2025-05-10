@@ -31,7 +31,6 @@ echo   "output": "sea-prep.blob",
 echo   "disableExperimentalSEAWarning": true, 
 echo   "useCodeCache": true, 
 echo   "assets": { 
-echo     "index.html": "public/index.html", 
 echo     "favicon.ico": "public/favicon.ico", 
 echo     "top.html": "public/top.html", 
 echo     "style.css": "public/style.css", 
