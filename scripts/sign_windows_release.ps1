@@ -29,10 +29,10 @@ param (
 
     # --- NEW: Parameters for DownloadNet Specific Signature Metadata ---
     [Parameter(Mandatory=$false, HelpMessage="Description to embed in the signature.")]
-    [string]$SignatureDescription = "DownloadNet Application", # Default for DownloadNet
+    [string]$SignatureDescription = "DownloadNet - offline full-text search archive of the web for you.", # Default for DownloadNet
 
     [Parameter(Mandatory=$false, HelpMessage="URL for more information to embed in the signature.")]
-    [string]$SignatureUrl = "https://example.com/downloadnet" # Default for DownloadNet - REPLACE WITH ACTUAL URL
+    [string]$SignatureUrl = "https://github.com/DO-SAY-GO/dn" # Default for DownloadNet - REPLACE WITH ACTUAL URL
 )
 
 # --- Configuration (Defaults from original script) ---
