@@ -31,6 +31,7 @@ chmod +x build/global/downloadnet.cjs
 if [[ "$OSTYPE" == darwin* ]]; then
   echo "Using macOS builder..." >&2
   ./stampers/macos-new.sh dn-macos build/cjs/dn.cjs build/bin/
+  #./stampers/macos.sh dn-macos build/cjs/dn.cjs build/bin/
 elif [[ "$(node.exe -p process.platform)" == win* ]]; then
   echo "Using windows builder..." >&2
   ./stampers/win.bat dn-win.exe ./build/cjs/dn.cjs ./build/bin/

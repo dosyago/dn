@@ -1,81 +1,38 @@
 #!/bin/bash
 
-# macOS Single Executable Application (SEA) Stamper and Signer for DownloadNet
-#
-# This script automates the process of:
-# 1. Setting up the correct Node.js version using NVM.
-# 2. Generating a SEA configuration and blob.
-# 3. Creating an executable from the Node binary.
-# 4. Injecting the SEA blob into the executable.
-# 5. Automatically detecting and prompting for the appropriate Apple Developer ID Application certificate.
-# 6. Code signing the executable with hardened runtime and timestamping.
-# 7. Verifying the signature.
+# macOS Single Executable Application (SEA) Stamper, Signer, and Conditional Notarizer for DownloadNet
 
-# Exit on any error
 set -e
+# set -x 
 
-# Optional: Enable for detailed command tracing during debugging
-# set -x
+DEFAULT_NODE_VERSION="22"
+MACOS_APP_BUNDLE_ID="com.DOSAYGO.DownloadNet"
+ENTITLEMENTS_FILE_PATH="scripts/downloadnet-entitlements.xml" 
+NOTARIZE_SCRIPT_PATH="./stampers/notarize_macos.sh" # Adjust if needed
 
-# --- Configuration & Variables ---
-DEFAULT_NODE_VERSION="22" # Node.js version to use for building the SEA
-MACOS_APP_BUNDLE_ID="com.DOSAYGO.DownloadNet" # Define your bundle ID
-
-# --- Helper Functions ---
-
-# Function to ensure NVM is sourced and working
+# --- Helper Functions (source_nvm, find_developer_id_identities - keep as is) ---
 source_nvm() {
-  # Try standard NVM paths
-  if [ -n "$NVM_DIR" ] && [ -s "$NVM_DIR/nvm.sh" ]; then
-    # shellcheck source=/dev/null
-    source "$NVM_DIR/nvm.sh"
-  elif [ -s "$HOME/.nvm/nvm.sh" ]; then
-    # shellcheck source=/dev/null
-    source "$HOME/.nvm/nvm.sh"
-  fi
-
-  if ! command -v nvm &> /dev/null; then
-    echo "ERROR: NVM command not found after attempting to source." >&2
-    echo "Please ensure NVM is installed correctly: https://github.com/nvm-sh/nvm#installing-and-updating" >&2
-    return 1
-  fi
+  if [ -n "$NVM_DIR" ] && [ -s "$NVM_DIR/nvm.sh" ]; then source "$NVM_DIR/nvm.sh";
+  elif [ -s "$HOME/.nvm/nvm.sh" ]; then source "$HOME/.nvm/nvm.sh"; fi
+  if ! command -v nvm &> /dev/null; then echo "ERROR: NVM command not found." >&2; return 1; fi
   return 0
 }
 
-# Function to find Developer ID Application signing identities
 find_developer_id_identities() {
-  local identities_output
-  local developer_id_identities=()
-  local identity_line
-
+  local identities_output developer_id_identities=() identity_line
   echo "INFO: Searching for valid 'Developer ID Application' signing identities in keychain..." >&2
-  identities_output=$(security find-identity -v -p codesigning)
-
+  identities_output=$(security find-identity -v -p codesigning | awk '{$1=$1;print}')
   while IFS= read -r identity_line; do
     if [[ "$identity_line" == *"Developer ID Application:"* ]]; then
-      local name
-      # Extract the full name in quotes. Handles names with spaces.
-      # Regex: Find a closing parenthesis, a space, then capture everything up to the next quote (non-greedy if possible, but sed is greedy).
-      # Then remove leading/trailing quotes.
-      name=$(echo "$identity_line" | sed -n 's/.*\) *"\(.*\)"/\1/p')
-      if [ -n "$name" ]; then
-        developer_id_identities+=("$name")
-      fi
+      local name; name=$(echo "$identity_line" | awk -F '"' '{print $2}')
+      if [ -n "$name" ]; then developer_id_identities+=("$name"); fi
     fi
-  done <<< "$identities_output"
-
-  # Return the found identities (one per line for easy processing by calling script)
-  for id_name in "${developer_id_identities[@]}"; do
-    echo "$id_name"
-  done
+  done <<< "$identities_output"; for id_name in "${developer_id_identities[@]}"; do echo "$id_name"; done
 }
+# --- End Helper Functions ---
 
-# --- Main Script Logic ---
-
-# Validate input parameters
 if [ "$#" -ne 3 ]; then
   echo "Usage: $0 <output-executable-name> <path-to-js-source-file> <output-folder-path>" >&2
-  echo "Example: $0 dn build/cjs/dn.cjs build/bin/" >&2
   exit 1
 fi
 
@@ -83,26 +40,18 @@ EXE_NAME_ARG="$1"
 JS_SOURCE_FILE_ARG="$2"
 OUTPUT_FOLDER_ARG="$3"
 
-echo "--- DownloadNet macOS SEA Stamper & Signer ---"
-
-# 1. Setup NVM and Node.js
-echo "[Step 1/7] Setting up Node.js environment..." >&2
+echo "--- DownloadNet macOS SEA Stamper, Signer & Conditional Notarizer ---"
+# Steps 1-5: Setup, SEA generation, Node binary prep, Injection (keep as is)
+echo "[Step 1/8] Setting up Node.js environment..." >&2
 if ! source_nvm; then exit 1; fi
-
-echo "INFO: Ensuring Node.js version $DEFAULT_NODE_VERSION is installed and used..." >&2
-nvm install "$DEFAULT_NODE_VERSION" || { echo "ERROR: Failed to install Node $DEFAULT_NODE_VERSION" >&2; exit 1; }
-nvm use "$DEFAULT_NODE_VERSION" || { echo "ERROR: Failed to use Node $DEFAULT_NODE_VERSION" >&2; exit 1; }
-echo "INFO: Using Node version: $(node -v) from $(command -v node)" >&2
-
-# 2. Prepare output directory and paths
+nvm install "$DEFAULT_NODE_VERSION" > /dev/null || { echo "ERROR: Failed to install Node $DEFAULT_NODE_VERSION" >&2; exit 1; }
+nvm use "$DEFAULT_NODE_VERSION" > /dev/null || { echo "ERROR: Failed to use Node $DEFAULT_NODE_VERSION" >&2; exit 1; }
+echo "INFO: Using Node version: $(node -v)" >&2
+if [ ! -f "$ENTITLEMENTS_FILE_PATH" ]; then echo "ERROR: Entitlements file not found at $ENTITLEMENTS_FILE_PATH" >&2; exit 1; fi
+echo "INFO: Using entitlements file: $ENTITLEMENTS_FILE_PATH" >&2
 mkdir -p "$OUTPUT_FOLDER_ARG"
-# Temporary executable will be created in the current directory, then moved.
-TEMP_EXE_PATH="./${EXE_NAME_ARG}_temp_sea" # Temporary name to avoid conflict if script is re-run
-
-# 3. Create sea-config.json
-# Assuming 'public/' directory and JS_SOURCE_FILE_ARG are relative to the CWD where this script is run from.
-# If JS_SOURCE_FILE_ARG is not relative to CWD, it needs to be an absolute path or handled accordingly.
-echo "[Step 2/7] Creating sea-config.json..." >&2
+TEMP_EXE_PATH="./${EXE_NAME_ARG}_sea_final_build"
+echo "[Step 2/8] Creating sea-config.json..." >&2
 cat <<EOF > sea-config.json
 {
   "main": "${JS_SOURCE_FILE_ARG}",
@@ -118,133 +67,129 @@ cat <<EOF > sea-config.json
   }
 }
 EOF
-echo "INFO: sea-config.json created for main entry: ${JS_SOURCE_FILE_ARG}" >&2
-
-# 4. Generate the SEA blob
-echo "[Step 3/7] Generating SEA blob (sea-prep.blob)..." >&2
+echo "[Step 3/8] Generating SEA blob..." >&2
 node --experimental-sea-config sea-config.json || { echo "ERROR: Failed to generate SEA blob." >&2; rm -f sea-config.json; exit 1; }
-echo "INFO: SEA blob generated." >&2
-
-# 5. Prepare the Node binary for injection
-echo "[Step 4/7] Preparing Node binary..." >&2
+echo "[Step 4/8] Preparing Node binary..." >&2
 NODE_EXECUTABLE_PATH="$(command -v node)"
-if [ ! -f "$NODE_EXECUTABLE_PATH" ]; then
-    echo "ERROR: Node executable not found at $NODE_EXECUTABLE_PATH" >&2
-    rm -f sea-config.json sea-prep.blob
-    exit 1
-fi
-cp "$NODE_EXECUTABLE_PATH" "$TEMP_EXE_PATH" || { echo "ERROR: Failed to copy node binary to $TEMP_EXE_PATH." >&2; rm -f sea-config.json sea-prep.blob; exit 1; }
-echo "INFO: Node binary copied to $TEMP_EXE_PATH." >&2
-
-echo "INFO: Removing existing signature from $TEMP_EXE_PATH (if any)..." >&2
-codesign --remove-signature "$TEMP_EXE_PATH" 2>/dev/null || echo "INFO: No existing signature to remove, or removal failed (this is often okay)." >&2
-
-# 6. Inject the SEA blob
-echo "[Step 5/7] Injecting SEA blob into $TEMP_EXE_PATH..." >&2
-NPX_CMD="npx"
-if ! command -v npx &> /dev/null; then
-    NODE_BIN_PATH=$(dirname "$(command -v node)")
-    if [ -x "$NODE_BIN_PATH/npx" ]; then NPX_CMD="$NODE_BIN_PATH/npx"; else
-        echo "ERROR: npx command not found. Please install npx (usually comes with npm)." >&2
-        rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"
-        exit 1
-    fi
-fi
+cp "$NODE_EXECUTABLE_PATH" "$TEMP_EXE_PATH" || { echo "ERROR: Failed to copy node binary." >&2; rm -f sea-config.json sea-prep.blob; exit 1; }
+echo "INFO: Removing existing signature from copied Node binary $TEMP_EXE_PATH..." >&2
+codesign --remove-signature "$TEMP_EXE_PATH" 2>/dev/null || echo "INFO: No existing signature or removal failed (okay)." >&2
+echo "[Step 5/8] Injecting SEA blob into $TEMP_EXE_PATH..." >&2
+NPX_CMD="npx"; if ! command -v npx &> /dev/null; then NODE_BIN_PATH=$(dirname "$(command -v node)"); if [ -x "$NODE_BIN_PATH/npx" ]; then NPX_CMD="$NODE_BIN_PATH/npx"; else echo "ERROR: npx not found." >&2; exit 1; fi; fi
 "$NPX_CMD" postject "$TEMP_EXE_PATH" NODE_SEA_BLOB sea-prep.blob \
   --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 \
   --macho-segment-name NODE_SEA || { echo "ERROR: postject failed."; rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"; exit 1; }
-echo "INFO: SEA blob injected successfully." >&2
+echo "INFO: SEA blob injected." >&2
 
-# 7. Code Signing
-echo "[Step 6/7] Preparing for Code Signing..." >&2
+# Step 6: Code Signing (keep as is)
+echo "[Step 6/8] Code Signing Process..." >&2
 SELECTED_SIGNING_IDENTITY=""
-# Attempt to use environment variable first, if set for non-interactive use
-if [ -n "${MACOS_CODESIGN_IDENTITY_DOWNLOADNET}" ]; then
-    echo "INFO: Using pre-set signing identity from MACOS_CODESIGN_IDENTITY_DOWNLOADNET: ${MACOS_CODESIGN_IDENTITY_DOWNLOADNET}" >&2
-    SELECTED_SIGNING_IDENTITY="${MACOS_CODESIGN_IDENTITY_DOWNLOADNET}"
+if [ -n "${MACOS_CODESIGN_IDENTITY_DOWNLOADNET}" ]; then SELECTED_SIGNING_IDENTITY="${MACOS_CODESIGN_IDENTITY_DOWNLOADNET}"; echo "INFO: Using pre-set signing identity: ${SELECTED_SIGNING_IDENTITY}" >&2
 else
-    # Auto-detect Developer ID Application certificates
-    DEVELOPER_ID_CANDIDATES=()
-    while IFS= read -r line; do DEVELOPER_ID_CANDIDATES+=("$line"); done < <(find_developer_id_identities)
-
+    DEVELOPER_ID_CANDIDATES=(); while IFS= read -r line; do DEVELOPER_ID_CANDIDATES+=("$line"); done < <(find_developer_id_identities)
     NUM_CANDIDATES=${#DEVELOPER_ID_CANDIDATES[@]}
+    if [ "$NUM_CANDIDATES" -eq 0 ]; then SELECTED_SIGNING_IDENTITY="-"; echo "WARNING: No Developer ID certs found. Ad-hoc signing." >&2
+    elif [ "$NUM_CANDIDATES" -eq 1 ]; then SELECTED_SIGNING_IDENTITY="${DEVELOPER_ID_CANDIDATES[0]}"; echo "INFO: Auto-selected unique Developer ID cert: $SELECTED_SIGNING_IDENTITY" >&2
+    else 
+        if [ -t 0 ]; then PS3="Select certificate by number (or 'a' for ad-hoc, 'q' to quit): "; select opt in "${DEVELOPER_ID_CANDIDATES[@]}" "Ad-hoc Sign (not for distribution)" "Quit"; do case $REPLY in q|$(($NUM_CANDIDATES+2))) exit 1;; $(($NUM_CANDIDATES+1))) SELECTED_SIGNING_IDENTITY="-"; break;; *) if [[ "$REPLY" -ge 1 && "$REPLY" -le "$NUM_CANDIDATES" ]]; then SELECTED_SIGNING_IDENTITY="${DEVELOPER_ID_CANDIDATES[$((REPLY-1))]}"; break; else echo "Invalid."; fi;; esac; done;
+        else SELECTED_SIGNING_IDENTITY="${DEVELOPER_ID_CANDIDATES[0]}"; echo "WARNING: Non-interactive, multiple certs, using first: $SELECTED_SIGNING_IDENTITY" >&2; fi
+        echo "INFO: You selected: $SELECTED_SIGNING_IDENTITY" >&2
+    fi
+fi
+if [ -z "$SELECTED_SIGNING_IDENTITY" ]; then echo "ERROR: No signing identity selected." >&2; exit 1; fi
+echo "INFO: Signing $TEMP_EXE_PATH with identity: '$SELECTED_SIGNING_IDENTITY', bundle ID: '$MACOS_APP_BUNDLE_ID', entitlements: '$ENTITLEMENTS_FILE_PATH'" >&2
+SIGN_OPTIONS="--force --deep --timestamp --identifier \"$MACOS_APP_BUNDLE_ID\" --entitlements \"$ENTITLEMENTS_FILE_PATH\""
+if [ "$SELECTED_SIGNING_IDENTITY" != "-" ]; then SIGN_OPTIONS="$SIGN_OPTIONS --options runtime"; fi
+eval "codesign $SIGN_OPTIONS --sign \"$SELECTED_SIGNING_IDENTITY\" \"$TEMP_EXE_PATH\""
+if [ $? -ne 0 ]; then echo "ERROR: codesign failed." >&2; exit 1; fi
+echo "INFO: Code signing successful." >&2
 
-    if [ "$NUM_CANDIDATES" -eq 0 ]; then
-        echo "WARNING: No 'Developer ID Application' certificates found in keychain." >&2
-        echo "The application will be ad-hoc signed. It will run locally but may not pass Gatekeeper on other machines or be notarizable." >&2
-        SELECTED_SIGNING_IDENTITY="-" # Ad-hoc signing
-    elif [ "$NUM_CANDIDATES" -eq 1 ]; then
-        SELECTED_SIGNING_IDENTITY="${DEVELOPER_ID_CANDIDATES[0]}"
-        echo "INFO: Automatically selected unique 'Developer ID Application' certificate: $SELECTED_SIGNING_IDENTITY" >&2
-    else
-        echo "INFO: Multiple 'Developer ID Application' certificates found. Please choose one:" >&2
-        PS3="Select certificate by number (or type 'q' to quit, 'a' for ad-hoc): "
-        select opt in "${DEVELOPER_ID_CANDIDATES[@]}" "Ad-hoc Sign (not recommended for distribution)" "Quit"; do
-            if [[ "$REPLY" == "q" || "$opt" == "Quit" ]]; then
-                echo "INFO: Signing process aborted by user." >&2
-                rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"
-                exit 1
-            elif [[ "$opt" == "Ad-hoc Sign (not recommended for distribution)" ]]; then
-                echo "INFO: Proceeding with ad-hoc signing." >&2
-                SELECTED_SIGNING_IDENTITY="-"
-                break
-            elif [[ "$REPLY" -ge 1 && "$REPLY" -le "$NUM_CANDIDATES" ]]; then
-                SELECTED_SIGNING_IDENTITY="${DEVELOPER_ID_CANDIDATES[$((REPLY-1))]}"
-                echo "INFO: You selected: $SELECTED_SIGNING_IDENTITY" >&2
-                break
-            else
-                echo "Invalid selection: $REPLY. Please try again." >&2
-            fi
-        done
+# Step 7: Verifying Signature and Testing Execution
+echo "[Step 7/8] Verifying Signature and Testing Execution..." >&2
+echo "INFO: Verifying signature for $TEMP_EXE_PATH..." >&2
+codesign --verify --strict --verbose=4 "$TEMP_EXE_PATH" || { echo "ERROR: codesign --verify failed." >&2; exit 1; }
+echo "INFO: Signature verified." >&2
+echo "INFO: Displaying signature details (check entitlements)..." >&2
+codesign --display --entitlements - --verbose=2 "$TEMP_EXE_PATH"
+echo "INFO: Assessing with spctl for $TEMP_EXE_PATH..." >&2
+spctl_output=$(spctl --assess --type execute --verbose "$TEMP_EXE_PATH" 2>&1) || true
+echo "$spctl_output"
+
+CAN_NOTARIZE=false
+if [[ "$SELECTED_SIGNING_IDENTITY" != "-" && ("$spctl_output" == *"source=Unnotarized Developer ID"* || "$spctl_output" == *"rejected"*) ]]; then
+    echo "INFO: App signed with Developer ID. Eligible for notarization." >&2
+    CAN_NOTARIZE=true
+elif [[ "$SELECTED_SIGNING_IDENTITY" == "-" && "$spctl_output" == *": accepted"* ]]; then
+    echo "INFO: App is ad-hoc signed and accepted locally. Notarization is not applicable." >&2
+elif [[ "$SELECTED_SIGNING_IDENTITY" != "-" && "$spctl_output" == *": accepted"* && ("$spctl_output" == *"source=Notarized Developer ID"* || "$spctl_output" == *"source=Apple notarization"*) ]]; then
+    echo "INFO: App appears to be already signed with Developer ID and notarized." >&2
+else
+    echo "WARNING: App status is unclear or not suitable for notarization based on spctl assessment." >&2
+fi
+
+PROCEED_WITH_NOTARIZATION="no"
+if [ "$CAN_NOTARIZE" = true ]; then
+    echo "---------------------------------------------------------------------"
+    echo "TESTING EXECUTABLE: The application '$TEMP_EXE_PATH' will now run in the foreground."
+    echo "Please interact with it to verify its basic functionality (e.g., menu appears, can select exit)."
+    echo "Once you are done testing and have exited the application (or used Ctrl+C), "
+    echo "this script will ask for your confirmation."
+    echo "---------------------------------------------------------------------"
+    
+    # Make the temporary executable runnable by the current user
+    chmod +x "$TEMP_EXE_PATH"
+
+    # Run the application in the foreground. The script will pause here.
+    # The user needs to manually exit the application or Ctrl+C it.
+    if ! "$TEMP_EXE_PATH"; then
+        echo "WARNING: Application exited with a non-zero status during test run." >&2
+        # This doesn't necessarily mean it failed for the user's visual check,
+        # but it's worth noting. For an Inquirer app, Ctrl+C often results in non-zero.
+    fi
+    
+    # After the application exits (or is Ctrl+C'd), ask the user.
+    echo "---------------------------------------------------------------------"
+    if [ -t 0 ]; then # Check if running in an interactive terminal
+        read -r -p "Did the application '$EXE_NAME_ARG' run correctly during your test? (y/N): " USER_CONFIRM_SUCCESS
+        if [[ "$USER_CONFIRM_SUCCESS" =~ ^[Yy]$ ]]; then
+            echo "INFO: User confirmed successful execution."
+            PROCEED_WITH_NOTARIZATION="yes"
+        else
+            echo "INFO: User indicated the test run was not successful. Notarization will be skipped."
+            PROCEED_WITH_NOTARIZATION="no"
+        fi
+    else # Non-interactive (CI) - this part is tricky for interactive apps
+        echo "WARNING: Non-interactive environment. Cannot get user confirmation for test run." >&2
+        echo "         Skipping notarization. For CI, implement automated tests or always notarize." >&2
+        PROCEED_WITH_NOTARIZATION="no" # Default to no for CI without specific automated tests
     fi
 fi
 
-if [ -z "$SELECTED_SIGNING_IDENTITY" ]; then
-    echo "ERROR: No signing identity was selected or determined. Cannot proceed with signing." >&2
-    rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"
-    exit 1
-fi
 
-echo "INFO: Signing $TEMP_EXE_PATH with identity: '$SELECTED_SIGNING_IDENTITY' and bundle ID: '$MACOS_APP_BUNDLE_ID'" >&2
-SIGN_OPTIONS="--force --deep --timestamp --identifier \"$MACOS_APP_BUNDLE_ID\"" # Add identifier
-if [ "$SELECTED_SIGNING_IDENTITY" != "-" ]; then
-    SIGN_OPTIONS="$SIGN_OPTIONS --options runtime"
-fi
-
-codesign $SIGN_OPTIONS --sign "$SELECTED_SIGNING_IDENTITY" "$TEMP_EXE_PATH"
-SIGN_EXIT_CODE=$?
-if [ $SIGN_EXIT_CODE -ne 0 ]; then
-    echo "ERROR: codesign failed for $TEMP_EXE_PATH with identity '$SELECTED_SIGNING_IDENTITY'. Exit code: $SIGN_EXIT_CODE" >&2
-    echo "Ensure the certificate is in your login keychain and accessible, and that the private key is not passphrase protected or is unlocked." >&2
-    rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"
-    exit 1
-fi
-echo "INFO: Code signing successful." >&2
-
-# 8. Verification and Finalization
-echo "[Step 7/7] Verifying signature and finalizing..." >&2
-echo "INFO: Verifying signature for $TEMP_EXE_PATH..." >&2
-codesign --verify --verbose=2 "$TEMP_EXE_PATH" || { echo "ERROR: codesign --verify failed. The signature is invalid."; rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"; exit 1; }
-echo "INFO: Signature verified by codesign." >&2
-
-echo "INFO: Displaying signature details for $TEMP_EXE_PATH..." >&2
-codesign --display --verbose=2 "$TEMP_EXE_PATH"
-
-echo "INFO: Assessing with spctl for $TEMP_EXE_PATH..." >&2
-spctl_output=$(spctl --assess --type execute --verbose "$TEMP_EXE_PATH" 2>&1) || true # Capture output even on failure
-echo "$spctl_output"
-if [[ "$spctl_output" == *": accepted"* ]]; then
-    echo "INFO: spctl assessment: accepted." >&2
+# Step 8: Conditional Notarization and Finalization
+echo "[Step 8/8] Conditional Notarization and Finalization..." >&2
+if [ "$PROCEED_WITH_NOTARIZATION" = "yes" ]; then
+    if [ -x "$NOTARIZE_SCRIPT_PATH" ]; then
+        echo "INFO: Proceeding to notarization for $TEMP_EXE_PATH..." >&2
+        if "$NOTARIZE_SCRIPT_PATH" "$TEMP_EXE_PATH" "$MACOS_APP_BUNDLE_ID"; then
+            echo "INFO: Notarization process completed successfully for $TEMP_EXE_PATH." >&2
+        else
+            echo "ERROR: Notarization process failed for $TEMP_EXE_PATH." >&2
+        fi
+    else
+        echo "WARNING: Notarization script $NOTARIZE_SCRIPT_PATH not found or not executable. Skipping notarization." >&2
+    fi
 else
-    echo "WARNING: spctl assessment did not explicitly state 'accepted'. This might be expected if not notarized or if ad-hoc signed." >&2
+    if [ "$CAN_NOTARIZE" = true ]; then # Only print this if notarization was an option
+         echo "INFO: Notarization skipped based on test run outcome or user choice." >&2
+    fi
 fi
 
 FINAL_EXE_PATH="$OUTPUT_FOLDER_ARG/$EXE_NAME_ARG"
 echo "INFO: Moving $TEMP_EXE_PATH to $FINAL_EXE_PATH..." >&2
-mv "$TEMP_EXE_PATH" "$FINAL_EXE_PATH" || { echo "ERROR: Failed to move executable to output folder $FINAL_EXE_PATH."; rm -f sea-config.json sea-prep.blob "$TEMP_EXE_PATH"; exit 1; }
-
-echo "INFO: Cleaning up temporary files (sea-config.json, sea-prep.blob)..." >&2
+mv "$TEMP_EXE_PATH" "$FINAL_EXE_PATH" || { echo "ERROR: Failed to move executable."; exit 1; }
+echo "INFO: Cleaning up temporary files..." >&2
 rm -f sea-config.json sea-prep.blob
-
 echo "--- DownloadNet macOS SEA Stamping & Signing Complete ---" >&2
 echo "SUCCESS: Executable created at: $FINAL_EXE_PATH" >&2
+# ... (final status message about notarization)
