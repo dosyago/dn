@@ -1,11 +1,11 @@
 # 🌳 TDF — Tree Document Format, by DOSAYGO
 
 > [!IMPORTANT]
-> **DownloadNet (dn) has grown into something new.** The proxy-based archiver
-> that lived in this repo has been succeeded by **TDF**: a new client, a new
+> **DownloadNet (dn) has grown into something new.** The CDP-based archiver
+> that lived in this repo was the seed of **TDF**: a new client, a new
 > archive format (`.tdf`), and a new capture architecture. The web is captured
 > by **Tree Grower** and replayed by **Tree Player** — two native apps that
-> drive your real browser over WebDriver BiDi instead of proxying it. dn v4.5
+> grow dn's in-browser interception into a multi-browser architecture. dn v4.5
 > remains available, unchanged, in the [Legacy](#-legacy-downloadnet-dn)
 > section below. This repo is no longer an open-source codebase; it is the
 > public home of the TDF product line and the permanent archive of dn.
@@ -39,14 +39,15 @@ irm https://trees.dosaygo.com/install.ps1 | iex
 
 Downloads and checksums: <https://trees.dosaygo.com/downloads.html>
 
-## How it's different from dn
+## From dn to TDF
 
-dn ran as an intercepting proxy in front of Chrome. TDF takes a different
-approach:
+dn intercepted responses inside Chrome's own fetch cycle over the Chrome
+DevTools Protocol (CDP) — Chrome-only. That interception model is the seed
+TDF grew from:
 
-- **No proxy.** Grower drives your installed browser (Chrome, Firefox, and the
-  Chromium family) directly over **WebDriver BiDi / CDP**. The browser is the
-  source of truth; nothing is re-fetched out-of-band.
+- **Multi-browser.** Grower drives your installed browser (Chrome, Firefox,
+  and the Chromium family) over **WebDriver BiDi / CDP**. The browser stays
+  the source of truth; nothing is re-fetched out-of-band.
 - **Active, blocking capture.** Each response is paused in the browser, its
   body read through the automation protocol, stored, then released —
   deterministic capture instead of best-effort caching.
