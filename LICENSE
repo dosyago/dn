@@ -1,0 +1,52 @@
+TDF / Tree Grower / Tree Player — Proprietary License
+
+Copyright (c) 2026 DOSAYGO Corporation. All rights reserved.
+
+1. Scope
+
+   This license applies to everything in this repository EXCEPT the
+   `legacy/` directory. The `legacy/` directory contains the archived
+   DownloadNet (dn) product, which remains licensed under the PolyForm
+   Strict License 1.0.0 — see `legacy/LICENSE` and `legacy/NOTICE`.
+
+2. The TDF products are closed source
+
+   Tree Grower, Tree Player, the Tree Document Format (.tdf) tooling, and
+   the DOSAYGO license service are proprietary, closed-source software.
+   Their source code is not published in this repository. This repository
+   hosts product documentation, release pointers, and the dn archive only.
+
+3. Software license (EULA summary)
+
+   Use of the TDF applications is governed by the DOSAYGO Terms of Use and
+   license terms published at:
+
+       https://trees.dosaygo.com/terms.html
+       https://trees.dosaygo.com/license.html
+
+   In short:
+
+   - Tree Player is free to download and use.
+   - Tree Grower is paid software. Release builds require a valid,
+     device-bound, signed license token issued by the DOSAYGO license
+     service. Activation is offline-verifiable after issuance.
+   - You may not redistribute, resell, sublicense, reverse engineer,
+     decompile, or modify the applications, or circumvent or attempt to
+     circumvent license activation or enforcement, except where such a
+     restriction is unenforceable under applicable law.
+   - Content you capture into .tdf archives is yours. You are responsible
+     for capturing and sharing content lawfully.
+
+4. Repository content
+
+   You may view and link to the documentation in this repository. No other
+   rights are granted. Nothing here grants rights to DOSAYGO trademarks,
+   including "DOSAYGO", "TDF", "Tree Grower", and "Tree Player".
+
+5. No warranty
+
+   THE SOFTWARE AND THIS REPOSITORY'S CONTENT ARE PROVIDED "AS IS", WITHOUT
+   WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. SEE THE TERMS OF USE FOR THE
+   COMPLETE WARRANTY DISCLAIMER AND LIMITATION OF LIABILITY.
+
+Contact: trees@dosaygo.com
